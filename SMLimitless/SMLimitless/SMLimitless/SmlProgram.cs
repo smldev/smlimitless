@@ -20,6 +20,8 @@ namespace SMLimitless
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            this.IsMouseVisible = true;
         }
 
         protected override void Initialize()
