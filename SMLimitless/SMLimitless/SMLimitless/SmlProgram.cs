@@ -10,6 +10,8 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+
+using SMLimitless.Graphics;
 #endregion
 
 namespace SMLimitless
@@ -22,6 +24,8 @@ namespace SMLimitless
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        StaticGraphicsObject graphicsObject = new StaticGraphicsObject();
+
         public SmlProgram()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -32,7 +36,8 @@ namespace SMLimitless
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            string absolute = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..\\..\\..\\test_tile.png");
+            graphicsObject.LoadFromMetadata(@"static-single>""" + absolute + @"""");
 
             base.Initialize();
         }
@@ -41,8 +46,9 @@ namespace SMLimitless
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            GameServices.InitializeServices(this.GraphicsDevice, spriteBatch);
 
-            // TODO: use this.Content to load your game content here
+            graphicsObject.LoadContent();
         }
 
         protected override void UnloadContent()
@@ -65,7 +71,10 @@ namespace SMLimitless
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
+
+            this.spriteBatch.Begin();
+            graphicsObject.Draw(new Vector2(256, 256), Color.White);
+            this.spriteBatch.End();
 
             base.Draw(gameTime);
         }

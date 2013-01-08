@@ -8,6 +8,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace SMLimitless
 {
+    /// <summary>
+    /// Provides global access to game services.
+    /// </summary>
     public static class GameServices
     {
         private static GameServiceContainer container;
@@ -23,11 +26,10 @@ namespace SMLimitless
             }
         }
 
-        public static void InitializeServices(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, GameTime gameTime)
+        public static void InitializeServices(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
         {
             AddService<GraphicsDevice>(graphicsDevice);
             AddService<SpriteBatch>(spriteBatch);
-            AddService<GameTime>(gameTime);
         }
 
         public static GraphicsDevice Graphics
@@ -38,11 +40,6 @@ namespace SMLimitless
         public static SpriteBatch SpriteBatch
         {
             get { return GetService<SpriteBatch>(); }
-        }
-
-        public static GameTime GameTime
-        {
-            get { return GetService<GameTime>(); }
         }
 
         public static T GetService<T>()

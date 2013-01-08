@@ -109,6 +109,9 @@
   <ItemGroup>
     <Compile Include="GameServices.cs" />
     <Compile Include="Graphics\GraphicsManager.cs" />
+    <Compile Include="Graphics\Spritesheet.cs" />
+    <Compile Include="Graphics\SpritesheetManager.cs" />
+    <Compile Include="Graphics\StaticGraphicsObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SmlProgram.cs" />
   </ItemGroup>
