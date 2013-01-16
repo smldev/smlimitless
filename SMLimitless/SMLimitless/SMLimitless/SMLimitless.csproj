@@ -107,8 +107,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="GameServices.cs" />
     <Compile Include="Graphics\GraphicsManager.cs" />
+    <Compile Include="Graphics\MetadataHelpers.cs" />
     <Compile Include="Graphics\Spritesheet.cs" />
     <Compile Include="Graphics\SpritesheetManager.cs" />
     <Compile Include="Graphics\StaticGraphicsObject.cs" />
