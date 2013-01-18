@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using Microsoft.Xna.Framework;
+
 using SMLimitless.Extensions;
 
 namespace SMLimitless.Graphics
@@ -19,7 +21,6 @@ namespace SMLimitless.Graphics
         /// <param name="start">The opening character (for example, a left parentheses or bracket).</param>
         /// <param name="end">The closing character (for example, a right parentheses or bracket).</param>
         /// <returns>A list of all substrings between two characters.</returns>
-        [Obsolete]
         internal static List<String> ExtractStringBetweenChars(string fullString, char start, char end)
         {
             // Sanity check - see if there actually are any start/end characters inside
@@ -29,20 +30,14 @@ namespace SMLimitless.Graphics
             var endCharIndexes = new List<int>();
             int i;
             
-            // First, find the indexes of all the start characters
+            // Find the indexes of all the start and end characters
             for (i = 0; i < fullString.Length; i++)
             {
                 if (fullString[i] == start)
                 {
                     startCharIndexes.Add(i);
                 }
-            }
-
-            // Now, find the indexes of all the end characters.
-            // Due to possible nested substrings, we need to search from the end of the string backwards.
-            for (i = fullString.Length - 1; i >= 0; i--)
-            {
-                if (fullString[i] == end)
+                else if (fullString[i] == end)
                 {
                     endCharIndexes.Add(i);
                 }
@@ -54,6 +49,52 @@ namespace SMLimitless.Graphics
             for (i = 0; i < startCharIndexes.Count; i++)
             {
                 result.Add(StringExtensions.Substring(fullString, startCharIndexes[i] + 1, endCharIndexes[i]));
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Returns a single rectangle from a metadata string.
+        /// Format: "[x,y,width,height]".  First rectangle is returned.
+        /// </summary>
+        internal static Rectangle ExtractSingleRectangle(string fullString)
+        {
+            var substrings = ExtractStringBetweenChars(fullString, '[', ']');
+            string firstRectStr = substrings[0];
+
+            // The substrings should contain characters in the format ###,###,###,###
+            if (!firstRectStr.Contains(',')) { throw new Exception("MetadataHelpers.ExtractSingleRectangle: Invalid metadata rectangle format."); }
+
+            var firstRectSplit = firstRectStr.Split(',');
+            int[] integers = new int[4];
+
+            for (int i = 0; i < 4; i++)
+            {
+                integers[i] = Int32.Parse(firstRectSplit[i]);
+            }
+
+            return new Rectangle(integers[0], integers[1], integers[2], integers[3]);
+        }
+
+        /// <summary>
+        /// Extracts a group of rectangles from a metadata string.
+        /// </summary>
+        internal static List<Rectangle> ExtractAllRectangles(string fullString)
+        {
+            var result = new List<Rectangle>();
+            var substrings = ExtractStringBetweenChars(fullString, '[', ']');
+
+            foreach (string substring in substrings)
+            {
+                if (!substring.Contains(',')) { throw new Exception("MetadataHelpers.ExtractSingleRectangle: Invalid metadata rectangle format."); }
+
+                var split = substring.Split(',');
+                Rectangle rect = new Rectangle(Int32.Parse(split[0]),
+                                               Int32.Parse(split[1]),
+                                               Int32.Parse(split[2]),
+                                               Int32.Parse(split[3]));
+                result.Add(rect);
             }
 
             return result;
