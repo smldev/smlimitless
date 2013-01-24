@@ -71,7 +71,6 @@ namespace SMLimitless
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-
             this.spriteBatch.Begin();
             graphicsObject.Draw(new Vector2(256, 256), Color.White);
             this.spriteBatch.End();

@@ -23,12 +23,25 @@ namespace SMLimitless.Graphics
 
         public void LoadFromMetadata(string metadata)
         {
-            // Metadata format: static-single:“//filepath/image.png”
             if (!isLoaded)
             {
                 var split = metadata.Split('>');
-                this.filePath = split[1].Substring(1, split[1].Length - 2); // remove the quotes.
-                isLoaded = true;
+                if (split[0] == "static-single")
+                {
+                    // Metadata format: static-single>“//filepath/image.png”
+                    this.filePath = split[1].Substring(1, split[1].Length - 2); // remove the quotes.
+                    isLoaded = true;
+                }
+                else if (split[0] == "static-spritesheet")
+                {
+                    // Metadata format: static-spritesheet>“//filepath/image.png”,width,height,tileNumber
+                    throw new NotImplementedException();
+                }
+                else if (split[0] == "static-spritesheet_r")
+                {
+                    // Metadata format: static-spritesheet_r>“//filepath/image.png”,[x,y,width,height]
+                    throw new NotImplementedException();
+                }
             }
         }
 
