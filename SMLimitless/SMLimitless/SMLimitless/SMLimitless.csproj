@@ -109,6 +109,7 @@
   <ItemGroup>
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="GameServices.cs" />
+    <Compile Include="Graphics\AnimatedGraphicsObject.cs" />
     <Compile Include="Graphics\GraphicsManager.cs" />
     <Compile Include="Graphics\MetadataHelpers.cs" />
     <Compile Include="Graphics\Spritesheet.cs" />

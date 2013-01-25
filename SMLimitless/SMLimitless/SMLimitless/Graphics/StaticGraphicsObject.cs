@@ -42,6 +42,10 @@ namespace SMLimitless.Graphics
                     // Metadata format: static-spritesheet_r>“//filepath/image.png”,[x,y,width,height]
                     throw new NotImplementedException();
                 }
+                else
+                {
+                    throw new Exception("StaticGraphicsObject.LoadFromMetadata: Invalid metadata or metadata type.");
+                }
             }
         }
 

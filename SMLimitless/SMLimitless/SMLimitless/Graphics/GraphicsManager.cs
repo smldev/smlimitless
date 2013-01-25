@@ -11,6 +11,8 @@ namespace SMLimitless.Graphics
 {
     public static class GraphicsManager
     {
+        private static Dictionary<String, Texture2D> loadedTextures;
+
         /// <summary>
         /// Loads a texture from any PNG image.
         /// </summary>
@@ -20,10 +22,17 @@ namespace SMLimitless.Graphics
             if (!filePath.EndsWith(".png")) { throw new ArgumentException("Tried to load an image that was not a PNG.", "filePath"); }
             if (!File.Exists(filePath)) { throw new FileNotFoundException(string.Format("The file at {0} does not exist.")); }
 
-            using (Stream stream = File.OpenRead(filePath))
+            if (loadedTextures == null) loadedTextures = new Dictionary<string, Texture2D>();
+
+            if (!loadedTextures.ContainsKey(filePath))
             {
-                return Texture2D.FromStream(GameServices.Graphics, stream);
+                using (Stream stream = File.OpenRead(filePath))
+                {
+                    loadedTextures.Add(filePath, Texture2D.FromStream(GameServices.Graphics, stream));
+                }
             }
+
+            return loadedTextures[filePath];
         }
 
         public static Texture2D Crop(this Texture2D texture, Rectangle area)
