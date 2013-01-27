@@ -25,6 +25,7 @@ namespace SMLimitless
         SpriteBatch spriteBatch;
 
         StaticGraphicsObject graphicsObject = new StaticGraphicsObject();
+        AnimatedGraphicsObject animGraphicsObject = new AnimatedGraphicsObject();
 
         public SmlProgram()
         {
@@ -37,7 +38,9 @@ namespace SMLimitless
         protected override void Initialize()
         {
             string absolute = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..\\..\\..\\test_tile.png");
+            string absolute2 = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..\\..\\..\\test_tile_anim.png");
             graphicsObject.LoadFromMetadata(@"static-single>""" + absolute + @"""");
+            animGraphicsObject.LoadFromMetadata(@"anim-single>""" + absolute2 + @""",16,10");
 
             base.Initialize();
         }
@@ -46,9 +49,10 @@ namespace SMLimitless
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            GameServices.InitializeServices(this.GraphicsDevice, spriteBatch);
+            GameServices.InitializeServices(this.GraphicsDevice, spriteBatch, Content);
 
             graphicsObject.LoadContent();
+            animGraphicsObject.LoadContent();
         }
 
         protected override void UnloadContent()
@@ -73,6 +77,7 @@ namespace SMLimitless
 
             this.spriteBatch.Begin();
             graphicsObject.Draw(new Vector2(256, 256), Color.White);
+            animGraphicsObject.Draw(new Vector2(256, 224), Color.White, false);
             this.spriteBatch.End();
 
             base.Draw(gameTime);

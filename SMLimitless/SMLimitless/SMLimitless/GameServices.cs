@@ -5,6 +5,7 @@ using System.Text;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Content;
 
 namespace SMLimitless
 {
@@ -26,10 +27,11 @@ namespace SMLimitless
             }
         }
 
-        public static void InitializeServices(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
+        public static void InitializeServices(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, ContentManager content)
         {
             AddService<GraphicsDevice>(graphicsDevice);
             AddService<SpriteBatch>(spriteBatch);
+            AddService<ContentManager>(content);
         }
 
         public static GraphicsDevice Graphics
@@ -56,5 +58,28 @@ namespace SMLimitless
         {
             Container.RemoveService(typeof(T));
         }
+
+        #region Global Debug Fonts
+        private static SpriteFont debugFontSmall;
+        private static SpriteFont debugFontLarge;
+
+        public static SpriteFont DebugFontSmall
+        {
+            get
+            {
+                if (debugFontSmall == null) debugFontSmall = GetService<ContentManager>().Load<SpriteFont>("DebugFontSmall");
+                return debugFontSmall;
+            }
+        }
+
+        public static SpriteFont DebugFontLarge
+        {
+            get
+            {
+                if (debugFontLarge == null) debugFontLarge = GetService<ContentManager>().Load<SpriteFont>("DebugFontLarge");
+                return debugFontLarge;
+            }
+        }
+        #endregion
     }
 }

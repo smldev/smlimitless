@@ -14,6 +14,7 @@ namespace SMLimitless.Graphics
         private string metadata;
 
         private string filePath;
+        private int frameLength;
         private List<Rectangle> rectangles;
 
         private int frameTime; // the number of rendered frames to display each texture
@@ -38,12 +39,14 @@ namespace SMLimitless.Graphics
                 if (split[0] == "anim-single")
                 {
                     // Metadata format: anim-single>“//filepath/image.png”,frameLength,frameTime
-                    this.filePath = split[1].Substring(1, split[1].Length - 2); // remove the quotes.
-                    int frameLength = Int32.Parse(split[2]);
-                    this.frameTime = Int32.Parse(split[3]);
+                    var data = split[1].Split(',');
+                    this.filePath = data[0].Substring(1, data[0].Length - 2); // remove the quotes.
+                    this.frameLength = Int32.Parse(data[1]);
+                    this.frameTime = Int32.Parse(data[2]);
 
                     // We can't get the rectangles now because we don't have the texture (or its width).
                     // We'll grab them on content load if frameLength is set (more than zero).
+                    this.isLoaded = true;
                 }
                 else if (split[0] == "anim-spritesheet")
                 {
@@ -62,9 +65,63 @@ namespace SMLimitless.Graphics
             }
         }
 
-        public void Load(string FilePath, int frameLength, int frameTime)
+        public void Load(string FilePath, int FrameLength, int FrameTime)
         {
+            this.filePath = FilePath;
+            this.frameLength = FrameLength;
+            this.frameTime = FrameTime;
+            this.isLoaded = true;
+        }
 
+        public void LoadContent()
+        {
+            if (isLoaded && !isContentLoaded)
+            {
+                if (this.frameLength != 0) // if we're loading from a single file
+                {
+                    Texture2D wholeTexture = GraphicsManager.LoadFromFile(this.filePath);
+
+                    if (wholeTexture.Width % this.frameLength != 0) throw new Exception("AnimatedGraphicsObject.LoadContent: Mismatched frame width and texture width.");
+
+                    for (int xPos = 0; xPos < wholeTexture.Width; xPos += frameLength)
+                    {
+                        this.rectangles.Add(new Rectangle(xPos, 0, frameLength, wholeTexture.Height));
+                    }
+
+                    foreach (Rectangle rect in rectangles)
+                    {
+                        textures.Add(GraphicsManager.Crop(wholeTexture, rect));
+                    }
+
+                    isLoaded = true;
+                }
+                // eventual spritesheet code here
+            }
+        }
+
+        private void UpdateFrameCounter()
+        {
+            this.elapsedFrames++;
+            if (this.elapsedFrames >= this.frameTime)
+            {
+                this.elapsedFrames = 0;
+
+                if (this.currentTextureIndex == textures.Count - 1) currentTextureIndex = 0;
+                else currentTextureIndex++;
+            }
+        }
+
+        public void Draw(Vector2 position, Color color, bool debug)
+        {
+            SpriteBatch spriteBatch = GameServices.SpriteBatch;
+            spriteBatch.Draw(textures[currentTextureIndex], position, color);
+
+            if (debug)
+            {
+                spriteBatch.DrawString(GameServices.DebugFontSmall, currentTextureIndex.ToString(), position, Color.White);
+            }
+
+            UpdateFrameCounter();
         }
     }
 }
