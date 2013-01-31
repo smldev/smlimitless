@@ -29,7 +29,7 @@ namespace SMLimitless.Graphics
                 if (split[0] == "static-single")
                 {
                     // Metadata format: static-single>“//filepath/image.png”
-                    this.filePath = split[1].Substring(1, split[1].Length - 2); // remove the quotes.
+                    this.filePath = MetadataHelpers.TrimQuotes(split[1]);
                     isLoaded = true;
                 }
                 else if (split[0] == "static-spritesheet")

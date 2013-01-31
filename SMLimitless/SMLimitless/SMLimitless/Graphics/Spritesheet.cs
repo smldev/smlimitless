@@ -6,6 +6,8 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
+using SMLimitless.Extensions;
+
 namespace SMLimitless.Graphics
 {
     /// <summary>
@@ -32,21 +34,27 @@ namespace SMLimitless.Graphics
         {
             if (!isLoaded)
             {
-                // Metadata definition: spritesheet-def:“//filepath/image.png”,width,height
                 var split1 = metadata.Split('>');
                 var split2 = split1[1].Split(',');
 
-                if (split2.Length != 3) throw new ArgumentException("Spritesheet metadata definition had an invalid number of items.", "metadata");
-
-                // split2[0] is the file path.
-                filePath = split2[0].Substring(1, split2[0].Length - 2); // remove the quotes
-
-                // split2[1] and [2] are the width and height
-                int width = Int32.Parse(split2[1]);
-                int height = Int32.Parse(split2[2]);
-                tileSize = new Vector2(width, height);
-
-                isLoaded = true;
+                if (split1[0] == "spritesheet_def")
+                {
+                    // Metadata definition: spritesheet-def:“//filepath/image.png”,width,height
+                    filePath = MetadataHelpers.TrimQuotes(split2[0]);
+                    tileSize = new Vector2(Single.Parse(split2[1]), Single.Parse(split2[2]));
+                    isLoaded = true;
+                }
+                else if (split1[0] == "spritesheet_nosize")
+                {
+                    // Metadata defintion: spritesheet-nosize>“//filepath/image.png”
+                    filePath = MetadataHelpers.TrimQuotes(split2[0]);
+                    tileSize = new Vector2(Single.NaN, Single.NaN);
+                    isLoaded = true;
+                }
+                else
+                {
+                    throw new Exception("Spritesheet.LoadFromMetadata: Invalid metadata or metadata type.");
+                }
             }
         }
 
@@ -67,7 +75,7 @@ namespace SMLimitless.Graphics
                 sheetTexture = GraphicsManager.LoadFromFile(this.filePath);
 
                 // Check the dimensions of the image to see if the tile size is divisible.
-                if (sheetTexture.Width % tileSize.X != 0 || sheetTexture.Height % tileSize.Y != 0)
+                if (!tileSize.IsNaN() && (sheetTexture.Width % tileSize.X != 0 || sheetTexture.Height % tileSize.Y != 0))
                 {
                     throw new Exception(string.Format("The tile size {0}, {1} is invalid: the spritesheet cannot be evenly divided into tiles this size.", tileSize.X.ToString(), tileSize.Y.ToString()));
                 }
@@ -78,7 +86,7 @@ namespace SMLimitless.Graphics
 
         public Texture2D GetTile(int tileIndex)
         {
-            if (tileSize.X < 0 || tileSize.Y < 0) // if the tile size is negative, getting tiles by index is not available (i.e. sprites are differently sized)
+            if (tileSize.IsNaN())
             {
                 throw new Exception("This spritesheet cannot get tiles by index.  Please use a Rectangle to get the tiles instead.");
             }

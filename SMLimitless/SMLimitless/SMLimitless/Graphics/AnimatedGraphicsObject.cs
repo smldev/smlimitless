@@ -40,7 +40,7 @@ namespace SMLimitless.Graphics
                 {
                     // Metadata format: anim-single>“//filepath/image.png”,frameLength,frameTime
                     var data = split[1].Split(',');
-                    this.filePath = data[0].Substring(1, data[0].Length - 2); // remove the quotes.
+                    this.filePath = MetadataHelpers.TrimQuotes(data[0]);
                     this.frameLength = Int32.Parse(data[1]);
                     this.frameTime = Int32.Parse(data[2]);
 

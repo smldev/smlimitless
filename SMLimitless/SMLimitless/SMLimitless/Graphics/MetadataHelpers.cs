@@ -99,5 +99,17 @@ namespace SMLimitless.Graphics
 
             return result;
         }
+
+        /// <summary>
+        /// Extracts a string between quote (") characters.
+        /// </summary>
+        public static string TrimQuotes(string input)
+        {
+            if (input.StartsWith(@"""") && input.EndsWith(@""""))
+            {
+                return input.Substring(1, input.Length - 2);
+            }
+            else return input;
+        }
     }
 }
