@@ -13,24 +13,24 @@ namespace SMLimitless.Graphics
     /// <summary>
     /// Defines a texture made up of many different tiles.
     /// </summary>
-    public class Spritesheet
+    internal class Spritesheet
     {
-        public string Metadata { get; private set; }
+        internal string Metadata { get; private set; }
 
         private bool isLoaded;
         private bool isContentLoaded;
-        private string filePath;
+        internal string filePath;
         private Vector2 tileSize;
 
         private Texture2D sheetTexture;
         private Dictionary<Rectangle, Texture2D> croppedTiles;
 
-        public Spritesheet()
+        internal Spritesheet()
         {
 
         }
 
-        public void LoadFromMetadata(string metadata)
+        internal void LoadFromMetadata(string metadata)
         {
             if (!isLoaded)
             {
@@ -58,7 +58,7 @@ namespace SMLimitless.Graphics
             }
         }
 
-        public void Load(string filePath, int tileWidth, int tileHeight)
+        internal void Load(string filePath, int tileWidth, int tileHeight)
         {
             if (!isLoaded)
             {
@@ -68,7 +68,17 @@ namespace SMLimitless.Graphics
             }
         }
 
-        public void LoadContent()
+        internal void Load(string filePath)
+        {
+            if (!isLoaded)
+            {
+                this.filePath = filePath;
+                this.tileSize = new Vector2(Single.NaN, Single.NaN);
+                isLoaded = true;
+            }
+        }
+
+        internal void LoadContent()
         {
             if (isLoaded && !isContentLoaded)
             {
@@ -84,7 +94,7 @@ namespace SMLimitless.Graphics
             }
         }
 
-        public Texture2D GetTile(int tileIndex)
+        internal Texture2D GetTile(int tileIndex)
         {
             if (tileSize.IsNaN())
             {
@@ -106,7 +116,7 @@ namespace SMLimitless.Graphics
             return sheetTexture.Crop(sourceRect);
         }
 
-        public Texture2D GetTile(Rectangle sourceRect)
+        internal Texture2D GetTile(Rectangle sourceRect)
         {
             return sheetTexture.Crop(sourceRect);
         }

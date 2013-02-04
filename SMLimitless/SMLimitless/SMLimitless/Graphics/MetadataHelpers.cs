@@ -111,5 +111,18 @@ namespace SMLimitless.Graphics
             }
             else return input;
         }
+
+        [Obsolete] // well, you usually have to split() it anyway
+        public static string GetDatatypeHeader(string input)
+        {
+            if (input.Contains('>'))
+            {
+                return input.Split('>')[0];
+            }
+            else
+            {
+                throw new Exception("MetadataHelpers.GetDatatypeHeader: Invalid metadata or not metadata.");
+            }
+        }
     }
 }
