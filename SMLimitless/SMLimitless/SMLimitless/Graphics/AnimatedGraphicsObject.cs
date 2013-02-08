@@ -36,7 +36,7 @@ namespace SMLimitless.Graphics
             {
                 this.metadata = Metadata;
                 var split = metadata.Split('>');
-                if (split[0] == "anim-single")
+                if (split[0].Contains("anim-single"))
                 {
                     // Metadata format: anim-single>“//filepath/image.png”,frameLength,frameTime
                     var data = split[1].Split(',');
@@ -48,15 +48,15 @@ namespace SMLimitless.Graphics
                     // We'll grab them on content load if frameLength is set (more than zero).
                     this.isLoaded = true;
                 }
-                else if (split[0] == "anim-spritesheet")
+                else if (split[0].Contains("anim-spritesheet"))
                 {
-                    // Metadata format: anim-spritesheet>“//filepath/image.png”,width,height,tileNumber1,tileNumber2,tileNumber3,...
-                    throw new NotImplementedException();
+                    SpritesheetManager.LoadFromMetadata(Metadata);
+                    this.isLoaded = true;
                 }
-                else if (split[0] == "anim-spritesheet_r")
+                else if (split[0].Contains("anim-spritesheet_r"))
                 {
-                    // Metadata format: anim-spritesheet_r>”//filepath/image.png”,[x,y,width,height],[x,y,width,height],...,frameTime
-                    throw new NotImplementedException();
+                    SpritesheetManager.LoadFromMetadata(Metadata);
+                    this.isLoaded = true;
                 }
                 else
                 {
@@ -77,25 +77,52 @@ namespace SMLimitless.Graphics
         {
             if (isLoaded && !isContentLoaded)
             {
-                if (this.frameLength != 0) // if we're loading from a single file
+                if (!metadata.Contains("spritesheet"))
                 {
-                    Texture2D wholeTexture = GraphicsManager.LoadFromFile(this.filePath);
-
-                    if (wholeTexture.Width % this.frameLength != 0) throw new Exception("AnimatedGraphicsObject.LoadContent: Mismatched frame width and texture width.");
-
-                    for (int xPos = 0; xPos < wholeTexture.Width; xPos += frameLength)
+                    if (this.frameLength != 0) // if we're loading from a single file
                     {
-                        this.rectangles.Add(new Rectangle(xPos, 0, frameLength, wholeTexture.Height));
-                    }
+                        Texture2D wholeTexture = GraphicsManager.LoadFromFile(this.filePath);
 
-                    foreach (Rectangle rect in rectangles)
-                    {
-                        textures.Add(GraphicsManager.Crop(wholeTexture, rect));
-                    }
+                        if (wholeTexture.Width % this.frameLength != 0) throw new Exception("AnimatedGraphicsObject.LoadContent: Mismatched frame width and texture width.");
 
-                    isLoaded = true;
+                        for (int xPos = 0; xPos < wholeTexture.Width; xPos += frameLength)
+                        {
+                            this.rectangles.Add(new Rectangle(xPos, 0, frameLength, wholeTexture.Height));
+                        }
+
+                        foreach (Rectangle rect in rectangles)
+                        {
+                            textures.Add(GraphicsManager.Crop(wholeTexture, rect));
+                        }
+
+                        isLoaded = true;
+                    }
                 }
-                // eventual spritesheet code here
+                else if (metadata.Contains("spritesheet_r"))
+                {
+                    // Metadata format: anim-spritesheet_r(-nosize)>”//filepath/image.png”,[x:y:width:height],[x:y:width:height],...,frameTime
+                    var data = metadata.Split('>')[1].Split(',');
+                    string filePath = MetadataHelpers.TrimQuotes(data[0]);
+                    var sourceRects = MetadataHelpers.ExtractAllRectangles(data);
+
+                    textures = SpritesheetManager.GetTiles(filePath, sourceRects);
+                    frameTime = Int32.Parse(data[data.Length - 1]);
+                }
+                else if (metadata.Contains("spritesheet"))
+                {
+                    // Metadata format: anim-spritesheet>“//filepath/image.png”,width,height,frameTime,tileNumber1,tileNumber2,tileNumber3,...
+                    var data = metadata.Split('>')[1].Split(',');
+                    string filePath = MetadataHelpers.TrimQuotes(data[0]);
+                    var tileIndexes = new List<int>();
+
+                    frameTime = Int32.Parse(data[3]);
+                    for (int i = 4; i < data.Length - 1; i++)
+                    {
+                        tileIndexes.Add(Int32.Parse(data[i]));
+                    }
+
+                    textures = SpritesheetManager.GetTiles(filePath, tileIndexes);
+                }
             }
         }
 

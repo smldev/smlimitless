@@ -63,10 +63,10 @@ namespace SMLimitless.Graphics
             var substrings = ExtractStringBetweenChars(fullString, '[', ']');
             string firstRectStr = substrings[0];
 
-            // The substrings should contain characters in the format ###,###,###,###
-            if (!firstRectStr.Contains(',')) { throw new Exception("MetadataHelpers.ExtractSingleRectangle: Invalid metadata rectangle format."); }
+            // The substrings should contain characters in the format ###:###:###:###
+            if (!firstRectStr.Contains(':')) { throw new Exception("MetadataHelpers.ExtractSingleRectangle: Invalid metadata rectangle format."); }
 
-            var firstRectSplit = firstRectStr.Split(',');
+            var firstRectSplit = firstRectStr.Split(':');
             int[] integers = new int[4];
 
             for (int i = 0; i < 4; i++)
@@ -87,9 +87,9 @@ namespace SMLimitless.Graphics
 
             foreach (string substring in substrings)
             {
-                if (!substring.Contains(',')) { throw new Exception("MetadataHelpers.ExtractSingleRectangle: Invalid metadata rectangle format."); }
+                if (!substring.Contains(':')) { throw new Exception("MetadataHelpers.ExtractSingleRectangle: Invalid metadata rectangle format."); }
 
-                var split = substring.Split(',');
+                var split = substring.Split(':');
                 Rectangle rect = new Rectangle(Int32.Parse(split[0]),
                                                Int32.Parse(split[1]),
                                                Int32.Parse(split[2]),
@@ -98,6 +98,13 @@ namespace SMLimitless.Graphics
             }
 
             return result;
+        }
+
+        internal static List<Rectangle> ExtractAllRectangles(string[] strArray)
+        {
+            StringBuilder builder = new StringBuilder();
+            foreach (string str in strArray) builder.Append(str);
+            return ExtractAllRectangles(builder.ToString());
         }
 
         /// <summary>

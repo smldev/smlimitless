@@ -23,6 +23,7 @@ namespace SMLimitless.Graphics
 
         public void LoadFromMetadata(string metadata)
         {
+            this.Metadata = metadata;
             if (!isLoaded)
             {
                 var split = metadata.Split('>');
@@ -32,15 +33,15 @@ namespace SMLimitless.Graphics
                     this.filePath = MetadataHelpers.TrimQuotes(split[1]);
                     isLoaded = true;
                 }
-                else if (split[0] == "static-spritesheet")
+                else if (split[0].Contains("static-spritesheet"))
                 {
-                    // Metadata format: static-spritesheet>“//filepath/image.png”,width,height,tileNumber
-                    throw new NotImplementedException();
+                    SpritesheetManager.LoadFromMetadata(metadata);
+                    isLoaded = true;
                 }
-                else if (split[0] == "static-spritesheet_r")
+                else if (split[0].Contains("static-spritesheet_r"))
                 {
-                    // Metadata format: static-spritesheet_r>“//filepath/image.png”,[x,y,width,height]
-                    throw new NotImplementedException();
+                    SpritesheetManager.LoadFromMetadata(metadata);
+                    isLoaded = true;
                 }
                 else
                 {
@@ -62,7 +63,36 @@ namespace SMLimitless.Graphics
         {
             if (isLoaded && !isContentLoaded)
             {
-                texture = GraphicsManager.LoadFromFile(this.filePath);
+                if (Metadata.Contains("spritesheet_r"))
+                {
+                    // Metadata format: static-spritesheet_r(-nosize)>“//filepath/image.png”,width,height,[x:y:width:height]
+                    string filePath;
+                    Rectangle sourceRect;
+
+                    var data = Metadata.Split('>')[1].Split(',');
+                    filePath = MetadataHelpers.TrimQuotes(data[0]);
+                    if (Metadata.Contains("nosize")) sourceRect = MetadataHelpers.ExtractSingleRectangle(data[1]);
+                    else sourceRect = MetadataHelpers.ExtractSingleRectangle(data[3]);
+
+                    texture = SpritesheetManager.GetTile(filePath, sourceRect);
+                }
+                else if (Metadata.Contains("spritesheet"))
+                {
+                    // Metadata format: static-spritesheet(-nosize)>“//filepath/image.png”,width,height,tileNumber
+                    string filePath;
+                    int tileIndex;
+
+                    var data = Metadata.Split('>')[1].Split(',');
+                    filePath = MetadataHelpers.TrimQuotes(data[0]);
+                    if (Metadata.Contains("nosize")) tileIndex = Int32.Parse(data[1]);
+                    else tileIndex = Int32.Parse(data[3]);
+
+                    texture = SpritesheetManager.GetTile(filePath, tileIndex);
+                }
+                else
+                {
+                    texture = GraphicsManager.LoadFromFile(this.filePath);
+                }
                 isContentLoaded = true;
             }
         }

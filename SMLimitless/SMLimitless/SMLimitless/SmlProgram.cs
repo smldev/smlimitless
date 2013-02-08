@@ -27,6 +27,11 @@ namespace SMLimitless
         StaticGraphicsObject graphicsObject = new StaticGraphicsObject();
         AnimatedGraphicsObject animGraphicsObject = new AnimatedGraphicsObject();
 
+        StaticGraphicsObject sheetObject = new StaticGraphicsObject();
+        StaticGraphicsObject sheetRectObject = new StaticGraphicsObject();
+
+        AnimatedGraphicsObject animSheetObject = new AnimatedGraphicsObject();
+
         public SmlProgram()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -37,10 +42,18 @@ namespace SMLimitless
 
         protected override void Initialize()
         {
+            SpritesheetManager.Initalize();
+
             string absolute = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..\\..\\..\\test_tile.png");
             string absolute2 = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..\\..\\..\\test_tile_anim.png");
+            string absolute3 = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..\\..\\..\\test_sheet.png");
             graphicsObject.LoadFromMetadata(@"static-single>""" + absolute + @"""");
             animGraphicsObject.LoadFromMetadata(@"anim-single>""" + absolute2 + @""",16,10");
+
+            sheetObject.LoadFromMetadata(@"static-spritesheet>""" + absolute3 + @""",16,16,0");
+            sheetRectObject.LoadFromMetadata(@"static-spritesheet_r>""" + absolute3 + @""",16,16,[16:0:16:16]");
+
+            animSheetObject.LoadFromMetadata(@"anim-spritesheet_r-nosize>""" + absolute3 + @""",[0:16:16:16],[16:16:16:16],[32:16:16:16],[48:16:16:16],8");
 
             base.Initialize();
         }
@@ -50,9 +63,15 @@ namespace SMLimitless
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             GameServices.InitializeServices(this.GraphicsDevice, spriteBatch, Content);
+            SpritesheetManager.LoadContent();
 
             graphicsObject.LoadContent();
             animGraphicsObject.LoadContent();
+
+            sheetObject.LoadContent();
+            sheetRectObject.LoadContent();
+
+            animSheetObject.LoadContent();
         }
 
         protected override void UnloadContent()
@@ -78,6 +97,11 @@ namespace SMLimitless
             this.spriteBatch.Begin();
             graphicsObject.Draw(new Vector2(256, 256), Color.White);
             animGraphicsObject.Draw(new Vector2(256, 224), Color.White, false);
+
+            sheetObject.Draw(new Vector2(288, 256), Color.White);
+            sheetRectObject.Draw(new Vector2(304, 256), Color.White);
+
+            animSheetObject.Draw(new Vector2(320, 256), Color.White, false);
             this.spriteBatch.End();
 
             base.Draw(gameTime);
