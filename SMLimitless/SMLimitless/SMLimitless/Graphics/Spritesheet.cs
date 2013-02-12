@@ -105,17 +105,7 @@ namespace SMLimitless.Graphics
             int tilesPerRow = sheetTexture.Width / (int)tileSize.X;
             int tilesPerColumn = sheetTexture.Height / (int)tileSize.Y;
 
-            int row = 0, column = 0;
-            if (tileIndex < tilesPerRow)
-            {
-                column = tileIndex;
-            }
-            else
-            {
-                int i;
-                for (i = tileIndex; i > 0 && i > tilesPerRow; i -= tilesPerRow) { row++; }
-                column = i;
-            }
+            int row = tileIndex / tilesPerRow, column = tileIndex % tilesPerRow;
             row *= (int)tileSize.X;
             column *= (int)tileSize.Y;
 

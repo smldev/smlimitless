@@ -7,6 +7,9 @@ namespace SMLimitless.Extensions
 {
     public static class StringExtensions
     {
+        /// <summary>
+        /// Returns a substring between two indexes.
+        /// </summary>
         public static string Substring(this string str, int startIndex, int endIndex)
         {
             int length = endIndex - startIndex;

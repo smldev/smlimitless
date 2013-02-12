@@ -6,6 +6,8 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
+using SMLimitless.Extensions;
+
 namespace SMLimitless.Graphics
 {
     public class AnimatedGraphicsObject
@@ -30,11 +32,11 @@ namespace SMLimitless.Graphics
             rectangles = new List<Rectangle>();
         }
 
-        public void LoadFromMetadata(string Metadata)
+        public void LoadFromMetadata(string metadata)
         {
             if (!isLoaded)
             {
-                this.metadata = Metadata;
+                this.metadata = metadata;
                 var split = metadata.Split('>');
                 if (split[0].Contains("anim-single"))
                 {
@@ -50,12 +52,12 @@ namespace SMLimitless.Graphics
                 }
                 else if (split[0].Contains("anim-spritesheet"))
                 {
-                    SpritesheetManager.LoadFromMetadata(Metadata);
+                    SpritesheetManager.LoadFromMetadata(metadata);
                     this.isLoaded = true;
                 }
                 else if (split[0].Contains("anim-spritesheet_r"))
                 {
-                    SpritesheetManager.LoadFromMetadata(Metadata);
+                    SpritesheetManager.LoadFromMetadata(metadata);
                     this.isLoaded = true;
                 }
                 else
@@ -79,24 +81,21 @@ namespace SMLimitless.Graphics
             {
                 if (!metadata.Contains("spritesheet"))
                 {
-                    if (this.frameLength != 0) // if we're loading from a single file
+                    Texture2D wholeTexture = GraphicsManager.LoadFromFile(this.filePath);
+
+                    if (wholeTexture.Width % this.frameLength != 0) throw new Exception("AnimatedGraphicsObject.LoadContent: Mismatched frame width and texture width.");
+
+                    for (int xPos = 0; xPos < wholeTexture.Width; xPos += frameLength)
                     {
-                        Texture2D wholeTexture = GraphicsManager.LoadFromFile(this.filePath);
-
-                        if (wholeTexture.Width % this.frameLength != 0) throw new Exception("AnimatedGraphicsObject.LoadContent: Mismatched frame width and texture width.");
-
-                        for (int xPos = 0; xPos < wholeTexture.Width; xPos += frameLength)
-                        {
-                            this.rectangles.Add(new Rectangle(xPos, 0, frameLength, wholeTexture.Height));
-                        }
-
-                        foreach (Rectangle rect in rectangles)
-                        {
-                            textures.Add(GraphicsManager.Crop(wholeTexture, rect));
-                        }
-
-                        isLoaded = true;
+                        this.rectangles.Add(new Rectangle(xPos, 0, frameLength, wholeTexture.Height));
                     }
+
+                    foreach (Rectangle rect in rectangles)
+                    {
+                        textures.Add(GraphicsManager.Crop(wholeTexture, rect));
+                    }
+
+                    isLoaded = true;
                 }
                 else if (metadata.Contains("spritesheet_r"))
                 {
@@ -138,10 +137,11 @@ namespace SMLimitless.Graphics
             }
         }
 
-        public void Draw(Vector2 position, Color color, bool debug)
+        public void Draw(Vector2 position, Color color, bool debug, SpriteEffects effects)
         {
+            // TODO: Add support for flipping this sprite (it's a SpriteBatch.Draw overload with a SpriteEffects param)
             SpriteBatch spriteBatch = GameServices.SpriteBatch;
-            spriteBatch.Draw(textures[currentTextureIndex], position, color);
+            spriteBatch.Draw(textures[currentTextureIndex], position, color, effects);
 
             if (debug)
             {
@@ -149,6 +149,11 @@ namespace SMLimitless.Graphics
             }
 
             UpdateFrameCounter();
+        }
+
+        public void Draw(Vector2 position, Color color, bool debug)
+        {
+            this.Draw(position, color, debug, SpriteEffects.None);
         }
     }
 }

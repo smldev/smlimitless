@@ -24,6 +24,7 @@ namespace SMLimitless
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        /* Testing graphics objects */
         StaticGraphicsObject graphicsObject = new StaticGraphicsObject();
         AnimatedGraphicsObject animGraphicsObject = new AnimatedGraphicsObject();
 
@@ -44,6 +45,7 @@ namespace SMLimitless
         {
             SpritesheetManager.Initalize();
 
+            // Initalize the testing objects.
             string absolute = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..\\..\\..\\test_tile.png");
             string absolute2 = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..\\..\\..\\test_tile_anim.png");
             string absolute3 = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..\\..\\..\\test_sheet.png");
@@ -53,7 +55,7 @@ namespace SMLimitless
             sheetObject.LoadFromMetadata(@"static-spritesheet>""" + absolute3 + @""",16,16,0");
             sheetRectObject.LoadFromMetadata(@"static-spritesheet_r>""" + absolute3 + @""",16,16,[16:0:16:16]");
 
-            animSheetObject.LoadFromMetadata(@"anim-spritesheet_r-nosize>""" + absolute3 + @""",[0:16:16:16],[16:16:16:16],[32:16:16:16],[48:16:16:16],8");
+            animSheetObject.LoadFromMetadata(@"anim-spritesheet>""" + absolute3 + @""",16,16,8,5,6,7,8");
 
             base.Initialize();
         }
@@ -95,13 +97,13 @@ namespace SMLimitless
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             this.spriteBatch.Begin();
-            graphicsObject.Draw(new Vector2(256, 256), Color.White);
-            animGraphicsObject.Draw(new Vector2(256, 224), Color.White, false);
+            graphicsObject.Draw(new Vector2(256, 256), Color.White, SpriteEffects.FlipVertically);
+            animGraphicsObject.Draw(new Vector2(256, 224), Color.White, false, SpriteEffects.FlipHorizontally);
 
             sheetObject.Draw(new Vector2(288, 256), Color.White);
             sheetRectObject.Draw(new Vector2(304, 256), Color.White);
 
-            animSheetObject.Draw(new Vector2(320, 256), Color.White, false);
+            animSheetObject.Draw(new Vector2(320, 256), Color.White, false, SpriteEffects.None);
             this.spriteBatch.End();
 
             base.Draw(gameTime);

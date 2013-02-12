@@ -6,6 +6,8 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
+using SMLimitless.Extensions;
+
 namespace SMLimitless.Graphics
 {
     public class StaticGraphicsObject
@@ -97,10 +99,15 @@ namespace SMLimitless.Graphics
             }
         }
 
-        public void Draw(Vector2 position, Color color)
+        public void Draw(Vector2 position, Color color, SpriteEffects effects)
         {
             SpriteBatch spriteBatch = GameServices.SpriteBatch;
-            spriteBatch.Draw(this.texture, position, color);
+            spriteBatch.Draw(this.texture, position, color, effects);
+        }
+
+        public void Draw(Vector2 position, Color color)
+        {
+            this.Draw(position, color, SpriteEffects.None);
         }
     }
 }
