@@ -125,6 +125,11 @@ namespace SMLimitless.Graphics
             }
         }
 
+        public void Update()
+        {
+            UpdateFrameCounter();
+        }
+
         private void UpdateFrameCounter()
         {
             this.elapsedFrames++;
@@ -147,8 +152,6 @@ namespace SMLimitless.Graphics
             {
                 spriteBatch.DrawString(GameServices.DebugFontSmall, currentTextureIndex.ToString(), position, Color.White);
             }
-
-            UpdateFrameCounter();
         }
 
         public void Draw(Vector2 position, Color color, bool debug)
