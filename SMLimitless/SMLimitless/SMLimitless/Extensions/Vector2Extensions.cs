@@ -16,5 +16,10 @@ namespace SMLimitless.Extensions
         {
             return (vector.X == Single.NaN || vector.Y == Single.NaN);
         }
+
+        public static Rectangle ToRectangle(this Vector2 position, Vector2 size)
+        {
+            return new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y);
+        }
     }
 }

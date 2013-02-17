@@ -33,6 +33,9 @@ namespace SMLimitless
 
         AnimatedGraphicsObject animSheetObject = new AnimatedGraphicsObject();
 
+        /* Testing effects */
+        SMLimitless.Screens.Effects.FadeEffect fadeEffect;
+
         public SmlProgram()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -56,6 +59,8 @@ namespace SMLimitless
             sheetRectObject.LoadFromMetadata(@"static-spritesheet_r>""" + absolute3 + @""",16,16,[16:0:16:16]");
 
             animSheetObject.LoadFromMetadata(@"anim-spritesheet>""" + absolute3 + @""",16,16,8,5,6,7,8");
+
+            fadeEffect = new Screens.Effects.FadeEffect(new Vector2(GraphicsDevice.PresentationParameters.BackBufferWidth, GraphicsDevice.PresentationParameters.BackBufferHeight));
 
             base.Initialize();
         }
@@ -90,6 +95,15 @@ namespace SMLimitless
             // TODO: Add your update logic here
 
             base.Update(gameTime);
+
+            animGraphicsObject.Update();
+            animSheetObject.Update();
+
+            fadeEffect.Update(null);
+
+            // Testing fading
+            if (Keyboard.GetState().IsKeyDown(Keys.A)) fadeEffect.Start(60, Interfaces.EffectDirection.Forward);
+            else if (Keyboard.GetState().IsKeyDown(Keys.Z)) fadeEffect.Start(60, Interfaces.EffectDirection.Backward);
         }
 
         protected override void Draw(GameTime gameTime)
@@ -104,6 +118,7 @@ namespace SMLimitless
             sheetRectObject.Draw(new Vector2(304, 256), Color.White);
 
             animSheetObject.Draw(new Vector2(320, 256), Color.White, false, SpriteEffects.None);
+            fadeEffect.Draw(null, GameServices.SpriteBatch);
             this.spriteBatch.End();
 
             base.Draw(gameTime);
