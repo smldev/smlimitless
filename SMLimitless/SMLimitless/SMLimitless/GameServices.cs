@@ -27,6 +27,8 @@ namespace SMLimitless
             }
         }
 
+        public static Vector2 ScreenSize;
+
         public static void InitializeServices(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, ContentManager content)
         {
             AddService<GraphicsDevice>(graphicsDevice);

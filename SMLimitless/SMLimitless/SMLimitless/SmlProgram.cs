@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
 using SMLimitless.Graphics;
+using SMLimitless.Screens;
 #endregion
 
 namespace SMLimitless
@@ -24,18 +25,6 @@ namespace SMLimitless
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        /* Testing graphics objects */
-        StaticGraphicsObject graphicsObject = new StaticGraphicsObject();
-        AnimatedGraphicsObject animGraphicsObject = new AnimatedGraphicsObject();
-
-        StaticGraphicsObject sheetObject = new StaticGraphicsObject();
-        StaticGraphicsObject sheetRectObject = new StaticGraphicsObject();
-
-        AnimatedGraphicsObject animSheetObject = new AnimatedGraphicsObject();
-
-        /* Testing effects */
-        SMLimitless.Screens.Effects.FadeEffect fadeEffect;
-
         public SmlProgram()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -47,21 +36,9 @@ namespace SMLimitless
         protected override void Initialize()
         {
             SpritesheetManager.Initalize();
-
-            // Initalize the testing objects.
-            string absolute = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..\\..\\..\\test_tile.png");
-            string absolute2 = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..\\..\\..\\test_tile_anim.png");
-            string absolute3 = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..\\..\\..\\test_sheet.png");
-            graphicsObject.LoadFromMetadata(@"static-single>""" + absolute + @"""");
-            animGraphicsObject.LoadFromMetadata(@"anim-single>""" + absolute2 + @""",16,10");
-
-            sheetObject.LoadFromMetadata(@"static-spritesheet>""" + absolute3 + @""",16,16,0");
-            sheetRectObject.LoadFromMetadata(@"static-spritesheet_r>""" + absolute3 + @""",16,16,[16:0:16:16]");
-
-            animSheetObject.LoadFromMetadata(@"anim-spritesheet>""" + absolute3 + @""",16,16,8,5,6,7,8");
-
-            fadeEffect = new Screens.Effects.FadeEffect(new Vector2(GraphicsDevice.PresentationParameters.BackBufferWidth, GraphicsDevice.PresentationParameters.BackBufferHeight));
-
+            GameServices.ScreenSize = new Vector2(GraphicsDevice.PresentationParameters.BackBufferWidth, GraphicsDevice.PresentationParameters.BackBufferHeight);
+            ScreenManager.Initalize();
+            ScreenManager.SetRootScreen(new TestScreen(), "");
             base.Initialize();
         }
 
@@ -71,14 +48,7 @@ namespace SMLimitless
             spriteBatch = new SpriteBatch(GraphicsDevice);
             GameServices.InitializeServices(this.GraphicsDevice, spriteBatch, Content);
             SpritesheetManager.LoadContent();
-
-            graphicsObject.LoadContent();
-            animGraphicsObject.LoadContent();
-
-            sheetObject.LoadContent();
-            sheetRectObject.LoadContent();
-
-            animSheetObject.LoadContent();
+            ScreenManager.LoadContent();
         }
 
         protected override void UnloadContent()
@@ -93,17 +63,9 @@ namespace SMLimitless
                 this.Exit();
 
             // TODO: Add your update logic here
+            ScreenManager.Update();
 
             base.Update(gameTime);
-
-            animGraphicsObject.Update();
-            animSheetObject.Update();
-
-            fadeEffect.Update(null);
-
-            // Testing fading
-            if (Keyboard.GetState().IsKeyDown(Keys.A)) fadeEffect.Start(60, Interfaces.EffectDirection.Forward);
-            else if (Keyboard.GetState().IsKeyDown(Keys.Z)) fadeEffect.Start(60, Interfaces.EffectDirection.Backward);
         }
 
         protected override void Draw(GameTime gameTime)
@@ -111,14 +73,7 @@ namespace SMLimitless
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             this.spriteBatch.Begin();
-            graphicsObject.Draw(new Vector2(256, 256), Color.White, SpriteEffects.FlipVertically);
-            animGraphicsObject.Draw(new Vector2(256, 224), Color.White, false, SpriteEffects.FlipHorizontally);
-
-            sheetObject.Draw(new Vector2(288, 256), Color.White);
-            sheetRectObject.Draw(new Vector2(304, 256), Color.White);
-
-            animSheetObject.Draw(new Vector2(320, 256), Color.White, false, SpriteEffects.None);
-            fadeEffect.Draw(null, GameServices.SpriteBatch);
+            ScreenManager.Draw();
             this.spriteBatch.End();
 
             base.Draw(gameTime);

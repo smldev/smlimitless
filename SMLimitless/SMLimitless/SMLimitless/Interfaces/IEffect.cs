@@ -17,7 +17,7 @@ namespace SMLimitless.Interfaces
     public interface IEffect
     {
         event EffectCompletedEventHandler effectCompletedEvent;
-        void Start(int length, EffectDirection direction);
+        void Start(int length, EffectDirection direction, Vector2 position, Color color);
         void Stop();
         void LoadContent(ContentManager Content);
 
@@ -26,6 +26,7 @@ namespace SMLimitless.Interfaces
         /// </summary>
         /// <param name="screenSize">The size of the screen in pixels.</param>
         void SetScreenSize(Vector2 screenSize);
+        void Set(EffectDirection direction, Color color);
         void Update(GameTime gameTime);
         void Draw(GameTime gameTime, SpriteBatch spriteBatch);
     }

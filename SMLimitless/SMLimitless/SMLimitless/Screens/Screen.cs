@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using SMLimitless.Interfaces;
+
 namespace SMLimitless.Screens
 {
     /// <summary>
@@ -11,22 +13,30 @@ namespace SMLimitless.Screens
     /// </summary>
     public abstract class Screen
     {
-        public bool DoDraw;
-        public bool DoUpdate;
+        public Screen Owner;
+
+        public bool IsRunning = false;
+
+        protected IEffect effect;
+        protected Screen nextScreen;
+
+        protected bool isInitialized;
+        protected bool isContentLoaded;
 
         public abstract void Initialize(string parameters);
-
+        public abstract void LoadContent();
         public abstract void Draw();
         public abstract void Update();
+        public virtual void UnloadContent() { }
 
-        public void Start()
+        public virtual void Start()
         {
-            this.DoUpdate = true;
+            this.IsRunning = true;
         }
 
-        public void Stop()
+        public virtual void Stop()
         {
-            this.DoUpdate = false;
+            this.IsRunning = false;
         }
 
         /// <summary>

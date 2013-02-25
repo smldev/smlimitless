@@ -11,6 +11,11 @@ namespace SMLimitless.Screens
         private static Hierarchy<Screen> screens;
         private static Screen activeScreen;
 
+        public static void Initalize()
+        {
+            screens = new Hierarchy<Screen>(null);
+        }
+
         public static void Update()
         {
             activeScreen.Update();
@@ -21,7 +26,20 @@ namespace SMLimitless.Screens
             activeScreen.Draw();
         }
 
-        public void AddScreen(Screen parent, Screen child)
+        public static void SetRootScreen(Screen screen, string parameters)
+        {
+            screens.Data = screen;
+            activeScreen = screen;
+            activeScreen.Initialize(parameters);
+            activeScreen.Start();
+        }
+
+        public static void LoadContent()
+        {
+            activeScreen.LoadContent();
+        }
+
+        public static void AddScreen(Screen parent, Screen child)
         {
             var childNode = new Hierarchy<Screen>(child);
             var parentNode = screens.Search(parent);
@@ -30,9 +48,13 @@ namespace SMLimitless.Screens
             {
                 parentNode.Add(childNode);
             }
+            else
+            {
+                throw new Exception("ScreenManager.AddScreen: Could not find the screen's parent node.");
+            }
         }
 
-        public void RemoveScreen(Screen screen, bool removeChildren)
+        public static void RemoveScreen(Screen screen, bool removeChildren)
         {
             var screenNode = screens.Search(screen);
             var parentNode = screenNode.Parent;
@@ -47,6 +69,14 @@ namespace SMLimitless.Screens
                 }
             }
             parentNode.Remove(screenNode);
+        }
+
+        public static void SwitchScreen(Screen switchTo)
+        {
+            activeScreen.Stop();
+            switchTo.LoadContent();
+            activeScreen = switchTo;
+            activeScreen.Start();
         }
     }
 }

@@ -26,6 +26,7 @@ namespace SMLimitless.Screens.Effects
         private bool isRunning;
         private bool isInitialized;
         private EffectDirection dir; // If the direction is forward, then fade to black.  If backward, fade from black.
+        private Color color;
 
         private Vector2 screensize;
 
@@ -43,13 +44,14 @@ namespace SMLimitless.Screens.Effects
             isInitialized = true;
         }
 
-        public void Start(int length, EffectDirection direction)
+        public void Start(int length, EffectDirection direction, Vector2 position, Color color)
         {
             if (direction == EffectDirection.Forward && this.currentFadeLevel == 1f || direction == EffectDirection.Backward && this.currentFadeLevel == 0f) return;
 
             isRunning = true;
             fadeDelta = 1.0f / length;
             dir = direction;
+            this.color = color;
             if (dir == EffectDirection.Backward)
             {
                 // fade in from black
@@ -68,8 +70,9 @@ namespace SMLimitless.Screens.Effects
         /// Instantly changes the fade to fully black or fully transparent.
         /// </summary>
         /// <param name="direction">The direction in which to fade.  Forward fades to black, backward fades from black.</param>
-        public void Set(EffectDirection direction)
+        public void Set(EffectDirection direction, Color color)
         {
+            this.color = color;
             if (direction == EffectDirection.Forward)
             {
                 currentFadeLevel = 1f;
@@ -113,7 +116,7 @@ namespace SMLimitless.Screens.Effects
         {
             if (isInitialized)
             {
-                spriteBatch.DrawRectangle(Vector2.Zero.ToRectangle(screensize), Color.Black * currentFadeLevel);
+                spriteBatch.DrawRectangle(Vector2.Zero.ToRectangle(screensize), this.color * currentFadeLevel);
             }
         }
 
