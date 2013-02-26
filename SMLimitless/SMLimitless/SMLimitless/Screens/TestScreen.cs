@@ -64,7 +64,7 @@ namespace SMLimitless.Screens
 
                 this.effect.Update(null);
 
-                if (Keyboard.GetState().IsKeyDown(Keys.X))
+                if (InputManager.IsNewKeyPress(Keys.X))
                 {
                     BlankScreen blank = new BlankScreen();
                     blank.Initialize(this, "");

@@ -16,4 +16,14 @@ namespace SMLimitless
         Up,
         Down
     }
+
+    // Credit to RCIX of StackExchange GameDev
+    public enum MouseButtons
+    {
+        LeftButton,
+        MiddleButton,
+        RightButton,
+        ExtraButton1,
+        ExtraButton2
+    }
 }

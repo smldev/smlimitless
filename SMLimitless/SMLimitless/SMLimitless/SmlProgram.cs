@@ -63,6 +63,7 @@ namespace SMLimitless
                 this.Exit();
 
             // TODO: Add your update logic here
+            InputManager.Update();
             ScreenManager.Update();
 
             base.Update(gameTime);

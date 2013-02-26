@@ -119,6 +119,7 @@
     <Compile Include="Graphics\SpritesheetManager.cs" />
     <Compile Include="Graphics\StaticGraphicsObject.cs" />
     <Compile Include="Hierarchy.cs" />
+    <Compile Include="InputManager.cs" />
     <Compile Include="Interfaces\IEffect.cs" />
     <Compile Include="Interfaces\IPositionable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
