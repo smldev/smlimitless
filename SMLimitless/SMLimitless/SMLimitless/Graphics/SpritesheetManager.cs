@@ -17,7 +17,7 @@ namespace SMLimitless.Graphics
             sheetCache = new Dictionary<string, Spritesheet>();
         }
 
-        public static void LoadFromMetadata(string metadata)
+        public static void AddSheetFromMetadata(string metadata)
         {
             // TODO: load from metadata, but only if we're not loaded
             // also, the filepath is always first - we can get that easily
@@ -46,14 +46,14 @@ namespace SMLimitless.Graphics
             }
         }
 
-        public static void Load(string filePath, int tileWidth, int tileHeight)
+        public static void AddSheet(string filePath, int tileWidth, int tileHeight)
         {
             Spritesheet sheet = new Spritesheet();
             sheet.Load(filePath, tileWidth, tileHeight);
             sheetCache.Add(filePath, sheet);
         }
 
-        public static void Load(string filePath)
+        public static void AddSheet(string filePath)
         {
             Spritesheet sheet = new Spritesheet();
             sheet.Load(filePath);

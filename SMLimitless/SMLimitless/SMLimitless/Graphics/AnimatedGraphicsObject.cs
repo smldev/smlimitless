@@ -52,12 +52,12 @@ namespace SMLimitless.Graphics
                 }
                 else if (split[0].Contains("anim-spritesheet"))
                 {
-                    SpritesheetManager.LoadFromMetadata(metadata);
+                    SpritesheetManager.AddSheetFromMetadata(metadata);
                     this.isLoaded = true;
                 }
                 else if (split[0].Contains("anim-spritesheet_r"))
                 {
-                    SpritesheetManager.LoadFromMetadata(metadata);
+                    SpritesheetManager.AddSheetFromMetadata(metadata);
                     this.isLoaded = true;
                 }
                 else

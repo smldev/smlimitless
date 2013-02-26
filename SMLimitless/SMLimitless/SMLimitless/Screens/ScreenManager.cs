@@ -30,7 +30,7 @@ namespace SMLimitless.Screens
         {
             screens.Data = screen;
             activeScreen = screen;
-            activeScreen.Initialize(parameters);
+            activeScreen.Initialize(null, parameters);
             activeScreen.Start();
         }
 
@@ -77,6 +77,14 @@ namespace SMLimitless.Screens
             switchTo.LoadContent();
             activeScreen = switchTo;
             activeScreen.Start();
+        }
+
+        public static void ExitScreen(Screen screen, string exitMessage)
+        {
+            Screen parent = screen.Owner;
+            RemoveScreen(screen, false);
+            activeScreen = parent;
+            parent.Start(exitMessage);
         }
     }
 }

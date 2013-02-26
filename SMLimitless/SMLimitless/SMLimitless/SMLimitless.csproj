@@ -122,6 +122,7 @@
     <Compile Include="Interfaces\IEffect.cs" />
     <Compile Include="Interfaces\IPositionable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Screens\BlankScreen.cs" />
     <Compile Include="Screens\Effects\FadeEffect.cs" />
     <Compile Include="Screens\Screen.cs" />
     <Compile Include="Screens\ScreenManager.cs" />

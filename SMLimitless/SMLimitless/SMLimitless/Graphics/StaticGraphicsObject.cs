@@ -37,12 +37,12 @@ namespace SMLimitless.Graphics
                 }
                 else if (split[0].Contains("static-spritesheet"))
                 {
-                    SpritesheetManager.LoadFromMetadata(metadata);
+                    SpritesheetManager.AddSheetFromMetadata(metadata);
                     isLoaded = true;
                 }
                 else if (split[0].Contains("static-spritesheet_r"))
                 {
-                    SpritesheetManager.LoadFromMetadata(metadata);
+                    SpritesheetManager.AddSheetFromMetadata(metadata);
                     isLoaded = true;
                 }
                 else

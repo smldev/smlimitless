@@ -23,13 +23,13 @@ namespace SMLimitless.Screens
         protected bool isInitialized;
         protected bool isContentLoaded;
 
-        public abstract void Initialize(string parameters);
+        public abstract void Initialize(Screen owner, string parameters);
         public abstract void LoadContent();
         public abstract void Draw();
         public abstract void Update();
         public virtual void UnloadContent() { }
 
-        public virtual void Start()
+        public virtual void Start(string parameters = "")
         {
             this.IsRunning = true;
         }
@@ -42,7 +42,10 @@ namespace SMLimitless.Screens
         /// <summary>
         /// Exits this screen and gives control to the parent screen.
         /// </summary>
-        /// <returns>Parameters indicating the exit condition.  Varies by screen.</returns>
-        public abstract string Exit();
+        public virtual void Exit(string parameters = "")
+        {
+            this.Stop();
+            ScreenManager.ExitScreen(this, parameters);
+        }
     }
 }
