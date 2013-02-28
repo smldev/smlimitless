@@ -27,7 +27,7 @@ namespace SMLimitless.Graphics
 
         internal Spritesheet()
         {
-
+            croppedTiles = new Dictionary<Rectangle, Texture2D>();
         }
 
         internal void LoadFromMetadata(string metadata)
@@ -100,7 +100,6 @@ namespace SMLimitless.Graphics
             {
                 throw new Exception("This spritesheet cannot get tiles by index.  Please use a Rectangle to get the tiles instead.");
             }
-
             Rectangle sourceRect;
             int tilesPerRow = sheetTexture.Width / (int)tileSize.X;
             int tilesPerColumn = sheetTexture.Height / (int)tileSize.Y;
@@ -110,12 +109,22 @@ namespace SMLimitless.Graphics
             column *= (int)tileSize.Y;
 
             sourceRect = new Rectangle(column, row, (int)tileSize.X, (int)tileSize.Y);
-            return sheetTexture.Crop(sourceRect);
+            if (!croppedTiles.ContainsKey(sourceRect))
+            {
+                Texture2D croppedTexture = sheetTexture.Crop(sourceRect);
+                croppedTiles.Add(sourceRect, croppedTexture);
+            }
+            return croppedTiles[sourceRect];
         }
 
         internal Texture2D GetTile(Rectangle sourceRect)
         {
-            return sheetTexture.Crop(sourceRect);
+            if (!croppedTiles.ContainsKey(sourceRect))
+            {
+                Texture2D croppedTexture = sheetTexture.Crop(sourceRect);
+                croppedTiles.Add(sourceRect, croppedTexture);
+            }
+            return croppedTiles[sourceRect];
         }
     }
 }

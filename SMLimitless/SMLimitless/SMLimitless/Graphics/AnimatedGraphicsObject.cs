@@ -94,8 +94,6 @@ namespace SMLimitless.Graphics
                     {
                         textures.Add(GraphicsManager.Crop(wholeTexture, rect));
                     }
-
-                    isLoaded = true;
                 }
                 else if (metadata.Contains("spritesheet_r"))
                 {
@@ -122,6 +120,7 @@ namespace SMLimitless.Graphics
 
                     textures = SpritesheetManager.GetTiles(filePath, tileIndexes);
                 }
+                isContentLoaded = true;
             }
         }
 

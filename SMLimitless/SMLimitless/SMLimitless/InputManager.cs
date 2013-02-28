@@ -84,25 +84,11 @@ namespace SMLimitless
 
         public static void Update()
         {
-            if (lastKeyboardState == null && currentKeyboardState == null)
-            {
-                lastKeyboardState = currentKeyboardState = Keyboard.GetState();
-            }
-            else
-            {
-                lastKeyboardState = currentKeyboardState;
-                currentKeyboardState = Keyboard.GetState();
-            }
+            lastKeyboardState = currentKeyboardState;
+            currentKeyboardState = Keyboard.GetState();
 
-            if (lastMouseState == null && currentMouseState == null)
-            {
-                lastMouseState = currentMouseState = Mouse.GetState();
-            }
-            else
-            {
-                lastMouseState = currentMouseState;
-                currentMouseState = Mouse.GetState();
-            }
+            lastMouseState = currentMouseState;
+            currentMouseState = Mouse.GetState();
         }
 
         public static bool IsNewKeyPress(Keys key)
