@@ -26,4 +26,11 @@ namespace SMLimitless
         ExtraButton1,
         ExtraButton2
     }
+
+    public enum SpriteDirection
+    {
+        FacePlayer,
+        Left,
+        Right
+    }
 }

@@ -62,6 +62,11 @@ namespace SMLimitless
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
+            if (GameServices.GetService<GameTime>() == null)
+            {
+                GameServices.AddService<GameTime>(gameTime);
+            }
+
             // TODO: Add your update logic here
             InputManager.Update();
             ScreenManager.Update();

@@ -46,6 +46,11 @@ namespace SMLimitless
             get { return GetService<SpriteBatch>(); }
         }
 
+        public static GameTime GameTime
+        {
+            get { return GetService<GameTime>(); }
+        }
+
         public static T GetService<T>()
         {
             return (T)Container.GetService(typeof(T));
