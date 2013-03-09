@@ -36,9 +36,9 @@ namespace SMLimitless
         protected override void Initialize()
         {
             SpritesheetManager.Initalize();
-            GameServices.ScreenSize = new Vector2(GraphicsDevice.PresentationParameters.BackBufferWidth, GraphicsDevice.PresentationParameters.BackBufferHeight);
             ScreenManager.Initalize();
-            ScreenManager.SetRootScreen(new TestScreen(), "");
+            ScreenManager.SetRootScreen(new LevelScreen(), "");
+            GameServices.ScreenSize = new Vector2(GraphicsDevice.PresentationParameters.BackBufferWidth, GraphicsDevice.PresentationParameters.BackBufferHeight);
             base.Initialize();
         }
 

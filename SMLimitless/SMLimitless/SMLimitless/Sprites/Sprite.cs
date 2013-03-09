@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 
 using SMLimitless.Interfaces;
 using SMLimitless.Extensions;
+using SMLimitless.Sprites.Collections;
 
 namespace SMLimitless.Sprites
 {
@@ -18,6 +19,7 @@ namespace SMLimitless.Sprites
     {
         public uint ID { get; set; }
         public string EditorLabel { get; protected set; }
+        public Level Owner;
 
         public bool IsActive { get; set; }
         public string State { get; protected set; }
@@ -28,7 +30,7 @@ namespace SMLimitless.Sprites
 
         public Vector2 Size { get; protected set; }
 
-        public Vector2 Acceleration { get; protected set; }
+        public Vector2 Acceleration { get; set; }
         public Vector2 Velocity { get; protected set; }
 
         #region Editor Properties
@@ -48,8 +50,9 @@ namespace SMLimitless.Sprites
         public SpriteDirection Direction { get; set; }
         #endregion
 
-        public virtual void Initialize()
+        public virtual void Initialize(Level owner)
         {
+            Owner = owner;
             // Initialize all the properties
             this.IsActive = true;
             this.IsHostile = true;
@@ -69,6 +72,8 @@ namespace SMLimitless.Sprites
             Velocity += Acceleration * delta;
 
             ProjectedPosition += Velocity * delta;
+
+            if (Velocity.Y >= 500.0f) Velocity = new Vector2(Velocity.X, 500.0f);
         }
 
         public abstract void Draw();

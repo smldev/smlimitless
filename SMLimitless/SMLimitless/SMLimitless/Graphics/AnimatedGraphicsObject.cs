@@ -113,7 +113,7 @@ namespace SMLimitless.Graphics
                     var tileIndexes = new List<int>();
 
                     frameTime = Int32.Parse(data[3]);
-                    for (int i = 4; i < data.Length - 1; i++)
+                    for (int i = 4; i < data.Length; i++)
                     {
                         tileIndexes.Add(Int32.Parse(data[i]));
                     }

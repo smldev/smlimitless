@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 using SMLimitless.Screens.Effects;
 using SMLimitless.Graphics;
+using SMLimitless.Sprites;
 
 namespace SMLimitless.Screens
 {
@@ -39,7 +40,7 @@ namespace SMLimitless.Screens
             sheetObject.LoadFromMetadata(@"static-spritesheet>""" + absolute3 + @""",16,16,0");
             sheetRectObject.LoadFromMetadata(@"static-spritesheet_r>""" + absolute3 + @""",16,16,[16:0:16:16]");
 
-            animSheetObject.LoadFromMetadata(@"anim-spritesheet>""" + absolute3 + @""",16,16,8,5,6,7,8");
+            animSheetObject.LoadFromMetadata(@"anim-spritesheet>""" + absolute3 + @""",16,16,8,4,5,6,7");
             this.isInitialized = true;
         }
 
@@ -85,6 +86,7 @@ namespace SMLimitless.Screens
                 sheetRectObject.Draw(new Vector2(304, 256), Color.White);
 
                 animSheetObject.Draw(new Vector2(320, 256), Color.White, false, SpriteEffects.None);
+
                 this.effect.Draw(null, GameServices.SpriteBatch);
             }
         }

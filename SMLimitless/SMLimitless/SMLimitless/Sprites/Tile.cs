@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 
 using SMLimitless.Interfaces;
 using SMLimitless.Extensions;
+using SMLimitless.Sprites.Collections;
 
 namespace SMLimitless.Sprites
 {
@@ -15,6 +16,7 @@ namespace SMLimitless.Sprites
     {
         public uint ID { get; set; }
         public string EditorLabel { get; set; }
+        public Level Owner { get; set; }
 
         public bool IsActive { get; set; }
         public string State { get; set; }
@@ -27,8 +29,9 @@ namespace SMLimitless.Sprites
         public string Name { get; set; }
         #endregion
 
-        public virtual void Initialize()
+        public virtual void Initialize(Level owner)
         {
+            this.Owner = owner;
             this.IsActive = true;
             this.Name = "";
         }
