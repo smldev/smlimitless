@@ -10,5 +10,6 @@ namespace SMLimitless.Interfaces
     public interface IPositionable
     {
         Vector2 Position { get; }
+        Vector2 Size { get; }
     }
 }

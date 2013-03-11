@@ -21,5 +21,20 @@ namespace SMLimitless.Extensions
         {
             return new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y);
         }
+
+        public static Vector2 Floor(this Vector2 vector)
+        {
+            return new Vector2((float)Math.Floor(vector.X), (float)Math.Floor(vector.Y));
+        }
+
+        public static Vector2 FloorDivide(this Vector2 vector, float divisor)
+        {
+            return new Vector2((float)Math.Floor(vector.X / divisor), (float)Math.Floor(vector.Y / divisor));
+        }
+
+        public static Vector2 FloorDivide(this Vector2 vector, Vector2 divisor)
+        {
+            return new Vector2((float)Math.Floor(vector.X / divisor.X), (float)Math.Floor(vector.Y / divisor.Y));
+        }
     }
 }
