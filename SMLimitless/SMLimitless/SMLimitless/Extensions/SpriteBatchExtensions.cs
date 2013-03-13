@@ -67,6 +67,40 @@ namespace SMLimitless.Extensions
             spriteBatch.DrawRectangle(new Rectangle(x, y, width, height), color);
         }
 
+        public static void DrawRectangleEdges(this SpriteBatch batch, Vector2 position, Vector2 size, Color color)
+        {
+            // Draw four lines, one for each side.
+            Tuple<Vector2, Vector2> topSide = new Tuple<Vector2, Vector2>(position, new Vector2(position.X + size.X, position.Y));
+            Tuple<Vector2, Vector2> bottomSide = new Tuple<Vector2, Vector2>(new Vector2(position.X, position.Y + size.Y), position + size);
+            Tuple<Vector2, Vector2> leftSide = new Tuple<Vector2, Vector2>(position, new Vector2(position.X, position.Y + size.Y));
+            Tuple<Vector2, Vector2> rightSide = new Tuple<Vector2, Vector2>(new Vector2(position.X + size.X, position.Y), position + size);
+
+            DrawLine(batch, 1f, color, topSide.Item1, topSide.Item2);
+            DrawLine(batch, 1f, color, bottomSide.Item1, bottomSide.Item2);
+            DrawLine(batch, 1f, color, leftSide.Item1, leftSide.Item2);
+            DrawLine(batch, 1f, color, rightSide.Item1, rightSide.Item2);
+        }
+
+        public static void DrawRectangleEdges(this SpriteBatch batch, Rectangle rect, Color color)
+        {
+            DrawRectangleEdges(batch, new Vector2(rect.X, rect.Y), new Vector2(rect.Width, rect.Height), color);
+        }
+
         #endregion
+
+        // from http://www.xnawiki.com/index.php/Drawing_2D_lines_without_using_primitives
+        /// <summary>
+        /// Draws a line between two points with a custom width and color.
+        /// </summary>
+        public static void DrawLine(this SpriteBatch batch, float width, Color color, Vector2 point1, Vector2 point2)
+        {
+            Initialize(batch);
+            float angle = (float)Math.Atan2(point2.Y - point1.Y, point2.X - point1.X);
+            float length = Vector2.Distance(point1, point2);
+
+            batch.Draw(blank, point1, null, color,
+                       angle, Vector2.Zero, new Vector2(length, width),
+                       SpriteEffects.None, 0);
+        }
     }
 }

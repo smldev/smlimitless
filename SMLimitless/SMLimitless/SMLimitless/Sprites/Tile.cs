@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 
 using SMLimitless.Interfaces;
 using SMLimitless.Extensions;
+using SMLimitless.Physics;
 using SMLimitless.Sprites.Collections;
 
 namespace SMLimitless.Sprites
@@ -23,6 +24,13 @@ namespace SMLimitless.Sprites
 
         public Vector2 Position { get; set; }
         public Vector2 Size { get; set; }
+        public BoundingRectangle Hitbox
+        {
+            get
+            {
+                return new BoundingRectangle(Position, Size + Position);
+            }
+        }
 
         #region Editor Properties
         [DefaultValue(""), Description("The name of this sprite to be used in event scripting.  This field is optional.")]

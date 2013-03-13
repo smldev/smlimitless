@@ -1,105 +1,146 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
 
-using SMLimitless;
-using SMLimitless.Interfaces;
 using SMLimitless.Extensions;
+using SMLimitless.Interfaces;
+using SMLimitless.Sprites;
 
 namespace SMLimitless.Physics
 {
-    public class QuadTree<T> where T : IPositionable
+    /// <summary>
+    /// Represents a collection of sprites and tiles divided into cells.
+    /// </summary>
+    /// <remarks>
+    /// This is a lazy quadtree - it does not separate cells based on the number of objects inside them.
+    /// </remarks>
+    public class QuadTree
     {
-        private Dictionary<Vector2, List<IPositionable>> cells;
+        private Dictionary<Vector2, QuadTreeCell> cells;
+
+        private List<Sprite> sprites;
+        private List<Tile> tiles;
 
         /// <summary>
-        /// The size of each cell in pixels.
+        /// The size in pixels of all cells.
         /// </summary>
         public Vector2 CellSize { get; private set; }
 
-        public List<IPositionable> this[Vector2 cell]
+        public QuadTree(Vector2 cellSize)
         {
-            get
+            cells = new Dictionary<Vector2, QuadTreeCell>();
+            sprites = new List<Sprite>();
+            tiles = new List<Tile>();
+            CellSize = cellSize;
+        }
+
+        private List<Vector2> GetIntersectingCells(IPositionable item)
+        {
+            var result = new List<Vector2>();
+            result.AddUnlessDuplicate(item.Position.FloorDivide(CellSize));
+            result.AddUnlessDuplicate(new Vector2(item.Position.X + item.Size.X, item.Position.Y).FloorDivide(CellSize));
+            result.AddUnlessDuplicate(new Vector2(item.Position.X, item.Position.Y + item.Size.Y).FloorDivide(CellSize));
+            result.AddUnlessDuplicate(new Vector2(item.Position.X + item.Size.X, item.Position.Y + item.Size.Y).FloorDivide(CellSize));
+            return result;
+        }
+
+        private void PlaceSprite(Sprite sprite)
+        {
+            var intersectingCells = GetIntersectingCells(sprite);
+
+            foreach (var cell in intersectingCells)
             {
-                if (!cells.ContainsKey(cell)) return null;
-                return cells[cell];
+                if (!cells.ContainsKey(cell)) cells.Add(cell, new QuadTreeCell());
+                if (!cells[cell].Sprites.Contains(sprite)) cells[cell].Add(sprite);
+            }
+        }
+
+        private void PlaceTile(Tile tile)
+        {
+            var intersectingCells = GetIntersectingCells(tile);
+
+            foreach (var cell in intersectingCells)
+            {
+                if (!cells.ContainsKey(cell)) cells.Add(cell, new QuadTreeCell());
+                if (!cells[cell].Tiles.Contains(tile)) cells[cell].Add(tile);
+            }
+        }
+
+        public void Add(Sprite sprite)
+        {
+            sprites.Add(sprite);
+            PlaceSprite(sprite);
+        }
+
+        public void Add(Tile tile)
+        {
+            tiles.Add(tile);
+            PlaceTile(tile);
+        }
+
+        public void Remove(Sprite sprite)
+        {
+            sprites.Remove(sprite);
+            foreach (var cell in cells.Values)
+            {
+                cell.Sprites.Remove(sprite);
+            }
+        }
+
+        public void Remove(Tile tile)
+        {
+            tiles.Remove(tile);
+            foreach (var cell in cells.Values)
+            {
+                cell.Tiles.Remove(tile);
             }
         }
 
         /// <summary>
-        /// Adds an item to the QuadTree.
+        /// Clears all the sprites and tiles from all cells.
         /// </summary>
-        public void Add(IPositionable item)
+        public void Clear()
         {
-            // Items may intersect more than one cell, up to four.
-            // We need to add the item to every cell it intersects.
-
-            Vector2 cellTopLeft = item.Position.FloorDivide(CellSize);
-            Vector2 cellTopRight = new Vector2(item.Position.X + item.Size.X, item.Position.Y).FloorDivide(CellSize);
-            Vector2 cellBottomLeft = new Vector2(item.Position.X, item.Position.Y + item.Size.Y).FloorDivide(CellSize);
-            Vector2 cellBottomRight = new Vector2(item.Position.X + item.Size.X, item.Position.Y + item.Size.Y).FloorDivide(CellSize);
-
-            // Now, check if the cells exist, and add them if they don't.
-            if (!cells.ContainsKey(cellTopLeft)) cells.Add(cellTopLeft, new List<IPositionable>());
-            if (!cells.ContainsKey(cellTopRight)) cells.Add(cellTopRight, new List<IPositionable>());
-            if (!cells.ContainsKey(cellBottomLeft)) cells.Add(cellBottomLeft, new List<IPositionable>());
-            if (!cells.ContainsKey(cellBottomRight)) cells.Add(cellBottomRight, new List<IPositionable>());
-
-            // Now, add the object to the cells, checking for duplicates.
-            if (!cells[cellTopLeft].Contains(item)) cells[cellTopLeft].Add(item);
-            if (!cells[cellTopRight].Contains(item)) cells[cellTopRight].Add(item);
-            if (!cells[cellBottomLeft].Contains(item)) cells[cellBottomLeft].Add(item);
-            if (!cells[cellBottomRight].Contains(item)) cells[cellTopRight].Add(item);
-        }
-
-        /// <summary>
-        /// Removes an item from the QuadTree.
-        /// </summary>
-        public void Remove(IPositionable item)
-        {
-            foreach (var cell in cells)
+            foreach (var cell in cells.Values)
             {
-                if (cell.Value.Contains(item))
-                {
-                    cell.Value.Remove(item);
-                }
+                cell.Sprites.Clear();
+                cell.Tiles.Clear();
             }
         }
 
-        private void UpdateItemPosition(IPositionable item)
+        /// <summary>
+        /// Clears all the sprites and tiles from all cells, and then removes all cells entirely.
+        /// </summary>
+        public void ClearAll()
         {
-            Remove(item);
+            cells.Clear();
+        }
 
-            Vector2 cellTopLeft = item.Position.FloorDivide(CellSize);
-            Vector2 cellTopRight = new Vector2(item.Position.X + item.Size.X, item.Position.Y).FloorDivide(CellSize);
-            Vector2 cellBottomLeft = new Vector2(item.Position.X, item.Position.Y + item.Size.Y).FloorDivide(CellSize);
-            Vector2 cellBottomRight = new Vector2(item.Position.X + item.Size.X, item.Position.Y + item.Size.Y).FloorDivide(CellSize);
+        public List<Sprite> GetCollidableSprites(Sprite sprite)
+        {
+            var result = new List<Sprite>();
+            var intersectingCells = GetIntersectingCells(sprite);
+            intersectingCells.ForEach(cell => result.AddRange(cells[cell].Sprites));
+            return result;
+        }
 
-            // Now, check if the cells exist, and add them if they don't.
-            if (!cells.ContainsKey(cellTopLeft)) cells.Add(cellTopLeft, new List<IPositionable>());
-            if (!cells.ContainsKey(cellTopRight)) cells.Add(cellTopRight, new List<IPositionable>());
-            if (!cells.ContainsKey(cellBottomLeft)) cells.Add(cellBottomLeft, new List<IPositionable>());
-            if (!cells.ContainsKey(cellBottomRight)) cells.Add(cellBottomRight, new List<IPositionable>());
-
-            // Now, add the object to the cells, checking for duplicates.
-            if (!cells[cellTopLeft].Contains(item)) cells[cellTopLeft].Add(item);
-            if (!cells[cellTopRight].Contains(item)) cells[cellTopRight].Add(item);
-            if (!cells[cellBottomLeft].Contains(item)) cells[cellBottomLeft].Add(item);
-            if (!cells[cellBottomRight].Contains(item)) cells[cellTopRight].Add(item);
+        public List<Tile> GetCollidableTiles(Sprite sprite)
+        {
+            var result = new List<Tile>();
+            var intersectingCells = GetIntersectingCells(sprite);
+            intersectingCells.ForEach(cell => result.AddRange(cells[cell].Tiles));
+            return result;
         }
 
         public void Update()
         {
-            foreach (var cell in cells)
-            {
-                cell.Value.ForEach(i => UpdateItemPosition(i));
-            }
+            ClearAll();
+            sprites.ForEach(s => PlaceSprite(s));
+            tiles.ForEach(t => PlaceTile(t));
         }
 
         public void Draw()
@@ -111,11 +152,43 @@ namespace SMLimitless.Physics
                 Rectangle drawBounds = new Rectangle(
                  (int)(cell.Key.X * CellSize.X),
                  (int)(cell.Key.Y * CellSize.Y),
-                 (int)((cell.Key.X * CellSize.X) + CellSize.X),
-                 (int)((cell.Key.Y * CellSize.Y) + CellSize.Y));
+                 (int)(CellSize.X),
+                 (int)(CellSize.Y));
 
-                batch.DrawRectangle(drawBounds, Color.Gray);
+                batch.DrawRectangleEdges(drawBounds, Color.White);
             }
+        }
+    }
+
+    internal class QuadTreeCell
+    {
+        internal List<Sprite> Sprites;
+        internal List<Tile> Tiles;
+
+        internal QuadTreeCell()
+        {
+            Sprites = new List<Sprite>();
+            Tiles = new List<Tile>();
+        }
+
+        internal void Add(Sprite sprite)
+        {
+            Sprites.Add(sprite);
+        }
+
+        internal void Add(Tile tile)
+        {
+            Tiles.Add(tile);
+        }
+
+        internal void Remove(Sprite sprite)
+        {
+            Sprites.Remove(sprite);
+        }
+
+        internal void Remove(Tile tile)
+        {
+            Tiles.Remove(tile);
         }
     }
 }

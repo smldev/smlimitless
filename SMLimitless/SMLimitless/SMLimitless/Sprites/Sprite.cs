@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 
 using SMLimitless.Interfaces;
 using SMLimitless.Extensions;
+using SMLimitless.Physics;
 using SMLimitless.Sprites.Collections;
 
 namespace SMLimitless.Sprites
@@ -29,6 +30,13 @@ namespace SMLimitless.Sprites
         public Vector2 ProjectedPosition { get; protected set; }
 
         public Vector2 Size { get; protected set; }
+        public BoundingRectangle Hitbox
+        {
+            get
+            {
+                return new BoundingRectangle(Position, Size + Position);
+            }
+        }
 
         public Vector2 Acceleration { get; set; }
         public Vector2 Velocity { get; protected set; }
