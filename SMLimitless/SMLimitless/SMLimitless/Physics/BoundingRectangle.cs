@@ -102,8 +102,6 @@ namespace SMLimitless.Physics
         /// </returns>
         public Vector2 GetIntersectionDepth(BoundingRectangle other)
         {
-            //return ToRectangle().GetIntersectionDepth(other.ToRectangle());
-
             // Calculate half sizes.
             float halfWidthA = Width / 2.0f;
             float halfHeightA = Height / 2.0f;

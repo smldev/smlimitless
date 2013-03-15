@@ -128,7 +128,6 @@
     <Compile Include="Interfaces\IPositionable.cs" />
     <Compile Include="Physics\BoundingRectangle.cs" />
     <Compile Include="Physics\QuadTree.cs" />
-    <Compile Include="Physics\QuadTree_old.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Screens\BlankScreen.cs" />
     <Compile Include="Screens\Effects\FadeEffect.cs" />
@@ -138,6 +137,7 @@
     <Compile Include="Screens\TestScreen.cs" />
     <Compile Include="SmlProgram.cs" />
     <Compile Include="Sprites\Collections\Level.cs" />
+    <Compile Include="Sprites\MouseFollowSprite.cs" />
     <Compile Include="Sprites\Sprite.cs" />
     <Compile Include="Sprites\TestSprite.cs" />
     <Compile Include="Sprites\TestTile.cs" />

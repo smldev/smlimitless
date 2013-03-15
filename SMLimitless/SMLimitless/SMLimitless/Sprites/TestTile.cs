@@ -31,6 +31,12 @@ namespace SMLimitless.Sprites
         {
         }
 
+        public override void HandleCollision(Sprite sprite, Vector2 intersection)
+        {
+            // Offset the sprite's position by our intersection.
+            sprite.Position += intersection;
+        }
+
         public override void Draw()
         {
             graphics.Draw(this.Position, Color.White);

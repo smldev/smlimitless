@@ -47,5 +47,6 @@ namespace SMLimitless.Sprites
         public abstract void LoadContent();
         public abstract void Update();
         public abstract void Draw();
+        public abstract void HandleCollision(Sprite sprite, Vector2 intersection);
     }
 }

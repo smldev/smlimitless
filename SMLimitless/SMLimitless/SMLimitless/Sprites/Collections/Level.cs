@@ -15,6 +15,8 @@ namespace SMLimitless.Sprites.Collections
         private List<Tile> tiles;
         private List<Sprite> sprites;
 
+        private MouseFollowSprite mouseSprite;
+
         private QuadTree quadTree;
 
         public const float GravityAcceleration = 300f;
@@ -23,6 +25,7 @@ namespace SMLimitless.Sprites.Collections
         {
             tiles = new List<Tile>();
             sprites = new List<Sprite>();
+            mouseSprite = new MouseFollowSprite();
 
             quadTree = new QuadTree(new Vector2(64, 64));
         }
@@ -31,17 +34,19 @@ namespace SMLimitless.Sprites.Collections
         {
             TestSprite sprite = new TestSprite();
             sprites.Add(sprite);
-            quadTree.Add(sprite);
             sprites[0].Initialize(this);
+            mouseSprite.Initialize(this);
+            quadTree.Add(sprite);
+            quadTree.Add(mouseSprite);
 
             int j = 0;
             for (int i = 0; i < 800; i += 16)
             {
                 TestTile tile = new TestTile();
                 tiles.Add(tile);
-                quadTree.Add(tile);
                 tiles[j].Initialize(this);
                 tiles[j].Position = new Vector2(i, 432f);
+                quadTree.Add(tile);
                 j++;
             }
 
@@ -77,18 +82,15 @@ namespace SMLimitless.Sprites.Collections
                 s.Acceleration = new Vector2(s.Acceleration.X, s.Acceleration.Y + GravityAcceleration);
                 s.Update();
             }
-
+            mouseSprite.Update();
             quadTree.Update();
-
-            // Temporary collision checks
-            
         }
 
         public void Draw()
         {
             tiles.ForEach(t => t.Draw());
             sprites.ForEach(s => s.Draw());
-
+            mouseSprite.Draw();
             quadTree.Draw();
         }
     }

@@ -40,11 +40,31 @@ namespace SMLimitless.Physics
 
         private List<Vector2> GetIntersectingCells(IPositionable item)
         {
+            //if (item is MouseFollowSprite) System.Diagnostics.Debugger.Break();
             var result = new List<Vector2>();
-            result.AddUnlessDuplicate(item.Position.FloorDivide(CellSize));
-            result.AddUnlessDuplicate(new Vector2(item.Position.X + item.Size.X, item.Position.Y).FloorDivide(CellSize));
-            result.AddUnlessDuplicate(new Vector2(item.Position.X, item.Position.Y + item.Size.Y).FloorDivide(CellSize));
-            result.AddUnlessDuplicate(new Vector2(item.Position.X + item.Size.X, item.Position.Y + item.Size.Y).FloorDivide(CellSize));
+            Rectangle rect = new Rectangle((int)item.Position.X, (int)item.Position.Y, (int)item.Size.X, (int)item.Size.Y);
+            //Vector2 sizeInCells = new Vector2(rect.Width / CellSize.X, rect.Height / CellSize.Y);
+
+            //Vector2 topLeft = new Vector2(rect.X, rect.Y);
+            //Vector2 topRight = new Vector2(rect.X + rect.Width, rect.Y);
+            //Vector2 bottomLeft = new Vector2(rect.X, rect.Y + rect.Height);
+            //Vector2 bottomRight = new Vector2(rect.X + rect.Width, rect.Y + rect.Height);
+
+            int topCellY = (int)Math.Floor(rect.Top / CellSize.Y);
+            int bottomCellY = (int)Math.Floor(rect.Bottom / CellSize.Y);
+            int leftCellX = (int)Math.Floor(rect.Left / CellSize.X);
+            int rightCellX = (int)Math.Floor(rect.Right / CellSize.X);
+
+            int x, y;
+
+            for (y = topCellY; y <= bottomCellY; y++)
+            {
+                for (x = leftCellX; x <= rightCellX; x++)
+                {
+                    result.AddUnlessDuplicate(new Vector2(x, y));
+                }
+            }
+
             return result;
         }
 
@@ -156,6 +176,7 @@ namespace SMLimitless.Physics
                  (int)(CellSize.Y));
 
                 batch.DrawRectangleEdges(drawBounds, Color.White);
+                batch.DrawString(GameServices.DebugFontSmall, cell.Key.ToString(), new Vector2(cell.Key.X * CellSize.X + 2, cell.Key.Y * CellSize.Y + 2), Color.White);
             }
         }
     }

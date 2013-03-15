@@ -35,5 +35,10 @@ namespace SMLimitless.Sprites
         {
             graphics.Draw(this.Position, Color.White);
         }
+
+        public override void HandleCollision(Sprite sprite, Vector2 intersection)
+        {
+            
+        }
     }
 }

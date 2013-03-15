@@ -15,7 +15,7 @@ namespace SMLimitless
     public static class Testing
     {
         public static Stopwatch Stopwatch;
-        private static QuadTree quadTree;
+        //private static QuadTree quadTree;
 
         public static void Benchmark()
         {
