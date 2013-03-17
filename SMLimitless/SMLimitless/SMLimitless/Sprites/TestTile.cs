@@ -5,7 +5,9 @@ using System.Text;
 
 using Microsoft.Xna.Framework;
 
+using SMLimitless.Extensions;
 using SMLimitless.Graphics;
+using SMLimitless.Physics;
 using SMLimitless.Sprites.Collections;
 
 namespace SMLimitless.Sprites
@@ -34,6 +36,18 @@ namespace SMLimitless.Sprites
         public override void HandleCollision(Sprite sprite, Vector2 intersection)
         {
             // Offset the sprite's position by our intersection.
+            if (Math.Abs(intersection.X) > Math.Abs(intersection.Y))
+            {
+                intersection.X = 0;
+            }
+            else if (Math.Abs(intersection.Y) > Math.Abs(intersection.X))
+            {
+                intersection.Y = 0;
+            }
+            else
+            {
+                intersection.X = 0;
+            }
             sprite.Position += intersection;
         }
 

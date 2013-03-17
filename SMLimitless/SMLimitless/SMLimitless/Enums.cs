@@ -33,4 +33,13 @@ namespace SMLimitless
         Left,
         Right
     }
+
+    public enum IntersectionDirection
+    {
+        Up,
+        Down,
+        Left,
+        Right,
+        None
+    }
 }

@@ -19,7 +19,7 @@ namespace SMLimitless.Sprites.Collections
 
         private QuadTree quadTree;
 
-        public const float GravityAcceleration = 300f;
+        public const float GravityAcceleration = 64f;
 
         public Level()
         {
@@ -84,6 +84,8 @@ namespace SMLimitless.Sprites.Collections
             }
             mouseSprite.Update();
             quadTree.Update();
+
+            mouseSprite.CheckCollisions(quadTree.GetCollidableTiles(mouseSprite), new List<Sprite>());
         }
 
         public void Draw()

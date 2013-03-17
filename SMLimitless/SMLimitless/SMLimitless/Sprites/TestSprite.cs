@@ -47,7 +47,7 @@ namespace SMLimitless.Sprites
 
         public override void HandleTileCollision(Tile tile, Vector2 intersect)
         {
-            
+            this.Velocity = new Vector2(Velocity.X, 0);
         }
     }
 }

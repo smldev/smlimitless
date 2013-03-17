@@ -90,16 +90,6 @@ namespace SMLimitless.Physics
             max = new Vector2(width, height);
         }
 
-        /// <summary>
-        /// Calculates the signed depth of intersection between two BoundingRectangles.
-        /// </summary>
-        /// <returns>
-        /// The amount of overlap between two intersecting BoundingRectangles. 
-        /// These depth values can be negative depending on which sides the 
-        /// BoundingRectangles intersect. This allows callers to determine 
-        /// the correct direction to push objects in order to resolve collisions.
-        /// If the BoundingRectangles are not intersecting, Vector2.Zero is returned.
-        /// </returns>
         public Vector2 GetIntersectionDepth(BoundingRectangle other)
         {
             // Calculate half sizes.
@@ -126,6 +116,47 @@ namespace SMLimitless.Physics
             float depthX = distanceX > 0 ? minDistanceX - distanceX : -minDistanceX - distanceX;
             float depthY = distanceY > 0 ? minDistanceY - distanceY : -minDistanceY - distanceY;
             return new Vector2(depthX, depthY);
+        }
+
+
+        public Vector2 GetIntersectionDepthEx(BoundingRectangle other)
+        {
+            Vector2 result = Vector2.Zero;
+            if (this.Right < other.Left)
+            {
+                return Vector2.Zero;
+            }
+            else if ((this.Right > other.Left) && (this.Right < other.Right))
+            {
+                result = new Vector2(this.Right - other.Left, 0f);
+            }
+            else if ((this.Left > other.Left) && (this.Left < other.Right))
+            {
+                result = new Vector2(-(other.Right - this.Left), 0f);
+            }
+            else if (this.Left > other.Right)
+            {
+                return Vector2.Zero;
+            }
+
+            if (this.Bottom < other.Top)
+            {
+                return Vector2.Zero;
+            }
+            else if ((this.Bottom > other.Top) && (this.Bottom < other.Bottom))
+            {
+                result = new Vector2(result.X, this.Bottom - other.Top);
+            }
+            else if ((this.Top > other.Top) && (this.Top < other.Bottom))
+            {
+                result = new Vector2(result.X, -(other.Bottom - this.Top));
+            }
+            else if (this.Top > other.Bottom)
+            {
+                return Vector2.Zero;
+            }
+
+            return result;
         }
 
         /// <summary>

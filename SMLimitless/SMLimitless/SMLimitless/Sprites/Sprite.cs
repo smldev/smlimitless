@@ -28,6 +28,7 @@ namespace SMLimitless.Sprites
         public Vector2 PreviousPosition { get; protected set; }
         public Vector2 Position { get; set; }
         public Vector2 ProjectedPosition { get; protected set; }
+        public bool OnGround { get; protected set; }
 
         public Vector2 Size { get; protected set; }
         public BoundingRectangle Hitbox
