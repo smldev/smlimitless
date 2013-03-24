@@ -152,7 +152,7 @@ namespace SMLimitless.Physics
         {
             var result = new List<Tile>();
             var intersectingCells = GetIntersectingCells(sprite);
-            intersectingCells.ForEach(cell => result.AddRange(cells[cell].Tiles));
+            intersectingCells.ForEach(cell => cells[cell].Tiles.ForEach(tile => result.AddUnlessDuplicate(tile)));
             return result;
         }
 

@@ -33,8 +33,11 @@ namespace SMLimitless.Sprites
         }
 
         #region Editor Properties
-        [DefaultValue(""), Description("The name of this sprite to be used in event scripting.  This field is optional.")]
+        [DefaultValue(""), Description("The name of this tile to be used in event scripting.  This field is optional.")]
         public string Name { get; set; }
+
+        [DefaultValue(0), Description("Determines how sprites should collide with this tile.")]
+        public TileCollisionType Collision { get; set; }
         #endregion
 
         public virtual void Initialize(Level owner)
@@ -47,6 +50,6 @@ namespace SMLimitless.Sprites
         public abstract void LoadContent();
         public abstract void Update();
         public abstract void Draw();
-        public abstract void HandleCollision(Sprite sprite, Vector2 intersection);
+        public abstract void HandleCollision(Sprite sprite);
     }
 }

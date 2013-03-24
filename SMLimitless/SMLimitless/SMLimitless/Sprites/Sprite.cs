@@ -28,7 +28,9 @@ namespace SMLimitless.Sprites
         public Vector2 PreviousPosition { get; protected set; }
         public Vector2 Position { get; set; }
         public Vector2 ProjectedPosition { get; protected set; }
-        public bool OnGround { get; protected set; }
+
+        public bool IsEmbedded { get; set; }
+        public bool IsOnGround { get; set; }
 
         public Vector2 Size { get; protected set; }
         public BoundingRectangle Hitbox
@@ -83,45 +85,6 @@ namespace SMLimitless.Sprites
             ProjectedPosition += Velocity * delta;
 
             if (Velocity.Y >= 500.0f) Velocity = new Vector2(Velocity.X, 500.0f);
-        }
-
-        /// <summary>
-        /// Checks for collisions with nearby sprites and tiles.
-        /// Tiles are first checked, then sprites.
-        /// If a collision is detected, the collision handlers will be called.
-        /// </summary>
-        /// <param name="nearbyTiles">A list of all the tiles in the cell(s) where this sprite is.</param>
-        /// <param name="nearbySprites">A list of all the sprites in the cell(s) where this sprite is.</param>
-        public void CheckCollisions(List<Tile> nearbyTiles, List<Sprite> nearbySprites)
-        {
-            CheckTileCollisions(nearbyTiles);
-            CheckSpriteCollisions(nearbySprites);
-        }
-
-        protected virtual void CheckTileCollisions(List<Tile> nearbyTiles)
-        {
-            foreach (Tile tile in nearbyTiles)
-            {
-                Vector2 intersect = Hitbox.GetIntersectionDepth(tile.Hitbox);
-                if (intersect != Vector2.Zero)
-                {
-                    tile.HandleCollision(this, intersect);
-                    this.HandleTileCollision(tile, intersect);
-                }
-            }
-        }
-
-        protected virtual void CheckSpriteCollisions(List<Sprite> nearbySprites)
-        {
-            foreach (Sprite sprite in nearbySprites)
-            {
-                Vector2 intersect = Hitbox.GetIntersectionDepth(sprite.Hitbox);
-                if (intersect != Vector2.Zero)
-                {
-                    sprite.HandleSpriteCollision(this, intersect);
-                    this.HandleSpriteCollision(sprite, intersect);
-                }
-            }
         }
 
         public abstract void Draw();

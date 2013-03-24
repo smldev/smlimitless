@@ -5,6 +5,7 @@ using System.Text;
 
 using Microsoft.Xna.Framework;
 
+using SMLimitless.Extensions;
 using SMLimitless.Interfaces;
 using SMLimitless.Physics;
 
@@ -21,21 +22,24 @@ namespace SMLimitless.Sprites.Collections
 
         public const float GravityAcceleration = 64f;
 
+        private string debugText = "";
+
         public Level()
         {
             tiles = new List<Tile>();
             sprites = new List<Sprite>();
             mouseSprite = new MouseFollowSprite();
 
-            quadTree = new QuadTree(new Vector2(64, 64));
+            quadTree = new QuadTree(new Vector2(64f, 64f));
         }
 
         public void Initialize()
         {
             TestSprite sprite = new TestSprite();
             sprites.Add(sprite);
+            sprites.Add(mouseSprite);
             sprites[0].Initialize(this);
-            mouseSprite.Initialize(this);
+            sprites[1].Initialize(this);
             quadTree.Add(sprite);
             quadTree.Add(mouseSprite);
 
@@ -82,17 +86,109 @@ namespace SMLimitless.Sprites.Collections
                 s.Acceleration = new Vector2(s.Acceleration.X, s.Acceleration.Y + GravityAcceleration);
                 s.Update();
             }
-            mouseSprite.Update();
             quadTree.Update();
+            CheckCollision();
+        }
 
-            mouseSprite.CheckCollisions(quadTree.GetCollidableTiles(mouseSprite), new List<Sprite>());
+        public void CheckCollision()
+        {
+            // First, check sprite-tile collisions
+            foreach (Sprite sprite in sprites)
+            {
+                var collidableTiles = quadTree.GetCollidableTiles(sprite);
+                List<Intersection> intersections = new List<Intersection>();
+                List<Tile> collidingTiles = new List<Tile>();
+
+                foreach (Tile tile in collidableTiles)
+                {
+                    if (tile.Collision == TileCollisionType.Solid)
+                    {
+                        var intersection = new Intersection(sprite.Hitbox, tile.Hitbox);
+                        if (intersection.IsIntersecting)
+                        {
+                            intersections.Add(intersection);
+                            collidingTiles.Add(tile);
+                        }
+                    }
+                    else if (tile.Collision == TileCollisionType.TopSolid)
+                    {
+                        var intersection = new Intersection(sprite.Hitbox, tile.Hitbox);
+                        if (intersection.IsIntersecting && intersection.Direction == Direction.Up)
+                        {
+                            intersections.Add(intersection);
+                            collidingTiles.Add(tile);
+                        }
+                    }
+                }
+
+                intersections = Intersection.ConsolidateIntersections(intersections);
+
+                // The distance by which the sprite will have to be moved
+                Vector2 resolution = Vector2.Zero;
+                foreach (Intersection intersection in intersections)
+                {
+                    switch (intersection.Direction)
+                    {
+                        case Direction.Up:
+                            if (resolution.Y > 0) // If we've already moved down
+                            {
+                                sprite.IsEmbedded = true;
+                            }
+                            else if (resolution.Y == 0)
+                            {
+                                resolution.Y += intersection.GetIntersectionResolution().Y;
+                                debugText += "Up ";
+                            }
+                            break;
+                        case Direction.Down:
+                            if (resolution.Y < 0) // If we've already moved up
+                            {
+                                sprite.IsEmbedded = true;
+                            }
+                            else if (resolution.Y == 0)
+                            {
+                                resolution.Y += intersection.GetIntersectionResolution().Y;
+                                debugText += "Down ";
+                            }
+                            break;
+                        case Direction.Left:
+                            if (resolution.X > 0) // If we've already moved right
+                            {
+                                sprite.IsEmbedded = true;
+                            }
+                            else if (resolution.X == 0)
+                            {
+                                resolution.X += intersection.GetIntersectionResolution().X;
+                                debugText += "Left ";
+                            }
+                            break;
+                        case Direction.Right:
+                            if (resolution.X < 0) // If we've already moved left
+                            {
+                                sprite.IsEmbedded = true;
+                            }
+                            else if (resolution.X == 0)
+                            {
+                                resolution.X += intersection.GetIntersectionResolution().X;
+                                debugText += "Right ";
+                            }
+                            break;
+                    }
+
+                    if (sprite.IsEmbedded) break; // We're not resolving anything since we're embedded, but...
+                }
+                sprite.Position += resolution;
+
+                collidingTiles.ForEach(t => t.HandleCollision(sprite)); // ... we do want to call the collision handler.
+            }
         }
 
         public void Draw()
         {
             tiles.ForEach(t => t.Draw());
             sprites.ForEach(s => s.Draw());
-            mouseSprite.Draw();
+            GameServices.SpriteBatch.DrawString(GameServices.DebugFontLarge, debugText, new Vector2(16, 16), Color.White);
+            debugText = "";
             quadTree.Draw();
         }
     }

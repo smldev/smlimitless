@@ -68,19 +68,19 @@ namespace SMLimitless.Screens
             Vector2 resolution1 = intersect1.GetIntersectionResolution();
             Vector2 resolution2 = intersect2.GetIntersectionResolution();
 
-            if (intersect1.Direction == IntersectionDirection.Up || intersect2.Direction == IntersectionDirection.Up)
+            if (intersect1.Direction == Direction.Up || intersect2.Direction == Direction.Up)
             {
                 if (Math.Abs(resolution1.Y) > Math.Abs(resolution2.Y)) d = new BoundingRectangle(a.X + resolution1.X, a.Y + resolution1.Y, 100f, 100f);
                 else if (Math.Abs(resolution2.Y) > Math.Abs(resolution1.Y)) d = new BoundingRectangle(a.X + resolution2.X, a.Y + resolution2.Y, 100f, 100f);
                 else d = new BoundingRectangle(a.X + resolution1.X, a.Y + resolution2.Y, 100f, 100f);
             }
-            else if (intersect1.Direction == IntersectionDirection.Down || intersect2.Direction == IntersectionDirection.Down)
+            else if (intersect1.Direction == Direction.Down || intersect2.Direction == Direction.Down)
             {
                 if (Math.Abs(resolution1.Y) > Math.Abs(resolution2.Y)) d = new BoundingRectangle(a.X + resolution1.X, a.Y + resolution1.Y, 100f, 100f);
                 else if (Math.Abs(resolution2.Y) > Math.Abs(resolution1.Y)) d = new BoundingRectangle(a.X + resolution2.X, a.Y + resolution2.Y, 100f, 100f);
                 else d = new BoundingRectangle(a.X + resolution1.X, a.Y + resolution2.Y, 100f, 100f);
             }
-            else if (intersect1.Direction == IntersectionDirection.Left || intersect2.Direction == IntersectionDirection.Right)
+            else if (intersect1.Direction == Direction.Left || intersect2.Direction == Direction.Right)
             {
                 if (Math.Abs(resolution1.X) > Math.Abs(resolution2.X)) d = new BoundingRectangle(a.X + resolution1.X, a.Y + resolution1.Y, 100f, 100f);
                 else if (Math.Abs(resolution2.X) > Math.Abs(resolution1.X)) d = new BoundingRectangle(a.X + resolution2.X, a.Y + resolution2.Y, 100f, 100f);

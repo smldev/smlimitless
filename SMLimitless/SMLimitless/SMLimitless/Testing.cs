@@ -14,22 +14,26 @@ namespace SMLimitless
 {
     public static class Testing
     {
-        public static Stopwatch Stopwatch;
-        //private static QuadTree quadTree;
-
-        public static void Benchmark()
+        // Credit to Jon Skeet
+        // http://stackoverflow.com/questions/969290/c-exact-time-measurement-for-performance-testing
+        public static TimeSpan Time(Action action)
         {
-            if (Stopwatch == null) Stopwatch = new Stopwatch();
-            //if (quadTree == null) quadTree = new QuadTree(new Vector2(64, 64));
+            Stopwatch stopwatch = Stopwatch.StartNew();
+            action();
+            stopwatch.Stop();
+            return stopwatch.Elapsed;
+        }
 
-            //TestSprite sprite = new TestSprite();
-
-            //Stopwatch.Start();
-            //quadTree.GetIntersectingCells(sprite);
-            //Stopwatch.Stop();
-            
-            GameServices.SpriteBatch.DrawString(GameServices.DebugFontLarge, Stopwatch.ElapsedTicks.ToString(), Vector2.Zero, Color.White);
-            Stopwatch.Reset();
+        public static TimeSpan Time(Action action, int iterations)
+        {
+            int i;
+            Stopwatch stopwatch = Stopwatch.StartNew();
+            for (i = 0; i < iterations; i++)
+            {
+                action();
+            }
+            stopwatch.Stop();
+            return stopwatch.Elapsed;
         }
     }
 }

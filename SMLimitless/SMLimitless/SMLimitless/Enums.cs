@@ -5,12 +5,14 @@ using System.Text;
 
 namespace SMLimitless
 {
+    [Obsolete]
     public enum HorizontalFlip
     {
         Left,
         Right
     }
 
+    [Obsolete]
     public enum VerticalFlip
     {
         Up,
@@ -34,12 +36,18 @@ namespace SMLimitless
         Right
     }
 
-    public enum IntersectionDirection
+    public enum Direction
     {
         Up,
         Down,
         Left,
         Right,
-        None
+    }
+
+    public enum TileCollisionType
+    {
+        Solid,
+        TopSolid,
+        Passive,
     }
 }

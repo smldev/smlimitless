@@ -103,7 +103,7 @@ namespace SMLimitless
 
         public static bool IsOldKeyPress(Keys key)
         {
-            return (lastKeyboardState.IsKeyDown(key) && currentKeyboardState.IsKeyDown(key));
+            return (lastKeyboardState.IsKeyDown(key) && currentKeyboardState.IsKeyUp(key));
         }
 
         public static bool IsNewMousePress(MouseButtons button)
