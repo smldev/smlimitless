@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
@@ -20,7 +21,13 @@ namespace SMLimitless.Sprites.Collections
 
         private QuadTree quadTree;
 
-        public const float GravityAcceleration = 64f;
+        private float gravityAcceleration = 20000f;
+        [Description("How fast sprites in this level fall.")]
+        public float GravityAcceleration
+        {
+            get { return gravityAcceleration; }
+            set { gravityAcceleration = value; }
+        }
 
         private string debugText = "";
 
@@ -80,12 +87,7 @@ namespace SMLimitless.Sprites.Collections
         public void Update()
         {
             tiles.ForEach(t => t.Update());
-
-            foreach (Sprite s in sprites)
-            {
-                s.Acceleration = new Vector2(s.Acceleration.X, s.Acceleration.Y + GravityAcceleration);
-                s.Update();
-            }
+            sprites.ForEach(s => s.Update());
             quadTree.Update();
             CheckCollision();
         }
@@ -127,9 +129,11 @@ namespace SMLimitless.Sprites.Collections
                 Vector2 resolution = Vector2.Zero;
                 foreach (Intersection intersection in intersections)
                 {
+                    bool spriteIsOnGround = false;
                     switch (intersection.Direction)
                     {
                         case Direction.Up:
+                            spriteIsOnGround = true;
                             if (resolution.Y > 0) // If we've already moved down
                             {
                                 sprite.IsEmbedded = true;
@@ -175,6 +179,7 @@ namespace SMLimitless.Sprites.Collections
                             break;
                     }
 
+                    sprite.IsOnGround = spriteIsOnGround;
                     if (sprite.IsEmbedded) break; // We're not resolving anything since we're embedded, but...
                 }
                 sprite.Position += resolution;
@@ -187,7 +192,6 @@ namespace SMLimitless.Sprites.Collections
         {
             tiles.ForEach(t => t.Draw());
             sprites.ForEach(s => s.Draw());
-            GameServices.SpriteBatch.DrawString(GameServices.DebugFontLarge, debugText, new Vector2(16, 16), Color.White);
             debugText = "";
             quadTree.Draw();
         }

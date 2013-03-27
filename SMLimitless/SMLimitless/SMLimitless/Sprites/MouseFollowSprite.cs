@@ -49,7 +49,7 @@ namespace SMLimitless.Sprites
             throw new NotImplementedException();
         }
 
-        public override void HandleTileCollision(Tile tile, Vector2 intersect)
+        public override void HandleTileCollision(Tile tile)
         {
             
         }

@@ -5,6 +5,7 @@ using System.Text;
 
 using Microsoft.Xna.Framework;
 
+using SMLimitless.Extensions;
 using SMLimitless.Graphics;
 using SMLimitless.Sprites.Collections;
 
@@ -31,13 +32,15 @@ namespace SMLimitless.Sprites
         public override void Update()
         {
             graphics.Update();
-            base.Velocity = new Vector2(30f, 0f);
+            base.Velocity = new Vector2(30f, Velocity.Y);
             base.Update();
         }
 
         public override void Draw()
         {
             graphics.Draw(base.Position, Color.White, false);
+            GameServices.SpriteBatch.DrawRectangleEdges(base.ProjectedPosition.ToRectangle(base.Size), Color.Green);
+            GameServices.SpriteBatch.DrawString(GameServices.DebugFontLarge, Velocity.ToString(), new Vector2(16, 16), Color.White);
         }
 
         public override void HandleSpriteCollision(Sprite sprite, Vector2 intersect)
@@ -45,9 +48,9 @@ namespace SMLimitless.Sprites
             throw new NotImplementedException();
         }
 
-        public override void HandleTileCollision(Tile tile, Vector2 intersect)
+        public override void HandleTileCollision(Tile tile)
         {
-            this.Velocity = new Vector2(Velocity.X, 0);
+            
         }
     }
 }

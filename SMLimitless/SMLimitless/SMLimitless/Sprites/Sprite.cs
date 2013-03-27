@@ -30,7 +30,21 @@ namespace SMLimitless.Sprites
         public Vector2 ProjectedPosition { get; protected set; }
 
         public bool IsEmbedded { get; set; }
-        public bool IsOnGround { get; set; }
+
+        private bool isOnGround;
+        public bool IsOnGround
+        {
+            get { return this.isOnGround; }
+            set
+            {
+                if (value == true)
+                {
+                    Velocity = new Vector2(Velocity.X, 0f);
+                    Acceleration = new Vector2(Acceleration.X, 0f);
+                }
+                isOnGround = value;
+            }
+        }
 
         public Vector2 Size { get; protected set; }
         public BoundingRectangle Hitbox
@@ -80,15 +94,23 @@ namespace SMLimitless.Sprites
             PreviousPosition = Position;
             Position = ProjectedPosition;
 
+            if (!IsOnGround && Velocity.Y < 250f)
+            {
+                Acceleration = new Vector2(Acceleration.X, Owner.GravityAcceleration);
+            }
+            else if (Velocity.Y > 250f)
+            {
+                Acceleration = new Vector2(Acceleration.X, 0f);
+                Velocity = new Vector2(Velocity.X, 250f);
+            }
+
             Velocity += Acceleration * delta;
 
             ProjectedPosition += Velocity * delta;
-
-            if (Velocity.Y >= 500.0f) Velocity = new Vector2(Velocity.X, 500.0f);
         }
 
         public abstract void Draw();
-        public abstract void HandleTileCollision(Tile tile, Vector2 intersect);
+        public abstract void HandleTileCollision(Tile tile);
         public abstract void HandleSpriteCollision(Sprite sprite, Vector2 intersect);
     }
 }
