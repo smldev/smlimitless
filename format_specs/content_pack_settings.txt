@@ -1,0 +1,7 @@
+; Super Mario Limitless
+; Content Package Settings Format Specification
+
+Name = SML Sample Content Package
+Author = Celarix
+AssemblyPath = sml_sample.dll
+BaseFolderName = %SML_Sample% ; A defined path, much like %AppData%, that will resolve into the absolute path to the folder.
