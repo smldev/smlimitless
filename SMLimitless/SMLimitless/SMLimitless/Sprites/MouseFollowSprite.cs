@@ -44,12 +44,12 @@ namespace SMLimitless.Sprites
             GameServices.SpriteBatch.DrawRectangle(Hitbox.ToRectangle(), Color.Red);
         }
 
-        public override void HandleSpriteCollision(Sprite sprite, Vector2 intersect)
+        public override void HandleSpriteCollision(Sprite sprite, Intersection intersect)
         {
             throw new NotImplementedException();
         }
 
-        public override void HandleTileCollision(Tile tile)
+        public override void HandleTileCollision(Tile tile, Intersection intersect)
         {
             
         }

@@ -111,10 +111,9 @@ namespace SMLimitless.Sprites.Collections
             // First, check sprite-tile collisions
             foreach (Sprite sprite in sprites)
             {
-
                 var collidableTiles = quadTree.GetCollidableTiles(sprite);
                 List<Intersection> intersections = new List<Intersection>();
-                List<Tile> collidingTiles = new List<Tile>();
+                Dictionary<Tile, Intersection> collidingTiles = new Dictionary<Tile, Intersection>();
                 bool spriteIsOnGround = false;
                 bool spriteIsEmbedded = false;
 
@@ -131,7 +130,7 @@ namespace SMLimitless.Sprites.Collections
                         if (intersection.IsIntersecting)
                         {
                             intersections.Add(intersection);
-                            collidingTiles.Add(tile);
+                            collidingTiles.Add(tile, intersection);
                         }
                     }
                     else if (tile.Collision == TileCollisionType.TopSolid)
@@ -140,7 +139,7 @@ namespace SMLimitless.Sprites.Collections
                         if (intersection.IsIntersecting && intersection.Direction == Direction.Up)
                         {
                             intersections.Add(intersection);
-                            collidingTiles.Add(tile);
+                            collidingTiles.Add(tile, intersection);
                         }
                     }
                 }
@@ -209,8 +208,6 @@ namespace SMLimitless.Sprites.Collections
                             }
                             break;
                     }
-
-                    //if (sprite.IsEmbedded) break; // We're not resolving anything since we're embedded, but...
                 }
                 sprite.IsOnGround = spriteIsOnGround;
                 sprite.IsEmbedded = spriteIsEmbedded;
@@ -219,7 +216,11 @@ namespace SMLimitless.Sprites.Collections
                     sprite.Position += resolution;
                 }
 
-                collidingTiles.ForEach(t => t.HandleCollision(sprite)); // ... we do want to call the collision handler.
+                foreach (var collision in collidingTiles)
+                {
+                    collision.Key.HandleCollision(sprite, collision.Value);
+                    sprite.HandleTileCollision(collision.Key, collision.Value);
+                }
             }
         }
 
@@ -227,7 +228,7 @@ namespace SMLimitless.Sprites.Collections
         {
             tiles.ForEach(t => t.Draw());
             sprites.ForEach(s => s.Draw());
-            GameServices.SpriteBatch.DrawString(GameServices.DebugFontLarge, debugText, new Vector2(16, 36), Color.White);
+            //GameServices.SpriteBatch.DrawString(GameServices.DebugFontLarge, debugText, new Vector2(16, 36), Color.White);
             debugText = "";
             quadTree.Draw();
         }

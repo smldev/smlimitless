@@ -34,7 +34,7 @@ namespace SMLimitless.Sprites
         {
         }
 
-        public override void HandleCollision(Sprite sprite)
+        public override void HandleCollision(Sprite sprite, Intersection intersect)
         {
 
         }

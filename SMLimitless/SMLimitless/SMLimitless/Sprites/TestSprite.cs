@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 
 using SMLimitless.Extensions;
 using SMLimitless.Graphics;
+using SMLimitless.Physics;
 using SMLimitless.Sprites.Collections;
 
 namespace SMLimitless.Sprites
@@ -41,12 +42,12 @@ namespace SMLimitless.Sprites
             graphics.Draw(base.Position, Color.White, false);
         }
 
-        public override void HandleSpriteCollision(Sprite sprite, Vector2 intersect)
+        public override void HandleSpriteCollision(Sprite sprite, Intersection intersect)
         {
             throw new NotImplementedException();
         }
 
-        public override void HandleTileCollision(Tile tile)
+        public override void HandleTileCollision(Tile tile,Intersection intersect)
         {
             
         }

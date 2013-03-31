@@ -132,7 +132,7 @@ namespace SMLimitless.Sprites
         }
 
         public abstract void Draw();
-        public abstract void HandleTileCollision(Tile tile);
-        public abstract void HandleSpriteCollision(Sprite sprite, Vector2 intersect);
+        public abstract void HandleTileCollision(Tile tile, Intersection intersect);
+        public abstract void HandleSpriteCollision(Sprite sprite, Intersection intersect);
     }
 }

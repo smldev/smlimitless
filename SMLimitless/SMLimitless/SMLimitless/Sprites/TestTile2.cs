@@ -6,6 +6,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 
 using SMLimitless.Graphics;
+using SMLimitless.Physics;
 using SMLimitless.Sprites.Collections;
 
 namespace SMLimitless.Sprites
@@ -36,7 +37,7 @@ namespace SMLimitless.Sprites
             graphics.Draw(this.Position, Color.White);
         }
 
-        public override void HandleCollision(Sprite sprite)
+        public override void HandleCollision(Sprite sprite, Intersection intersect)
         {
             
         }

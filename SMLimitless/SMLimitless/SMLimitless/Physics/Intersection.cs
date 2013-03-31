@@ -82,7 +82,14 @@ namespace SMLimitless.Physics
 
         public override string ToString()
         {
-            return String.Format("Depth: {0}, {1}; Direction: {2}", Depth.X, Depth.Y, Direction.ToString());
+            if (Depth != Vector2.Zero)
+            {
+                return String.Format("Depth: {0}, {1}; Direction: {2}", Depth.X, Depth.Y, Direction.ToString());
+            }
+            else
+            {
+                return String.Format("Depth: {0}, {1}", Depth.X, Depth.Y);
+            }
         }
 
         private static IOrderedEnumerable<Intersection> SortByX(List<Intersection> intersections)
