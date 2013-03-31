@@ -27,9 +27,20 @@ namespace SMLimitless.Sprites
 
         public Vector2 PreviousPosition { get; protected set; }
         public Vector2 Position { get; set; }
-        public Vector2 ProjectedPosition { get; protected set; }
 
-        public bool IsEmbedded { get; set; }
+        private bool isEmbedded;
+        public bool IsEmbedded
+        {
+            get
+            {
+                return isEmbedded;
+            }
+            set
+            {
+                //if (isEmbedded && !value) System.Diagnostics.Debugger.Break();
+                isEmbedded = value;
+            }
+        }
 
         private bool isOnGround;
         public bool IsOnGround
@@ -37,7 +48,7 @@ namespace SMLimitless.Sprites
             get { return this.isOnGround; }
             set
             {
-                if (value == true)
+                if (value)
                 {
                     Velocity = new Vector2(Velocity.X, 0f);
                     Acceleration = new Vector2(Acceleration.X, 0f);
@@ -92,21 +103,32 @@ namespace SMLimitless.Sprites
             float delta = GameServices.GameTime.GetElapsedSeconds();
 
             PreviousPosition = Position;
-            Position = ProjectedPosition;
 
-            if (!IsOnGround && Velocity.Y < 250f)
+            if (IsEmbedded)
             {
-                Acceleration = new Vector2(Acceleration.X, Owner.GravityAcceleration);
+                // We are embedded if collision checks tell us we need to resolve
+                // both left and right or up and down.  We should move left until
+                // we're out of being embedded.
+
+                Acceleration = Vector2.Zero;
+                Velocity = new Vector2(-25f, 0f);
             }
-            else if (Velocity.Y > 250f)
+            else
             {
-                Acceleration = new Vector2(Acceleration.X, 0f);
-                Velocity = new Vector2(Velocity.X, 250f);
+                if (!IsOnGround && Velocity.Y < 250f)
+                {
+                    Acceleration = new Vector2(Acceleration.X, Owner.GravityAcceleration);
+                }
+                else if (Velocity.Y > 250f)
+                {
+                    Acceleration = new Vector2(Acceleration.X, 0f);
+                    Velocity = new Vector2(Velocity.X, 250f);
+                }
             }
 
             Velocity += Acceleration * delta;
 
-            ProjectedPosition += Velocity * delta;
+            Position += Velocity * delta;
         }
 
         public abstract void Draw();

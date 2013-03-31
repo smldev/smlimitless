@@ -143,6 +143,7 @@
     <Compile Include="Sprites\TestSprite.cs" />
     <Compile Include="Sprites\TestTile.cs" />
     <Compile Include="Sprites\TestTile2.cs" />
+    <Compile Include="Sprites\TestTile3.cs" />
     <Compile Include="Sprites\Tile.cs" />
     <Compile Include="Testing.cs" />
   </ItemGroup>
