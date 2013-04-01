@@ -1,0 +1,17 @@
+[Complex]
+FrameSize = 16,16 ; Measured in pixels
+TotalGraphicsObjects = 3 ; The total number of all graphics objects (static, animated) in this complex object.
+[Object1]
+Type = static
+Name = standing
+FramePosition = 0,0 ; The position of the top-left corner of this frame.  The frame size is used to complete the rectangle.
+[Object2]
+Type = animated
+Name = standing_to_ducking
+FramePosition = 16,0
+FramePosition = 32,0
+CycleLength=0.00667 ; 4 frames
+[Object3]
+Type = static
+Name = ducking
+FramePosition = 32,0 ; Frames can be reused in different objects.
