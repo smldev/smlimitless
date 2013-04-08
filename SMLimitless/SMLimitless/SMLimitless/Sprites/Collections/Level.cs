@@ -43,7 +43,7 @@ namespace SMLimitless.Sprites.Collections
         public void Initialize()
         {
             TestSprite sprite = new TestSprite();
-            sprite.Position = new Vector2(129f, 129f);
+            sprite.Position = new Vector2(96f, 72f);
             sprites.Add(sprite);
             sprites.Add(mouseSprite);
             sprites[0].Initialize(this);
@@ -78,17 +78,14 @@ namespace SMLimitless.Sprites.Collections
                 j++;
             }
 
-            for (int y = 96; y < 160; y += 16)
+            for (int x = 96; x < 160; x += 16)
             {
-                for (int x = 96; x < 160; x += 16)
-                {
-                    TestTile3 tile = new TestTile3();
-                    tiles.Add(tile);
-                    tile.Initialize(this);
-                    tile.Position = new Vector2(x, y);
-                    quadTree.Add(tile);
-                    j++;
-                }
+                TestTile3 tile = new TestTile3();
+                tiles.Add(tile);
+                tile.Initialize(this);
+                tile.Position = new Vector2(x, 96);
+                quadTree.Add(tile);
+                j++;
             }
         }
 
@@ -133,7 +130,7 @@ namespace SMLimitless.Sprites.Collections
                             collidingTiles.Add(tile, intersection);
                         }
                     }
-                    else if (tile.Collision == TileCollisionType.TopSolid)
+                    else if (tile.Collision == TileCollisionType.TopSolid && sprite.Velocity.Y > 0f)
                     {
                         var intersection = new Intersection(sprite.Hitbox, tile.Hitbox);
                         if (intersection.IsIntersecting && intersection.Direction == Direction.Up)

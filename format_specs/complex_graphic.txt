@@ -1,17 +1,29 @@
 [Complex]
 FrameSize = 16,16 ; Measured in pixels
-TotalGraphicsObjects = 3 ; The total number of all graphics objects (static, animated) in this complex object.
+TotalGraphicsObjects = 4 ; The total number of all graphics objects (static, animated) in this complex object.
+
 [Object1]
-Type = static
-Name = standing
-FramePosition = 0,0 ; The position of the top-left corner of this frame.  The frame size is used to complete the rectangle.
-[Object2]
+Name = walking
 Type = animated
-Name = standing_to_ducking
-FramePosition = 16,0
-FramePosition = 32,0
-CycleLength=0.00667 ; 4 frames
-[Object3]
+Frames = 2
+Frame1 = [0, 0] ; The position of the frame in pixels.
+Frame2 = [16, 0]
+CycleLength = 1 ; Measured in seconds, rounded up to the nearest frame
+
+[Object2]
+Name = kick_left
 Type = static
-Name = ducking
-FramePosition = 32,0 ; Frames can be reused in different objects.
+Frame = [32, 0]
+
+[Object3]
+Name = kick_right
+Type = static
+Frame = [48, 0]
+
+[Object4]
+Name = stomp
+Type = animated_runonce
+Frames = 3
+Frame1 = [0, 16]
+Frame2 = [16, 16]
+Frame3 = [32, 16]

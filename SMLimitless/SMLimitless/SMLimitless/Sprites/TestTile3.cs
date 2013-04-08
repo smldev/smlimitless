@@ -19,6 +19,7 @@ namespace SMLimitless.Sprites
         public override void Initialize(Level owner)
         {
             this.Size = new Vector2(16f, 16f);
+            this.Collision = TileCollisionType.TopSolid;
             graphics = new StaticGraphicsObject();
             string absolute = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..\\..\\..\\test_sheet.png");
             graphics.LoadFromMetadata(@"static-spritesheet>""" + absolute + @""",16,16,0");

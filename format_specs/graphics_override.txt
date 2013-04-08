@@ -1,0 +1,13 @@
+; Super Mario Limitless
+; Graphics Override File Specification
+
+[Overrides]
+"level1" = "folder1"  ; The graphics in folder1 will override level1's graphics.
+"level2" = "folder2", "folder3" ; This level is overriden by two folders.
+"level3", "level4" = "folder4" ; These two levels are overriden by one folder.
+"level5", "level6" = "folder5", "folder6" ; The two levels are overriden by two folders.
+global = "folder7"; All the graphics for every level in this folder are overriden by folder7.
+
+; Notes: any number of folders can override any number of levels
+; Notes: If two overriding folders have graphics for the same object (a conflict), an exception is thrown.
+; Notes: Names are encapsulated in double quoted because folder names can have commas as valid characters (for example, level1 = My Awesome, Wonderful, Graphics Folder looks like three folders).

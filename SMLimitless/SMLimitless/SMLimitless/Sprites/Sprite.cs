@@ -37,7 +37,6 @@ namespace SMLimitless.Sprites
             }
             set
             {
-                //if (isEmbedded && !value) System.Diagnostics.Debugger.Break();
                 isEmbedded = value;
             }
         }
