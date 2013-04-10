@@ -1,0 +1,3 @@
+[Animated_RunOnce]
+FrameWidth = 16
+CycleLength = 2.0
