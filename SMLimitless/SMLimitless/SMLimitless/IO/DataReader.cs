@@ -177,7 +177,7 @@ namespace SMLimitless.IO
             {
                 var result = new Dictionary<string, string>();
                 int index = Array.IndexOf(file, sectionName) + 1;
-                while (!string.IsNullOrEmpty(file[index]))
+                while (index < file.Length && !string.IsNullOrEmpty(file[index]))
                 {
                     string[] entry = file[index].Split('=');
                     entry.TrimStringArray();

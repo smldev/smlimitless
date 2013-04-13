@@ -23,19 +23,19 @@ namespace SMLimitless.Sprites
             float distance = 2f;
             if (InputManager.IsCurrentKeyPress(Keys.Up))
             {
-                this.Position = new Vector2(this.Position.X, this.Position.Y - distance);
+                Position = new Vector2(Position.X, Position.Y - distance);
             }
             if (InputManager.IsCurrentKeyPress(Keys.Down))
             {
-                this.Position = new Vector2(this.Position.X, this.Position.Y + distance);
+                Position = new Vector2(Position.X, Position.Y + distance);
             }
             if (InputManager.IsCurrentKeyPress(Keys.Left))
             {
-                this.Position = new Vector2(this.Position.X - 1.0f, this.Position.Y);
+                Position = new Vector2(Position.X - 1.0f, Position.Y);
             }
             if (InputManager.IsCurrentKeyPress(Keys.Right))
             {
-                this.Position = new Vector2(this.Position.X + 1.0f, this.Position.Y);
+                Position = new Vector2(Position.X + 1.0f, Position.Y);
             }
         }
 

@@ -18,8 +18,8 @@ namespace SMLimitless.Sprites
         public override void Initialize(Level owner)
         {
             graphics = new StaticGraphicsObject();
-            string absolute = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..\\..\\..\\test_sheet.png");
-            graphics.LoadFromMetadata(@"static-spritesheet>""" + absolute + @""",16,16,12");
+            string absolute = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..\\..\\..\\gfx\\smw_grass_center.png");
+            graphics.Load(absolute);
             base.Initialize(owner);
         }
 
@@ -34,7 +34,7 @@ namespace SMLimitless.Sprites
 
         public override void Draw()
         {
-            graphics.Draw(this.Position, Color.White);
+            graphics.Draw(Position, Color.White);
         }
 
         public override void HandleCollision(Sprite sprite, Intersection intersect)

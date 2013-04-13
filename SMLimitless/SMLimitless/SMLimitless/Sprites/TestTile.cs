@@ -18,10 +18,10 @@ namespace SMLimitless.Sprites
 
         public override void Initialize(Level owner)
         {
-            this.Size = new Vector2(16f, 16f);
+            Size = new Vector2(16f, 16f);
             graphics = new StaticGraphicsObject();
-            string absolute = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..\\..\\..\\test_sheet.png");
-            graphics.LoadFromMetadata(@"static-spritesheet>""" + absolute + @""",16,16,8");
+            string absolute = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..\\..\\..\\gfx\\smw_grass_top.png");
+            graphics.Load(absolute);
             base.Initialize(owner);
         }
 
@@ -41,7 +41,7 @@ namespace SMLimitless.Sprites
 
         public override void Draw()
         {
-            graphics.Draw(this.Position, Color.White);
+            graphics.Draw(Position, Color.White);
         }
     }
 }

@@ -98,7 +98,7 @@ namespace SMLimitless.Screens
         public override void Start(string parameters = "")
         {
             base.Start();
-            //this.effect.Start(30, Interfaces.EffectDirection.Backward, Vector2.Zero, Color.Black);
+            //effect.Start(30, Interfaces.EffectDirection.Backward, Vector2.Zero, Color.Black);
         }
 
         void effect_effectCompletedEvent(object sender, Interfaces.EffectDirection direction)

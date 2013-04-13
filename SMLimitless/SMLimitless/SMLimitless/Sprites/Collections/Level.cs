@@ -14,6 +14,7 @@ namespace SMLimitless.Sprites.Collections
 {
     public class Level
     {
+        bool run = false;
         private List<Tile> tiles;
         private List<Sprite> sprites;
 
@@ -97,10 +98,14 @@ namespace SMLimitless.Sprites.Collections
 
         public void Update()
         {
-            tiles.ForEach(t => t.Update());
-            sprites.ForEach(s => s.Update());
-            quadTree.Update();
-            CheckCollision();
+            if (InputManager.IsNewKeyPress(Microsoft.Xna.Framework.Input.Keys.Space)) run = true;
+            if (run)
+            {
+                tiles.ForEach(t => t.Update());
+                sprites.ForEach(s => s.Update());
+                quadTree.Update();
+                CheckCollision();
+            }
         }
 
         public void CheckCollision()
@@ -227,7 +232,7 @@ namespace SMLimitless.Sprites.Collections
             sprites.ForEach(s => s.Draw());
             //GameServices.SpriteBatch.DrawString(GameServices.DebugFontLarge, debugText, new Vector2(16, 36), Color.White);
             debugText = "";
-            quadTree.Draw();
+            //quadTree.Draw();
         }
     }
 }

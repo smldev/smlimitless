@@ -16,26 +16,26 @@ namespace SMLimitless.Screens
     {
         public override void Initialize(Screen owner, string parameters)
         {
-            this.Owner = owner;
-            this.effect = new FadeEffect(GameServices.ScreenSize);
-            this.effect.Set(EffectDirection.Forward, Color.BlueViolet);
+            Owner = owner;
+            effect = new FadeEffect(GameServices.ScreenSize);
+            effect.Set(EffectDirection.Forward, Color.BlueViolet);
         }
 
         public override void LoadContent() { }
 
         public override void Update()
         {
-            this.effect.Update(null);
+            effect.Update(null);
 
             if (Keyboard.GetState().IsKeyDown(Keys.X))
             {
-                this.Exit();
+                Exit();
             }
         }
 
         public override void Draw()
         {
-            this.effect.Draw(null, GameServices.SpriteBatch);
+            effect.Draw(null, GameServices.SpriteBatch);
         }
     }
 }

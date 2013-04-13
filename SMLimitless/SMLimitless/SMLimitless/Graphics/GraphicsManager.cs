@@ -15,11 +15,13 @@ namespace SMLimitless.Graphics
     {
         private static Dictionary<String, Texture2D> loadedTextures;
         private static Dictionary<CroppedTextureMetadata, Texture2D> croppedTextures;
+        private static Dictionary<string, IGraphicsObject> loadedObjects;
 
-        public GraphicsManager()
+        static GraphicsManager()
         {
             loadedTextures = new Dictionary<string, Texture2D>();
             croppedTextures = new Dictionary<CroppedTextureMetadata, Texture2D>();
+            loadedObjects = new Dictionary<string, IGraphicsObject>();
         }
 
         /// <summary>
@@ -52,35 +54,44 @@ namespace SMLimitless.Graphics
         /// </summary>
         public static IGraphicsObject LoadGraphicsObject(string filePath)
         {
-            // We'll assume we have the right path (considering graphics overrides).
-            string fileNameWithoutExt = Path.GetFileNameWithoutExtension(filePath);
-            string directoryName = new FileInfo(filePath).DirectoryName;
-            string configPath = Path.Combine(directoryName, String.Concat(fileNameWithoutExt, ".txt"));
-
-            if (!File.Exists(configPath))
+            if (!loadedObjects.ContainsKey(filePath))
             {
-                // No configuration, so the object is probably static
-                StaticGraphicsObject result = new StaticGraphicsObject();
-                result.Load(filePath);
-                return result;
+                // We'll assume we have the right path (considering graphics overrides).
+                string fileNameWithoutExt = Path.GetFileNameWithoutExtension(filePath);
+                string directoryName = new FileInfo(filePath).DirectoryName;
+                string configPath = Path.Combine(directoryName, String.Concat(fileNameWithoutExt, ".txt"));
+
+                if (!File.Exists(configPath))
+                {
+                    // No configuration, so the object is probably static
+                    var result = new StaticGraphicsObject();
+                    result.Load(filePath);
+                    loadedObjects.Add(filePath, result);
+                    return result;
+                }
+                else
+                {
+                    // A configuration!  Let's read it to find out what it is.
+                    DataReader config = new DataReader(configPath);
+                    if (config[0] == "[Animated]" || config[0] == "[Animated_RunOnce]")
+                    {
+                        var result = new AnimatedGraphicsObject();
+                        result.Load(filePath, config);
+                        loadedObjects.Add(filePath, result);
+                        return result;
+                    }
+                    else if (config[0] == "[Complex]")
+                    {
+                        // TODO: create ComplexGraphicsObject
+                        return null;
+                    }
+                }
             }
             else
             {
-                // A configuration!  Let's read it to find out what it is.
-                DataReader config = new DataReader(configPath);
-                if (config[0] == "[Animated]")
-                {
-                    // TODO: create AnimatedGraphicsObject
-                }
-                else if (config[0] == "[Animated_RunOnce]")
-                {
-                    // TODO: create AnimatedGraphicsObject
-                }
-                else if (config[0] == "[Complex]")
-                {
-                    // TODO: you get the idea
-                }
+                return loadedObjects[filePath].Clone();
             }
+            return null; // TODO: see if we can remove this line
         }
 
         public static Texture2D Crop(this Texture2D texture, Rectangle area)
@@ -112,17 +123,17 @@ namespace SMLimitless.Graphics
 
             return croppedTextures[metadata];
         }
+    }
 
-        internal struct CroppedTextureMetadata
+    internal struct CroppedTextureMetadata
+    {
+        internal Texture2D SourceTexture;
+        internal Rectangle SourceRectangle;
+
+        internal CroppedTextureMetadata(Texture2D sourceTexture, Rectangle sourceRectangle)
         {
-            internal Texture2D SourceTexture;
-            internal Rectangle SourceRectangle;
-
-            internal CroppedTextureMetadata(Texture2D sourceTexture, Rectangle sourceRectangle)
-            {
-                this.SourceTexture = sourceTexture;
-                this.SourceRectangle = sourceRectangle;
-            }
+            SourceTexture = sourceTexture;
+            SourceRectangle = sourceRectangle;
         }
     }
 }

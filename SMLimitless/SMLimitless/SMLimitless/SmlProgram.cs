@@ -30,7 +30,7 @@ namespace SMLimitless
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
-            this.IsMouseVisible = true;
+            IsMouseVisible = true;
         }
 
         protected override void Initialize()
@@ -46,7 +46,7 @@ namespace SMLimitless
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            GameServices.InitializeServices(this.GraphicsDevice, spriteBatch, Content);
+            GameServices.InitializeServices(GraphicsDevice, spriteBatch, Content);
             SpritesheetManager.LoadContent();
             ScreenManager.LoadContent();
         }
@@ -60,7 +60,7 @@ namespace SMLimitless
         {
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
+                Exit();
 
             if (GameServices.GetService<GameTime>() == null)
             {
@@ -78,9 +78,9 @@ namespace SMLimitless
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            this.spriteBatch.Begin();
+            spriteBatch.Begin();
             ScreenManager.Draw();
-            this.spriteBatch.End();
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }

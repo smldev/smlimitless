@@ -18,7 +18,7 @@ namespace SMLimitless.Physics
         {
             get
             {
-                if (this.Depth == Vector2.Zero)
+                if (Depth == Vector2.Zero)
                 {
                     throw new Exception("Intersection.Direction.Get: No direction if not intersecting.");
                 }
@@ -41,7 +41,7 @@ namespace SMLimitless.Physics
         {
             get
             {
-                switch (this.Direction)
+                switch (Direction)
                 {
                     case Direction.Up:
                         return new Vector2(0f, 1f);
@@ -61,13 +61,13 @@ namespace SMLimitless.Physics
         {
             get
             {
-                return this.Depth != Vector2.Zero;
+                return Depth != Vector2.Zero;
             }
         }
 
         public Intersection(Vector2 intersection)
         {
-            this.Depth = intersection;
+            Depth = intersection;
         }
 
         public Intersection(BoundingRectangle a, BoundingRectangle b) : this(a.GetIntersectionDepth(b)) { }
@@ -77,7 +77,7 @@ namespace SMLimitless.Physics
         /// </summary>
         public Vector2 GetIntersectionResolution()
         {
-            return this.Depth * this.multiplier;
+            return Depth * multiplier;
         }
 
         public override string ToString()

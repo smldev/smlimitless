@@ -31,12 +31,12 @@ namespace SMLimitless.Screens
 
         public virtual void Start(string parameters = "")
         {
-            this.IsRunning = true;
+            IsRunning = true;
         }
 
         public virtual void Stop()
         {
-            this.IsRunning = false;
+            IsRunning = false;
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace SMLimitless.Screens
         /// </summary>
         public virtual void Exit(string parameters = "")
         {
-            this.Stop();
+            Stop();
             ScreenManager.ExitScreen(this, parameters);
         }
     }

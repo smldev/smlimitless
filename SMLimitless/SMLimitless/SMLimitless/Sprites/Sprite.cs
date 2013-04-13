@@ -44,7 +44,7 @@ namespace SMLimitless.Sprites
         private bool isOnGround;
         public bool IsOnGround
         {
-            get { return this.isOnGround; }
+            get { return isOnGround; }
             set
             {
                 if (value)
@@ -89,10 +89,10 @@ namespace SMLimitless.Sprites
         {
             Owner = owner;
             // Initialize all the properties
-            this.IsActive = true;
-            this.IsHostile = true;
-            this.IsMoving = true;
-            this.Direction = SpriteDirection.FacePlayer;
+            IsActive = true;
+            IsHostile = true;
+            IsMoving = true;
+            Direction = SpriteDirection.FacePlayer;
         }
 
         public abstract void LoadContent();

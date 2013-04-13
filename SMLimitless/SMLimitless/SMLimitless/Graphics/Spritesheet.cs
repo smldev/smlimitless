@@ -63,7 +63,7 @@ namespace SMLimitless.Graphics
             if (!isLoaded)
             {
                 this.filePath = filePath;
-                this.tileSize = new Vector2(tileWidth, tileHeight);
+                tileSize = new Vector2(tileWidth, tileHeight);
                 isLoaded = true;
             }
         }
@@ -73,7 +73,7 @@ namespace SMLimitless.Graphics
             if (!isLoaded)
             {
                 this.filePath = filePath;
-                this.tileSize = new Vector2(Single.NaN, Single.NaN);
+                tileSize = new Vector2(Single.NaN, Single.NaN);
                 isLoaded = true;
             }
         }
@@ -82,7 +82,7 @@ namespace SMLimitless.Graphics
         {
             if (isLoaded && !isContentLoaded)
             {
-                sheetTexture = GraphicsManager.LoadTextureFromFile(this.filePath);
+                sheetTexture = GraphicsManager.LoadTextureFromFile(filePath);
 
                 // Check the dimensions of the image to see if the tile size is divisible.
                 if (!tileSize.IsNaN() && (sheetTexture.Width % tileSize.X != 0 || sheetTexture.Height % tileSize.Y != 0))

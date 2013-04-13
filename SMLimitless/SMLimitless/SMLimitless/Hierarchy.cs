@@ -80,9 +80,9 @@ namespace SMLimitless
 
         public Hierarchy<T> Search(T data)
         {
-            if (this.Data == data) return this;
+            if (Data == data) return this;
 
-            foreach (Hierarchy<T> node in this.Children)
+            foreach (Hierarchy<T> node in Children)
             {
                 return node.Search(data);
             }

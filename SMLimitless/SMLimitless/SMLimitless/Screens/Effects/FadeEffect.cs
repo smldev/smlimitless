@@ -46,7 +46,7 @@ namespace SMLimitless.Screens.Effects
 
         public void Start(int length, EffectDirection direction, Vector2 position, Color color)
         {
-            if (direction == EffectDirection.Forward && this.currentFadeLevel == 1f || direction == EffectDirection.Backward && this.currentFadeLevel == 0f) return;
+            if (direction == EffectDirection.Forward && currentFadeLevel == 1f || direction == EffectDirection.Backward && currentFadeLevel == 0f) return;
 
             isRunning = true;
             fadeDelta = 1.0f / length;
@@ -116,7 +116,7 @@ namespace SMLimitless.Screens.Effects
         {
             if (isInitialized)
             {
-                spriteBatch.DrawRectangle(Vector2.Zero.ToRectangle(screensize), this.color * currentFadeLevel);
+                spriteBatch.DrawRectangle(Vector2.Zero.ToRectangle(screensize), color * currentFadeLevel);
             }
         }
 

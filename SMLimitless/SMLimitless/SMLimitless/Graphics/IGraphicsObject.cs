@@ -17,5 +17,6 @@ namespace SMLimitless.Graphics
         void LoadContent();
         void Update();
         void Draw(Vector2 position, Color color);
+        IGraphicsObject Clone();
     }
 }

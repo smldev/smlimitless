@@ -42,9 +42,9 @@ namespace SMLimitless.Sprites
 
         public virtual void Initialize(Level owner)
         {
-            this.Owner = owner;
-            this.IsActive = true;
-            this.Name = "";
+            Owner = owner;
+            IsActive = true;
+            Name = "";
         }
 
         public abstract void LoadContent();

@@ -27,7 +27,7 @@ namespace SMLimitless.Graphics
             if (!isLoaded)
             {
                 this.filePath = filePath;
-                this.isLoaded = true;
+                isLoaded = true;
             }
         }
 
@@ -40,7 +40,7 @@ namespace SMLimitless.Graphics
         {
             if (isLoaded && !isContentLoaded)
             {
-                this.texture = GraphicsManager.LoadTextureFromFile(this.filePath);
+                texture = GraphicsManager.LoadTextureFromFile(filePath);
                 isContentLoaded = true;
             }
         }
@@ -57,6 +57,16 @@ namespace SMLimitless.Graphics
         public void Draw(Vector2 position, Color color, SpriteEffects effects)
         {
             GameServices.SpriteBatch.Draw(texture, position, color, effects);
+        }
+
+        public IGraphicsObject Clone()
+        {
+            var clone = new StaticGraphicsObject();
+            clone.texture = this.texture;
+            clone.filePath = this.filePath;
+            clone.isLoaded = true;
+            clone.isContentLoaded = true;
+            return clone;
         }
     }
 }

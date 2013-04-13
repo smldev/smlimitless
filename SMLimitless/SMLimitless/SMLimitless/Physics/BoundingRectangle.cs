@@ -122,36 +122,36 @@ namespace SMLimitless.Physics
         public Vector2 GetIntersectionDepthEx(BoundingRectangle other)
         {
             Vector2 result = Vector2.Zero;
-            if (this.Right < other.Left)
+            if (Right < other.Left)
             {
                 return Vector2.Zero;
             }
-            else if ((this.Right > other.Left) && (this.Right < other.Right))
+            else if ((Right > other.Left) && (Right < other.Right))
             {
-                result = new Vector2(this.Right - other.Left, 0f);
+                result = new Vector2(Right - other.Left, 0f);
             }
-            else if ((this.Left > other.Left) && (this.Left < other.Right))
+            else if ((Left > other.Left) && (Left < other.Right))
             {
-                result = new Vector2(-(other.Right - this.Left), 0f);
+                result = new Vector2(-(other.Right - Left), 0f);
             }
-            else if (this.Left > other.Right)
+            else if (Left > other.Right)
             {
                 return Vector2.Zero;
             }
 
-            if (this.Bottom < other.Top)
+            if (Bottom < other.Top)
             {
                 return Vector2.Zero;
             }
-            else if ((this.Bottom > other.Top) && (this.Bottom < other.Bottom))
+            else if ((Bottom > other.Top) && (Bottom < other.Bottom))
             {
-                result = new Vector2(result.X, this.Bottom - other.Top);
+                result = new Vector2(result.X, Bottom - other.Top);
             }
-            else if ((this.Top > other.Top) && (this.Top < other.Bottom))
+            else if ((Top > other.Top) && (Top < other.Bottom))
             {
-                result = new Vector2(result.X, -(other.Bottom - this.Top));
+                result = new Vector2(result.X, -(other.Bottom - Top));
             }
-            else if (this.Top > other.Bottom)
+            else if (Top > other.Bottom)
             {
                 return Vector2.Zero;
             }
@@ -170,7 +170,7 @@ namespace SMLimitless.Physics
 
         public void Draw(Color color)
         {
-            GameServices.SpriteBatch.DrawRectangle(this.ToRectangle(), color);
+            GameServices.SpriteBatch.DrawRectangle(ToRectangle(), color);
         }
 
         public override string ToString()

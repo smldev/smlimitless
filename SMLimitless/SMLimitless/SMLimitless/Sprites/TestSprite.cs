@@ -19,9 +19,9 @@ namespace SMLimitless.Sprites
         public override void Initialize(Level owner)
         {
             graphics = new AnimatedGraphicsObject();
-            string absolute = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..\\..\\..\\test_sheet.png");
-            graphics.LoadFromMetadata(@"anim-spritesheet>""" + absolute + @""",16,16,15,2,3");
-            this.Size = new Vector2(16, 16);
+            string absolute = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..\\..\\..\\gfx\\smb3_goomba.png");
+            graphics = (AnimatedGraphicsObject)GraphicsManager.LoadGraphicsObject(absolute);
+            Size = new Vector2(16, 16);
             base.Initialize(owner);
         }
 
