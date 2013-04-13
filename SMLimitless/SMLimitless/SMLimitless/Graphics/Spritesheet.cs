@@ -82,7 +82,7 @@ namespace SMLimitless.Graphics
         {
             if (isLoaded && !isContentLoaded)
             {
-                sheetTexture = GraphicsManager.LoadFromFile(this.filePath);
+                sheetTexture = GraphicsManager.LoadTextureFromFile(this.filePath);
 
                 // Check the dimensions of the image to see if the tile size is divisible.
                 if (!tileSize.IsNaN() && (sheetTexture.Width % tileSize.X != 0 || sheetTexture.Height % tileSize.Y != 0))
