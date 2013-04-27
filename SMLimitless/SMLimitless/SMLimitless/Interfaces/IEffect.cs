@@ -19,16 +19,10 @@ namespace SMLimitless.Interfaces
         event EffectCompletedEventHandler effectCompletedEvent;
         void Start(int length, EffectDirection direction, Vector2 position, Color color);
         void Stop();
-        void LoadContent(ContentManager Content);
-
-        /// <summary>
-        /// Sets the screen size and visible drawing area for this effect.
-        /// </summary>
-        /// <param name="screenSize">The size of the screen in pixels.</param>
-        void SetScreenSize(Vector2 screenSize);
+        void LoadContent();
         void Set(EffectDirection direction, Color color);
-        void Update(GameTime gameTime);
-        void Draw(GameTime gameTime, SpriteBatch spriteBatch);
+        void Update();
+        void Draw();
     }
 
     public delegate void EffectCompletedEventHandler(object sender, EffectDirection direction);

@@ -232,7 +232,7 @@ namespace SMLimitless.Sprites.Collections
             sprites.ForEach(s => s.Draw());
             //GameServices.SpriteBatch.DrawString(GameServices.DebugFontLarge, debugText, new Vector2(16, 36), Color.White);
             debugText = "";
-            //quadTree.Draw();
+            quadTree.Draw();
         }
     }
 }

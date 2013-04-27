@@ -37,7 +37,7 @@ namespace SMLimitless
         {
             SpritesheetManager.Initalize();
             ScreenManager.Initalize();
-            ScreenManager.SetRootScreen(new LevelScreen(), "");
+            ScreenManager.SetRootScreen(new TestScreen(), "");
             GameServices.ScreenSize = new Vector2(GraphicsDevice.PresentationParameters.BackBufferWidth, GraphicsDevice.PresentationParameters.BackBufferHeight);
             base.Initialize();
         }

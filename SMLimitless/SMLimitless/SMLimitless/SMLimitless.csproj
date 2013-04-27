@@ -110,6 +110,7 @@
     <Compile Include="Enums.cs" />
     <Compile Include="Extensions\GameTimeExtensions.cs" />
     <Compile Include="Extensions\ListExtensions.cs" />
+    <Compile Include="Extensions\NumericExtensions.cs" />
     <Compile Include="Extensions\SpriteBatchExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\Vector2Extensions.cs" />

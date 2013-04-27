@@ -17,7 +17,7 @@ namespace SMLimitless.Screens
         public override void Initialize(Screen owner, string parameters)
         {
             Owner = owner;
-            effect = new FadeEffect(GameServices.ScreenSize);
+            effect = new FadeEffect();
             effect.Set(EffectDirection.Forward, Color.BlueViolet);
         }
 
@@ -25,7 +25,7 @@ namespace SMLimitless.Screens
 
         public override void Update()
         {
-            effect.Update(null);
+            effect.Update();
 
             if (Keyboard.GetState().IsKeyDown(Keys.X))
             {
@@ -35,7 +35,7 @@ namespace SMLimitless.Screens
 
         public override void Draw()
         {
-            effect.Draw(null, GameServices.SpriteBatch);
+            effect.Draw();
         }
     }
 }
