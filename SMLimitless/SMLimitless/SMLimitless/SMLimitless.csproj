@@ -130,6 +130,8 @@
     <Compile Include="Interfaces\IPositionable.cs" />
     <Compile Include="IO\DataReader.cs" />
     <Compile Include="Physics\BoundingRectangle.cs" />
+    <Compile Include="Physics\Interpolator.cs" />
+    <Compile Include="Physics\InterpolatorScales.cs" />
     <Compile Include="Physics\Intersection.cs" />
     <Compile Include="Physics\QuadTree.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

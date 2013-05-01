@@ -17,21 +17,16 @@ namespace SMLimitless.Screens
 {
     public class TestScreen : Screen
     {
-        // Testing adjustability of AnimatedGraphicsObjects
-        AnimatedGraphicsObject graphics = new AnimatedGraphicsObject();
+        public StaticGraphicsObject graphics;
+        public Interpolator interpolator;
+        public Vector2 position = Vector2.Zero;
+        public Vector2 velocity = Vector2.Zero;
 
         public override void Update() 
         {
             effect.Update();
-            if (InputManager.IsCurrentKeyPress(Keys.Right))
-            {
-                graphics.AdjustSpeed(10f);
-            }
-            else if (InputManager.IsCurrentKeyPress(Keys.Left))
-            {
-                graphics.AdjustSpeed(-10f);
-            }
             graphics.Update();
+            interpolator.Update();
         }
 
         public override void LoadContent() 
@@ -42,13 +37,13 @@ namespace SMLimitless.Screens
         public override void Initialize(Screen owner, string parameters)
         {
             effect = new FadeEffect();
-            graphics = (AnimatedGraphicsObject)GraphicsManager.LoadGraphicsObject(System.IO.Directory.GetCurrentDirectory() +  @"..\\..\\..\\..\\gfx\\smw_player_big.png");
+            graphics = (StaticGraphicsObject)GraphicsManager.LoadGraphicsObject(System.IO.Directory.GetCurrentDirectory() +  @"..\\..\\..\\..\\gfx\\smw_concrete_block.png");
+            interpolator = new Interpolator(0f, 400f, 4.0f, i => this.position.X = i.Value, i => this.velocity = Vector2.Zero, InterpolatorScales.SmoothStep);
         }
 
         public override void Draw()
         {
-            graphics.Draw(new Vector2(0, 0), Color.White);
-            GameServices.SpriteBatch.DrawString(GameServices.DebugFontLarge, graphics.AnimationCycleLength.ToString(), Vector2.Zero, Color.White);
+            graphics.Draw(position, Color.White);
             effect.Draw();
         }
 
@@ -57,6 +52,12 @@ namespace SMLimitless.Screens
             base.Start();
             effect.Set(Interfaces.EffectDirection.Forward, Color.Black);
             effect.Start(30, Interfaces.EffectDirection.Backward, Vector2.Zero, Color.Black);
+            
+        }
+
+        private void AdjustSpeed(float addend)
+        {
+            this.velocity.X += addend;
         }
 
         void effect_effectCompletedEvent(object sender, Interfaces.EffectDirection direction)
