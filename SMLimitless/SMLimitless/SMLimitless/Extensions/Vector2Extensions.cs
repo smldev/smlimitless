@@ -61,5 +61,18 @@ namespace SMLimitless.Extensions
         {
             return (left.X <= right.X) && (left.Y <= right.Y);
         }
+
+        /// <summary>
+        /// Parses a string containing a vector value formatted "x,y".
+        /// </summary>
+        public static Vector2 Parse(string input)
+        {
+            var values = input.Split(',');
+            if (values.Length != 2) throw new Exception(String.Format("Vector2Extensions.Parse(string): Attempted to parse invalid string {0}", input));
+            float x, y;
+            if (!Single.TryParse(values[0], out x)) throw new Exception(String.Format("Vector2Extensions.Parse(string): X Component of vector is not a valid number. Tried to parse {0}", values[0]));
+            if (!Single.TryParse(values[1], out y)) throw new Exception(String.Format("Vector2Extensions.Parse(string): Y Component of vector is not a valid number. Tried to parse {0}", values[1]));
+            return new Vector2(x, y);
+        }
     }
 }

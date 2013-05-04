@@ -18,6 +18,10 @@ namespace SMLimitless.Graphics
         private string filePath;
         private Texture2D texture;
 
+        // ComplexGraphicsObjects required fields
+        Rectangle cgoSourceRect;
+        ComplexGraphicsObject cgoOwner;
+
         public StaticGraphicsObject()
         {
         }
@@ -36,11 +40,31 @@ namespace SMLimitless.Graphics
             throw new Exception("StaticGraphicsObject.Load(string, DataReader): Static objects do not accepts configuration files.  Please use Load(string) instead.");
         }
 
+        internal void Load(Dictionary<string, string> section, ComplexGraphicsObject owner)
+        {
+            if (!isLoaded)
+            {
+                cgoSourceRect = Vector2Extensions.Parse(section["Frame"]).ToRectangle(owner.FrameSize);
+                filePath = owner.FilePath;
+                cgoOwner = owner;
+                isLoaded = true;
+            }
+        }
+
         public void LoadContent()
         {
             if (isLoaded && !isContentLoaded)
             {
                 texture = GraphicsManager.LoadTextureFromFile(filePath);
+                isContentLoaded = true;
+            }
+        }
+
+        internal void LoadContentCGO(Texture2D fileTexture)
+        {
+            if (isLoaded && !isContentLoaded && cgoSourceRect != Rectangle.Empty)
+            {
+                texture = fileTexture.Crop(cgoSourceRect);
                 isContentLoaded = true;
             }
         }

@@ -82,8 +82,10 @@ namespace SMLimitless.Graphics
                     }
                     else if (config[0] == "[Complex]")
                     {
-                        // TODO: create ComplexGraphicsObject
-                        return null;
+                        var result = new ComplexGraphicsObject();
+                        result.Load(filePath, config);
+                        loadedObjects.Add(filePath, result);
+                        return result;
                     }
                 }
             }

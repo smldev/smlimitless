@@ -17,7 +17,7 @@ namespace SMLimitless.Screens
 {
     public class TestScreen : Screen
     {
-        public StaticGraphicsObject graphics;
+        public ComplexGraphicsObject graphics;
         public Interpolator interpolator;
         public Vector2 position = Vector2.Zero;
         public Vector2 velocity = Vector2.Zero;
@@ -27,6 +27,41 @@ namespace SMLimitless.Screens
             effect.Update();
             graphics.Update();
             interpolator.Update();
+            if (InputManager.IsCurrentKeyPress(Keys.W))
+            {
+                graphics.CurrentObjectName = "water";
+            }
+            else if (InputManager.IsCurrentKeyPress(Keys.L))
+            {
+                graphics.CurrentObjectName = "lava";
+            }
+            else if (InputManager.IsCurrentKeyPress(Keys.B))
+            {
+                graphics.CurrentObjectName = "block_break";
+                graphics.Reset(true);
+            }
+            else if (InputManager.IsCurrentKeyPress(Keys.D))
+            {
+                graphics.CurrentObjectName = "diamond_block";
+            }
+            else if (InputManager.IsCurrentKeyPress(Keys.R))
+            {
+                if (graphics.CurrentObjectName != "diamond_block")
+                {
+                    graphics.Reset(true);
+                }
+            }
+            else if (InputManager.IsCurrentKeyPress(Keys.I))
+            {
+                if (position.X == 400f)
+                {
+                    interpolator.Reset(400f, 0f, 4.0f, i => this.position.X = i.Value, i => this.velocity = Vector2.Zero, InterpolatorScales.SmoothStep);
+                }
+                else if (position.X == 0f)
+                {
+                    interpolator.Reset(0f, 400f, 4.0f, i => this.position.X = i.Value, i => this.velocity = Vector2.Zero, InterpolatorScales.SmoothStep);
+                }
+            }
         }
 
         public override void LoadContent() 
@@ -37,7 +72,7 @@ namespace SMLimitless.Screens
         public override void Initialize(Screen owner, string parameters)
         {
             effect = new FadeEffect();
-            graphics = (StaticGraphicsObject)GraphicsManager.LoadGraphicsObject(System.IO.Directory.GetCurrentDirectory() +  @"..\\..\\..\\..\\gfx\\smw_concrete_block.png");
+            graphics = (ComplexGraphicsObject)GraphicsManager.LoadGraphicsObject(System.IO.Directory.GetCurrentDirectory() +  @"..\\..\\..\\..\\gfx\\complex_spritesheet.png");
             interpolator = new Interpolator(0f, 400f, 4.0f, i => this.position.X = i.Value, i => this.velocity = Vector2.Zero, InterpolatorScales.SmoothStep);
         }
 

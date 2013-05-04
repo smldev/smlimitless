@@ -1,29 +1,30 @@
 [Complex]
 FrameSize = 16,16 ; Measured in pixels
 TotalGraphicsObjects = 4 ; The total number of all graphics objects (static, animated) in this complex object.
+StartingObject = walking
 
-[Object1]
+[Object0] ; section name must be [Object#]
 Name = walking
 Type = animated
 Frames = 2
-Frame1 = [0, 0] ; The position of the frame in pixels.
-Frame2 = [16, 0]
+Frame0 = 0,0 ; The position of the frame in pixels.
+Frame1 = 16,0
 CycleLength = 1 ; Measured in seconds, rounded up to the nearest frame
 
-[Object2]
+[Object1]
 Name = kick_left
 Type = static
-Frame = [32, 0]
+Frame = 32,0
 
-[Object3]
+[Object2]
 Name = kick_right
 Type = static
-Frame = [48, 0]
+Frame = 48,0
 
-[Object4]
+[Object3]
 Name = stomp
 Type = animated_runonce
 Frames = 3
-Frame1 = [0, 16]
-Frame2 = [16, 16]
-Frame3 = [32, 16]
+Frame0 = 0,16
+Frame1 = 16,16
+Frame2 = 32,16

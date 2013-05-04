@@ -18,7 +18,7 @@ namespace SMLimitless.Graphics
 
         private bool isLoaded;
         private bool isContentLoaded;
-        private bool isRunOnce;
+        public bool IsRunOnce { get; internal set; }
         public bool IsRunning { get; set; }
 
         private string filePath;
@@ -29,6 +29,10 @@ namespace SMLimitless.Graphics
         private int renderedFramesElapsed;
         private int frameIndex;
         private int frameWidth; // measured in pixels
+
+        // ComplexGraphicsObject required fields
+        internal List<Rectangle> cgoSourceRects;
+        ComplexGraphicsObject cgoOwner;
 
         private decimal animationCycleLength;
         /// <summary>
@@ -70,6 +74,7 @@ namespace SMLimitless.Graphics
         public AnimatedGraphicsObject()
         {
             textures = new List<Texture2D>();
+            cgoSourceRects = new List<Rectangle>();
             IsRunning = true;
         }
 
@@ -98,12 +103,39 @@ namespace SMLimitless.Graphics
                 else
                 {
                     data = config.ReadFullSection("[Animated_RunOnce]");
-                    isRunOnce = true;
+                    IsRunOnce = true;
                 }
 
                 frameWidth = Int32.Parse(data["FrameWidth"]);
                 AnimationCycleLength = Decimal.Parse(data["CycleLength"]);
 
+                isLoaded = true;
+            }
+        }
+
+        /// <summary>
+        /// Loads an AnimatedGraphicsObjects from a configuration section in a ComplexGraphicsObject.
+        /// </summary>
+        /// <param name="section">The section from the CGO configuration that specifies this object.</param>
+        /// <param name="owner">The CGO that owns this object.</param>
+        internal void Load(Dictionary<string, string> section, ComplexGraphicsObject owner)
+        {
+            if (!isLoaded)
+            {
+                int frames = Int32.Parse(section["Frames"]);
+                Vector2 frameSize = owner.FrameSize;
+                filePath = owner.FilePath;
+                for (int i = 0; i < frames; i++)
+                {
+                    cgoSourceRects.Add(Vector2Extensions.Parse(section[String.Concat("Frame", i)]).ToRectangle(frameSize));
+                }
+                if (section["Type"] == "animated_runonce")
+                {
+                    IsRunOnce = true;
+                }
+                AnimationCycleLength = Decimal.Parse(section["CycleLength"]);
+                cgoOwner = owner;
+                frameCount = frames - 1;
                 isLoaded = true;
             }
         }
@@ -126,6 +158,18 @@ namespace SMLimitless.Graphics
             }
         }
 
+        internal void LoadContentCGO(Texture2D fileTexture)
+        {
+            if (isLoaded && !isContentLoaded && cgoSourceRects.Any())
+            {
+                foreach (Rectangle sourceRect in cgoSourceRects)
+                {
+                    textures.Add(fileTexture.Crop(sourceRect));
+                }
+                isContentLoaded = true;
+            }
+        }
+
         public void Update()
         {
             if (IsRunning)
@@ -135,7 +179,7 @@ namespace SMLimitless.Graphics
                 {
                     if (frameIndex == frameCount)
                     {
-                        if (isRunOnce)
+                        if (IsRunOnce)
                         {
                             IsRunning = false;
                             return;
@@ -233,6 +277,13 @@ namespace SMLimitless.Graphics
             }
         }
 
+        public void Reset(bool startRunning)
+        {
+            renderedFramesElapsed = 0;
+            frameIndex = 0;
+            if (startRunning) IsRunning = true;
+        }
+
         public IGraphicsObject Clone()
         {
             var clone = new AnimatedGraphicsObject();
@@ -242,7 +293,7 @@ namespace SMLimitless.Graphics
             clone.frameCount = frameCount;
             clone.frameWidth = frameWidth;
             clone.AnimationCycleLength = AnimationCycleLength;
-            clone.isRunOnce = isRunOnce;
+            clone.IsRunOnce = IsRunOnce;
             clone.isLoaded = true;
             clone.isContentLoaded = true;
             return clone;
