@@ -35,7 +35,6 @@ namespace SMLimitless
 
         protected override void Initialize()
         {
-            SpritesheetManager.Initalize();
             ScreenManager.Initalize();
             ScreenManager.SetRootScreen(new TestScreen(), "");
             GameServices.ScreenSize = new Vector2(GraphicsDevice.PresentationParameters.BackBufferWidth, GraphicsDevice.PresentationParameters.BackBufferHeight);
@@ -47,7 +46,6 @@ namespace SMLimitless
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             GameServices.InitializeServices(GraphicsDevice, spriteBatch, Content);
-            SpritesheetManager.LoadContent();
             ScreenManager.LoadContent();
         }
 

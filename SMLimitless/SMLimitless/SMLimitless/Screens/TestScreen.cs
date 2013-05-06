@@ -20,7 +20,6 @@ namespace SMLimitless.Screens
         public ComplexGraphicsObject graphics;
         public Interpolator interpolator;
         public Vector2 position = Vector2.Zero;
-        public Vector2 velocity = Vector2.Zero;
 
         public override void Update() 
         {
@@ -55,11 +54,11 @@ namespace SMLimitless.Screens
             {
                 if (position.X == 400f)
                 {
-                    interpolator.Reset(400f, 0f, 4.0f, i => this.position.X = i.Value, i => this.velocity = Vector2.Zero, InterpolatorScales.SmoothStep);
+                    interpolator.Reset(400f, 0f, 1.0f, i => this.position.X = i.Value, i => { }, InterpolatorScales.SmoothStep);
                 }
                 else if (position.X == 0f)
                 {
-                    interpolator.Reset(0f, 400f, 4.0f, i => this.position.X = i.Value, i => this.velocity = Vector2.Zero, InterpolatorScales.SmoothStep);
+                    interpolator.Reset(0f, 400f, 12.0f, i => this.position.X = i.Value, i => { }, InterpolatorScales.SmoothStep);
                 }
             }
         }
@@ -73,7 +72,7 @@ namespace SMLimitless.Screens
         {
             effect = new FadeEffect();
             graphics = (ComplexGraphicsObject)GraphicsManager.LoadGraphicsObject(System.IO.Directory.GetCurrentDirectory() +  @"..\\..\\..\\..\\gfx\\complex_spritesheet.png");
-            interpolator = new Interpolator(0f, 400f, 4.0f, i => this.position.X = i.Value, i => this.velocity = Vector2.Zero, InterpolatorScales.SmoothStep);
+            interpolator = new Interpolator(0f, 400f, 4.0f, i => this.position.X = i.Value, i => { }, InterpolatorScales.SmoothStep);
         }
 
         public override void Draw()
@@ -88,11 +87,6 @@ namespace SMLimitless.Screens
             effect.Set(Interfaces.EffectDirection.Forward, Color.Black);
             effect.Start(30, Interfaces.EffectDirection.Backward, Vector2.Zero, Color.Black);
             
-        }
-
-        private void AdjustSpeed(float addend)
-        {
-            this.velocity.X += addend;
         }
 
         void effect_effectCompletedEvent(object sender, Interfaces.EffectDirection direction)

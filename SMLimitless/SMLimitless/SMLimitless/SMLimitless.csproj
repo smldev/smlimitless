@@ -119,9 +119,6 @@
     <Compile Include="Graphics\ComplexGraphicsObject.cs" />
     <Compile Include="Graphics\GraphicsManager.cs" />
     <Compile Include="Graphics\IGraphicsObject.cs" />
-    <Compile Include="Graphics\MetadataHelpers.cs" />
-    <Compile Include="Graphics\Spritesheet.cs" />
-    <Compile Include="Graphics\SpritesheetManager.cs" />
     <Compile Include="Graphics\StaticGraphicsObject.cs" />
     <Compile Include="Hierarchy.cs" />
     <Compile Include="InputManager.cs" />
