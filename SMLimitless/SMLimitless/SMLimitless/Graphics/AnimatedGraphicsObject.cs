@@ -1,224 +1,311 @@
-﻿using System;
+﻿//-----------------------------------------------------------------------
+// <copyright file="AnimatedGraphicsObject.cs" company="Chris Akridge">
+//     Copyrighted under the MIT license.
+// </copyright>
+//-----------------------------------------------------------------------
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
 using SMLimitless.Extensions;
 using SMLimitless.IO;
 
 namespace SMLimitless.Graphics
 {
+    /// <summary>
+    /// A graphics object with multiple textures that are drawn in sequence.
+    /// </summary>
     public class AnimatedGraphicsObject : IGraphicsObject
     {
-        private const float msFrameLength = 1000f / 60f; // precision is nice
+        /// <summary>
+        /// A constant field equaling 16.67.
+        /// </summary>
+        private const float FrameLengthInMilliseconds = 1000f / 60f; // precision is nice
 
+        /// <summary>
+        /// Set when the Load method is called successfully.
+        /// </summary>
         private bool isLoaded;
-        private bool isContentLoaded;
-        public bool IsRunOnce { get; internal set; }
-        public bool IsRunning { get; set; }
 
+        /// <summary>
+        /// Set when the LoadContent method is called successfully.
+        /// </summary>
+        private bool isContentLoaded;
+
+        /// <summary>
+        /// A field containing the path to the image that
+        /// this object was loaded from.
+        /// </summary>
         private string filePath;
+
+        /// <summary>
+        /// A field containing the path to the configuration
+        /// file that this object was loaded from.
+        /// </summary>
         private string configFilePath;
 
-        private List<Texture2D> textures;
-        private int frameCount = -1;
-        private int renderedFramesElapsed;
-        private int frameIndex;
-        private int frameWidth; // measured in pixels
-
-        // ComplexGraphicsObject required fields
-        internal List<Rectangle> cgoSourceRects;
-        ComplexGraphicsObject cgoOwner;
-
-        private decimal animationCycleLength;
         /// <summary>
-        /// The time, measured in seconds, for the animation to play through all the frames.
+        /// The textures of this object.
+        /// </summary>
+        private List<Texture2D> textures;
+        
+        /// <summary>
+        /// The zero-based number of textures in this object.
+        /// Set to -1 until the object is loaded.
+        /// </summary>
+        private int frameCount = -1;
+
+        /// <summary>
+        /// How many rendered frames have been drawn since the last texture change.
+        /// </summary>
+        private int renderedFramesElapsed;
+
+        /// <summary>
+        /// The index of the current texture.
+        /// </summary>
+        private int frameIndex;
+
+        /// <summary>
+        /// The width of each texture, measured in pixels.
+        /// </summary>
+        private int frameWidth;
+
+        /// <summary>
+        /// The ComplexGraphicsObject that owns this object.
+        /// </summary>
+        private ComplexGraphicsObject cgoOwner;
+
+        /// <summary>
+        /// The field containing the animation cycle length.
+        /// </summary>
+        private decimal animationCycleLength;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AnimatedGraphicsObject"/> class.
+        /// </summary>
+        public AnimatedGraphicsObject()
+        {
+            this.textures = new List<Texture2D>();
+            this.CgoSourceRects = new List<Rectangle>();
+            this.IsRunning = true;
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the object runs through the textures.
+        /// </summary>
+        public bool IsRunning { get; set; }
+
+        /// <summary>
+        /// Gets a value indicating whether this object will run once.
+        /// Run-once objects will cycle through their textures once,
+        /// and then continuously draw the last texture until the
+        /// Reset method is called.
+        /// </summary>
+        public bool IsRunOnce { get; internal set; }
+
+        /// <summary>
+        /// Gets or sets the time, measured in seconds, for the animation to play through all the frames.
         /// </summary>
         public decimal AnimationCycleLength
         {
             get
             {
-                return animationCycleLength;
+                return this.animationCycleLength;
             }
+
             set
             {
-                if (value < ((1m / 60m) * textures.Count))
+                if (value < ((1m / 60m) * this.textures.Count))
                 {
-                    animationCycleLength = ((1m / 60m) * textures.Count);
+                    this.animationCycleLength = (1m / 60m) * this.textures.Count;
                 }
                 else
                 {
-                    animationCycleLength = value;
+                    this.animationCycleLength = value;
                 }
             }
         }
-        private int frameTime
+
+        /// <summary>
+        /// Gets or sets the list of source rectangles of the textures of this object from the complex graphic texture.
+        /// This field is required by ComplexGraphicsObjects and not to be used otherwise.
+        /// </summary>
+        internal List<Rectangle> CgoSourceRects { get; set; }
+
+        /// <summary>
+        /// Gets the frame time, which is the number of rendered frames that
+        /// each texture is drawn for.
+        /// </summary>
+        private int FrameTime
         {
             get
             {
-                if (textures == null || textures.Count == 0)
+                if (this.textures == null || this.textures.Count == 0)
                 {
                     return 0;
                 }
                 else
                 {
-                    return (int)(AnimationCycleLength * 60m) / textures.Count;
+                    return (int)(this.AnimationCycleLength * 60m) / this.textures.Count;
                 }
             }
         }
 
-        public AnimatedGraphicsObject()
-        {
-            textures = new List<Texture2D>();
-            cgoSourceRects = new List<Rectangle>();
-            IsRunning = true;
-        }
-
+        /// <summary>
+        /// Loads this AnimatedGraphicsObject from the specified file path.
+        /// This overload is only included to fulfill the IGraphicsObject contract.
+        /// Don't call it.
+        /// </summary>
+        /// <param name="filePath">The file path to the image to use.</param>
         public void Load(string filePath)
         {
             throw new Exception("AnimatedGraphicsObject.Load(string): Use the overload Load(string, DataReader) instead.");
         }
 
         /// <summary>
-        /// Loads an instance of an AnimatedGraphicsObject from the given file path and the given configuration.
+        /// Loads an instance of an AnimatedGraphicsObject.
         /// </summary>
+        /// <param name="filePath">The file path to the image to use.</param>
+        /// <param name="config">A DataReader containing the configuration for this file.</param>
         public void Load(string filePath, DataReader config)
         {
-            if (!isLoaded)
+            if (!this.isLoaded)
             {
                 this.filePath = filePath;
-                configFilePath = config.FilePath;
+                this.configFilePath = config.FilePath;
 
                 if (config[0] != "[Animated]" && config[0] != "[Animated_RunOnce]")
                 {
-                    throw new Exception(String.Format("AnimatedGraphicsObject.Load(string, DataReader): Invalid or corrupt configuration data (expected header [Animated] or [Animated_RunOnce], got header {0})", config[0]));
+                    throw new Exception(string.Format("AnimatedGraphicsObject.Load(string, DataReader): Invalid or corrupt configuration data (expected header [Animated] or [Animated_RunOnce], got header {0})", config[0]));
                 }
 
                 Dictionary<string, string> data;
-                if (config[0] == "[Animated]") data = config.ReadFullSection("[Animated]");
+                if (config[0] == "[Animated]")
+                {
+                    data = config.ReadFullSection("[Animated]");
+                }
                 else
                 {
                     data = config.ReadFullSection("[Animated_RunOnce]");
-                    IsRunOnce = true;
+                    this.IsRunOnce = true;
                 }
 
-                frameWidth = Int32.Parse(data["FrameWidth"]);
-                AnimationCycleLength = Decimal.Parse(data["CycleLength"]);
+                this.frameWidth = int.Parse(data["FrameWidth"]);
+                this.AnimationCycleLength = decimal.Parse(data["CycleLength"]);
 
-                isLoaded = true;
+                this.isLoaded = true;
             }
         }
 
         /// <summary>
-        /// Loads an AnimatedGraphicsObjects from a configuration section in a ComplexGraphicsObject.
+        /// Loads the content for this AnimatedGraphicsObject.
         /// </summary>
-        /// <param name="section">The section from the CGO configuration that specifies this object.</param>
-        /// <param name="owner">The CGO that owns this object.</param>
-        internal void Load(Dictionary<string, string> section, ComplexGraphicsObject owner)
-        {
-            if (!isLoaded)
-            {
-                int frames = Int32.Parse(section["Frames"]);
-                Vector2 frameSize = owner.FrameSize;
-                filePath = owner.FilePath;
-                for (int i = 0; i < frames; i++)
-                {
-                    cgoSourceRects.Add(Vector2Extensions.Parse(section[String.Concat("Frame", i)]).ToRectangle(frameSize));
-                }
-                if (section["Type"] == "animated_runonce")
-                {
-                    IsRunOnce = true;
-                }
-                AnimationCycleLength = Decimal.Parse(section["CycleLength"]);
-                cgoOwner = owner;
-                frameCount = frames - 1;
-                isLoaded = true;
-            }
-        }
-
         public void LoadContent()
         {
-            if (isLoaded && !isContentLoaded)
+            if (this.isLoaded && !this.isContentLoaded)
             {
-                Texture2D fullTexture = GraphicsManager.LoadTextureFromFile(filePath);
+                Texture2D fullTexture = GraphicsManager.LoadTextureFromFile(this.filePath);
                 int frameHeight = fullTexture.Height;
 
-                if (fullTexture.Width % frameWidth != 0) throw new Exception("AnimatedGraphicsObject.LoadContent(): The specified frame width for this texture is invalid.");
-
-                for (int x = 0; x < fullTexture.Width; x += frameWidth)
+                if (fullTexture.Width % this.frameWidth != 0)
                 {
-                    textures.Add(GraphicsManager.Crop(fullTexture, new Rectangle(x, 0, frameWidth, frameHeight)));
-                    frameCount++;
+                    throw new Exception("AnimatedGraphicsObject.LoadContent(): The specified frame width for this texture is invalid.");
                 }
-                isContentLoaded = true;
+
+                for (int x = 0; x < fullTexture.Width; x += this.frameWidth)
+                {
+                    this.textures.Add(GraphicsManager.Crop(fullTexture, new Rectangle(x, 0, this.frameWidth, frameHeight)));
+                    this.frameCount++;
+                }
+
+                this.isContentLoaded = true;
             }
         }
 
-        internal void LoadContentCGO(Texture2D fileTexture)
-        {
-            if (isLoaded && !isContentLoaded && cgoSourceRects.Any())
-            {
-                foreach (Rectangle sourceRect in cgoSourceRects)
-                {
-                    textures.Add(fileTexture.Crop(sourceRect));
-                }
-                isContentLoaded = true;
-            }
-        }
-
+        /// <summary>
+        /// Updates this AnimatedGraphicsObject.
+        /// </summary>
         public void Update()
         {
-            if (IsRunning)
+            if (this.IsRunning)
             {
-                renderedFramesElapsed++;
-                if (renderedFramesElapsed == frameTime)
+                this.renderedFramesElapsed++;
+                if (this.renderedFramesElapsed == this.FrameTime)
                 {
-                    if (frameIndex == frameCount)
+                    if (this.frameIndex == this.frameCount)
                     {
-                        if (IsRunOnce)
+                        if (this.IsRunOnce)
                         {
-                            IsRunning = false;
+                            this.IsRunning = false;
                             return;
                         }
-                        else frameIndex = 0;
+                        else
+                        {
+                            this.frameIndex = 0;
+                        }
                     }
-                    else frameIndex++;
+                    else
+                    {
+                        this.frameIndex++;
+                    }
 
-                    renderedFramesElapsed = 0;
+                    this.renderedFramesElapsed = 0;
                 }
             }
         }
 
+        /// <summary>
+        /// Draws this AnimatedGraphicsObject to the screen.
+        /// </summary>
+        /// <param name="position">The position to draw this object at.</param>
+        /// <param name="color">The color to shade this object. Use Color.White for no shading.</param>
         public void Draw(Vector2 position, Color color)
         {
-            GameServices.SpriteBatch.Draw(textures[frameIndex], position, color);
-            GameServices.SpriteBatch.DrawString(GameServices.DebugFontLarge, this.frameTime.ToString(), new Vector2(0, 20), Color.White);
+            GameServices.SpriteBatch.Draw(this.textures[this.frameIndex], position, color);
         }
 
+        /// <summary>
+        /// Draws this AnimatedGraphicsObject to the screen.
+        /// </summary>
+        /// <param name="position">The position to draw this object at.</param>
+        /// <param name="color">The color to shade this object. Use Color.White for no shading.</param>
+        /// <param name="spriteEffects">How to mirror this object.</param>
         public void Draw(Vector2 position, Color color, SpriteEffects spriteEffects)
         {
-            GameServices.SpriteBatch.Draw(textures[frameIndex], position, color, spriteEffects);
+            GameServices.SpriteBatch.Draw(this.textures[this.frameIndex], position, color, spriteEffects);
         }
 
+        /// <summary>
+        /// Draws this AnimatedGraphicsObject to the screen.
+        /// </summary>
+        /// <param name="position">The position to draw this object at.</param>
+        /// <param name="color">The color to shade this object. Use Color.White for no shading.</param>
+        /// <param name="debug">If true, the frame index will be drawn in the top-left corner of the sprite.</param>
         public void Draw(Vector2 position, Color color, bool debug)
         {
-            Draw(position, color);
+            this.Draw(position, color);
             if (debug)
             {
-                GameServices.SpriteBatch.DrawString(GameServices.DebugFontSmall, frameIndex.ToString(), position, Color.White);
+                GameServices.SpriteBatch.DrawString(GameServices.DebugFontSmall, this.frameIndex.ToString(), position, Color.White);
             }
         }
 
+        /// <summary>
+        /// Draws this AnimatedGraphicsObject to the screen.
+        /// </summary>
+        /// <param name="position">The position to draw this object at.</param>
+        /// <param name="color">The color to shade this object. Use Color.White for no shading.</param>
+        /// <param name="spriteEffects">How to mirror this object.</param>
+        /// /// <param name="debug">If true, the frame index will be drawn in the top-left corner of the sprite.</param>
         public void Draw(Vector2 position, Color color, SpriteEffects spriteEffects, bool debug)
         {
-            Draw(position, color, spriteEffects);
+            this.Draw(position, color, spriteEffects);
             if (debug)
             {
-                GameServices.SpriteBatch.DrawString(GameServices.DebugFontSmall, frameIndex.ToString(), position, Color.White);
+                GameServices.SpriteBatch.DrawString(GameServices.DebugFontSmall, this.frameIndex.ToString(), position, Color.White);
             }
         }
 
@@ -240,20 +327,20 @@ namespace SMLimitless.Graphics
         /// <param name="newFrameTime">How many rendered frames each frame is shown for.</param>
         public void SetSpeed(int newFrameTime)
         {
-            this.AnimationCycleLength = 60m / textures.Count;
+            this.AnimationCycleLength = 60m / this.textures.Count;
             this.renderedFramesElapsed = 0;
         }
 
         /// <summary>
         /// Adjusts the speed of the animation of this
         /// object by percentage. Rounded to the closest
-        /// frame boundary (usually 1/60th of a second).
+        /// frame boundary (usually one-sixtieth of a second).
         /// </summary>
         /// <param name="percentage">The percentage by which to adjust the animation speed.</param>
         public void AdjustSpeed(float percentage)
         {
             percentage /= 100f;
-            Decimal addend = this.AnimationCycleLength * (Decimal)percentage;
+            decimal addend = this.AnimationCycleLength * (decimal)percentage;
             this.AnimationCycleLength += addend;
             this.renderedFramesElapsed = 0;
 
@@ -261,42 +348,106 @@ namespace SMLimitless.Graphics
             if ((this.AnimationCycleLength * 60m) % 1 != 0)
             {
                 decimal cycleInFrames = this.AnimationCycleLength * 60m;
-                if (percentage > 0f) // If we're slowing down
+                if (percentage > 0f) 
                 {
+                    // If we're slowing down
                     cycleInFrames = NumericExtensions.RoundUp(cycleInFrames);
                 }
-                else if (percentage < 0f) // If we're speeding up
+                else if (percentage < 0f) 
                 {
+                    // If we're speeding up
                     cycleInFrames = NumericExtensions.RoundDown(cycleInFrames);
                 }
-                else // somehow we're zero
+                else
                 {
+                    // somehow we're zero
                     return;
                 }
+
                 this.AnimationCycleLength = cycleInFrames / 60m;
             }
         }
 
+        /// <summary>
+        /// Resets this AnimatedGraphicsObject.
+        /// The texture index becomes 0, and
+        /// the rendered frame count also becomes 0.
+        /// </summary>
+        /// <param name="startRunning">If true, the object will restart.</param>
         public void Reset(bool startRunning)
         {
-            renderedFramesElapsed = 0;
-            frameIndex = 0;
-            if (startRunning) IsRunning = true;
+            this.renderedFramesElapsed = 0;
+            this.frameIndex = 0;
+            if (startRunning)
+            {
+                this.IsRunning = true;
+            }
         }
 
+        /// <summary>
+        /// Returns a deep copy of this object.
+        /// The texture is not cloned, but everything else is.
+        /// </summary>
+        /// <returns>A deep copy of this object.</returns>
         public IGraphicsObject Clone()
         {
             var clone = new AnimatedGraphicsObject();
-            clone.filePath = filePath;
-            clone.configFilePath = configFilePath;
-            clone.textures = textures;
-            clone.frameCount = frameCount;
-            clone.frameWidth = frameWidth;
-            clone.AnimationCycleLength = AnimationCycleLength;
-            clone.IsRunOnce = IsRunOnce;
+            clone.filePath = this.filePath;
+            clone.configFilePath = this.configFilePath;
+            clone.textures = this.textures;
+            clone.frameCount = this.frameCount;
+            clone.frameWidth = this.frameWidth;
+            clone.AnimationCycleLength = this.AnimationCycleLength;
+            clone.IsRunOnce = this.IsRunOnce;
             clone.isLoaded = true;
             clone.isContentLoaded = true;
             return clone;
+        }
+
+        /// <summary>
+        /// Loads an AnimatedGraphicsObjects from a configuration section in a ComplexGraphicsObject.
+        /// </summary>
+        /// <param name="section">The section from the CGO configuration that specifies this object.</param>
+        /// <param name="owner">The CGO that owns this object.</param>
+        internal void Load(Dictionary<string, string> section, ComplexGraphicsObject owner)
+        {
+            if (!this.isLoaded)
+            {
+                int frames = int.Parse(section["Frames"]);
+                Vector2 frameSize = owner.FrameSize;
+                this.filePath = owner.FilePath;
+                for (int i = 0; i < frames; i++)
+                {
+                    this.CgoSourceRects.Add(Vector2Extensions.Parse(section[string.Concat("Frame", i)]).ToRectangle(frameSize));
+                }
+
+                if (section["Type"] == "animated_runonce")
+                {
+                    this.IsRunOnce = true;
+                }
+
+                this.AnimationCycleLength = decimal.Parse(section["CycleLength"]);
+                this.cgoOwner = owner;
+                this.frameCount = frames - 1;
+                this.isLoaded = true;
+            }
+        }
+
+        /// <summary>
+        /// Loads the content for this AnimatedGraphicsObject.
+        /// </summary>
+        /// <param name="fileTexture">The texture of the ComplexGraphicsObject to take the textures from.</param>
+        internal void LoadContentCGO(Texture2D fileTexture)
+        {
+            if (this.isLoaded && !this.isContentLoaded && this.CgoSourceRects.Any())
+            {
+                foreach (Rectangle sourceRect in this.CgoSourceRects)
+                {
+                    this.textures.Add(fileTexture.Crop(sourceRect));
+                }
+
+                this.isContentLoaded = true;
+            }
         }
     }
 }

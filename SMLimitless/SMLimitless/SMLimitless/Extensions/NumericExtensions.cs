@@ -1,10 +1,18 @@
-﻿using System;
+﻿//-----------------------------------------------------------------------
+// <copyright file="NumericExtensions.cs" company="Chris Akridge">
+//     Copyrighted unter the MIT Public License.
+// </copyright>
+//-----------------------------------------------------------------------
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace SMLimitless.Extensions
 {
+    /// <summary>
+    /// Contains helper methods for numeric types.
+    /// </summary>
     public static class NumericExtensions
     {
         /// <summary>
@@ -15,14 +23,18 @@ namespace SMLimitless.Extensions
         /// </summary>
         /// <param name="input">The decimal to round up.</param>
         /// <returns>The decimal rounded up to the nearest integer.</returns>
-        public static decimal RoundUp(Decimal input)
+        public static decimal RoundUp(decimal input)
         {
-            if (input % 1 != 0) // if the input isn't an integer
+            if (input % 1 != 0)
             {
+                // if the input isn't an integer
                 input += 1m;
                 return Math.Truncate(input);
             }
-            else return input;
+            else
+            {
+                return input;
+            }
         }
 
         /// <summary>
@@ -32,7 +44,7 @@ namespace SMLimitless.Extensions
         /// </summary>
         /// <param name="input">The decimal to round down.</param>
         /// <returns>The decimal rounded down to the nearest integer.</returns>
-        public static decimal RoundDown(Decimal input)
+        public static decimal RoundDown(decimal input)
         {
             return Math.Truncate(input);
         }
@@ -46,11 +58,12 @@ namespace SMLimitless.Extensions
         /// </summary>
         /// <param name="input">The decimal to round.</param>
         /// <returns>The rounded decimal.</returns>
-        public static decimal RoundNearest(Decimal input)
+        public static decimal RoundNearest(decimal input)
         {
-            if (input % 1 != 0) // if the input isn't an integer
+            if (input % 1 != 0)
             {
-                Decimal fraction = input - Math.Truncate(input); // remove the integral part
+                // if the input isn't an integer
+                decimal fraction = input - Math.Truncate(input); // remove the integral part
                 if (fraction >= 0.5m)
                 {
                     return RoundUp(input);
@@ -60,6 +73,7 @@ namespace SMLimitless.Extensions
                     return RoundDown(input);
                 }
             }
+
             return input;
         }
     }

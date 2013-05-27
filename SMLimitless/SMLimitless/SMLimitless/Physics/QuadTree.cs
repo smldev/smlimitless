@@ -1,11 +1,14 @@
-﻿using System;
+﻿//-----------------------------------------------------------------------
+// <copyright file="QuadTree.cs" company="Chris Akridge">
+//     Copyrighted unter the MIT Public License.
+// </copyright>
+//-----------------------------------------------------------------------
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
 using SMLimitless.Extensions;
 using SMLimitless.Interfaces;
 using SMLimitless.Sprites;
@@ -16,44 +19,183 @@ namespace SMLimitless.Physics
     /// Represents a collection of sprites and tiles divided into cells.
     /// </summary>
     /// <remarks>
-    /// This is a lazy quadtree - it does not separate cells based on the number of objects inside them.
+    /// This is a lazy QuadTree - it does not separate cells based on the number of objects inside them.
     /// </remarks>
     public class QuadTree
     {
+        /// <summary>
+        /// A dictionary of cells, with Vector2 keys
+        /// representing cell number, and with QuadTreeCell
+        /// values.
+        /// </summary>
         private Dictionary<Vector2, QuadTreeCell> cells;
 
+        /// <summary>
+        /// A list of all sprites in this QuadTree.
+        /// </summary>
         private List<Sprite> sprites;
+
+        /// <summary>
+        /// A list of all tiles in the QuadTree.
+        /// </summary>
         private List<Tile> tiles;
 
         /// <summary>
-        /// The size in pixels of all cells.
+        /// Initializes a new instance of the <see cref="QuadTree"/> class.
+        /// </summary>
+        /// <param name="cellSize">The size in pixels of each cell.</param>
+        public QuadTree(Vector2 cellSize)
+        {
+            this.cells = new Dictionary<Vector2, QuadTreeCell>();
+            this.sprites = new List<Sprite>();
+            this.tiles = new List<Tile>();
+            this.CellSize = cellSize;
+        }
+
+        /// <summary>
+        /// Gets the size in pixels of all cells.
         /// </summary>
         public Vector2 CellSize { get; private set; }
 
-        public QuadTree(Vector2 cellSize)
+        /// <summary>
+        /// Adds a sprite to the QuadTree.
+        /// </summary>
+        /// <param name="sprite">The sprite to add.</param>
+        public void Add(Sprite sprite)
         {
-            cells = new Dictionary<Vector2, QuadTreeCell>();
-            sprites = new List<Sprite>();
-            tiles = new List<Tile>();
-            CellSize = cellSize;
+            this.sprites.Add(sprite);
+            this.PlaceSprite(sprite);
         }
 
+        /// <summary>
+        /// Adds a tile to the QuadTree.
+        /// </summary>
+        /// <param name="tile">The tile to add.</param>
+        public void Add(Tile tile)
+        {
+            this.tiles.Add(tile);
+            this.PlaceTile(tile);
+        }
+
+        /// <summary>
+        /// Removes a sprite from the QuadTree.
+        /// </summary>
+        /// <param name="sprite">The sprite to remove.</param>
+        public void Remove(Sprite sprite)
+        {
+            this.sprites.Remove(sprite);
+            foreach (var cell in this.cells.Values)
+            {
+                cell.Sprites.Remove(sprite);
+            }
+        }
+
+        /// <summary>
+        /// Removes a tile from the QuadTree.
+        /// </summary>
+        /// <param name="tile">The tile to remove.</param>
+        public void Remove(Tile tile)
+        {
+            this.tiles.Remove(tile);
+            foreach (var cell in this.cells.Values)
+            {
+                cell.Tiles.Remove(tile);
+            }
+        }
+
+        /// <summary>
+        /// Clears all the sprites and tiles from all cells.
+        /// The list of all sprites and tiles is not affected.
+        /// </summary>
+        public void Clear()
+        {
+            foreach (var cell in this.cells.Values)
+            {
+                cell.Sprites.Clear();
+                cell.Tiles.Clear();
+            }
+        }
+
+        /// <summary>
+        /// Clears all the sprites and tiles from all cells, and then removes all cells entirely.
+        /// </summary>
+        public void ClearAll()
+        {
+            this.cells.Clear();
+        }
+
+        /// <summary>
+        /// Gets a list of all the sprites that a given sprite could collide with.
+        /// </summary>
+        /// <param name="sprite">The sprite to check.</param>
+        /// <returns>A list of sprites.</returns>
+        public List<Sprite> GetCollidableSprites(Sprite sprite)
+        {
+            var result = new List<Sprite>();
+            var intersectingCells = this.GetIntersectingCells(sprite);
+            intersectingCells.ForEach(cell => result.AddRange(this.cells[cell].Sprites));
+            return result;
+        }
+
+        /// <summary>
+        /// Gets a list of all the tiles that a given sprite could collide with.
+        /// </summary>
+        /// <param name="sprite">The sprite to check.</param>
+        /// <returns>A list of tiles.</returns>
+        public List<Tile> GetCollidableTiles(Sprite sprite)
+        {
+            var result = new List<Tile>();
+            var intersectingCells = this.GetIntersectingCells(sprite);
+            intersectingCells.ForEach(cell => this.cells[cell].Tiles.ForEach(tile => result.AddUnlessDuplicate(tile)));
+            return result;
+        }
+
+        /// <summary>
+        /// Updates the QuadTree, recalculating the cells for every tile.
+        /// </summary>
+        public void Update()
+        {
+            this.ClearAll();
+            this.sprites.ForEach(s => this.PlaceSprite(s));
+            this.tiles.ForEach(t => this.PlaceTile(t));
+        }
+
+        /// <summary>
+        /// Draws a grid of all cells in the QuadTree,
+        /// as well as the cell number in small text
+        /// in the top-left corner.
+        /// </summary>
+        public void Draw()
+        {
+            SpriteBatch batch = GameServices.SpriteBatch;
+
+            foreach (var cell in this.cells)
+            {
+                Rectangle drawBounds = new Rectangle(
+                 (int)(cell.Key.X * this.CellSize.X),
+                 (int)(cell.Key.Y * this.CellSize.Y),
+                 (int)this.CellSize.X,
+                 (int)this.CellSize.Y);
+
+                batch.DrawRectangleEdges(drawBounds, Color.White);
+                batch.DrawString(GameServices.DebugFontSmall, cell.Key.ToString(), new Vector2((cell.Key.X * this.CellSize.X) + 2, (cell.Key.Y * this.CellSize.Y) + 2), Color.White);
+            }
+        }
+
+        /// <summary>
+        /// Returns a list of all the cells a given object intersects.
+        /// </summary>
+        /// <param name="item">The object to check.</param>
+        /// <returns>A list of all intersecting cells.</returns>
         private List<Vector2> GetIntersectingCells(IPositionable item)
         {
-            //if (item is MouseFollowSprite) System.Diagnostics.Debugger.Break();
             var result = new List<Vector2>();
             Rectangle rect = new Rectangle((int)item.Position.X, (int)item.Position.Y, (int)item.Size.X, (int)item.Size.Y);
-            //Vector2 sizeInCells = new Vector2(rect.Width / CellSize.X, rect.Height / CellSize.Y);
 
-            //Vector2 topLeft = new Vector2(rect.X, rect.Y);
-            //Vector2 topRight = new Vector2(rect.X + rect.Width, rect.Y);
-            //Vector2 bottomLeft = new Vector2(rect.X, rect.Y + rect.Height);
-            //Vector2 bottomRight = new Vector2(rect.X + rect.Width, rect.Y + rect.Height);
-
-            int topCellY = (int)Math.Floor(rect.Top / CellSize.Y);
-            int bottomCellY = (int)Math.Floor(rect.Bottom / CellSize.Y);
-            int leftCellX = (int)Math.Floor(rect.Left / CellSize.X);
-            int rightCellX = (int)Math.Floor(rect.Right / CellSize.X);
+            int topCellY = (int)Math.Floor(rect.Top / this.CellSize.Y);
+            int bottomCellY = (int)Math.Floor(rect.Bottom / this.CellSize.Y);
+            int leftCellX = (int)Math.Floor(rect.Left / this.CellSize.X);
+            int rightCellX = (int)Math.Floor(rect.Right / this.CellSize.X);
 
             int x, y;
 
@@ -68,148 +210,48 @@ namespace SMLimitless.Physics
             return result;
         }
 
+        /// <summary>
+        /// Places a sprite in the proper cell(s).
+        /// </summary>
+        /// <param name="sprite">The sprite to place.</param>
         private void PlaceSprite(Sprite sprite)
         {
-            var intersectingCells = GetIntersectingCells(sprite);
+            var intersectingCells = this.GetIntersectingCells(sprite);
 
             foreach (var cell in intersectingCells)
             {
-                if (!cells.ContainsKey(cell)) cells.Add(cell, new QuadTreeCell());
-                if (!cells[cell].Sprites.Contains(sprite)) cells[cell].Add(sprite);
+                if (!this.cells.ContainsKey(cell))
+                {
+                    this.cells.Add(cell, new QuadTreeCell());
+                }
+
+                if (!this.cells[cell].Sprites.Contains(sprite))
+                {
+                    this.cells[cell].Add(sprite);
+                }
             }
         }
 
+        /// <summary>
+        /// Places a tile in the proper cell(s).
+        /// </summary>
+        /// <param name="tile">The tile to place.</param>
         private void PlaceTile(Tile tile)
         {
-            var intersectingCells = GetIntersectingCells(tile);
+            var intersectingCells = this.GetIntersectingCells(tile);
 
             foreach (var cell in intersectingCells)
             {
-                if (!cells.ContainsKey(cell)) cells.Add(cell, new QuadTreeCell());
-                if (!cells[cell].Tiles.Contains(tile)) cells[cell].Add(tile);
+                if (!this.cells.ContainsKey(cell))
+                {
+                    this.cells.Add(cell, new QuadTreeCell());
+                }
+
+                if (!this.cells[cell].Tiles.Contains(tile))
+                {
+                    this.cells[cell].Add(tile);
+                }
             }
-        }
-
-        public void Add(Sprite sprite)
-        {
-            sprites.Add(sprite);
-            PlaceSprite(sprite);
-        }
-
-        public void Add(Tile tile)
-        {
-            tiles.Add(tile);
-            PlaceTile(tile);
-        }
-
-        public void Remove(Sprite sprite)
-        {
-            sprites.Remove(sprite);
-            foreach (var cell in cells.Values)
-            {
-                cell.Sprites.Remove(sprite);
-            }
-        }
-
-        public void Remove(Tile tile)
-        {
-            tiles.Remove(tile);
-            foreach (var cell in cells.Values)
-            {
-                cell.Tiles.Remove(tile);
-            }
-        }
-
-        /// <summary>
-        /// Clears all the sprites and tiles from all cells.
-        /// </summary>
-        public void Clear()
-        {
-            foreach (var cell in cells.Values)
-            {
-                cell.Sprites.Clear();
-                cell.Tiles.Clear();
-            }
-        }
-
-        /// <summary>
-        /// Clears all the sprites and tiles from all cells, and then removes all cells entirely.
-        /// </summary>
-        public void ClearAll()
-        {
-            cells.Clear();
-        }
-
-        public List<Sprite> GetCollidableSprites(Sprite sprite)
-        {
-            var result = new List<Sprite>();
-            var intersectingCells = GetIntersectingCells(sprite);
-            intersectingCells.ForEach(cell => result.AddRange(cells[cell].Sprites));
-            return result;
-        }
-
-        public List<Tile> GetCollidableTiles(Sprite sprite)
-        {
-            var result = new List<Tile>();
-            var intersectingCells = GetIntersectingCells(sprite);
-            intersectingCells.ForEach(cell => cells[cell].Tiles.ForEach(tile => result.AddUnlessDuplicate(tile)));
-            return result;
-        }
-
-        public void Update()
-        {
-            ClearAll();
-            sprites.ForEach(s => PlaceSprite(s));
-            tiles.ForEach(t => PlaceTile(t));
-        }
-
-        public void Draw()
-        {
-            SpriteBatch batch = GameServices.SpriteBatch;
-
-            foreach (var cell in cells)
-            {
-                Rectangle drawBounds = new Rectangle(
-                 (int)(cell.Key.X * CellSize.X),
-                 (int)(cell.Key.Y * CellSize.Y),
-                 (int)(CellSize.X),
-                 (int)(CellSize.Y));
-
-                batch.DrawRectangleEdges(drawBounds, Color.White);
-                batch.DrawString(GameServices.DebugFontSmall, cell.Key.ToString(), new Vector2(cell.Key.X * CellSize.X + 2, cell.Key.Y * CellSize.Y + 2), Color.White);
-            }
-        }
-    }
-
-    internal class QuadTreeCell
-    {
-        internal List<Sprite> Sprites;
-        internal List<Tile> Tiles;
-
-        internal QuadTreeCell()
-        {
-            Sprites = new List<Sprite>();
-            Tiles = new List<Tile>();
-        }
-
-        internal void Add(Sprite sprite)
-        {
-            Sprites.Add(sprite);
-        }
-
-        internal void Add(Tile tile)
-        {
-            Tiles.Add(tile);
-        }
-
-        internal void Remove(Sprite sprite)
-        {
-            Sprites.Remove(sprite);
-        }
-
-        internal void Remove(Tile tile)
-        {
-            Tiles.Remove(tile);
         }
     }
 }

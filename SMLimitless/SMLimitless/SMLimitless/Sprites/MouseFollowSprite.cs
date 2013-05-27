@@ -1,62 +1,93 @@
-﻿using System;
+﻿//-----------------------------------------------------------------------
+// <copyright file="MouseFollowSprite.cs" company="Chris Akridge">
+//     Copyrighted unter the MIT Public License.
+// </copyright>
+//-----------------------------------------------------------------------
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-
 using SMLimitless.Extensions;
 using SMLimitless.Physics;
 
 namespace SMLimitless.Sprites
 {
+    /// <summary>
+    /// A testing sprite.
+    /// </summary>
     public class MouseFollowSprite : Sprite
     {
+        /// <summary>
+        /// Initializes this sprite.
+        /// </summary>
+        /// <param name="owner">The level that owns this sprite.</param>
         public override void Initialize(Collections.Level owner)
         {
-            Size = new Vector2(16f, 16f);
+            this.Size = new Vector2(16f, 16f);
             base.Initialize(owner);
         }
+        
+        /// <summary>
+        /// Updates this sprite.
+        /// </summary>
         public override void Update()
         {
             float distance = 2f;
             if (InputManager.IsCurrentKeyPress(Keys.Up))
             {
-                Position = new Vector2(Position.X, Position.Y - distance);
+                this.Position = new Vector2(Position.X, Position.Y - distance);
             }
+
             if (InputManager.IsCurrentKeyPress(Keys.Down))
             {
-                Position = new Vector2(Position.X, Position.Y + distance);
+                this.Position = new Vector2(Position.X, Position.Y + distance);
             }
+
             if (InputManager.IsCurrentKeyPress(Keys.Left))
             {
-                Position = new Vector2(Position.X - 1.0f, Position.Y);
+                this.Position = new Vector2(Position.X - 1.0f, Position.Y);
             }
+
             if (InputManager.IsCurrentKeyPress(Keys.Right))
             {
-                Position = new Vector2(Position.X + 1.0f, Position.Y);
+                this.Position = new Vector2(Position.X + 1.0f, Position.Y);
             }
         }
 
+        /// <summary>
+        /// Draws this sprite.
+        /// </summary>
         public override void Draw()
         {
             GameServices.SpriteBatch.DrawRectangle(Hitbox.ToRectangle(), Color.Red);
         }
 
+        /// <summary>
+        /// Handles a collision between this sprite and another.
+        /// </summary>
+        /// <param name="sprite">The sprite that has collided with this one.</param>
+        /// <param name="intersect">The depth of the intersection.</param>
         public override void HandleSpriteCollision(Sprite sprite, Intersection intersect)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Handles a collision between this sprite and a tile.
+        /// </summary>
+        /// <param name="tile">The tile that this sprite has collided with.</param>
+        /// <param name="intersect">The depth of the intersection.</param>
         public override void HandleTileCollision(Tile tile, Intersection intersect)
         {
-            
         }
 
+        /// <summary>
+        /// Loads the content for this sprite.
+        /// </summary>
         public override void LoadContent()
         {
-        
         }
     }
 }
