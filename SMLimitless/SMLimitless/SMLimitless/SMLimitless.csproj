@@ -107,6 +107,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Content\ContentPackage.cs" />
+    <Compile Include="Content\ContentPackageManager.cs" />
+    <Compile Include="Content\ContentPackageResourceSearcher.cs" />
+    <Compile Include="Content\ResourceNotFoundException.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Extensions\GameTimeExtensions.cs" />
     <Compile Include="Extensions\ListExtensions.cs" />

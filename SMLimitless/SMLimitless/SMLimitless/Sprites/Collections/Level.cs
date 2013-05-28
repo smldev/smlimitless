@@ -24,7 +24,7 @@ namespace SMLimitless.Sprites.Collections
         /// <summary>
         /// A value indicating whether this level should be running. Temporary.
         /// </summary>
-        private bool run = false;
+        private bool run = true;
 
         /// <summary>
         /// A collection of all the tiles in this level.
@@ -149,7 +149,7 @@ namespace SMLimitless.Sprites.Collections
         {
             if (InputManager.IsNewKeyPress(Microsoft.Xna.Framework.Input.Keys.Space))
             {
-                this.run = true;
+                this.run = !this.run;
             }
 
             if (this.run)
