@@ -47,12 +47,6 @@ namespace SMLimitless.Content
         internal string BaseFolderPath { get; private set; }
 
         /// <summary>
-        /// Gets a placeholder string that, when included in paths,
-        /// will be substituted for the BaseFolderPath property.
-        /// </summary>
-        internal string BaseFolderName { get; private set; }
-
-        /// <summary>
         /// Gets the path to the custom content assembly file.
         /// </summary>
         internal string AssemblyPath { get; private set; }
@@ -90,7 +84,6 @@ namespace SMLimitless.Content
                 this.Author = settings["Author"];
                 this.BaseFolderPath = string.Concat(new FileInfo(settingsPath).DirectoryName, @"\");
                 this.AssemblyPath = string.Concat(this.BaseFolderPath, settings["AssemblyPath"]);
-                this.BaseFolderName = settings["BaseFolderName"];
 
                 // Sanity check - let's make sure the assembly path is right.
                 if (!File.Exists(this.AssemblyPath) || !this.AssemblyPath.EndsWith(".dll"))
@@ -113,18 +106,6 @@ namespace SMLimitless.Content
         }
 
         /// <summary>
-        /// Gets a full file path by substituting
-        /// the base folder name (e.g. %Content%) with
-        /// the BaseFolderPath property.
-        /// </summary>
-        /// <param name="path">The path to complete.</param>
-        /// <returns>A full file path.</returns>
-        internal string GetFullPath(string path)
-        {
-            return path.Replace(this.BaseFolderName, this.BaseFolderPath);
-        }
-
-        /// <summary>
         /// Gets a file path to a resource given the resource name.
         /// </summary>
         /// <param name="resourceName">The name of the resource.</param>
@@ -143,9 +124,8 @@ namespace SMLimitless.Content
             string nameString = string.Format("Name: {0}", this.Name);
             string authorString = string.Format("Author: {0}", this.Author);
             string assemblyPathString = string.Format("Assembly Path: {0}", this.AssemblyPath);
-            string baseFolderNameString = string.Format("Base Folder Name: {0}", this.BaseFolderName);
             string baseFolderPathString = string.Format("Base Folder Path: {0}", this.BaseFolderPath);
-            return string.Format("{0}, {1}, {2}, {3}, {4}", nameString, authorString, assemblyPathString, baseFolderNameString, baseFolderPathString);
+            return string.Format("{0}, {1}, {2}, {3}, {4}", nameString, authorString, assemblyPathString, baseFolderPathString);
         }
     }
 }
