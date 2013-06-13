@@ -119,6 +119,7 @@
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\Vector2Extensions.cs" />
     <Compile Include="GameServices.cs" />
+    <Compile Include="GameSettings.cs" />
     <Compile Include="Graphics\AnimatedGraphicsObject.cs" />
     <Compile Include="Graphics\ComplexGraphicsObject.cs" />
     <Compile Include="Graphics\CroppedTextureMetadata.cs" />
@@ -126,7 +127,8 @@
     <Compile Include="Graphics\IGraphicsObject.cs" />
     <Compile Include="Graphics\StaticGraphicsObject.cs" />
     <Compile Include="Hierarchy.cs" />
-    <Compile Include="InputManager.cs" />
+    <Compile Include="Input\InputManager.cs" />
+    <Compile Include="Input\InputObject.cs" />
     <Compile Include="Interfaces\IEditorObject.cs" />
     <Compile Include="Interfaces\IEffect.cs" />
     <Compile Include="Interfaces\IName.cs" />

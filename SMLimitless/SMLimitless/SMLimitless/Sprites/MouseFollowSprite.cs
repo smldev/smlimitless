@@ -10,6 +10,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using SMLimitless.Extensions;
+using SMLimitless.Input;
 using SMLimitless.Physics;
 
 namespace SMLimitless.Sprites
@@ -53,6 +54,11 @@ namespace SMLimitless.Sprites
             if (InputManager.IsCurrentKeyPress(Keys.Right))
             {
                 this.Position = new Vector2(Position.X + 1.0f, Position.Y);
+            }
+
+            if (InputManager.IsNewActionPress(InputAction.Jump))
+            {
+                this.Position = new Vector2(Position.X, Position.Y + -20f);
             }
         }
 

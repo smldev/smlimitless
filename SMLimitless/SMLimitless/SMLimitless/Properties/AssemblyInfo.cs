@@ -11,11 +11,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("SMLimitless")]
-[assembly: AssemblyProduct("SMLimitless")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyCopyright("Copyright ©  2012")]
+[assembly: AssemblyTitle("Super Mario Limitless")]
+[assembly: AssemblyProduct("Super Mario Limitless")]
+[assembly: AssemblyDescription("An open-source platformer engine featuring extensive customizability.")]
+[assembly: AssemblyCompany("SML Development")]
+[assembly: AssemblyCopyright("Copyrighted under the MIT License 2012-2013.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

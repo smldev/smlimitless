@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using SMLimitless.Extensions;
+using SMLimitless.Input;
 using SMLimitless.Interfaces;
 using SMLimitless.Physics;
 

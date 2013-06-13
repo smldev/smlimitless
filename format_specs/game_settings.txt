@@ -1,0 +1,18 @@
+; Super Mario Limitless
+; Game Settings File Format Specification
+; THIS IS NOT COMPLETE AND IS SUBJECT TO CHANGE
+[GameSettings]
+
+[InputBindings]
+; Maps a string representation of the SMLimitless.Input.Actions enum to 
+; a string representation of the Microsoft.Xna.Framework.Input.Keys or
+; SMLimitless.MouseButtons enum.
+Up = Up
+Down = Down
+Left = Left
+Right = Right
+Jump = X
+SpinJump = S
+Run = Z
+AltRun = A
+Pause = Enter

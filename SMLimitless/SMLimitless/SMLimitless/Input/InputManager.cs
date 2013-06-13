@@ -3,7 +3,7 @@
 //     Copyrighted under the MIT license.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace SMLimitless
+namespace SMLimitless.Input
 {
     using System;
     using System.Collections.Generic;
@@ -37,6 +37,11 @@ namespace SMLimitless
         /// The mouse state at the last call to Update().
         /// </summary>
         private static MouseState currentMouseState;
+
+        /// <summary>
+        /// A collection of input actions and their corresponding input objects.
+        /// </summary>
+        private static Dictionary<InputAction, InputObject> inputBindings;
 
         /// <summary>
         /// Gets the keyboard state at the call before last to Update().
@@ -127,6 +132,30 @@ namespace SMLimitless
             get
             {
                 return currentMouseState.ScrollWheelValue - lastMouseState.ScrollWheelValue;
+            }
+        }
+
+        /// <summary>
+        /// Initializes the InputManager.
+        /// </summary>
+        public static void Initialize()
+        {
+            InputManager.ReloadBindings();
+        }
+
+        /// <summary>
+        /// Reloads the key bindings.
+        /// </summary>
+        public static void ReloadBindings()
+        {
+            InputManager.inputBindings = new Dictionary<InputAction, InputObject>();
+            var inputSettings = GameSettings.GetSection("[InputBindings]");
+
+            foreach (var binding in inputSettings)
+            {
+                InputAction action = (InputAction)Enum.Parse(typeof(InputAction), binding.Key);
+                InputObject inputObject = InputObject.Parse(binding.Value);
+                InputManager.inputBindings.Add(action, inputObject);
             }
         }
 
@@ -244,5 +273,113 @@ namespace SMLimitless
                     return false;
             }
         }
+
+        /// <summary>
+        /// Determines if an input action was pressed in the current frame but not the last.
+        /// </summary>
+        /// <param name="action">The action to check.</param>
+        /// <returns>True if this is a new action, false if otherwise.</returns>
+        public static bool IsNewActionPress(InputAction action)
+        {
+            if (!InputManager.inputBindings.ContainsKey(action))
+            {
+                throw new ArgumentException(string.Format("InputManager.IsNewActionPress(InputAction): The game settings file does not define an action named {0}.", action.ToString()), "action");
+            }
+
+            InputObject inputObject = InputManager.inputBindings[action];
+            return inputObject.IsUp(InputManager.LastKeyboardState, InputManager.LastMouseState) && inputObject.IsDown(InputManager.CurrentKeyboardState, InputManager.CurrentMouseState);
+        }
+
+        /// <summary>
+        /// Determines if an input action was pressed in the current frame and the last.
+        /// </summary>
+        /// <param name="action">The action to check.</param>
+        /// <returns>True if this is a current action, false if otherwise.</returns>
+        public static bool IsCurrentActionPress(InputAction action)
+        {
+            if (!InputManager.inputBindings.ContainsKey(action))
+            {
+                throw new ArgumentException(string.Format("InputManager.IsCurrentActionPress(InputAction): The game settings file does not define an action named {0}.", action.ToString()), "action");
+            }
+
+            InputObject inputObject = InputManager.inputBindings[action];
+            return inputObject.IsDown(InputManager.LastKeyboardState, InputManager.LastMouseState) && inputObject.IsDown(InputManager.CurrentKeyboardState, InputManager.CurrentMouseState);
+        }
+
+        /// <summary>
+        /// Determines if an input action was pressed in the last frame but not the current.
+        /// </summary>
+        /// <param name="action">The action to check.</param>
+        /// <returns>True if this is an old action, false if otherwise.</returns>
+        public static bool IsOldActionPress(InputAction action)
+        {
+            if (!InputManager.inputBindings.ContainsKey(action))
+            {
+                throw new ArgumentException(string.Format("InputManager.IsOldActionPress(InputAction): The game settings file does not define an action named {0}.", action.ToString()), "action");
+            }
+
+            InputObject inputObject = InputManager.inputBindings[action];
+            return inputObject.IsDown(InputManager.LastKeyboardState, InputManager.LastMouseState) && inputObject.IsUp(InputManager.CurrentKeyboardState, InputManager.CurrentMouseState);
+        }
+    }
+
+    /// <summary>
+    /// Defines actions performed by input.
+    /// </summary>
+    public enum InputAction
+    {
+        /// <summary>
+        /// The "up" action.
+        /// An example of usage is a player holding Up to enter a pipe.
+        /// </summary>
+        Up,
+
+        /// <summary>
+        /// The "down" action.
+        /// An example of usage is a player holding Down to duck.
+        /// </summary>
+        Down,
+
+        /// <summary>
+        /// The "left" action.
+        /// An example of usage is a player holding Left to move left.
+        /// </summary>
+        Left,
+
+        /// <summary>
+        /// The "right" action.
+        /// An example of usage is a player holding Right to move right.
+        /// </summary>
+        Right,
+
+        /// <summary>
+        /// The "jump" action.
+        /// An example of usage is a player pressing Jump to jump into the air.
+        /// </summary>
+        Jump,
+
+        /// <summary>
+        /// The "spin jump" action.
+        /// An example of usage is a player pressing Spin Jump to perform a spin jump.
+        /// </summary>
+        SpinJump,
+
+        /// <summary>
+        /// The "run" action.
+        /// An example of usage is a player pressing Run to begin moving faster.
+        /// </summary>
+        Run,
+
+        /// <summary>
+        /// The "alternate run" action.
+        /// Performs much the same action as the "run" action, but can be set do other things.
+        /// </summary>
+        AltRun,
+
+        /// <summary>
+        /// The "pause" action.
+        /// An example of usage is a user pressing Pause to pause the game.
+        /// </summary>
+        Pause
     }
 }

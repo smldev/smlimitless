@@ -14,6 +14,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using SMLimitless.Graphics;
+using SMLimitless.Input;
 using SMLimitless.Screens;
 
 namespace SMLimitless
@@ -49,6 +50,8 @@ namespace SMLimitless
         /// </summary>
         protected override void Initialize()
         {
+            GameSettings.Initialize();
+            InputManager.Initialize();
             ScreenManager.Initalize();
             ScreenManager.SetRootScreen(new LevelScreen(), "");
             GameServices.ScreenSize = new Vector2(GraphicsDevice.PresentationParameters.BackBufferWidth, GraphicsDevice.PresentationParameters.BackBufferHeight);
