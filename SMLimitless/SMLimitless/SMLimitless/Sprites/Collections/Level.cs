@@ -167,9 +167,15 @@ namespace SMLimitless.Sprites.Collections
         /// </summary>
         public void CheckCollision()
         {
-            // First, check sprite-tile collisions
+            // First, check sprite-tile collisions.
             foreach (Sprite sprite in this.sprites)
             {
+                if (sprite.CollisionMode == SpriteCollisionMode.NoCollision)
+                {
+                    // This sprite won't be colliding with anything, so let's not waste time handling it.
+                    continue;
+                }
+
                 var collidableTiles = this.quadTree.GetCollidableTiles(sprite);
                 List<Intersection> intersections = new List<Intersection>();
                 Dictionary<Tile, Intersection> collidingTiles = new Dictionary<Tile, Intersection>();
@@ -202,6 +208,17 @@ namespace SMLimitless.Sprites.Collections
                             collidingTiles.Add(tile, intersection);
                         }
                     }
+                    else if (tile.Collision == TileCollisionType.BottomSolid && sprite.Velocity.Y < 0f)
+                    {
+                        var intersection = new Intersection(sprite.Hitbox, tile.Hitbox);
+                        if (intersection.IsIntersecting && intersection.Direction == Direction.Down)
+                        {
+                            intersections.Add(intersection);
+                            collidingTiles.Add(tile, intersection);
+                        }
+                    }
+
+                    // TODO: add handlers for LeftSolid and RightSolid
                 }
 
                 if (sprite.IsEmbedded)

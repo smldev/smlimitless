@@ -26,11 +26,41 @@ namespace SMLimitless.Screens
     public class TestScreen : Screen
     {
         /// <summary>
-        /// Updates the screen.
+        /// A rectangle.
         /// </summary>
-        public override void Update() 
+        private BoundingRectangle rectangle;
+
+        /// <summary>
+        /// A triangle.
+        /// </summary>
+        private RightTriangle triangle;
+
+        /// <summary>
+        /// Another rectangle.
+        /// </summary>
+        private BoundingRectangle other;
+
+        /// <summary>
+        /// A resolution.
+        /// </summary>
+        private Vector2 resolution;
+
+        /// <summary>
+        /// Another resolution.
+        /// </summary>
+        private Vector2 otherResolution;
+
+        /// <summary>
+        /// Initializes this screen.
+        /// </summary>
+        /// <param name="owner">The screen that is creating this one.</param>
+        /// <param name="parameters">Parameters are unused.</param>
+        public override void Initialize(Screen owner, string parameters)
         {
-            Effect.Update();
+            this.Effect = new FadeEffect();
+            this.triangle = new RightTriangle(new BoundingRectangle(400f, 200f, 200f, 100f), RtSlopedSides.BottomRight);
+            this.rectangle = new BoundingRectangle(300f, 200f, 32f, 32f);
+            this.other = new BoundingRectangle(150f, 200f, 100f, 100f);
         }
 
         /// <summary>
@@ -41,21 +71,64 @@ namespace SMLimitless.Screens
         }
 
         /// <summary>
-        /// Initializes this screen.
-        /// </summary>
-        /// <param name="owner">The screen that is creating this one.</param>
-        /// <param name="parameters">Parameters are unused.</param>
-        public override void Initialize(Screen owner, string parameters)
-        {
-            this.Effect = new FadeEffect();
-        }
-
-        /// <summary>
         /// Draws this screen.
         /// </summary>
         public override void Draw()
         {
             Effect.Draw();
+            this.triangle.Draw(false);
+            this.rectangle.DrawOutline(Color.White);
+            this.other.DrawOutline(Color.White);
+
+            this.resolution.ToString().DrawString(new Vector2(16f, 16f), Color.White);
+            this.otherResolution.ToString().DrawString(new Vector2(16f, 36f), Color.White);
+        }
+
+        /// <summary>
+        /// Updates the screen.
+        /// </summary>
+        public override void Update()
+        {
+            Effect.Update();
+            if (Input.InputManager.IsCurrentKeyPress(Keys.Left))
+            {
+                this.rectangle.X--;
+            }
+
+            if (Input.InputManager.IsCurrentKeyPress(Keys.Right))
+            {
+                this.rectangle.X++;
+            }
+
+            if (Input.InputManager.IsCurrentKeyPress(Keys.Up))
+            {
+                this.rectangle.Y--;
+            }
+
+            if (Input.InputManager.IsCurrentKeyPress(Keys.Down))
+            {
+                this.rectangle.Y++;
+            }
+
+            this.resolution = this.otherResolution = Vector2.Zero;
+
+            this.resolution = this.triangle.GetResolutionDistance(this.rectangle);
+            Intersection intersect = new Intersection(this.rectangle, this.other);
+            if (intersect.IsIntersecting)
+            {
+                this.otherResolution = intersect.GetIntersectionResolution();
+            }
+
+            if (this.resolution != Vector2.Zero)
+            {
+                this.rectangle.X += this.resolution.X;
+                this.rectangle.Y += this.resolution.Y;
+            }
+            else if (this.otherResolution != Vector2.Zero)
+            {
+                this.rectangle.X += this.otherResolution.X;
+                this.rectangle.Y += this.otherResolution.Y;
+            }
         }
 
         /// <summary>

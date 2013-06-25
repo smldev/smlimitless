@@ -211,6 +211,15 @@ namespace SMLimitless.Physics
         }
 
         /// <summary>
+        /// Draws the outline of this rectangle to the screen.
+        /// </summary>
+        /// <param name="color">The color of the outline.</param>
+        public void DrawOutline(Color color)
+        {
+            GameServices.SpriteBatch.DrawRectangleEdges(this.ToRectangle(), color);
+        }
+
+        /// <summary>
         /// Returns a string representing key values of this rectangle.
         /// </summary>
         /// <returns>A string representing key values of this rectangle.</returns>

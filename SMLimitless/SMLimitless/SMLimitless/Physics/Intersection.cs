@@ -35,11 +35,32 @@ namespace SMLimitless.Physics
         /// <summary>
         /// Initializes a new instance of the <see cref="Intersection"/> struct.
         /// </summary>
+        /// <param name="x">The horizontal depth of the intersection.</param>
+        /// <param name="y">The vertical depth of the intersection.</param>
+        public Intersection(float x, float y)
+        {
+            this.depth = new Vector2(x, y);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Intersection"/> struct.
+        /// </summary>
         /// <param name="a">A bounding rectangle.</param>
         /// <param name="b">A bounding rectangle that may be intersecting the first.</param>
         public Intersection(BoundingRectangle a, BoundingRectangle b)
             : this(a.GetIntersectionDepth(b))
         {
+        }
+
+        /// <summary>
+        /// Gets an Intersection with a zero resolution distance.
+        /// </summary>
+        public static Intersection Zero
+        {
+            get
+            {
+                return new Intersection(Vector2.Zero);
+            }
         }
 
         /// <summary>
@@ -140,6 +161,20 @@ namespace SMLimitless.Physics
         }
 
         /// <summary>
+        /// Gets a value indicating whether the intersection
+        /// depth is equal on both axes, which means that the
+        /// intersection is on one of the corners of the
+        /// intersecting rectangles.
+        /// </summary>
+       public bool IsCornerIntersection
+        {
+            get
+            {
+                return this.Depth.X == this.Depth.Y;
+            }
+        }
+
+        /// <summary>
         /// For a collection of intersections, all intersections with equal X or Y
         /// intersection depths will be added to reduce the number of intersections
         /// and unify resolution directions.  Intersections are consolidated by X
@@ -149,11 +184,6 @@ namespace SMLimitless.Physics
         /// <returns>A list of consolidated intersections.</returns>
         public static List<Intersection> ConsolidateIntersections(List<Intersection> intersections)
         {
-            if (intersections.Count == 2 && intersections[0].Direction == Direction.Right && intersections[1].Direction == Direction.Up)
-            {
-                // System.Diagnostics.Debugger.Break();
-            }
-
             var sortedByX = SortByX(intersections).ToList();
             var sortedByY = SortByY(intersections).ToList();
 

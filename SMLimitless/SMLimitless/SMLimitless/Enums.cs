@@ -88,7 +88,10 @@ namespace SMLimitless
         /// </summary>
         Right
     }
+}
 
+namespace SMLimitless.Sprites
+{
     /// <summary>
     /// Enumerates which sides of a tile can be collided with.
     /// </summary>
@@ -108,8 +111,60 @@ namespace SMLimitless
         TopSolid,
 
         /// <summary>
+        /// This tile is only solid on the bottom.
+        /// Sprites will pass through all the other sides.
+        /// </summary>
+        BottomSolid,
+
+        /// <summary>
+        /// This tile is only solid on the left side.
+        /// Sprites will pass through all the other sides.
+        /// </summary>
+        LeftSolid,
+
+        /// <summary>
+        /// This tile is only solid on the right side.
+        /// Sprites will pass through all the other sides.
+        /// </summary>
+        RightSolid,
+
+        /// <summary>
         /// This tile is not solid on any side.
         /// </summary>
         Passive
+    }
+
+    /// <summary>
+    /// Enumerates different modes of collision handling
+    /// that sprites can choose between.
+    /// </summary>
+    public enum SpriteCollisionMode
+    {
+        /// <summary>
+        /// Sprites that are colliding with solid tiles
+        /// are offset such that they are moved out of the tile(s).
+        /// Then, collision handler methods are called on both
+        /// the sprite and the tile.
+        /// </summary>
+        OffsetNotify,
+
+        /// <summary>
+        /// Sprites that are colliding with solid tiles
+        /// are offset such that they are moved out of the tile(s).
+        /// No collision handlers are run.
+        /// </summary>
+        OffsetOnly,
+
+        /// <summary>
+        /// Collision handler methods are called on both the
+        /// colliding sprite and colliding tile. No offsetting
+        /// is performed.
+        /// </summary>
+        NotifyOnly,
+
+        /// <summary>
+        /// The sprite does not collide with any object.
+        /// </summary>
+        NoCollision
     }
 }

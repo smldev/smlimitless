@@ -87,5 +87,27 @@ namespace SMLimitless.Extensions
 
             return input;
         }
+
+        /// <summary>
+        /// Draws a string to the screen.
+        /// </summary>
+        /// <param name="value">The string to draw.</param>
+        /// <param name="position">The position on the screen to draw it at.</param>
+        /// <param name="color">The color of the text.</param>
+        public static void DrawString(this string value, Microsoft.Xna.Framework.Vector2 position, Microsoft.Xna.Framework.Color color)
+        {
+            GameServices.SpriteBatch.DrawString(GameServices.DebugFontLarge, value, position, color);   
+        }
+
+        /// <summary>
+        /// Draws a string to the screen using small text.
+        /// </summary>
+        /// <param name="value">The string to draw.</param>
+        /// <param name="position">The position on the screen to draw it at.</param>
+        /// <param name="color">The color of the text.</param>
+        public static void DrawStringSmall(this string value, Microsoft.Xna.Framework.Vector2 position, Microsoft.Xna.Framework.Color color)
+        {
+            GameServices.SpriteBatch.DrawString(GameServices.DebugFontSmall, value, position, color);
+        }
     }
 }

@@ -56,6 +56,12 @@ namespace SMLimitless.Sprites
         public string State { get; protected set; }
 
         /// <summary>
+        /// Gets or sets the current collision mode of this sprite.
+        /// Please see the SpriteCollisionMode documentation for more information.
+        /// </summary>
+        public SpriteCollisionMode CollisionMode { get; protected set; }
+
+        /// <summary>
         /// Gets or sets the last position of this sprite.
         /// </summary>
         public Vector2 PreviousPosition { get; protected set; }
@@ -200,7 +206,7 @@ namespace SMLimitless.Sprites
             if (this.IsEmbedded)
             {
                 // We are embedded if collision checks tell us we need to resolve
-                // both left and right or up and down.  We should move left until
+                // both left and right or both up and down.  We should move left until
                 // we're out of being embedded.
                 this.Acceleration = Vector2.Zero;
                 this.Velocity = new Vector2(-25f, 0f);
