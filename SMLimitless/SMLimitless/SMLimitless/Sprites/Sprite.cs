@@ -137,7 +137,7 @@ namespace SMLimitless.Sprites
         /// Gets or sets the velocity of this sprite,
         /// measured in pixels per second.
         /// </summary>
-        public Vector2 Velocity { get; protected set; }
+        public Vector2 Velocity { get; set; } // TODO: make set accessor protected again
 
         /// <summary>
         /// Gets or sets an editor property representing an optional

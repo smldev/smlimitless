@@ -7,6 +7,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SMLimitless.Extensions;
+using SMLimitless.Interfaces;
 
 namespace SMLimitless.Physics
 {
@@ -16,7 +17,7 @@ namespace SMLimitless.Physics
     /// Using Rectangle for Collision bounds causes 'jiggling' as Rectangle 
     /// must round values to integers. This struct uses float for precision.
     /// </summary>
-    public struct BoundingRectangle
+    public class BoundingRectangle : ICollidableShape
     {
         /// <summary>
         /// The position of the top-left corner.
@@ -29,7 +30,7 @@ namespace SMLimitless.Physics
         private Vector2 max;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BoundingRectangle"/> struct.
+        /// Initializes a new instance of the <see cref="BoundingRectangle"/> class.
         /// </summary>
         /// <param name="rectangle">The <see cref="Rectangle"/> used to create this rectangle.</param>
         public BoundingRectangle(Rectangle rectangle)
@@ -38,7 +39,7 @@ namespace SMLimitless.Physics
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BoundingRectangle"/> struct.
+        /// Initializes a new instance of the <see cref="BoundingRectangle"/> class.
         /// </summary>
         /// <param name="start">The position of the top-left corner.</param>
         /// <param name="end">The size of the rectangle.</param>
@@ -48,7 +49,7 @@ namespace SMLimitless.Physics
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BoundingRectangle"/> struct.
+        /// Initializes a new instance of the <see cref="BoundingRectangle"/> class.
         /// </summary>
         /// <param name="x">The X-coordinate of the top-left corner.</param>
         /// <param name="y">The Y-coordinate of the top-right corner.</param>
@@ -155,6 +156,17 @@ namespace SMLimitless.Physics
         }
 
         /// <summary>
+        /// Gets the shape of this collidable object.
+        /// </summary>
+        public CollidableShape Shape
+        {
+            get
+            {
+                return CollidableShape.Rectangle;
+            }
+        }
+
+        /// <summary>
         /// Gets the intersection depth between this rectangle
         /// and another. Please use the <see cref="Intersection"/>
         /// structure instead of this method - that struct provides
@@ -199,6 +211,17 @@ namespace SMLimitless.Physics
         public Rectangle ToRectangle()
         {
             return new Rectangle((int)this.min.X, (int)this.min.Y, (int)this.max.X, (int)this.max.Y);
+        }
+
+        /// <summary>
+        /// Gets the minimum distance to offset a given rectangle
+        /// so that it will no longer be colliding with this shape.
+        /// </summary>
+        /// <param name="rect">The rectangle to resolve.</param>
+        /// <returns>The minimum distance to offset the given rectangle.</returns>
+        public Intersection GetResolutionDistance(BoundingRectangle rect)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

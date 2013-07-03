@@ -88,6 +88,23 @@ namespace SMLimitless
         /// </summary>
         Right
     }
+
+    /// <summary>
+    /// An enumeration of the collidable shapes that
+    /// SML supports.
+    /// </summary>
+    public enum CollidableShape
+    {
+        /// <summary>
+        /// A parallelogram with sides parallel to the coordinate axes.
+        /// </summary>
+        Rectangle,
+
+        /// <summary>
+        /// A rectangle split in half from corner to corner.
+        /// </summary>
+        RightTriangle
+    }
 }
 
 namespace SMLimitless.Sprites

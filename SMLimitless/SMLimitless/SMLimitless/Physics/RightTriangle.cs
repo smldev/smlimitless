@@ -10,13 +10,14 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using SMLimitless.Extensions;
+using SMLimitless.Interfaces;
 
 namespace SMLimitless.Physics
 {
     /// <summary>
     /// Represents a right triangle, used for sloped tiles.
     /// </summary>
-    public struct RightTriangle
+    public class RightTriangle : ICollidableShape
     {
         /// <summary>
         /// A rectangle that completely contains the triangle.
@@ -136,11 +137,22 @@ namespace SMLimitless.Physics
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RightTriangle"/> struct.
+        /// Gets the shape of this collidable object.
+        /// </summary>
+        public CollidableShape Shape
+        {
+            get
+            {
+                return CollidableShape.RightTriangle;
+            }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RightTriangle"/> class.
         /// </summary>
         /// <param name="bounds">The rectangle that forms the bounds of the triangle.</param>
         /// <param name="slopedSides">Which sides of the triangle are sloped.</param>
-        public RightTriangle(BoundingRectangle bounds, RtSlopedSides slopedSides) : this()
+        public RightTriangle(BoundingRectangle bounds, RtSlopedSides slopedSides)
         {
             this.bounds = bounds;
             this.SlopedSides = slopedSides;
@@ -189,7 +201,7 @@ namespace SMLimitless.Physics
         /// </summary>
         /// <param name="rect">The rectangle to resolve for.</param>
         /// <returns>The minimum resolution distance.</returns>
-        public Vector2 GetResolutionDistance(BoundingRectangle rect)
+        public Intersection GetResolutionDistance(BoundingRectangle rect)
         {
             // First, check if the rectangle is intersecting our bounds.
             Intersection intersect = new Intersection(rect, this.bounds);
@@ -223,11 +235,13 @@ namespace SMLimitless.Physics
                 {
                     if (bottomCenter.Y <= pointOnSlope.Y)
                     {
-                        return Vector2.Zero;
+                        return Intersection.Zero;
                     }
                     else if ((bottomCenter.Y > pointOnSlope.Y) && (bottomCenter.Y < this.bounds.Bottom))
                     {
-                        return pointOnSlope - bottomCenter;
+                        Intersection result = new Intersection(pointOnSlope - bottomCenter);
+                        result.IsSlopedIntersection = true;
+                        return result;
                     }
                     else
                     {
@@ -238,11 +252,13 @@ namespace SMLimitless.Physics
                 {
                     if (topCenter.Y >= pointOnSlope.Y)
                     {
-                        return Vector2.Zero;
+                        return Intersection.Zero;
                     }
                     else if ((topCenter.Y < pointOnSlope.Y) && (topCenter.Y > this.bounds.Top))
                     {
-                        return pointOnSlope - topCenter;
+                        Intersection result = new Intersection(pointOnSlope - topCenter);
+                        result.IsSlopedIntersection = true;
+                        return result;
                     }
                     else
                     {
@@ -256,15 +272,15 @@ namespace SMLimitless.Physics
                     (this.SlopedSides == RtSlopedSides.BottomLeft && (intersect.Direction == Direction.Right || intersect.Direction == Direction.Up)) ||
                     (this.SlopedSides == RtSlopedSides.BottomRight && (intersect.Direction == Direction.Left || intersect.Direction == Direction.Up)))
                 {
-                    return intersect.GetIntersectionResolution();
+                    return intersect;
                 }
                 else
                 {
-                    return Vector2.Zero;
+                    return Intersection.Zero;
                 }
             }
 
-            return Vector2.Zero;
+            return Intersection.Zero;
         }
 
         /// <summary>

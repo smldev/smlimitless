@@ -399,8 +399,8 @@ namespace SMLimitless.Graphics
             clone.frameWidth = this.frameWidth;
             clone.AnimationCycleLength = this.AnimationCycleLength;
             clone.IsRunOnce = this.IsRunOnce;
-            clone.isLoaded = true;
-            clone.isContentLoaded = true;
+            clone.isLoaded = this.isLoaded;
+            clone.isContentLoaded = this.isContentLoaded;
             return clone;
         }
 

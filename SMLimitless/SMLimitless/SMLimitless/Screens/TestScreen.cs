@@ -58,7 +58,7 @@ namespace SMLimitless.Screens
         public override void Initialize(Screen owner, string parameters)
         {
             this.Effect = new FadeEffect();
-            this.triangle = new RightTriangle(new BoundingRectangle(400f, 200f, 200f, 100f), RtSlopedSides.BottomRight);
+            this.triangle = new RightTriangle(new BoundingRectangle(400f, 200f, 100f, 100f), RtSlopedSides.TopLeft);
             this.rectangle = new BoundingRectangle(300f, 200f, 32f, 32f);
             this.other = new BoundingRectangle(150f, 200f, 100f, 100f);
         }
@@ -92,27 +92,27 @@ namespace SMLimitless.Screens
             Effect.Update();
             if (Input.InputManager.IsCurrentKeyPress(Keys.Left))
             {
-                this.rectangle.X--;
+                this.rectangle.X -= 2f;
             }
 
             if (Input.InputManager.IsCurrentKeyPress(Keys.Right))
             {
-                this.rectangle.X++;
+                this.rectangle.X += 2f;
             }
 
             if (Input.InputManager.IsCurrentKeyPress(Keys.Up))
             {
-                this.rectangle.Y--;
+                this.rectangle.Y -= 2f;
             }
 
             if (Input.InputManager.IsCurrentKeyPress(Keys.Down))
             {
-                this.rectangle.Y++;
+                this.rectangle.Y += 2f;
             }
 
             this.resolution = this.otherResolution = Vector2.Zero;
 
-            this.resolution = this.triangle.GetResolutionDistance(this.rectangle);
+            this.resolution = this.triangle.GetResolutionDistance(this.rectangle).GetIntersectionResolution();
             Intersection intersect = new Intersection(this.rectangle, this.other);
             if (intersect.IsIntersecting)
             {

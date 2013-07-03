@@ -96,6 +96,18 @@ namespace SMLimitless.Sprites.Collections
             this.quadTree.Add(sprite);
             this.quadTree.Add(this.mouseSprite);
 
+            Random random = new Random();
+            int total = random.Next(0, 100);
+            for (int i = 0; i < total; i++)
+            {
+                TestSprite newSprite = new TestSprite();
+                newSprite.Position = new Vector2(random.Next(0, 200), 100f);
+                this.sprites.Add(newSprite);
+                newSprite.Initialize(this);
+                this.quadTree.Add(newSprite);
+                newSprite.Velocity += new Vector2(random.Next(0, 100), random.Next(0, 100));
+            }
+
             int j = 0;
             for (int i = 0; i < 800; i += 16)
             {
@@ -167,6 +179,8 @@ namespace SMLimitless.Sprites.Collections
         /// </summary>
         public void CheckCollision()
         {
+            System.Diagnostics.Stopwatch benchmark = new System.Diagnostics.Stopwatch();
+
             // First, check sprite-tile collisions.
             foreach (Sprite sprite in this.sprites)
             {
@@ -234,7 +248,9 @@ namespace SMLimitless.Sprites.Collections
                     }
                 }
 
-                intersections = Intersection.ConsolidateIntersections(intersections);
+                benchmark.Start();
+                ////intersections = Intersection.ConsolidateIntersections(intersections);
+                benchmark.Stop();
 
                 // The distance by which the sprite will have to be moved
                 Vector2 resolution = Vector2.Zero;
@@ -311,6 +327,8 @@ namespace SMLimitless.Sprites.Collections
                     sprite.HandleTileCollision(collision.Key, collision.Value);
                 }
             }
+
+            this.debugText = string.Format("Consolidation took {0} microseconds", benchmark.Elapsed.TotalMilliseconds * 1000);
         }
 
         /// <summary>
@@ -320,7 +338,7 @@ namespace SMLimitless.Sprites.Collections
         {
             this.tiles.ForEach(t => t.Draw());
             this.sprites.ForEach(s => s.Draw());
-            //// GameServices.SpriteBatch.DrawString(GameServices.DebugFontLarge, debugText, new Vector2(16, 36), Color.White);
+            this.debugText.DrawString(new Vector2(16f, 16f), Color.White);
             this.debugText = "";
             this.quadTree.Draw();
         }

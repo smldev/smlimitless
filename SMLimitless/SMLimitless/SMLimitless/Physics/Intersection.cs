@@ -26,10 +26,10 @@ namespace SMLimitless.Physics
         /// <summary>
         /// Initializes a new instance of the <see cref="Intersection"/> struct.
         /// </summary>
-        /// <param name="intersection">The intersection depth.</param>
-        public Intersection(Vector2 intersection)
+        /// <param name="depth">The intersection depth.</param>
+        public Intersection(Vector2 depth) : this()
         {
-            this.depth = intersection;
+            this.depth = depth;
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace SMLimitless.Physics
         /// </summary>
         /// <param name="x">The horizontal depth of the intersection.</param>
         /// <param name="y">The vertical depth of the intersection.</param>
-        public Intersection(float x, float y)
+        public Intersection(float x, float y) : this()
         {
             this.depth = new Vector2(x, y);
         }
@@ -80,6 +80,13 @@ namespace SMLimitless.Physics
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether this
+        /// Intersection was created by checking a BoundingRectangle
+        /// and the sloped side of a RightTriangle for collision.
+        /// </summary>
+        public bool IsSlopedIntersection { get; set; }
+
+        /// <summary>
         /// Gets the direction that any resolution should use
         /// to resolve this intersection. "Shallowest-edge"
         /// is used to determine on which axis to resolve.
@@ -92,33 +99,51 @@ namespace SMLimitless.Physics
         {
             get
             {
-                if (this.Depth == Vector2.Zero)
+                if (this.IsSlopedIntersection)
                 {
-                    throw new Exception("Intersection.Direction.Get: No direction if not intersecting.");
-                }
-
-                if ((Math.Abs(this.Depth.X) > Math.Abs(this.Depth.Y)) || (Math.Abs(this.Depth.X) == Math.Abs(this.Depth.Y)))
-                {
-                    // Resolve vertically
                     if (this.Depth.Y < 0)
                     {
                         return Direction.Up;
                     }
-                    else
+                    else if (this.Depth.Y > 0)
                     {
                         return Direction.Down;
+                    }
+                    else
+                    {
+                        throw new Exception("Intersection.Direction.Get: (sloped) No direction if not intersecting.");
                     }
                 }
                 else
                 {
-                    // Resolve horizontally
-                    if (this.Depth.X < 0)
+                    if (this.Depth == Vector2.Zero)
                     {
-                        return Direction.Left;
+                        throw new Exception("Intersection.Direction.Get: No direction if not intersecting.");
+                    }
+
+                    if (Math.Abs(this.Depth.X) > Math.Abs(this.Depth.Y))
+                    {
+                        // Resolve vertically
+                        if (this.Depth.Y < 0)
+                        {
+                            return Direction.Up;
+                        }
+                        else
+                        {
+                            return Direction.Down;
+                        }
                     }
                     else
                     {
-                        return Direction.Right;
+                        // Resolve horizontally
+                        if (this.Depth.X < 0)
+                        {
+                            return Direction.Left;
+                        }
+                        else
+                        {
+                            return Direction.Right;
+                        }
                     }
                 }
             }
@@ -182,57 +207,58 @@ namespace SMLimitless.Physics
         /// </summary>
         /// <param name="intersections">The list of unconsolidated intersections.</param>
         /// <returns>A list of consolidated intersections.</returns>
+        [Obsolete]
         public static List<Intersection> ConsolidateIntersections(List<Intersection> intersections)
         {
-            var sortedByX = SortByX(intersections).ToList();
-            var sortedByY = SortByY(intersections).ToList();
+            ////var sortedByX = SortByX(intersections).ToList();
+            ////var sortedByY = SortByY(intersections).ToList();
 
             var result = new List<Intersection>();
 
-            float lastX = float.MinValue;
-            float lastY = float.MinValue;
+            ////float lastX = float.MinValue;
+            ////float lastY = float.MinValue;
 
-            for (int i = 0; i < sortedByX.Count; i++)
-            {
-                var current = sortedByX[i];
-                if (current.Depth.X == lastX)
-                {
-                    var last = sortedByX[i - 1];
-                    result.Remove(current);
-                    result.Remove(last);
-                    result.AddUnlessDuplicate(new Intersection(new Vector2(lastX, float.MaxValue)));
-                }
-                else if (current.Depth.X > lastX)
-                {
-                    lastX = current.Depth.X;
-                    result.AddUnlessDuplicate(current);
-                }
-                else
-                {
-                    result.Add(current);
-                }
-            }
+            ////for (int i = 0; i < sortedByX.Count; i++)
+            ////{
+            ////    var current = sortedByX[i];
+            ////    if (current.Depth.X == lastX)
+            ////    {
+            ////        var last = sortedByX[i - 1];
+            ////        result.Remove(current);
+            ////        result.Remove(last);
+            ////        result.AddUnlessDuplicate(new Intersection(new Vector2(lastX, float.MaxValue)));
+            ////    }
+            ////    else if (current.Depth.X > lastX)
+            ////    {
+            ////        lastX = current.Depth.X;
+            ////        result.AddUnlessDuplicate(current);
+            ////    }
+            ////    else
+            ////    {
+            ////        result.Add(current);
+            ////    }
+            ////}
 
-            for (int i = 0; i < sortedByY.Count; i++)
-            {
-                var current = sortedByY[i];
-                if (current.Depth.Y == lastY)
-                {
-                    var last = sortedByY[i - 1];
-                    result.Remove(current);
-                    result.Remove(last);
-                    result.AddUnlessDuplicate(new Intersection(new Vector2(float.MaxValue, lastY)));
-                }
-                else if (current.Depth.Y > lastY)
-                {
-                    lastY = current.Depth.Y;
-                    result.AddUnlessDuplicate(current);
-                }
-                else
-                {
-                    result.AddUnlessDuplicate(current);
-                }
-            }
+            ////for (int i = 0; i < sortedByY.Count; i++)
+            ////{
+            ////    var current = sortedByY[i];
+            ////    if (current.Depth.Y == lastY)
+            ////    {
+            ////        var last = sortedByY[i - 1];
+            ////        result.Remove(current);
+            ////        result.Remove(last);
+            ////        result.AddUnlessDuplicate(new Intersection(new Vector2(float.MaxValue, lastY)));
+            ////    }
+            ////    else if (current.Depth.Y > lastY)
+            ////    {
+            ////        lastY = current.Depth.Y;
+            ////        result.AddUnlessDuplicate(current);
+            ////    }
+            ////    else
+            ////    {
+            ////        result.AddUnlessDuplicate(current);
+            ////    }
+            ////}
 
             return result;
         }
@@ -243,7 +269,7 @@ namespace SMLimitless.Physics
         /// <returns>The minimum distance necessary to resolve this collision.</returns>
         public Vector2 GetIntersectionResolution()
         {
-            return this.Depth * this.Multiplier;
+            return this.Depth != Vector2.Zero ? this.Depth * this.Multiplier : Vector2.Zero;
         }
 
         /// <summary>
