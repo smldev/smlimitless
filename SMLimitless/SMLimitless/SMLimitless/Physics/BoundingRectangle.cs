@@ -174,6 +174,7 @@ namespace SMLimitless.Physics
         /// </summary>
         /// <param name="other">The other rectangle to check.</param>
         /// <returns>The intersection depth.</returns>
+        [Obsolete]
         public Vector2 GetIntersectionDepth(BoundingRectangle other)
         {
             // Calculate half sizes.
@@ -221,7 +222,37 @@ namespace SMLimitless.Physics
         /// <returns>The minimum distance to offset the given rectangle.</returns>
         public Intersection GetResolutionDistance(BoundingRectangle rect)
         {
-            throw new NotImplementedException();
+            Vector2 resolution = Vector2.Zero;
+
+            // Get the horizontal resolution
+            if (rect.Right <= this.Left || rect.Left >= this.Right)
+            {
+                return Intersection.Zero;
+            }
+            else if (this.Left < rect.Right && rect.Right < this.Right)
+            {
+                resolution.X = -(rect.Right - this.Left);
+            }
+            else if (this.Left < rect.Left && rect.Left < this.Right)
+            {
+                resolution.X = this.Right - rect.Left;
+            }
+
+            // Get the vertical resolution
+            if (rect.Bottom <= this.Top || rect.Top >= this.Bottom)
+            {
+                return Intersection.Zero;
+            }
+            else if (this.Top < rect.Bottom && rect.Bottom < this.Bottom)
+            {
+                resolution.Y = -(rect.Bottom - this.Top);
+            }
+            else if (this.Top < rect.Top && rect.Top < this.Bottom)
+            {
+                resolution.Y = this.Bottom - rect.Top;
+            }
+
+            return new Intersection(resolution);
         }
 
         /// <summary>

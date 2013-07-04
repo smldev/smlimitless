@@ -51,6 +51,16 @@ namespace SMLimitless.Screens
         private Vector2 otherResolution;
 
         /// <summary>
+        /// A flag.
+        /// </summary>
+        private bool doResolve;
+
+        /// <summary>
+        /// A string.
+        /// </summary>
+        private string debugText = "";
+
+        /// <summary>
         /// Initializes this screen.
         /// </summary>
         /// <param name="owner">The screen that is creating this one.</param>
@@ -59,8 +69,8 @@ namespace SMLimitless.Screens
         {
             this.Effect = new FadeEffect();
             this.triangle = new RightTriangle(new BoundingRectangle(400f, 200f, 100f, 100f), RtSlopedSides.TopLeft);
-            this.rectangle = new BoundingRectangle(300f, 200f, 32f, 32f);
-            this.other = new BoundingRectangle(150f, 200f, 100f, 100f);
+            this.rectangle = new BoundingRectangle(0f, 0f, 100f, 100f);
+            this.other = new BoundingRectangle(98f, 96f, 100f, 100f);
         }
 
         /// <summary>
@@ -110,13 +120,19 @@ namespace SMLimitless.Screens
                 this.rectangle.Y += 2f;
             }
 
+            if (Input.InputManager.IsCurrentMousePress(MouseButtons.LeftButton))
+            {
+                this.doResolve = true;
+            }
+
             this.resolution = this.otherResolution = Vector2.Zero;
 
             this.resolution = this.triangle.GetResolutionDistance(this.rectangle).GetIntersectionResolution();
-            Intersection intersect = new Intersection(this.rectangle, this.other);
-            if (intersect.IsIntersecting)
+            Intersection intersect = this.other.GetResolutionDistance(this.rectangle);
+            if (intersect.IsIntersecting && this.doResolve)
             {
                 this.otherResolution = intersect.GetIntersectionResolution();
+                this.debugText = this.otherResolution.ToString();
             }
 
             if (this.resolution != Vector2.Zero)

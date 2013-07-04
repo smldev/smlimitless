@@ -90,6 +90,10 @@
     <Reference Include="mscorlib">
       <Private>False</Private>
     </Reference>
+    <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\NUnit 2.6.2\bin\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
@@ -161,6 +165,8 @@
     <Compile Include="Sprites\TestTile3.cs" />
     <Compile Include="Sprites\Tile.cs" />
     <Compile Include="Testing.cs" />
+    <Compile Include="Tests\CollisionTests.cs" />
+    <Compile Include="Tests\GeneralTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

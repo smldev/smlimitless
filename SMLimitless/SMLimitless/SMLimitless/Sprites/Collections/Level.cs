@@ -156,6 +156,26 @@ namespace SMLimitless.Sprites.Collections
         }
 
         /// <summary>
+        /// Adds a sprite to this level.
+        /// </summary>
+        /// <param name="sprite">The sprite to add.</param>
+        public void AddSprite(Sprite sprite)
+        {
+            this.sprites.Add(sprite);
+            this.quadTree.Add(sprite);
+        }
+
+        /// <summary>
+        /// Adds a tile to this level.
+        /// </summary>
+        /// <param name="tile">The tile to add.</param>
+        public void AddTile(Tile tile)
+        {
+            this.tiles.Add(tile);
+            this.quadTree.Add(tile);
+        }
+
+        /// <summary>
         /// Updates this level.
         /// </summary>
         public void Update()
@@ -179,156 +199,6 @@ namespace SMLimitless.Sprites.Collections
         /// </summary>
         public void CheckCollision()
         {
-            System.Diagnostics.Stopwatch benchmark = new System.Diagnostics.Stopwatch();
-
-            // First, check sprite-tile collisions.
-            foreach (Sprite sprite in this.sprites)
-            {
-                if (sprite.CollisionMode == SpriteCollisionMode.NoCollision)
-                {
-                    // This sprite won't be colliding with anything, so let's not waste time handling it.
-                    continue;
-                }
-
-                var collidableTiles = this.quadTree.GetCollidableTiles(sprite);
-                List<Intersection> intersections = new List<Intersection>();
-                Dictionary<Tile, Intersection> collidingTiles = new Dictionary<Tile, Intersection>();
-                bool spriteIsOnGround = false;
-                bool spriteIsEmbedded = false;
-
-                foreach (Tile tile in collidableTiles)
-                {
-                    if (tile.Collision == TileCollisionType.Solid)
-                    {
-                        var intersection = new Intersection(sprite.Hitbox, tile.Hitbox);
-                        if (intersection.Depth.Abs().GreaterThanOrEqualTo(sprite.Size))
-                        {
-                            sprite.IsEmbedded = true;
-                            return;
-                        }
-
-                        if (intersection.IsIntersecting)
-                        {
-                            intersections.Add(intersection);
-                            collidingTiles.Add(tile, intersection);
-                        }
-                    }
-                    else if (tile.Collision == TileCollisionType.TopSolid && sprite.Velocity.Y > 0f)
-                    {
-                        var intersection = new Intersection(sprite.Hitbox, tile.Hitbox);
-                        if (intersection.IsIntersecting && intersection.Direction == Direction.Up)
-                        {
-                            intersections.Add(intersection);
-                            collidingTiles.Add(tile, intersection);
-                        }
-                    }
-                    else if (tile.Collision == TileCollisionType.BottomSolid && sprite.Velocity.Y < 0f)
-                    {
-                        var intersection = new Intersection(sprite.Hitbox, tile.Hitbox);
-                        if (intersection.IsIntersecting && intersection.Direction == Direction.Down)
-                        {
-                            intersections.Add(intersection);
-                            collidingTiles.Add(tile, intersection);
-                        }
-                    }
-
-                    // TODO: add handlers for LeftSolid and RightSolid
-                }
-
-                if (sprite.IsEmbedded)
-                {
-                    if (intersections.Count == 0)
-                    {
-                        sprite.IsEmbedded = false;
-                        continue;
-                    }
-                    else
-                    {
-                        continue;
-                    }
-                }
-
-                benchmark.Start();
-                ////intersections = Intersection.ConsolidateIntersections(intersections);
-                benchmark.Stop();
-
-                // The distance by which the sprite will have to be moved
-                Vector2 resolution = Vector2.Zero;
-                foreach (Intersection intersection in intersections)
-                {
-                    switch (intersection.Direction)
-                    {
-                        case Direction.Up:
-                            spriteIsOnGround = true;
-                            if (resolution.Y > 0) 
-                            {
-                                // If we've already moved down
-                                spriteIsEmbedded = true;
-                            }
-                            else if (resolution.Y == 0)
-                            {
-                                resolution.Y += intersection.GetIntersectionResolution().Y;
-                                debugText += "Up ";
-                            }
-
-                            break;
-                        case Direction.Down:
-                            if (resolution.Y < 0) 
-                            {
-                                // If we've already moved up
-                                spriteIsEmbedded = true;
-                            }
-                            else if (resolution.Y == 0)
-                            {
-                                resolution.Y += intersection.GetIntersectionResolution().Y;
-                                debugText += "Down ";
-                            }
-
-                            break;
-                        case Direction.Left:
-                            if (resolution.X > 0) 
-                            {
-                                // If we've already moved right
-                                spriteIsEmbedded = true;
-                            }
-                            else if (resolution.X == 0)
-                            {
-                                resolution.X += intersection.GetIntersectionResolution().X;
-                                debugText += "Left ";
-                            }
-
-                            break;
-                        case Direction.Right:
-                            if (resolution.X < 0) 
-                            {
-                                // If we've already moved left
-                                spriteIsEmbedded = true;
-                            }
-                            else if (resolution.X == 0)
-                            {
-                                resolution.X += intersection.GetIntersectionResolution().X;
-                                debugText += "Right ";
-                            }
-
-                            break;
-                    }
-                }
-
-                sprite.IsOnGround = spriteIsOnGround;
-                sprite.IsEmbedded = spriteIsEmbedded;
-                if (!sprite.IsEmbedded)
-                {
-                    sprite.Position += resolution;
-                }
-
-                foreach (var collision in collidingTiles)
-                {
-                    collision.Key.HandleCollision(sprite, collision.Value);
-                    sprite.HandleTileCollision(collision.Key, collision.Value);
-                }
-            }
-
-            this.debugText = string.Format("Consolidation took {0} microseconds", benchmark.Elapsed.TotalMilliseconds * 1000);
         }
 
         /// <summary>

@@ -48,7 +48,7 @@ namespace SMLimitless.Physics
         /// <param name="a">A bounding rectangle.</param>
         /// <param name="b">A bounding rectangle that may be intersecting the first.</param>
         public Intersection(BoundingRectangle a, BoundingRectangle b)
-            : this(a.GetIntersectionDepth(b))
+            : this(a.GetResolutionDistance(b).Depth)
         {
         }
 
