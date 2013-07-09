@@ -69,6 +69,11 @@ namespace SMLimitless
     public enum Direction
     {
         /// <summary>
+        /// Represents an invalid or default direction.
+        /// </summary>
+        None = 0,
+
+        /// <summary>
         /// Represents up (negative Y).
         /// </summary>
         Up,
@@ -104,6 +109,35 @@ namespace SMLimitless
         /// A rectangle split in half from corner to corner.
         /// </summary>
         RightTriangle
+    }
+
+    /// <summary>
+    /// Enumerates the result of an operation that checks
+    /// if more than one X or Y component in that collection
+    /// are equal. Used to determine if a sprite collides with a
+    /// row and/or a column of tiles.
+    /// </summary>
+    public enum VectorCollectionEqualityTypes
+    {
+        /// <summary>
+        /// None of the vectors have equal components.
+        /// </summary>
+        NoEquality,
+
+        /// <summary>
+        /// Two or more of the vectors have equal X components.
+        /// </summary>
+        SomeXComponentsEqual,
+
+        /// <summary>
+        /// Two or more of the vectors have equal Y components.
+        /// </summary>
+        SomeYComponentsEqual,
+
+        /// <summary>
+        /// Two or more of the vectors have equal X and/or Y components.
+        /// </summary>
+        Both
     }
 }
 

@@ -199,6 +199,37 @@ namespace SMLimitless.Sprites.Collections
         /// </summary>
         public void CheckCollision()
         {
+            foreach (Sprite sprite in this.sprites)
+            {
+                if (sprite.CollisionMode == SpriteCollisionMode.NoCollision)
+                {
+                    // We're not colliding with anything anyway, so let's move on to the next sprite.
+                    continue;
+                }
+
+                // Step 1: Get all the tiles we could be intersecting with.
+                List<Tile> collidableTiles = this.quadTree.GetCollidableTiles(sprite);
+                List<Tile> collidingTiles = new List<Tile>(collidableTiles.Count);
+                List<Vector2> intersections = new List<Vector2>(collidableTiles.Count);
+
+                // Step 2: Determine if we're intersecting any of the tiles.
+                foreach (Tile tile in collidableTiles)
+                {
+                    ////Intersection intersection = ((ICollidableShape)tile.Hitbox).GetResolutionDistance(sprite.Hitbox);
+                    ////if (intersection.IsIntersecting)
+                    ////{
+                    ////    collidingTiles.Add(tile);
+                    ////    intersections.Add(intersection);
+                    ////}
+                }
+
+                // Step 3: Calculate the final resolution.
+                Vector2 resolution = Vector2.Zero;
+
+                if (sprite.CollisionMode == SpriteCollisionMode.OffsetNotify || sprite.CollisionMode == SpriteCollisionMode.OffsetOnly)
+                {
+                }
+            }
         }
 
         /// <summary>

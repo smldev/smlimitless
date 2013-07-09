@@ -51,11 +51,6 @@ namespace SMLimitless.Screens
         private Vector2 otherResolution;
 
         /// <summary>
-        /// A flag.
-        /// </summary>
-        private bool doResolve;
-
-        /// <summary>
         /// A string.
         /// </summary>
         private string debugText = "";
@@ -68,9 +63,10 @@ namespace SMLimitless.Screens
         public override void Initialize(Screen owner, string parameters)
         {
             this.Effect = new FadeEffect();
-            this.triangle = new RightTriangle(new BoundingRectangle(400f, 200f, 100f, 100f), RtSlopedSides.TopLeft);
-            this.rectangle = new BoundingRectangle(0f, 0f, 100f, 100f);
+            this.triangle = new RightTriangle(new BoundingRectangle(400f, 200f, 100f, 100f), RtSlopedSides.TopRight);
+            this.rectangle = new BoundingRectangle(0f, 0f, 32f, 32f);
             this.other = new BoundingRectangle(98f, 96f, 100f, 100f);
+            this.debugText = Testing.Time(new SMLimitless.Tests.GeneralTests().VectorEqualityTypeTest, 1000).TotalMilliseconds.ToString();
         }
 
         /// <summary>
@@ -120,18 +116,14 @@ namespace SMLimitless.Screens
                 this.rectangle.Y += 2f;
             }
 
-            if (Input.InputManager.IsCurrentMousePress(MouseButtons.LeftButton))
-            {
-                this.doResolve = true;
-            }
+            this.resolution = Vector2.Zero;
+            this.otherResolution = Vector2.Zero;
 
-            this.resolution = this.otherResolution = Vector2.Zero;
-
-            this.resolution = this.triangle.GetResolutionDistance(this.rectangle).GetIntersectionResolution();
-            Intersection intersect = this.other.GetResolutionDistance(this.rectangle);
-            if (intersect.IsIntersecting && this.doResolve)
+            this.resolution = this.triangle.GetCollisionResolution(this.rectangle);
+            ////if (this.resolution != Vector2.Zero) System.Diagnostics.Debugger.Break();
+            this.otherResolution = this.other.GetCollisionResolution(this.rectangle);
+            if (this.otherResolution != Vector2.Zero)
             {
-                this.otherResolution = intersect.GetIntersectionResolution();
                 this.debugText = this.otherResolution.ToString();
             }
 

@@ -134,7 +134,6 @@
     <Compile Include="Hierarchy.cs" />
     <Compile Include="Input\InputManager.cs" />
     <Compile Include="Input\InputObject.cs" />
-    <Compile Include="Interfaces\ICollidableShape.cs" />
     <Compile Include="Interfaces\IEditorObject.cs" />
     <Compile Include="Interfaces\IEffect.cs" />
     <Compile Include="Interfaces\IName.cs" />

@@ -64,7 +64,7 @@ namespace SMLimitless.Sprites
         /// </summary>
         /// <param name="sprite">The sprite that has collided with this tile.</param>
         /// <param name="intersect">The depth of the intersection.</param>
-        public override void HandleCollision(Sprite sprite, Intersection intersect)
+        public override void HandleCollision(Sprite sprite, Vector2 intersect)
         {
         }
     }

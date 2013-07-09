@@ -17,7 +17,7 @@ namespace SMLimitless.Physics
     /// <summary>
     /// Represents a right triangle, used for sloped tiles.
     /// </summary>
-    public class RightTriangle : ICollidableShape
+    public class RightTriangle
     {
         /// <summary>
         /// A rectangle that completely contains the triangle.
@@ -195,92 +195,106 @@ namespace SMLimitless.Physics
         }
 
         /// <summary>
-        /// Determines the minimum distance to offset a given
-        /// bounding rectangle that may be colliding with this
-        /// triangle.
+        /// Returns the distance to move a given rectangle by to
+        /// resolve a collision with this triangle.
         /// </summary>
-        /// <param name="rect">The rectangle to resolve for.</param>
-        /// <returns>The minimum resolution distance.</returns>
-        public Intersection GetResolutionDistance(BoundingRectangle rect)
+        /// <param name="that">The rectangle to resolve.</param>
+        /// <returns>The distance to move the rectangle by.</returns>
+        public Vector2 GetCollisionResolution(BoundingRectangle that)
         {
-            // First, check if the rectangle is intersecting our bounds.
-            Intersection intersect = new Intersection(rect, this.bounds);
-            if (intersect.IsIntersecting)
+            // Step 1. Get the intersection between the bounds of this triangle and the rectangle.
+            Vector2 boundsIntersection = this.bounds.GetCollisionResolution(that);
+
+            // Step 2. Determine the direction of the intersection. If it's one of the two
+            // directions that are our sloped edge, it's a slope collision. Otherwise, it's
+            // a normal rect-rect collision.
+            if (this.SlopedSides == RtSlopedSides.TopLeft)
             {
-                // There are two ways to resolve this: by the sloped edge,
-                // or by the two straight edges. For TopLeft and TopRight
-                // triangles, we check if the bottom center point on the rectangle
-                // is between the slope and the bottom line. For the BottomLeft
-                // and BottomRight triangles, we check if the top center point
-                // is between the slope and the top line. If so, the resolution
-                // distance is the difference between the bottom center or top center
-                // point and the point on the slope.
-                //
-                // If the bottom center or top center point isn't between the slope
-                // and the long side, or if the the point on the slope is zero (meaning
-                // that the point was too far to the left or to the right of the slope,
-                // or if the bottom center or top center point is below or above the long
-                // side of the rectangle, the resolution is handled like a normal rectangle-
-                // rectangle intersection.
-                Vector2 bottomCenter = new Vector2(rect.Left + (rect.Width / 2f), rect.Bottom);
-                Vector2 topCenter = new Vector2(rect.Left + (rect.Width / 2f), rect.Top);
-                Vector2 pointOnSlope = this.GetPointOnSlope(rect.Left + (rect.Width / 2f));
-
-                if (pointOnSlope == Vector2.Zero)
+                if (boundsIntersection.X < 0f || boundsIntersection.Y < 0f)
                 {
-                    goto ResolveAsRectangle;
-                }
-
-                if (this.SlopedSides == RtSlopedSides.TopLeft || this.SlopedSides == RtSlopedSides.TopRight)
-                {
-                    if (bottomCenter.Y <= pointOnSlope.Y)
-                    {
-                        return Intersection.Zero;
-                    }
-                    else if ((bottomCenter.Y > pointOnSlope.Y) && (bottomCenter.Y < this.bounds.Bottom))
-                    {
-                        Intersection result = new Intersection(pointOnSlope - bottomCenter);
-                        result.IsSlopedIntersection = true;
-                        return result;
-                    }
-                    else
-                    {
-                        goto ResolveAsRectangle;
-                    }
+                    // Direction is left or up, it's a slope collision
+                    return this.ResolveSlopeCollision(that, boundsIntersection);
                 }
                 else
                 {
-                    if (topCenter.Y >= pointOnSlope.Y)
-                    {
-                        return Intersection.Zero;
-                    }
-                    else if ((topCenter.Y < pointOnSlope.Y) && (topCenter.Y > this.bounds.Top))
-                    {
-                        Intersection result = new Intersection(pointOnSlope - topCenter);
-                        result.IsSlopedIntersection = true;
-                        return result;
-                    }
-                    else
-                    {
-                        goto ResolveAsRectangle;
-                    }
+                    return boundsIntersection;
                 }
-
-            ResolveAsRectangle:
-                if ((this.SlopedSides == RtSlopedSides.TopLeft && (intersect.Direction == Direction.Right || intersect.Direction == Direction.Down)) ||
-                    (this.SlopedSides == RtSlopedSides.TopRight && (intersect.Direction == Direction.Left || intersect.Direction == Direction.Down)) ||
-                    (this.SlopedSides == RtSlopedSides.BottomLeft && (intersect.Direction == Direction.Right || intersect.Direction == Direction.Up)) ||
-                    (this.SlopedSides == RtSlopedSides.BottomRight && (intersect.Direction == Direction.Left || intersect.Direction == Direction.Up)))
+            }
+            else if (this.SlopedSides == RtSlopedSides.TopRight)
+            {
+                if (boundsIntersection.X > 0f || boundsIntersection.Y < 0f)
                 {
-                    return intersect;
+                    // Direction is right or up, it's a slope collision
+                    return this.ResolveSlopeCollision(that, boundsIntersection);
                 }
                 else
                 {
-                    return Intersection.Zero;
+                    return boundsIntersection;
+                }
+            }
+            else if (this.SlopedSides == RtSlopedSides.BottomLeft)
+            {
+                if (boundsIntersection.X < 0f || boundsIntersection.Y > 0f)
+                {
+                    // Direction is left or down, it's a slope collision
+                    return this.ResolveSlopeCollision(that, boundsIntersection);
+                }
+                else
+                {
+                    return boundsIntersection;
+                }
+            }
+            else if (this.SlopedSides == RtSlopedSides.BottomRight)
+            {
+                if (boundsIntersection.X > 0f || boundsIntersection.Y > 0f)
+                {
+                    // Direction is right or down, it's a slope collision
+                    return this.ResolveSlopeCollision(that, boundsIntersection);
+                }
+                else
+                {
+                    return boundsIntersection;
                 }
             }
 
-            return Intersection.Zero;
+            return Vector2.Zero;
+        }
+
+        /// <summary>
+        /// Resolves a collision between a rectangle and the sloped side of this triangle.
+        /// </summary>
+        /// <param name="that">The rectangle to resolve.</param>
+        /// <param name="intersection">The intersection between the rectangle and the bounds of this triangle.</param>
+        /// <returns>The distance to move the rectangle by to resolve this collision.</returns>
+        private Vector2 ResolveSlopeCollision(BoundingRectangle that, Vector2 intersection)
+        {
+            Vector2 topCenter = new Vector2(that.X + (that.Width / 2f), that.Y);
+            Vector2 bottomCenter = new Vector2(that.X + (that.Width / 2f), that.Bottom);
+            Vector2 pointOnSlope = this.GetPointOnSlope(that.X + (that.Width / 2f));
+
+            if (pointOnSlope == Vector2.Zero)
+            {
+                return Vector2.Zero;
+            }
+
+            if (this.SlopedSides == RtSlopedSides.TopLeft || this.SlopedSides == RtSlopedSides.TopRight)
+            {
+                if (bottomCenter.Y > pointOnSlope.Y)
+                {
+                    // The bottom-center point is below the slope, resolution needed
+                    return new Vector2(0f, -(bottomCenter.Y - pointOnSlope.Y));
+                }
+            }
+            else if (this.SlopedSides == RtSlopedSides.BottomLeft || this.SlopedSides == RtSlopedSides.BottomRight)
+            {
+                if (topCenter.Y < pointOnSlope.Y)
+                {
+                    // The top-center point is above the slope, resolution needed
+                    return new Vector2(0f, pointOnSlope.Y - topCenter.Y);
+                }
+            }
+
+            return Vector2.Zero;
         }
 
         /// <summary>

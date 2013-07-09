@@ -16,6 +16,7 @@ namespace SMLimitless.Physics
     /// <summary>
     /// Represents an intersection between two geometric shapes.
     /// </summary>
+    [Obsolete]
     public struct Intersection
     {
         /// <summary>
@@ -48,7 +49,7 @@ namespace SMLimitless.Physics
         /// <param name="a">A bounding rectangle.</param>
         /// <param name="b">A bounding rectangle that may be intersecting the first.</param>
         public Intersection(BoundingRectangle a, BoundingRectangle b)
-            : this(a.GetResolutionDistance(b).Depth)
+            : this(a.GetResolutionDistance(b))
         {
         }
 
@@ -121,7 +122,7 @@ namespace SMLimitless.Physics
                         throw new Exception("Intersection.Direction.Get: No direction if not intersecting.");
                     }
 
-                    if (Math.Abs(this.Depth.X) > Math.Abs(this.Depth.Y))
+                    if ((Math.Abs(this.Depth.X) > Math.Abs(this.Depth.Y)) || (Math.Abs(this.Depth.X) == Math.Abs(this.Depth.Y)))
                     {
                         // Resolve vertically
                         if (this.Depth.Y < 0)
@@ -269,7 +270,7 @@ namespace SMLimitless.Physics
         /// <returns>The minimum distance necessary to resolve this collision.</returns>
         public Vector2 GetIntersectionResolution()
         {
-            return this.Depth != Vector2.Zero ? this.Depth * this.Multiplier : Vector2.Zero;
+            return (this.Depth != Vector2.Zero) ? this.Depth * this.Multiplier : Vector2.Zero;
         }
 
         /// <summary>

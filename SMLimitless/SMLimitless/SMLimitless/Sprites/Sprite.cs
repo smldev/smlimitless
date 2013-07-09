@@ -239,13 +239,13 @@ namespace SMLimitless.Sprites
         /// </summary>
         /// <param name="tile">The tile that this sprite has collided with.</param>
         /// <param name="intersect">The depth of the intersection.</param>
-        public abstract void HandleTileCollision(Tile tile, Intersection intersect);
+        public abstract void HandleTileCollision(Tile tile, Vector2 intersect);
 
         /// <summary>
         /// Handles a collision between this sprite and another.
         /// </summary>
         /// <param name="sprite">The sprite that has collided with this one.</param>
         /// <param name="intersect">The depth of the intersection.</param>
-        public abstract void HandleSpriteCollision(Sprite sprite, Intersection intersect);
+        public abstract void HandleSpriteCollision(Sprite sprite, Vector2 intersect);
     }
 }

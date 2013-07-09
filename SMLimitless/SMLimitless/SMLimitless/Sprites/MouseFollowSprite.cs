@@ -75,7 +75,7 @@ namespace SMLimitless.Sprites
         /// </summary>
         /// <param name="sprite">The sprite that has collided with this one.</param>
         /// <param name="intersect">The depth of the intersection.</param>
-        public override void HandleSpriteCollision(Sprite sprite, Intersection intersect)
+        public override void HandleSpriteCollision(Sprite sprite, Vector2 intersect)
         {
             throw new NotImplementedException();
         }
@@ -85,7 +85,7 @@ namespace SMLimitless.Sprites
         /// </summary>
         /// <param name="tile">The tile that this sprite has collided with.</param>
         /// <param name="intersect">The depth of the intersection.</param>
-        public override void HandleTileCollision(Tile tile, Intersection intersect)
+        public override void HandleTileCollision(Tile tile, Vector2 intersect)
         {
         }
 
