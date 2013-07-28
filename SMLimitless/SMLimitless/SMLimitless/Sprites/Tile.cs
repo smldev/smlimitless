@@ -60,7 +60,7 @@ namespace SMLimitless.Sprites
         /// <summary>
         /// Gets a rectangle representing this tile's hitbox.
         /// </summary>
-        public BoundingRectangle Hitbox
+        public virtual ICollidableShape Hitbox
         {
             get
             {

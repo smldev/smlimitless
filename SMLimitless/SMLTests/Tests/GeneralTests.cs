@@ -9,9 +9,10 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using NUnit.Framework;
+using SMLimitless;
 using SMLimitless.Extensions;
 
-namespace SMLimitless.Tests
+namespace SMLTests
 {
     /// <summary>
     /// A collection of general or miscellaneous tests.

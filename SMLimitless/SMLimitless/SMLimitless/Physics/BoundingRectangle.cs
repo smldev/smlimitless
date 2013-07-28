@@ -17,7 +17,7 @@ namespace SMLimitless.Physics
     /// Using Rectangle for Collision bounds causes 'jiggling' as Rectangle 
     /// must round values to integers. This struct uses float for precision.
     /// </summary>
-    public class BoundingRectangle
+    public class BoundingRectangle : ICollidableShape
     {
         /// <summary>
         /// The position of the top-left corner.

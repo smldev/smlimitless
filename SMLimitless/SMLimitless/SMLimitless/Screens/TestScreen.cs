@@ -9,12 +9,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using SMLimitless.Extensions;
-using SMLimitless.Graphics;
-using SMLimitless.Physics;
 using SMLimitless.Screens.Effects;
-using SMLimitless.Sprites;
 
 namespace SMLimitless.Screens
 {
@@ -26,34 +21,19 @@ namespace SMLimitless.Screens
     public class TestScreen : Screen
     {
         /// <summary>
-        /// A rectangle.
+        /// Updates the screen.
         /// </summary>
-        private BoundingRectangle rectangle;
+        public override void Update()
+        {
+            Effect.Update();
+        }
 
         /// <summary>
-        /// A triangle.
+        /// Loads the content for this screen.
         /// </summary>
-        private RightTriangle triangle;
-
-        /// <summary>
-        /// Another rectangle.
-        /// </summary>
-        private BoundingRectangle other;
-
-        /// <summary>
-        /// A resolution.
-        /// </summary>
-        private Vector2 resolution;
-
-        /// <summary>
-        /// Another resolution.
-        /// </summary>
-        private Vector2 otherResolution;
-
-        /// <summary>
-        /// A string.
-        /// </summary>
-        private string debugText = "";
+        public override void LoadContent()
+        {
+        }
 
         /// <summary>
         /// Initializes this screen.
@@ -63,17 +43,6 @@ namespace SMLimitless.Screens
         public override void Initialize(Screen owner, string parameters)
         {
             this.Effect = new FadeEffect();
-            this.triangle = new RightTriangle(new BoundingRectangle(400f, 200f, 100f, 100f), RtSlopedSides.TopRight);
-            this.rectangle = new BoundingRectangle(0f, 0f, 32f, 32f);
-            this.other = new BoundingRectangle(98f, 96f, 100f, 100f);
-            this.debugText = Testing.Time(new SMLimitless.Tests.GeneralTests().VectorEqualityTypeTest, 1000).TotalMilliseconds.ToString();
-        }
-
-        /// <summary>
-        /// Loads the content for this screen.
-        /// </summary>
-        public override void LoadContent() 
-        {
         }
 
         /// <summary>
@@ -82,61 +51,6 @@ namespace SMLimitless.Screens
         public override void Draw()
         {
             Effect.Draw();
-            this.triangle.Draw(false);
-            this.rectangle.DrawOutline(Color.White);
-            this.other.DrawOutline(Color.White);
-
-            this.resolution.ToString().DrawString(new Vector2(16f, 16f), Color.White);
-            this.otherResolution.ToString().DrawString(new Vector2(16f, 36f), Color.White);
-        }
-
-        /// <summary>
-        /// Updates the screen.
-        /// </summary>
-        public override void Update()
-        {
-            Effect.Update();
-            if (Input.InputManager.IsCurrentKeyPress(Keys.Left))
-            {
-                this.rectangle.X -= 2f;
-            }
-
-            if (Input.InputManager.IsCurrentKeyPress(Keys.Right))
-            {
-                this.rectangle.X += 2f;
-            }
-
-            if (Input.InputManager.IsCurrentKeyPress(Keys.Up))
-            {
-                this.rectangle.Y -= 2f;
-            }
-
-            if (Input.InputManager.IsCurrentKeyPress(Keys.Down))
-            {
-                this.rectangle.Y += 2f;
-            }
-
-            this.resolution = Vector2.Zero;
-            this.otherResolution = Vector2.Zero;
-
-            this.resolution = this.triangle.GetCollisionResolution(this.rectangle);
-            ////if (this.resolution != Vector2.Zero) System.Diagnostics.Debugger.Break();
-            this.otherResolution = this.other.GetCollisionResolution(this.rectangle);
-            if (this.otherResolution != Vector2.Zero)
-            {
-                this.debugText = this.otherResolution.ToString();
-            }
-
-            if (this.resolution != Vector2.Zero)
-            {
-                this.rectangle.X += this.resolution.X;
-                this.rectangle.Y += this.resolution.Y;
-            }
-            else if (this.otherResolution != Vector2.Zero)
-            {
-                this.rectangle.X += this.otherResolution.X;
-                this.rectangle.Y += this.otherResolution.Y;
-            }
         }
 
         /// <summary>

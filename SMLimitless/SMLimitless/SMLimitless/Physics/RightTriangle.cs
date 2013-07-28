@@ -17,7 +17,7 @@ namespace SMLimitless.Physics
     /// <summary>
     /// Represents a right triangle, used for sloped tiles.
     /// </summary>
-    public class RightTriangle
+    public class RightTriangle : ICollidableShape
     {
         /// <summary>
         /// A rectangle that completely contains the triangle.

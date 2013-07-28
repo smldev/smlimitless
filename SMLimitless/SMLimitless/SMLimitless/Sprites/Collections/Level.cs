@@ -109,7 +109,7 @@ namespace SMLimitless.Sprites.Collections
             }
 
             int j = 0;
-            for (int i = 0; i < 800; i += 16)
+            for (int i = 0; i < 400; i += 16)
             {
                 TestTile tile = new TestTile();
                 this.tiles.Add(tile);
@@ -117,6 +117,32 @@ namespace SMLimitless.Sprites.Collections
                 this.tiles[j].Position = new Vector2(i, 432f);
                 this.quadTree.Add(tile);
                 j++;
+            }
+
+            for (int i = 400; i < 800; i += 32)
+            {
+                SlopedTestTile1 tile1 = new SlopedTestTile1();
+                SlopedTestTile2 tile2 = new SlopedTestTile2();
+                TestTile4 tile3 = new TestTile4();
+                TestTile5 tile4 = new TestTile5();
+                this.tiles.Add(tile1);
+                this.tiles.Add(tile2);
+                this.tiles.Add(tile3);
+                this.tiles.Add(tile4);
+                this.tiles[j].Initialize(this);
+                this.tiles[j].Position = new Vector2(i, 416f);
+                j++;
+                this.tiles[j].Initialize(this);
+                this.tiles[j].Position = new Vector2(i + 16f, 416f);
+                j++;
+                this.tiles[j].Initialize(this);
+                this.tiles[j].Position = new Vector2(i, 432f);
+                j++;
+                this.tiles[j].Initialize(this);
+                this.tiles[j].Position = new Vector2(i + 16f, 432f);
+                j++;
+                this.quadTree.Add(tile1);
+                this.quadTree.Add(tile2);
             }
 
             for (int i = 0; i < 800; i += 16)
@@ -199,37 +225,7 @@ namespace SMLimitless.Sprites.Collections
         /// </summary>
         public void CheckCollision()
         {
-            foreach (Sprite sprite in this.sprites)
-            {
-                if (sprite.CollisionMode == SpriteCollisionMode.NoCollision)
-                {
-                    // We're not colliding with anything anyway, so let's move on to the next sprite.
-                    continue;
-                }
-
-                // Step 1: Get all the tiles we could be intersecting with.
-                List<Tile> collidableTiles = this.quadTree.GetCollidableTiles(sprite);
-                List<Tile> collidingTiles = new List<Tile>(collidableTiles.Count);
-                List<Vector2> intersections = new List<Vector2>(collidableTiles.Count);
-
-                // Step 2: Determine if we're intersecting any of the tiles.
-                foreach (Tile tile in collidableTiles)
-                {
-                    ////Intersection intersection = ((ICollidableShape)tile.Hitbox).GetResolutionDistance(sprite.Hitbox);
-                    ////if (intersection.IsIntersecting)
-                    ////{
-                    ////    collidingTiles.Add(tile);
-                    ////    intersections.Add(intersection);
-                    ////}
-                }
-
-                // Step 3: Calculate the final resolution.
-                Vector2 resolution = Vector2.Zero;
-
-                if (sprite.CollisionMode == SpriteCollisionMode.OffsetNotify || sprite.CollisionMode == SpriteCollisionMode.OffsetOnly)
-                {
-                }
-            }
+            // To be implemented.
         }
 
         /// <summary>

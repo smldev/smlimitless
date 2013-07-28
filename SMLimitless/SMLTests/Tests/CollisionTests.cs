@@ -9,11 +9,12 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using NUnit.Framework;
+using SMLimitless;
 using SMLimitless.Physics;
 using SMLimitless.Sprites;
 using SMLimitless.Sprites.Collections;
 
-namespace SMLimitless.Tests
+namespace SMLTests
 {
     /// <summary>
     /// Contains tests for collision detection and resolution.
@@ -160,11 +161,11 @@ namespace SMLimitless.Tests
 
             Level level = new Level();
 
-            TestSprite sprite = new TestSprite { Position = Vector2.Zero };
+            UnitTestingSprite sprite = new UnitTestingSprite { Position = Vector2.Zero };
             sprite.Initialize(level);
             level.AddSprite(sprite);
 
-            TestTile tile = new TestTile { Position = new Vector2(0f, 14f) };
+            UnitTestingTile tile = new UnitTestingTile { Position = new Vector2(0f, 14f) };
             tile.Initialize(level);
             level.AddTile(tile);
 
