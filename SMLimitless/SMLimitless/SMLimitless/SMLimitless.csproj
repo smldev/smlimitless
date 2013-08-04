@@ -120,6 +120,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collections\Grid.cs" />
+    <Compile Include="Collections\SizedGrid.cs" />
     <Compile Include="Content\ContentPackage.cs" />
     <Compile Include="Content\ContentPackageManager.cs" />
     <Compile Include="Content\ContentPackageResourceSearcher.cs" />
@@ -153,6 +155,7 @@
     <Compile Include="Physics\Interpolator.cs" />
     <Compile Include="Physics\InterpolatorScales.cs" />
     <Compile Include="Physics\Intersection.cs" />
+    <Compile Include="Physics\IntVector2.cs" />
     <Compile Include="Physics\QuadTree.cs" />
     <Compile Include="Physics\QuadTreeCell.cs" />
     <Compile Include="Physics\RightTriangle.cs" />
