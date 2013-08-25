@@ -76,5 +76,18 @@ namespace SMLimitless.Extensions
 
             return input;
         }
+
+        public static float Sign(this float value)
+        {
+            if (value < 0f)
+            {
+                return -1f;
+            }
+            else if (value > 0f)
+            {
+                return 1f;
+            }
+            return 0f;
+        }
     }
 }

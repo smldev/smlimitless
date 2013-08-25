@@ -23,7 +23,7 @@ namespace SMLimitless.Extensions
         /// <returns>True if one or both of the components equal Single.NaN, false if neither do.</returns>
         public static bool IsNaN(this Vector2 vector)
         {
-            return vector.X == float.NaN || vector.Y == float.NaN;
+            return float.IsNaN(vector.X) || float.IsNaN(vector.Y);
         }
 
         /// <summary>
@@ -156,6 +156,7 @@ namespace SMLimitless.Extensions
         /// </summary>
         /// <param name="vectors">The collection to check.</param>
         /// <returns>The equality of the components of a collection of Vector2s.</returns>
+        [Obsolete]
         public static VectorCollectionEqualityTypes GetVectorEqualityTypes(IEnumerable<Vector2> vectors)
         {
             float lastX = float.NaN;
@@ -206,6 +207,34 @@ namespace SMLimitless.Extensions
             {
                 return VectorCollectionEqualityTypes.NoEquality;
             }
+        }
+
+        public static Vector2 GreatestVectorByY(IEnumerable<Vector2> vectors)
+        {
+            Vector2 largestSoFar = new Vector2(0f, float.MinValue);
+            foreach (Vector2 vector in vectors)
+            {
+                if (Math.Abs(vector.Y) > Math.Abs(largestSoFar.Y))
+                {
+                    largestSoFar = vector;
+                }
+            }
+
+            return (largestSoFar.Y != float.MinValue) ? largestSoFar : Vector2.Zero;
+        }
+
+        public static Vector2 GreatestVectorByX(IEnumerable<Vector2> vectors)
+        {
+            Vector2 largestSoFar = new Vector2(float.MinValue, 0f);
+            foreach (Vector2 vector in vectors)
+            {
+                if (Math.Abs(vector.X) > Math.Abs(largestSoFar.X))
+                {
+                    largestSoFar = vector;
+                }
+            }
+
+            return (largestSoFar.X != float.MinValue) ? largestSoFar : Vector2.Zero;
         }
     }
 }

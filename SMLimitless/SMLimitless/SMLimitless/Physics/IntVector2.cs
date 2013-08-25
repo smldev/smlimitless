@@ -252,7 +252,7 @@ namespace SMLimitless.Physics
         /// <returns>The hash code of this object.</returns>
         public override int GetHashCode()
         {
-            return (this.X / this.Y) + (this.Y / this.X);
+            return this.X ^ this.Y;
         }
 
         /// <summary>

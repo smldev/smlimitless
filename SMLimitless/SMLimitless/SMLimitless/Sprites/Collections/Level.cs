@@ -20,7 +20,7 @@ namespace SMLimitless.Sprites.Collections
     /// A game-play area consisting of a collection
     /// of sprites, tiles, and utility objects.
     /// </summary>
-    public class Level
+    public sealed partial class Level
     {
         /// <summary>
         /// A value indicating whether this level should be running. Temporary.
@@ -98,10 +98,10 @@ namespace SMLimitless.Sprites.Collections
 
             Random random = new Random();
             int total = random.Next(0, 100);
-            for (int i = 0; i < total; i++)
+            for (int i = 0; i < 0; i++)
             {
                 TestSprite newSprite = new TestSprite();
-                newSprite.Position = new Vector2(random.Next(0, 200), 100f);
+                newSprite.Position = new Vector2(random.Next(0, 600), 100f);
                 this.sprites.Add(newSprite);
                 newSprite.Initialize(this);
                 this.quadTree.Add(newSprite);
@@ -218,14 +218,6 @@ namespace SMLimitless.Sprites.Collections
                 this.quadTree.Update();
                 this.CheckCollision();
             }
-        }
-
-        /// <summary>
-        /// Checks and resolves the collisions in this level. Temporary.
-        /// </summary>
-        public void CheckCollision()
-        {
-            // To be implemented.
         }
 
         /// <summary>

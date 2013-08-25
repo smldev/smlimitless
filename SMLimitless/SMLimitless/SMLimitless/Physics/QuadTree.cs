@@ -150,6 +150,73 @@ namespace SMLimitless.Physics
             return result;
         }
 
+        public List<SlopedTile> GetCollidableSlopedTiles(Sprite sprite)
+        {
+            List<Tile> collidableTiles = this.GetCollidableTiles(sprite);
+            List<SlopedTile> result = new List<SlopedTile>(collidableTiles.Count);
+
+            foreach (Tile tile in collidableTiles)
+            {
+                if (tile is SlopedTile)
+                {
+                    result.Add((SlopedTile)tile);
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Takes a list of tiles and returns a list of all the sloped tiles it contains.
+        /// Additionally, this method removes the sloped tiles from the original list.
+        /// </summary>
+        /// <param name="tiles">The list of tiles from which to separate the sloped tiles from.</param>
+        /// <returns>A list of sloped tiles from the supplied list of tiles.</returns>
+        public List<SlopedTile> SeparateSlopedTiles(ref List<Tile> tiles)
+        {
+            List<SlopedTile> result = new List<SlopedTile>(tiles.Count);
+
+            foreach (Tile tile in tiles)
+            {
+                if (tile is SlopedTile)
+                {
+                    result.Add((SlopedTile)tile);
+                }
+            }
+
+            foreach (Tile tile in result)
+            {
+                tiles.Remove(tile);
+            }
+
+            return result;
+        }
+
+        public void GetCollidableTiles(Sprite sprite, out List<Tile> tiles, out List<SlopedTile> slopedTiles)
+        {
+            var resultTiles = new List<Tile>();
+            var resultSloped = new List<SlopedTile>();
+            var intersectingCells = this.GetIntersectingCells(sprite);
+
+            foreach (var cell in intersectingCells)
+            {
+                foreach (Tile tile in this.cells[cell].Tiles)
+                {
+                    if (tile is SlopedTile)
+                    {
+                        resultSloped.AddUnlessDuplicate((SlopedTile)tile);
+                    }
+                    else
+                    {
+                        resultTiles.AddUnlessDuplicate(tile);
+                    }
+                }
+            }
+
+            tiles = resultTiles;
+            slopedTiles = resultSloped;
+        }
+
         /// <summary>
         /// Updates the QuadTree, recalculating the cells for every tile.
         /// </summary>

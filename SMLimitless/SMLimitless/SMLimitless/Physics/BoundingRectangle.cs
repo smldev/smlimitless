@@ -25,7 +25,7 @@ namespace SMLimitless.Physics
         private Vector2 min;
 
         /// <summary>
-        /// The size.
+        /// The size of the rectangle.
         /// </summary>
         private Vector2 max;
 
@@ -129,6 +129,22 @@ namespace SMLimitless.Physics
             get { return this.Y + this.Height; }
         }
 
+        public Vector2 TopCenter
+        {
+            get
+            {
+                return new Vector2(this.Center.X, this.Top);
+            }
+        }
+
+        public Vector2 BottomCenter
+        {
+            get
+            {
+                return new Vector2(this.Center.X, this.Bottom);
+            }
+        }
+
         /// <summary>
         /// Gets or sets the position.
         /// </summary>
@@ -152,7 +168,7 @@ namespace SMLimitless.Physics
         /// </summary>
         public Vector2 Center
         {
-            get { return (this.min + this.max) / 2; }
+            get { return new Vector2(this.X + (this.Width / 2f), this.Y + (this.Height / 2f)); }
         }
 
         /// <summary>
@@ -166,43 +182,116 @@ namespace SMLimitless.Physics
             }
         }
 
-        /// <summary>
-        /// Gets the intersection depth between this rectangle
-        /// and another. Please use the <see cref="Intersection"/>
-        /// structure instead of this method - that struct provides
-        /// much more detail and help in resolving collisions.
-        /// </summary>
-        /// <param name="other">The other rectangle to check.</param>
-        /// <returns>The intersection depth.</returns>
-        [Obsolete]
-        public Vector2 GetIntersectionDepth(BoundingRectangle other)
+        public bool Intersects(Vector2 point)
         {
-            // Calculate half sizes.
-            float halfWidthA = this.Width / 2.0f;
-            float halfHeightA = this.Height / 2.0f;
-            float halfWidthB = other.Width / 2.0f;
-            float halfHeightB = other.Height / 2.0f;
+            return (point.X > this.Left && point.X < this.Right) && (point.Y > this.Top && point.Y < this.Bottom);
+        }
 
-            // Calculate centers.
-            Vector2 centerA = new Vector2(this.Left + halfWidthA, this.Top + halfHeightA);
-            Vector2 centerB = new Vector2(other.Left + halfWidthB, other.Top + halfHeightB);
+        public bool Intersects(BoundingRectangle that)
+        {
+            if (that.Right <= this.Left || that.Left >= this.Right)
+            {
+                return false;
+            }
+            else if (that.Bottom <= this.Top || that.Top >= this.Bottom)
+            {
+                return false;
+            }
 
-            // Calculate current and minimum-non-intersecting distances between centers.
-            float distanceX = centerA.X - centerB.X;
-            float distanceY = centerA.Y - centerB.Y;
-            float minDistanceX = halfWidthA + halfWidthB;
-            float minDistanceY = halfHeightA + halfHeightB;
+            return true;
+        }
 
-            // If we are not intersecting at all, return (0, 0).
-            if (Math.Abs(distanceX) >= minDistanceX || Math.Abs(distanceY) >= minDistanceY)
+        public bool Intersects(RightTriangle triangle)
+        {
+            Vector2 pointOnSlope = triangle.GetPointOnSlope(this.Center.X);
+            Vector2 rectCenterPoint = (triangle.SlopedSides == RtSlopedSides.TopLeft || triangle.SlopedSides == RtSlopedSides.TopRight) ? this.BottomCenter : this.TopCenter;
+
+            if (!this.Intersects(triangle.Bounds))
+            {
+                return false;
+            }
+
+            if (pointOnSlope.IsNaN())
+            {
+                if (triangle.HorizontalSlopedSide == HorizontalDirection.Left)
+                {
+                    return rectCenterPoint.X >= triangle.Bounds.Right;
+                }
+                else
+                {
+                    return rectCenterPoint.X <= triangle.Bounds.Left;
+                }
+            }
+            else
+            {
+                if (triangle.VerticalSlopedSide == VerticalDirection.Up)
+                {
+                    return rectCenterPoint.Y > pointOnSlope.Y;
+                }
+                else
+                {
+                    return rectCenterPoint.Y < pointOnSlope.Y;
+                }
+            }
+        }
+
+        public Vector2 GetIntersectionDepth(BoundingRectangle that)
+        {
+            Vector2 result = Vector2.Zero;
+
+            // X-axis checks
+            if (that.Right <= this.Left || that.Left >= this.Right)
+            {
+                result.X = float.NaN;
+            }
+            else
+            {
+                if (that.Center.X <= this.Center.X)
+                {
+                    result.X = -(that.Right - this.Left);
+                }
+                else if (that.Center.X > this.Center.X)
+                {
+                    result.X = this.Right - that.Left;
+                }
+            }
+            
+            // Y-axis checks
+            if (that.Bottom <= this.Top || that.Top >= this.Bottom)
+            {
+                result.Y = float.NaN;
+            }
+            else
+            {
+                if (that.Center.Y <= this.Center.Y)
+                {
+                    result.Y = -(that.Bottom - this.Top);
+                }
+                else if (that.Center.Y > this.Center.Y)
+                {
+                    result.Y = this.Bottom - that.Top;
+                }
+            }
+
+            return (result.IsNaN()) ? new Vector2(float.NaN, float.NaN) : result;
+        }
+
+        public Vector2 GetCollisionResolution(BoundingRectangle that)
+        {
+            Vector2 intersection = this.GetIntersectionDepth(that);
+
+            if (intersection.IsNaN())
             {
                 return Vector2.Zero;
             }
-
-            // Calculate and return intersection depths.
-            float depthX = distanceX > 0 ? minDistanceX - distanceX : -minDistanceX - distanceX;
-            float depthY = distanceY > 0 ? minDistanceY - distanceY : -minDistanceY - distanceY;
-            return new Vector2(depthX, depthY);
+            else if (Math.Abs(intersection.X) < Math.Abs(intersection.Y))
+            {
+                return new Vector2(intersection.X, 0f);
+            }
+            else
+            {
+                return new Vector2(0f, intersection.Y);
+            }
         }
 
         /// <summary>
@@ -214,140 +303,98 @@ namespace SMLimitless.Physics
             return new Rectangle((int)this.min.X, (int)this.min.Y, (int)this.max.X, (int)this.max.Y);
         }
 
-        /// <summary>
-        /// Gets the minimum distance to offset a given rectangle
-        /// so that it will no longer be colliding with this shape.
-        /// </summary>
-        /// <param name="rect">The rectangle to resolve.</param>
-        /// <returns>The minimum distance to offset the given rectangle.</returns>
-        [Obsolete]
-        public Vector2 GetResolutionDistance(BoundingRectangle rect)
-        {
-            Vector2 resolution = Vector2.Zero;
+        /////// <summary>
+        /////// Returns the distance to move a given rectangle by to
+        /////// resolve a collision with this rectangle.
+        /////// </summary>
+        /////// <param name="that">The rectangle to resolve.</param>
+        /////// <returns>The distance to move the rectangle by.</returns>
+        ////public Vector2 GetCollisionResolution(BoundingRectangle that)
+        ////{
+        ////    Vector2 resolution = new Vector2(float.MaxValue, float.MaxValue); // this is so the shallowest-edge checks don't fail if the X or Y resolutions happen to be zero
 
-            // Get the horizontal resolution
-            if (rect.Right <= this.Left || rect.Left >= this.Right)
-            {
-                return Vector2.Zero;
-            }
-            else if (this.Left < rect.Right && rect.Right < this.Right)
-            {
-                resolution.X = -(rect.Right - this.Left);
-            }
-            else if (this.Left < rect.Left && rect.Left < this.Right)
-            {
-                resolution.X = this.Right - rect.Left;
-            }
+        ////    // Step 1: Get the depth and direction on the X (horizontal) axis.
+        ////    if (that.Right <= this.Left || this.Right <= that.Left)
+        ////    {
+        ////        // The other rect is to our left or right.
+        ////        // Per axis separation theorem, we're not intersecting.
+        ////        return Vector2.Zero;
+        ////    }
+        ////    else if (that.Left > this.Left && that.Right < this.Right)
+        ////    {
+        ////        // The other rect is completely contained within this one. The direction is derived by the distance to the center.
+        ////        float thisCenter = this.X + (this.Width / 2f);
+        ////        float thatCenter = that.X + (that.Width / 2f);
 
-            // Get the vertical resolution
-            if (rect.Bottom <= this.Top || rect.Top >= this.Bottom)
-            {
-                return Vector2.Zero;
-            }
-            else if (this.Top < rect.Bottom && rect.Bottom < this.Bottom)
-            {
-                resolution.Y = -(rect.Bottom - this.Top);
-            }
-            else if (this.Top < rect.Top && rect.Top < this.Bottom)
-            {
-                resolution.Y = this.Bottom - rect.Top;
-            }
+        ////        if (thatCenter >= thisCenter)
+        ////        {
+        ////            resolution.X = this.Right - that.Left;
+        ////        }
+        ////        else if (thisCenter <= thatCenter)
+        ////        {
+        ////            resolution.X = -(that.Right - this.Left);
+        ////        }
+        ////    }
+        ////    else if (that.Right > this.Left && that.Right < this.Right)
+        ////    {
+        ////        // The right edge of the other rect is between the edges of this rect. The direction is left.
+        ////        resolution.X = -(that.Right - this.Left);
+        ////    }
+        ////    else if (that.Left > this.Left && that.Left < this.Right)
+        ////    {
+        ////        // The left edge of the other rect is between the edges of this rect. The direction is right.
+        ////        resolution.X = this.Right - that.Left;
+        ////    }
 
-            return new Intersection(resolution).GetIntersectionResolution();
-        }
+        ////    // Step 2: Get the depth and direction on the Y (vertical) axis.
+        ////    if (that.Bottom <= this.Top || that.Top >= this.Bottom)
+        ////    {
+        ////        // The other rect is above or below us.
+        ////        // Per axis separation theorem, we're not intersecting.
+        ////        return Vector2.Zero;
+        ////    }
+        ////    else if (that.Top > this.Top && that.Bottom < this.Bottom)
+        ////    {
+        ////        // The other rect is completely contained within this one. The direction is derived by the distance to the center.
+        ////        float thisCenter = this.Y + (this.Height / 2f);
+        ////        float thatCenter = that.Y + (that.Height / 2f);
 
-        /// <summary>
-        /// Returns the distance to move a given rectangle by to
-        /// resolve a collision with this rectangle.
-        /// </summary>
-        /// <param name="that">The rectangle to resolve.</param>
-        /// <returns>The distance to move the rectangle by.</returns>
-        public Vector2 GetCollisionResolution(BoundingRectangle that)
-        {
-            Vector2 resolution = new Vector2(float.MaxValue, float.MaxValue); // this is so the shallowest-edge checks don't fail if the X or Y resolutions happen to be zero
+        ////        if (thatCenter >= thisCenter)
+        ////        {
+        ////            resolution.Y = this.Bottom - that.Top;
+        ////        }
+        ////        else if (thatCenter <= thisCenter)
+        ////        {
+        ////            resolution.Y = -(that.Bottom - this.Top);
+        ////        }
+        ////    }
+        ////    else if (that.Bottom > this.Top && that.Bottom < this.Bottom)
+        ////    {
+        ////        // The bottom edge of the other rect is between the edges of this rect. The direction is up.
+        ////        resolution.Y = -(that.Bottom - this.Top);
+        ////    }
+        ////    else if (that.Top > this.Top && that.Top < this.Bottom)
+        ////    {
+        ////        // The top edge of the other rect is between the edges of this rect. The direction is down.
+        ////        resolution.Y = this.Bottom - that.Top;
+        ////    }
 
-            // Step 1: Get the depth and direction on the X (horizontal) axis.
-            if (that.Right <= this.Left || this.Right <= that.Left)
-            {
-                // The other rect is to our left or right.
-                // Per axis separation theorem, we're not intersecting.
-                return Vector2.Zero;
-            }
-            else if (that.Left > this.Left && that.Right < this.Right)
-            {
-                // The other rect is completely contained within this one. The direction is derived by the distance to the center.
-                float thisCenter = this.X + (this.Width / 2f);
-                float thatCenter = that.X + (that.Width / 2f);
-
-                if (thatCenter >= thisCenter)
-                {
-                    resolution.X = this.Right - that.Left;
-                }
-                else if (thisCenter <= thatCenter)
-                {
-                    resolution.X = -(that.Right - this.Left);
-                }
-            }
-            else if (that.Right > this.Left && that.Right < this.Right)
-            {
-                // The right edge of the other rect is between the edges of this rect. The direction is left.
-                resolution.X = -(that.Right - this.Left);
-            }
-            else if (that.Left > this.Left && that.Left < this.Right)
-            {
-                // The left edge of the other rect is between the edges of this rect. The direction is right.
-                resolution.X = this.Right - that.Left;
-            }
-
-            // Step 2: Get the depth and direction on the Y (vertical) axis.
-            if (that.Bottom <= this.Top || that.Top >= this.Bottom)
-            {
-                // The other rect is above or below us.
-                // Per axis separation theorem, we're not intersecting.
-                return Vector2.Zero;
-            }
-            else if (that.Top > this.Top && that.Bottom < this.Bottom)
-            {
-                // The other rect is completely contained within this one. The direction is derived by the distance to the center.
-                float thisCenter = this.Y + (this.Height / 2f);
-                float thatCenter = that.Y + (that.Height / 2f);
-
-                if (thatCenter >= thisCenter)
-                {
-                    resolution.Y = this.Bottom - that.Top;
-                }
-                else if (thatCenter <= thisCenter)
-                {
-                    resolution.Y = -(that.Bottom - this.Top);
-                }
-            }
-            else if (that.Bottom > this.Top && that.Bottom < this.Bottom)
-            {
-                // The bottom edge of the other rect is between the edges of this rect. The direction is up.
-                resolution.Y = -(that.Bottom - this.Top);
-            }
-            else if (that.Top > this.Top && that.Top < this.Bottom)
-            {
-                // The top edge of the other rect is between the edges of this rect. The direction is down.
-                resolution.Y = this.Bottom - that.Top;
-            }
-
-            // Step 3: Determine the shallowest edge and correct the resolution.
-            if (Math.Abs(resolution.X) <= Math.Abs(resolution.Y))
-            {
-                // Horizontal edge of the intersection is shallower than the vertical edge.
-                // Resolve horizontally.
-                resolution.Y = 0;
-                return resolution;
-            }
-            else
-            {
-                // Vertical edge of the intersection is shallower than the horizontal edge.
-                // Resolve vertically.
-                resolution.X = 0;
-                return resolution;
-            }
-        }
+        ////    // Step 3: Determine the shallowest edge and correct the resolution.
+        ////    if (Math.Abs(resolution.X) <= Math.Abs(resolution.Y))
+        ////    {
+        ////        // Horizontal edge of the intersection is shallower than the vertical edge.
+        ////        // Resolve horizontally.
+        ////        resolution.Y = 0;
+        ////        return resolution;
+        ////    }
+        ////    else
+        ////    {
+        ////        // Vertical edge of the intersection is shallower than the horizontal edge.
+        ////        // Resolve vertically.
+        ////        resolution.X = 0;
+        ////        return resolution;
+        ////    }
+        ////}
 
         /// <summary>
         /// Draws this rectangle to the screen.

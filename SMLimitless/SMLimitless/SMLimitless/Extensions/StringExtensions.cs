@@ -109,5 +109,10 @@ namespace SMLimitless.Extensions
         {
             GameServices.SpriteBatch.DrawString(GameServices.DebugFontSmall, value, position, color);
         }
+
+        public static void DrawStringDefault(this string value)
+        {
+            value.DrawString(new Microsoft.Xna.Framework.Vector2(16f, 16f), Microsoft.Xna.Framework.Color.White);
+        }
     }
 }

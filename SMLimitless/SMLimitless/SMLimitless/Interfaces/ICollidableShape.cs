@@ -24,5 +24,7 @@ namespace SMLimitless.Interfaces
         /// <param name="that">The rectangle to resolve.</param>
         /// <returns>The distance to move the rectangle by.</returns>
         Vector2 GetCollisionResolution(BoundingRectangle that);
+
+        bool Intersects(BoundingRectangle that);
     }
 }

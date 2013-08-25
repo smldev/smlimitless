@@ -106,6 +106,11 @@ namespace SMLimitless.Sprites
         /// </summary>
         public abstract void Draw();
 
+        public virtual void HandleCollision(Sprite sprite)
+        {
+            this.HandleCollision(sprite, this.Hitbox.GetCollisionResolution(sprite.Hitbox));
+        }
+
         /// <summary>
         /// Handles a collision between this tile and a sprite.
         /// </summary>
