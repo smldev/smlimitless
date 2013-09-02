@@ -129,6 +129,9 @@ namespace SMLimitless.Physics
             get { return this.Y + this.Height; }
         }
 
+        /// <summary>
+        /// Gets the position of the top-center point of this rectangle.
+        /// </summary>
         public Vector2 TopCenter
         {
             get
@@ -137,6 +140,9 @@ namespace SMLimitless.Physics
             }
         }
 
+        /// <summary>
+        /// Gets the position of the bottom-center point of this rectangle.
+        /// </summary>
         public Vector2 BottomCenter
         {
             get
@@ -182,11 +188,34 @@ namespace SMLimitless.Physics
             }
         }
 
+        public BoundingRectangle Bounds
+        {
+            get
+            {
+                return this;
+            }
+        }
+
+        /// <summary>
+        /// Determines if a given point is within this rectangle.
+        /// </summary>
+        /// <param name="point">The point to check.</param>
+        /// <returns>True if the point is within this rectangle, false if otherwise.</returns>
         public bool Intersects(Vector2 point)
         {
             return (point.X > this.Left && point.X < this.Right) && (point.Y > this.Top && point.Y < this.Bottom);
         }
 
+        public bool IntersectsIncludingEdges(Vector2 point)
+        {
+            return (point.X >= this.Left && point.X <= this.Right) && (point.Y >= this.Top && point.Y <= this.Bottom);
+        }
+
+        /// <summary>
+        /// Determines if a given rectangle is intersecting this rectangle.
+        /// </summary>
+        /// <param name="that">The rectangle to check.</param>
+        /// <returns>True if any part of the other rectangle is intersecting this rectangle, false if otherwise.</returns>
         public bool Intersects(BoundingRectangle that)
         {
             if (that.Right <= this.Left || that.Left >= this.Right)
@@ -201,6 +230,11 @@ namespace SMLimitless.Physics
             return true;
         }
 
+        /// <summary>
+        /// Determines if a given right triangle is intersecting this rectangle.
+        /// </summary>
+        /// <param name="triangle">The right triangle to check.</param>
+        /// <returns>True if any part of the right triangle is intersecting this rectangle, false if otherwise.</returns>
         public bool Intersects(RightTriangle triangle)
         {
             Vector2 pointOnSlope = triangle.GetPointOnSlope(this.Center.X);
@@ -235,6 +269,18 @@ namespace SMLimitless.Physics
             }
         }
 
+        /// <summary>
+        /// Returns the intersection depth between a given rectangle and this one.
+        /// </summary>
+        /// <param name="that">The rectangle to check.</param>
+        /// <returns>The intersection depth between the other rectangle and this one. If the rectangles aren't intersecting, a vector with NaN components is returned.</returns>
+        /// <remarks>
+        /// This method determines the sign of either component of the result
+        /// by determining the "direction" of the intersection - for example,
+        /// if the right edge of the other rectangle is to the left of the center
+        /// of this rectangle, the "direction" is to the left, and since left is
+        /// negative X, the resulting X component will be negative.
+        /// </remarks>
         public Vector2 GetIntersectionDepth(BoundingRectangle that)
         {
             Vector2 result = Vector2.Zero;
@@ -273,24 +319,35 @@ namespace SMLimitless.Physics
                 }
             }
 
-            return (result.IsNaN()) ? new Vector2(float.NaN, float.NaN) : result;
+            return result.IsNaN() ? new Vector2(float.NaN, float.NaN) : result;
         }
 
-        public Vector2 GetCollisionResolution(BoundingRectangle that)
+        /// <summary>
+        /// Returns the distance to move a given rectangle
+        /// in order to properly resolve a collision.
+        /// </summary>
+        /// <param name="that">The rectangle to check.</param>
+        /// <returns>A value that can be applied to the position of the rectangle
+        /// to move it the minimum distance such that it won't be intersecting this one.</returns>
+        /// <remarks>Internally, this method uses the GetIntersectionDepth() method to determine
+        /// the intersection depth. It then determines which of the two axes has the smallest absolute
+        /// value and zeroes out the other. This way of collision resolution is called the "shallowest edge"
+        /// method, and it allows quick determination of which axis to resolve along.</remarks>
+        public Resolution GetCollisionResolution(BoundingRectangle that)
         {
             Vector2 intersection = this.GetIntersectionDepth(that);
 
             if (intersection.IsNaN())
             {
-                return Vector2.Zero;
+                return Resolution.Zero;
             }
             else if (Math.Abs(intersection.X) < Math.Abs(intersection.Y))
             {
-                return new Vector2(intersection.X, 0f);
+                return new Resolution(new Vector2(intersection.X, 0f));
             }
             else
             {
-                return new Vector2(0f, intersection.Y);
+                return new Resolution(new Vector2(0f, intersection.Y));
             }
         }
 

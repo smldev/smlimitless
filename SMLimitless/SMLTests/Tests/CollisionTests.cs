@@ -32,7 +32,7 @@ namespace SMLTests
             BoundingRectangle b = new BoundingRectangle(8f, 0f, 10f, 10f);
 
             // a.Right is between b.Left and b.Right, direction is Left, distance is -2f
-            Vector2 resolution = b.GetCollisionResolution(a);
+            Vector2 resolution = b.GetCollisionResolution(a).ResolutionDistance;
             Assert.AreEqual(new Vector2(-2f, 0f), resolution);
         }
 
@@ -46,7 +46,7 @@ namespace SMLTests
             BoundingRectangle b = new BoundingRectangle(0f, 0f, 10f, 10f);
 
             // a.Left is between b.Left and b.Right, direction is right, distance is 2f
-            Vector2 resolution = b.GetCollisionResolution(a);
+            Vector2 resolution = b.GetCollisionResolution(a).ResolutionDistance;
             Assert.AreEqual(new Vector2(2f, 0f), resolution);
         }
 
@@ -60,7 +60,7 @@ namespace SMLTests
             BoundingRectangle b = new BoundingRectangle(0f, 8f, 10f, 10f);
 
             // a.Bottom is betwen b.Top and b.Bottom, direction is up, distance is -2f
-            Vector2 resolution = b.GetCollisionResolution(a);
+            Vector2 resolution = b.GetCollisionResolution(a).ResolutionDistance;
             Assert.AreEqual(new Vector2(0f, -2f), resolution);
         }
 
@@ -74,7 +74,7 @@ namespace SMLTests
             BoundingRectangle b = new BoundingRectangle(0f, 0f, 10f, 10f);
 
             // a.Top is between b.Top and b.Bottom, direction is down, distance is -2f
-            Vector2 resolution = b.GetCollisionResolution(a);
+            Vector2 resolution = b.GetCollisionResolution(a).ResolutionDistance;
             Assert.AreEqual(new Vector2(0f, 2f), resolution);
         }
 
@@ -88,7 +88,7 @@ namespace SMLTests
             BoundingRectangle b = new BoundingRectangle(8f, 6f, 10f, 10f);
 
             // x < y, shallowest edge is horizontal, direction is left, distance is -2f
-            Vector2 resolution = b.GetCollisionResolution(a);
+            Vector2 resolution = b.GetCollisionResolution(a).ResolutionDistance;
             Assert.AreEqual(new Vector2(-2f, 0f), resolution);
         }
 
@@ -102,7 +102,7 @@ namespace SMLTests
             BoundingRectangle b = new BoundingRectangle(6f, 8f, 10f, 10f);
 
             // y < x, shallowest edge is vertical, direction is up, distance is -2f
-            Vector2 resolution = b.GetCollisionResolution(a);
+            Vector2 resolution = b.GetCollisionResolution(a).ResolutionDistance;
             Assert.AreEqual(new Vector2(0f, -2f), resolution);
         }
 
@@ -116,7 +116,7 @@ namespace SMLTests
             BoundingRectangle b = new BoundingRectangle(8f, 8f, 10f, 10f);
 
             // edges equal, resolve horizontally, direction is left, distance is -2f
-            Vector2 resolution = b.GetCollisionResolution(a);
+            Vector2 resolution = b.GetCollisionResolution(a).ResolutionDistance;
             Assert.AreEqual(new Vector2(-2f, 0f), resolution);
         }
 
@@ -128,7 +128,7 @@ namespace SMLTests
         {
             BoundingRectangle a = new BoundingRectangle(0f, 0f, 100f, 100f);
             RightTriangle r = new RightTriangle(new BoundingRectangle(0f, 48f, 100f, 100f), RtSlopedSides.TopLeft);
-            Vector2 resolution = r.GetCollisionResolution(a);
+            Vector2 resolution = r.GetCollisionResolution(a).ResolutionDistance;
             a = new BoundingRectangle(resolution.X, resolution.Y, 100f, 100f);
             Assert.AreEqual(new Vector2(0f, -2f), new Vector2(a.X, a.Y));
         }
@@ -143,7 +143,7 @@ namespace SMLTests
             RightTriangle r = new RightTriangle(new BoundingRectangle(-8f, 0f, 10f, 10f), RtSlopedSides.TopLeft);
 
             // Direction is right, distance is 2f
-            Vector2 resolution = r.GetCollisionResolution(a);
+            Vector2 resolution = r.GetCollisionResolution(a).ResolutionDistance;
             Assert.AreEqual(new Vector2(2f, 0f), resolution);
         }
 

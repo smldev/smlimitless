@@ -111,6 +111,8 @@ namespace SMLimitless.Sprites
             }
         }
 
+        public bool IsOnSlope { get; set; }
+
         /// <summary>
         /// Gets or sets the size in pixels of this sprite.
         /// </summary>
@@ -121,6 +123,7 @@ namespace SMLimitless.Sprites
         /// </summary>
         public BoundingRectangle Hitbox
         {
+            // TODO: make this get and set a value constructed in the ctor; it's not going to change - do this for Tile, too
             get
             {
                 return new BoundingRectangle(this.Position, this.Size + this.Position);
@@ -209,7 +212,7 @@ namespace SMLimitless.Sprites
                 // both left and right or both up and down.  We should move left until
                 // we're out of being embedded.
                 this.Acceleration = Vector2.Zero;
-                this.Velocity = new Vector2(-25f, 0f);
+                //this.Velocity = new Vector2(-25f, 0f);
             }
             else
             {

@@ -8,8 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using SMLimitless.Extensions;
 using SMLimitless.Input;
 using SMLimitless.Physics;
@@ -24,38 +24,12 @@ namespace SMLimitless.Screens
     /// </summary>
     public class TestScreen : Screen
     {
-        //private BoundingRectangle a = new BoundingRectangle(400f, 200f, 100f, 100f);
-        private RightTriangle a = new RightTriangle(400f, 200f, 100f, 100f, RtSlopedSides.BottomRight);
-        private BoundingRectangle b = new BoundingRectangle(0f, 0f, 20f, 20f);
         /// <summary>
         /// Updates the screen.
         /// </summary>
         public override void Update()
         {
             Effect.Update();
-
-            float speed = 3f;
-            if (InputManager.IsCurrentKeyPress(Keys.Left))
-            {
-                b.X -= speed;
-            }
-            if (InputManager.IsCurrentKeyPress(Keys.Right))
-            {
-                b.X += speed;
-            }
-            if (InputManager.IsCurrentKeyPress(Keys.Up))
-            {
-                b.Y -= speed;
-            }
-            if (InputManager.IsCurrentKeyPress(Keys.Down))
-            {
-                b.Y += speed;
-            }
-
-            Vector2 resolution = a.GetCollisionResolution(b);
-            if (resolution.IsNaN()) resolution = Vector2.Zero;
-            b.X += resolution.X;
-            b.Y += resolution.Y;
         }
 
         /// <summary>
@@ -81,10 +55,6 @@ namespace SMLimitless.Screens
         public override void Draw()
         {
             Effect.Draw();
-            //this.a.DrawOutline(Color.White);
-            this.a.Draw(false);
-            b.DrawOutline(Color.Red);
-            a.GetCollisionResolution(b).ToString().DrawStringDefault();
         }
 
         /// <summary>

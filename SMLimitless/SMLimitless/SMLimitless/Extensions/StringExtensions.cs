@@ -110,6 +110,10 @@ namespace SMLimitless.Extensions
             GameServices.SpriteBatch.DrawString(GameServices.DebugFontSmall, value, position, color);
         }
 
+        /// <summary>
+        /// Draws a string in the color white to the screen at the position of (16, 16) using the default font.
+        /// </summary>
+        /// <param name="value">The string to draw.</param>
         public static void DrawStringDefault(this string value)
         {
             value.DrawString(new Microsoft.Xna.Framework.Vector2(16f, 16f), Microsoft.Xna.Framework.Color.White);

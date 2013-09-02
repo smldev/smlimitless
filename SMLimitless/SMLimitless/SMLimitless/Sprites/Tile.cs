@@ -106,9 +106,89 @@ namespace SMLimitless.Sprites
         /// </summary>
         public abstract void Draw();
 
+        public virtual bool Intersects(Sprite sprite)
+        {
+            bool intersects = this.Hitbox.Intersects(sprite.Hitbox);
+            //if (intersects) System.Diagnostics.Debugger.Break();
+
+            switch (this.Collision)
+            {
+                case TileCollisionType.Solid:
+                    return intersects;
+                case TileCollisionType.TopSolid:
+                    if (sprite.Velocity.Y > 0f && sprite.PreviousPosition.Y + sprite.Size.Y <= this.Hitbox.Bounds.Top)
+                    {
+                        return intersects;
+                    }
+                    return false;
+                case TileCollisionType.BottomSolid:
+                    if (sprite.Velocity.Y < 0f && sprite.PreviousPosition.Y >= this.Hitbox.Bounds.Bottom)
+                    {
+                        return intersects;
+                    }
+                    return false;
+                case TileCollisionType.LeftSolid:
+                    if (sprite.Velocity.X > 0f && sprite.PreviousPosition.X + sprite.Size.X <= this.Hitbox.Bounds.Left)
+                    {
+                        return intersects;
+                    }
+                    return false;
+                case TileCollisionType.RightSolid:
+                    if (sprite.Velocity.X < 0f && sprite.PreviousPosition.X >= this.Hitbox.Bounds.Right)
+                    {
+                        return intersects;
+                    }
+                    return false;
+                default:
+                    break;
+            }
+            return false;
+        }
+
+        internal virtual Vector2 GetCollisionResolution(Sprite sprite)
+        {
+            Vector2 resolution = this.Hitbox.GetCollisionResolution(sprite.Hitbox).ResolutionDistance;
+
+            switch (this.Collision)
+            {
+                case TileCollisionType.Solid:
+                    return resolution;
+                case TileCollisionType.TopSolid:
+                    if (sprite.PreviousPosition.Y + Size.Y <= this.Hitbox.Bounds.Top)
+                    {
+                        return resolution;
+                    }
+                    return Vector2.Zero;
+                case TileCollisionType.BottomSolid:
+                    if (sprite.PreviousPosition.Y >= this.Hitbox.Bounds.Bottom)
+                    {
+                        return resolution;
+                    }
+                    return Vector2.Zero;
+                case TileCollisionType.LeftSolid:
+                    if (sprite.PreviousPosition.X + sprite.Size.X <= this.Hitbox.Bounds.Left)
+                    {
+                        return resolution;
+                    }
+                    return Vector2.Zero;
+                case TileCollisionType.RightSolid:
+                    if (sprite.PreviousPosition.X >= this.Hitbox.Bounds.Right)
+                    {
+                        return resolution;
+                    }
+                    return Vector2.Zero;
+                default:
+                    return Vector2.Zero;
+            }
+        }
+
+        /// <summary>
+        /// An abstract method which is called when a sprite intersects this tile.
+        /// </summary>
+        /// <param name="sprite">The sprite that intersected this tile.</param>
         public virtual void HandleCollision(Sprite sprite)
         {
-            this.HandleCollision(sprite, this.Hitbox.GetCollisionResolution(sprite.Hitbox));
+            this.HandleCollision(sprite, this.Hitbox.GetCollisionResolution(sprite.Hitbox).ResolutionDistance);
         }
 
         /// <summary>

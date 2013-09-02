@@ -87,88 +87,25 @@ namespace SMLimitless.Sprites.Collections
         /// </summary>
         public void Initialize()
         {
-            TestSprite sprite = new TestSprite();
-            sprite.Position = new Vector2(96f, 72f);
-            this.sprites.Add(sprite);
-            this.sprites.Add(this.mouseSprite);
-            this.sprites[0].Initialize(this);
-            this.sprites[1].Initialize(this);
-            this.quadTree.Add(sprite);
-            this.quadTree.Add(this.mouseSprite);
+            TestSprite testSprite = new TestSprite() { Position = new Vector2(0f, 300f) };
+            testSprite.Initialize(this);
+            this.AddSprite(testSprite);
 
-            Random random = new Random();
-            int total = random.Next(0, 100);
-            for (int i = 0; i < 0; i++)
+            for (int x = 0; x <= 800; x += 16)
             {
-                TestSprite newSprite = new TestSprite();
-                newSprite.Position = new Vector2(random.Next(0, 600), 100f);
-                this.sprites.Add(newSprite);
-                newSprite.Initialize(this);
-                this.quadTree.Add(newSprite);
-                newSprite.Velocity += new Vector2(random.Next(0, 100), random.Next(0, 100));
-            }
-
-            int j = 0;
-            for (int i = 0; i < 400; i += 16)
-            {
-                TestTile tile = new TestTile();
-                this.tiles.Add(tile);
-                this.tiles[j].Initialize(this);
-                this.tiles[j].Position = new Vector2(i, 432f);
-                this.quadTree.Add(tile);
-                j++;
-            }
-
-            for (int i = 400; i < 800; i += 32)
-            {
-                SlopedTestTile1 tile1 = new SlopedTestTile1();
-                SlopedTestTile2 tile2 = new SlopedTestTile2();
-                TestTile4 tile3 = new TestTile4();
-                TestTile5 tile4 = new TestTile5();
-                this.tiles.Add(tile1);
-                this.tiles.Add(tile2);
-                this.tiles.Add(tile3);
-                this.tiles.Add(tile4);
-                this.tiles[j].Initialize(this);
-                this.tiles[j].Position = new Vector2(i, 416f);
-                j++;
-                this.tiles[j].Initialize(this);
-                this.tiles[j].Position = new Vector2(i + 16f, 416f);
-                j++;
-                this.tiles[j].Initialize(this);
-                this.tiles[j].Position = new Vector2(i, 432f);
-                j++;
-                this.tiles[j].Initialize(this);
-                this.tiles[j].Position = new Vector2(i + 16f, 432f);
-                j++;
-                this.quadTree.Add(tile1);
-                this.quadTree.Add(tile2);
-            }
-
-            for (int i = 0; i < 800; i += 16)
-            {
-                this.tiles.Add(new TestTile2());
-                this.tiles[j].Initialize(this);
-                this.tiles[j].Position = new Vector2(i, 448f);
-                j++;
-            }
-
-            for (int i = 0; i < 800; i += 16)
-            {
-                this.tiles.Add(new TestTile2());
-                this.tiles[j].Initialize(this);
-                this.tiles[j].Position = new Vector2(i, 464f);
-                j++;
-            }
-
-            for (int x = 96; x < 160; x += 16)
-            {
-                TestTile3 tile = new TestTile3();
-                this.tiles.Add(tile);
+                TestTile tile = new TestTile() { Position = new Vector2(x, 400f) };
                 tile.Initialize(this);
-                tile.Position = new Vector2(x, 96);
-                this.quadTree.Add(tile);
-                j++;
+                this.AddTile(tile);
+            }
+
+            for (int x = 0; x <= 800; x += 16)
+            {
+                for (int y = 416; y <= 480; y += 16)
+                {
+                    TestTile2 tile = new TestTile2() { Position = new Vector2(x, y) };
+                    tile.Initialize(this);
+                    this.AddTile(tile);
+                }
             }
         }
 
@@ -211,6 +148,27 @@ namespace SMLimitless.Sprites.Collections
                 this.run = !this.run;
             }
 
+            // TEMPORARY: this code adds sprites and blocks and left- and right-clicks
+            // this is only to more easily test collision
+            if (InputManager.IsCurrentMousePress(MouseButtons.LeftButton))
+            {
+                // Add a sprite to the level.
+                Vector2 mousePosition = new Vector2(InputManager.CurrentMouseState.X, InputManager.CurrentMouseState.Y);
+                mousePosition = new Vector2(mousePosition.X - 8f, mousePosition.Y - 8f);
+                TestSprite testSprite = new TestSprite() { Position = mousePosition };
+                testSprite.Initialize(this);
+                testSprite.LoadContent();
+                this.AddSprite(testSprite);
+            }
+
+            if (InputManager.IsCurrentKeyPress(Microsoft.Xna.Framework.Input.Keys.X))
+            {
+                foreach (Sprite sprite in this.sprites)
+                {
+                    sprite.Velocity = new Vector2(sprite.Velocity.X, sprite.Velocity.Y - 50f);
+                }
+            }
+
             if (this.run)
             {
                 this.tiles.ForEach(t => t.Update());
@@ -227,9 +185,10 @@ namespace SMLimitless.Sprites.Collections
         {
             this.tiles.ForEach(t => t.Draw());
             this.sprites.ForEach(s => s.Draw());
+            this.sprites[0].Hitbox.DrawOutline(Color.White);
             this.debugText.DrawString(new Vector2(16f, 16f), Color.White);
             this.debugText = "";
-            this.quadTree.Draw();
+            //this.quadTree.Draw();
         }
     }
 }

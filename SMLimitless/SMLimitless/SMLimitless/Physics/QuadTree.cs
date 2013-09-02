@@ -125,6 +125,19 @@ namespace SMLimitless.Physics
         }
 
         /// <summary>
+        /// Given a point, this returns the coordinates of the cell the point is in.
+        /// </summary>
+        /// <param name="position">The point to get the cell coordinates for.</param>
+        /// <returns>The coordinates of the cell the point is in.</returns>
+        public Vector2 GetCellNumberAtPosition(Vector2 position)
+        {
+            float x = (float)Math.Floor(position.X / this.CellSize.X);
+            float y = (float)Math.Floor(position.X / this.CellSize.Y);
+
+            return new Vector2(x, y);
+        }
+
+        /// <summary>
         /// Gets a list of all the sprites that a given sprite could collide with.
         /// </summary>
         /// <param name="sprite">The sprite to check.</param>
@@ -138,7 +151,7 @@ namespace SMLimitless.Physics
         }
 
         /// <summary>
-        /// Gets a list of all the tiles that a given sprite could collide with.
+        /// Gets a list of all the normal tiles that a given sprite could collide with.
         /// </summary>
         /// <param name="sprite">The sprite to check.</param>
         /// <returns>A list of tiles.</returns>
@@ -150,6 +163,24 @@ namespace SMLimitless.Physics
             return result;
         }
 
+        public List<Tile> GetCollidableNormalTiles(Sprite sprite)
+        {
+            var intersectingCells = this.GetIntersectingCells(sprite);
+            List<Tile> result = new List<Tile>();
+
+            foreach (var cell in intersectingCells)
+            {
+                result.AddRange(this.cells[cell].Tiles.Where(t => !(t is SlopedTestTile1))); // this is hackish and will be replaced.
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Returns a list of all the sloped tiles that a given sprite could collide with.
+        /// </summary>
+        /// <param name="sprite">The sprite whose cells will be used.</param>
+        /// <returns>A list of sloped tiles that the sprite could collide with.</returns>
         public List<SlopedTile> GetCollidableSlopedTiles(Sprite sprite)
         {
             List<Tile> collidableTiles = this.GetCollidableTiles(sprite);
@@ -167,31 +198,11 @@ namespace SMLimitless.Physics
         }
 
         /// <summary>
-        /// Takes a list of tiles and returns a list of all the sloped tiles it contains.
-        /// Additionally, this method removes the sloped tiles from the original list.
+        /// Gets two lists of tiles that a given sprite could collide with.
         /// </summary>
-        /// <param name="tiles">The list of tiles from which to separate the sloped tiles from.</param>
-        /// <returns>A list of sloped tiles from the supplied list of tiles.</returns>
-        public List<SlopedTile> SeparateSlopedTiles(ref List<Tile> tiles)
-        {
-            List<SlopedTile> result = new List<SlopedTile>(tiles.Count);
-
-            foreach (Tile tile in tiles)
-            {
-                if (tile is SlopedTile)
-                {
-                    result.Add((SlopedTile)tile);
-                }
-            }
-
-            foreach (Tile tile in result)
-            {
-                tiles.Remove(tile);
-            }
-
-            return result;
-        }
-
+        /// <param name="sprite">The sprite to retrieve the collidable tiles for.</param>
+        /// <param name="tiles">A list of collidable tiles.</param>
+        /// <param name="slopedTiles">A list of collidable sloped tiles.</param>
         public void GetCollidableTiles(Sprite sprite, out List<Tile> tiles, out List<SlopedTile> slopedTiles)
         {
             var resultTiles = new List<Tile>();
@@ -258,11 +269,29 @@ namespace SMLimitless.Physics
         {
             var result = new List<Vector2>();
             Rectangle rect = new Rectangle((int)item.Position.X, (int)item.Position.Y, (int)item.Size.X, (int)item.Size.Y);
+            bool isLargeItem = item.Size.X > this.CellSize.X || item.Size.Y > this.CellSize.Y;
 
             int topCellY = (int)Math.Floor(rect.Top / this.CellSize.Y);
             int bottomCellY = (int)Math.Floor(rect.Bottom / this.CellSize.Y);
             int leftCellX = (int)Math.Floor(rect.Left / this.CellSize.X);
             int rightCellX = (int)Math.Floor(rect.Right / this.CellSize.X);
+
+            if (isLargeItem)
+            {
+                /* Consider a sprite that is larger than a single cell on either axis or both.
+                 * A sprite can collide with tiles, and can be resolved in a certain direction,
+                 * but for very large sprites, this may push the sprite out of its old cells
+                 * from which the collidable tiles were extracted from. Now that the sprite
+                 * is in different cells, it has a different set of collidable tiles, but those
+                 * aren't included in the produced set of collidable tiles. Thus, for very large
+                 * sprites, we need to expand the intersecting cell space such that it will include
+                 * all the tiles the sprite could collide with if it is resolved outside of its actual intersecting cells.
+                 */
+                topCellY--;
+                leftCellX--;
+                bottomCellY++;
+                rightCellX++;
+            }
 
             int x, y;
 

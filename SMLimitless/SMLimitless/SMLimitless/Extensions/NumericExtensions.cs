@@ -77,6 +77,11 @@ namespace SMLimitless.Extensions
             return input;
         }
 
+        /// <summary>
+        /// Returns a number representing the sign of a given number.
+        /// </summary>
+        /// <param name="value">The value of which to get the sign.</param>
+        /// <returns>1 for positive values, -1 for negative values, and 0 for zero.</returns>
         public static float Sign(this float value)
         {
             if (value < 0f)
@@ -87,6 +92,7 @@ namespace SMLimitless.Extensions
             {
                 return 1f;
             }
+
             return 0f;
         }
     }

@@ -157,6 +157,7 @@
     <Compile Include="Physics\IntVector2.cs" />
     <Compile Include="Physics\QuadTree.cs" />
     <Compile Include="Physics\QuadTreeCell.cs" />
+    <Compile Include="Physics\Resolution.cs" />
     <Compile Include="Physics\RightTriangle.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

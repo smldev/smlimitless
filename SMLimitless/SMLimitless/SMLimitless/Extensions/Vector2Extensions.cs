@@ -209,9 +209,14 @@ namespace SMLimitless.Extensions
             }
         }
 
+        /// <summary>
+        /// Returns a vector with the largest Y component, given a collection of vectors.
+        /// </summary>
+        /// <param name="vectors">A collection of vectors.</param>
+        /// <returns>The vector with the largest Y component.</returns>
         public static Vector2 GreatestVectorByY(IEnumerable<Vector2> vectors)
         {
-            Vector2 largestSoFar = new Vector2(0f, float.MinValue);
+            Vector2 largestSoFar = new Vector2(0f, 0f);
             foreach (Vector2 vector in vectors)
             {
                 if (Math.Abs(vector.Y) > Math.Abs(largestSoFar.Y))
@@ -223,9 +228,14 @@ namespace SMLimitless.Extensions
             return (largestSoFar.Y != float.MinValue) ? largestSoFar : Vector2.Zero;
         }
 
+        /// <summary>
+        /// Returns a vector with the largest X component, given a collection of vectors.
+        /// </summary>
+        /// <param name="vectors">A collection of vectors.</param>
+        /// <returns>The vector with the largest X component.</returns>
         public static Vector2 GreatestVectorByX(IEnumerable<Vector2> vectors)
         {
-            Vector2 largestSoFar = new Vector2(float.MinValue, 0f);
+            Vector2 largestSoFar = new Vector2(0f, 0f);
             foreach (Vector2 vector in vectors)
             {
                 if (Math.Abs(vector.X) > Math.Abs(largestSoFar.X))
@@ -235,6 +245,36 @@ namespace SMLimitless.Extensions
             }
 
             return (largestSoFar.X != float.MinValue) ? largestSoFar : Vector2.Zero;
+        }
+
+        public static Vector2 LeastVectorByY(IEnumerable<Vector2> vectors)
+        {
+            Vector2 smallestSoFar = new Vector2(float.MaxValue, float.MaxValue);
+
+            foreach (Vector2 vector in vectors)
+            {
+                if (Math.Abs(vector.Y) < Math.Abs(smallestSoFar.Y) && vector.Y != 0f)
+                {
+                    smallestSoFar = vector;
+                }
+            }
+
+            return (smallestSoFar != new Vector2(float.MaxValue)) ? smallestSoFar : Vector2.Zero;
+        }
+
+        public static Vector2 LeastVectorByX(IEnumerable<Vector2> vectors)
+        {
+            Vector2 smallestSoFar = new Vector2(float.MaxValue, float.MaxValue);
+
+            foreach (Vector2 vector in vectors)
+            {
+                if (Math.Abs(vector.X) < Math.Abs(smallestSoFar.X) && vector.X != 0f)
+                {
+                    smallestSoFar = vector;
+                }
+            }
+
+            return (smallestSoFar != new Vector2(float.MaxValue)) ? smallestSoFar : Vector2.Zero;
         }
     }
 }

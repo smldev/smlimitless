@@ -208,17 +208,45 @@ namespace SMLimitless.Sprites
 
 namespace SMLimitless.Physics
 {
+    /// <summary>
+    /// Defines the horizontal directions of left, right, and none.
+    /// </summary>
     public enum HorizontalDirection : int
     {
+        /// <summary>
+        /// The leftward cardinal direction (negative X).
+        /// </summary>
         Left = -1,
+
+        /// <summary>
+        /// No direction.
+        /// </summary>
         None = 0,
+
+        /// <summary>
+        /// The rightward cardinal direction (positive X).
+        /// </summary>
         Right = 1
     }
 
+    /// <summary>
+    /// Defines the vertical directions of up, down, and none.
+    /// </summary>
     public enum VerticalDirection : int
     {
+        /// <summary>
+        /// The upward cardinal direction (negative Y).
+        /// </summary>
         Up = -1,
+
+        /// <summary>
+        /// No direction.
+        /// </summary>
         None = 0,
+
+        /// <summary>
+        /// The downward cardinal direction (positive Y).
+        /// </summary>
         Down = 1
     }
 
@@ -237,5 +265,12 @@ namespace SMLimitless.Physics
         /// A rectangle split in half from corner to corner.
         /// </summary>
         RightTriangle
+    }
+
+    public enum ResolutionType
+    {
+        None,
+        Normal,
+        Slope
     }
 }

@@ -20,9 +20,9 @@ namespace SMLimitless.Physics
     public class RightTriangle : ICollidableShape
     {
         /// <summary>
-        /// A rectangle that completely contains the triangle.
+        /// Gets or sets the rectangle that completely contains the triangle.
         /// </summary>
-        internal BoundingRectangle Bounds { get; set; }
+        public BoundingRectangle Bounds { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating which sides of the triangle are sloped.
@@ -147,6 +147,9 @@ namespace SMLimitless.Physics
             }
         }
 
+        /// <summary>
+        /// Gets the horizontal side (left or right) that has the sloped edge.
+        /// </summary>
         public HorizontalDirection HorizontalSlopedSide
         {
             get
@@ -162,6 +165,9 @@ namespace SMLimitless.Physics
             }
         }
 
+        /// <summary>
+        /// Gets the vertical side (up or down) that has the sloped edge.
+        /// </summary>
         public VerticalDirection VerticalSlopedSide
         {
             get
@@ -188,6 +194,14 @@ namespace SMLimitless.Physics
             this.SlopedSides = slopedSides;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RightTriangle"/> class.
+        /// </summary>
+        /// <param name="x">The horizontal distance from the left edge of the game space.</param>
+        /// <param name="y">The vertical distance from the top edge of the game space.</param>
+        /// <param name="width">The width of the triangle.</param>
+        /// <param name="height">The height of the triangle.</param>
+        /// <param name="slopedSides">Which sides of the triangle are replaced by the slope.</param>
         public RightTriangle(float x, float y, float width, float height, RtSlopedSides slopedSides)
             : this(new BoundingRectangle(x, y, width, height), slopedSides)
         {
@@ -229,19 +243,49 @@ namespace SMLimitless.Physics
             return new Vector2(x, -y);
         }
 
+        [Obsolete]
+        public bool IsPointWithinSlope(Vector2 point)
+        {
+            float y = this.GetPointOnLine(point.X).Y;
+
+            if (float.IsNaN(y))
+            {
+                return false;
+            }
+
+            return (this.VerticalSlopedSide == VerticalDirection.Up) ? point.Y >= y : point.X <= y;
+        }
+
+        /// <summary>
+        /// Determines if a given rectangle intersects this triangle.
+        /// </summary>
+        /// <param name="rect">The rectangle to check for intersection.</param>
+        /// <returns>True if any part of the rectangle intersects this right triangle, false if otherwise.</returns>
         public bool Intersects(BoundingRectangle rect)
         {
             return rect.Intersects(this);
         }
 
-        public Vector2 GetCollisionResolution(BoundingRectangle rect)
+        /// <summary>
+        /// Gets the minimum distance to move a given rectangle such that
+        /// it will no longer be intersecting this right triangle.
+        /// </summary>
+        /// <param name="rect">The rectangle to resolve.</param>
+        /// <returns>The minimum distance to move the rectangle,
+        /// which can be directly applied to the rectangle's position.</returns>
+        /// <remarks>This method resolves collision by first determining if the bottom-center point
+        /// (for TopLeft/TopRight triangles) or the top-center point (for BottomLeft/BottomRight
+        /// triangles) is within the bounds. If it is, the method treats it as a slope collision 
+        /// by checking if the point is between the slope and the top. If it isn't, the collision
+        /// is treated as a collision between two rectangles.</remarks>
+        public Resolution GetCollisionResolution(BoundingRectangle rect)
         {
             Vector2 rectCollisionPoint = (this.SlopedSides == RtSlopedSides.TopLeft || this.SlopedSides == RtSlopedSides.TopRight) ? rect.BottomCenter : rect.TopCenter;
             Vector2 pointOnSlope = this.GetPointOnSlope(rect.Center.X);
 
-            if (!this.Bounds.Intersects(rectCollisionPoint))
+            if (!this.Bounds.IntersectsIncludingEdges(rectCollisionPoint))
             {
-                Vector2 resolution = this.Bounds.GetCollisionResolution(rect);
+                Vector2 resolution = this.Bounds.GetCollisionResolution(rect).ResolutionDistance;
                 Vector2 result = Vector2.Zero;
 
                 if (this.HorizontalSlopedSide == HorizontalDirection.Right)
@@ -279,11 +323,11 @@ namespace SMLimitless.Physics
                 }
 
                 // TODO: The above could be condensed into two conditionals, but alas, I'm too tired at the moment.
-                return result;
+                return new Resolution(result);
             }
             else
             {
-                return this.ResolveSlopeCollision(rect, this.Bounds.GetCollisionResolution(rect));
+                return new Resolution(this.ResolveSlopeCollision(rect, this.Bounds.GetCollisionResolution(rect).ResolutionDistance), ResolutionType.Slope);
             }
         }
 
