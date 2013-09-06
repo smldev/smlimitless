@@ -267,10 +267,25 @@ namespace SMLimitless.Physics
         RightTriangle
     }
 
+    /// <summary>
+    /// An enumeration of the different types of
+    /// collision resolutions between tiles and sprites.
+    /// </summary>
     public enum ResolutionType
     {
+        /// <summary>
+        /// Not a resolution (resolution of zero).
+        /// </summary>
         None,
+
+        /// <summary>
+        /// A resolution between a sprite and a straight edge of a tile.
+        /// </summary>
         Normal,
+
+        /// <summary>
+        /// A resolution between a sprite and the sloped side of a sloped tile.
+        /// </summary>
         Slope
     }
 }

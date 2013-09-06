@@ -17,6 +17,9 @@ namespace SMLimitless.Interfaces
     /// </summary>
     public interface ICollidableShape
     {
+        /// <summary>
+        /// Gets a rectangle which fully contains this collidable shape.
+        /// </summary>
         BoundingRectangle Bounds { get; }
 
         /// <summary>

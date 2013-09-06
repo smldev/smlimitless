@@ -243,19 +243,6 @@ namespace SMLimitless.Physics
             return new Vector2(x, -y);
         }
 
-        [Obsolete]
-        public bool IsPointWithinSlope(Vector2 point)
-        {
-            float y = this.GetPointOnLine(point.X).Y;
-
-            if (float.IsNaN(y))
-            {
-                return false;
-            }
-
-            return (this.VerticalSlopedSide == VerticalDirection.Up) ? point.Y >= y : point.X <= y;
-        }
-
         /// <summary>
         /// Determines if a given rectangle intersects this triangle.
         /// </summary>

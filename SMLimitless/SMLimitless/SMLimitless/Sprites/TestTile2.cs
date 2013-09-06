@@ -30,6 +30,8 @@ namespace SMLimitless.Sprites
         /// <param name="owner">The Level that owns this tile.</param>
         public override void Initialize(Level owner)
         {
+            this.Size = new Vector2(16f, 16f);
+            this.Collision = TileCollisionType.Passive;
             this.graphics = new StaticGraphicsObject();
             string absolute = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..\\..\\..\\gfx\\smw_grass_center.png");
             this.graphics.Load(absolute);

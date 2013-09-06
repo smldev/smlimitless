@@ -132,7 +132,7 @@ namespace SMLimitless.Physics
         public Vector2 GetCellNumberAtPosition(Vector2 position)
         {
             float x = (float)Math.Floor(position.X / this.CellSize.X);
-            float y = (float)Math.Floor(position.X / this.CellSize.Y);
+            float y = (float)Math.Floor(position.Y / this.CellSize.Y);
 
             return new Vector2(x, y);
         }
@@ -151,7 +151,7 @@ namespace SMLimitless.Physics
         }
 
         /// <summary>
-        /// Gets a list of all the normal tiles that a given sprite could collide with.
+        /// Gets a list of all the tiles that a given sprite could collide with.
         /// </summary>
         /// <param name="sprite">The sprite to check.</param>
         /// <returns>A list of tiles.</returns>
@@ -163,6 +163,11 @@ namespace SMLimitless.Physics
             return result;
         }
 
+        /// <summary>
+        /// Returns a list of all the normal (square) tiles that a given sprite could collide with.
+        /// </summary>
+        /// <param name="sprite">The sprite to check.</param>
+        /// <returns>A list of tiles.</returns>
         public List<Tile> GetCollidableNormalTiles(Sprite sprite)
         {
             var intersectingCells = this.GetIntersectingCells(sprite);
@@ -226,6 +231,36 @@ namespace SMLimitless.Physics
 
             tiles = resultTiles;
             slopedTiles = resultSloped;
+        }
+
+        /// <summary>
+        /// Returns all the sprites in a given cell.
+        /// </summary>
+        /// <param name="cell">The coordinates of the cell.</param>
+        /// <returns>A list of sprites, or null if the cell doesn't exist.</returns>
+        public List<Sprite> GetSpritesInCell(Vector2 cell)
+        {
+            if (!this.cells.ContainsKey(cell))
+            {
+                return null;
+            }
+
+            return this.cells[cell].Sprites;
+        }
+
+        /// <summary>
+        /// Returns all the tiles in a given cell.
+        /// </summary>
+        /// <param name="cell">The coordinates of the cell.</param>
+        /// <returns>A list of tiles, or null if the cell doesn't exist.</returns>
+        public List<Tile> GetTilesInCell(Vector2 cell)
+        {
+            if (!this.cells.ContainsKey(cell))
+            {
+                return null;
+            }
+
+            return this.cells[cell].Tiles;
         }
 
         /// <summary>

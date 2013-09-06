@@ -106,10 +106,15 @@ namespace SMLimitless.Sprites
         /// </summary>
         public abstract void Draw();
 
+        /// <summary>
+        /// Determines if a given sprite intersects this tile.
+        /// </summary>
+        /// <param name="sprite">The sprite to check.</param>
+        /// <returns>True if the sprite intersects this tile, false if otherwise.</returns>
+        /// <remarks>This method accounts for the different tile collision types.</remarks>
         public virtual bool Intersects(Sprite sprite)
         {
             bool intersects = this.Hitbox.Intersects(sprite.Hitbox);
-            //if (intersects) System.Diagnostics.Debugger.Break();
 
             switch (this.Collision)
             {
@@ -120,31 +125,43 @@ namespace SMLimitless.Sprites
                     {
                         return intersects;
                     }
+
                     return false;
                 case TileCollisionType.BottomSolid:
                     if (sprite.Velocity.Y < 0f && sprite.PreviousPosition.Y >= this.Hitbox.Bounds.Bottom)
                     {
                         return intersects;
                     }
+
                     return false;
                 case TileCollisionType.LeftSolid:
                     if (sprite.Velocity.X > 0f && sprite.PreviousPosition.X + sprite.Size.X <= this.Hitbox.Bounds.Left)
                     {
                         return intersects;
                     }
+
                     return false;
                 case TileCollisionType.RightSolid:
                     if (sprite.Velocity.X < 0f && sprite.PreviousPosition.X >= this.Hitbox.Bounds.Right)
                     {
                         return intersects;
                     }
+
                     return false;
                 default:
                     break;
             }
+
             return false;
         }
 
+        /// <summary>
+        /// Returns the distance to resolve a given colliding sprite by
+        /// so that it will be moved out of this tile.
+        /// </summary>
+        /// <param name="sprite">The sprite to resolve.</param>
+        /// <returns>A resolution containing the distance.</returns>
+        /// <remarks>This method accounts for the different tile collision types.</remarks>
         internal virtual Vector2 GetCollisionResolution(Sprite sprite)
         {
             Vector2 resolution = this.Hitbox.GetCollisionResolution(sprite.Hitbox).ResolutionDistance;
@@ -154,28 +171,32 @@ namespace SMLimitless.Sprites
                 case TileCollisionType.Solid:
                     return resolution;
                 case TileCollisionType.TopSolid:
-                    if (sprite.PreviousPosition.Y + Size.Y <= this.Hitbox.Bounds.Top)
+                    if (sprite.PreviousPosition.Y + this.Size.Y <= this.Hitbox.Bounds.Top)
                     {
                         return resolution;
                     }
+
                     return Vector2.Zero;
                 case TileCollisionType.BottomSolid:
                     if (sprite.PreviousPosition.Y >= this.Hitbox.Bounds.Bottom)
                     {
                         return resolution;
                     }
+
                     return Vector2.Zero;
                 case TileCollisionType.LeftSolid:
                     if (sprite.PreviousPosition.X + sprite.Size.X <= this.Hitbox.Bounds.Left)
                     {
                         return resolution;
                     }
+
                     return Vector2.Zero;
                 case TileCollisionType.RightSolid:
                     if (sprite.PreviousPosition.X >= this.Hitbox.Bounds.Right)
                     {
                         return resolution;
                     }
+
                     return Vector2.Zero;
                 default:
                     return Vector2.Zero;

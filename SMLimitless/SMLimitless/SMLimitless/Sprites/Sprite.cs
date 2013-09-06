@@ -111,6 +111,10 @@ namespace SMLimitless.Sprites
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this
+        /// sprite is sitting on a slope.
+        /// </summary>
         public bool IsOnSlope { get; set; }
 
         /// <summary>
@@ -212,7 +216,7 @@ namespace SMLimitless.Sprites
                 // both left and right or both up and down.  We should move left until
                 // we're out of being embedded.
                 this.Acceleration = Vector2.Zero;
-                //this.Velocity = new Vector2(-25f, 0f);
+                ////this.Velocity = new Vector2(-25f, 0f);
             }
             else
             {

@@ -32,7 +32,7 @@ namespace SMLimitless.Sprites
         public override void Initialize(Level owner)
         {
             this.Size = new Vector2(16f, 16f);
-            this.Collision = TileCollisionType.TopSolid;
+            this.Collision = TileCollisionType.Solid;
             this.graphics = new StaticGraphicsObject();
             string absolute = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..\\..\\..\\gfx\\smw_concrete_block.png");
             this.graphics.Load(absolute);

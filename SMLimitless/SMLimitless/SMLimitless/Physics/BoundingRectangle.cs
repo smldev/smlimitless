@@ -188,6 +188,10 @@ namespace SMLimitless.Physics
             }
         }
 
+        /// <summary>
+        /// Gets this rectangle.
+        /// </summary>
+        /// <remarks>This member is required for the ICollidableShape interface.</remarks>
         public BoundingRectangle Bounds
         {
             get
@@ -206,6 +210,11 @@ namespace SMLimitless.Physics
             return (point.X > this.Left && point.X < this.Right) && (point.Y > this.Top && point.Y < this.Bottom);
         }
 
+        /// <summary>
+        /// Determines if a given point is within or tangent to this rectangle.
+        /// </summary>
+        /// <param name="point">The point to check.</param>
+        /// <returns>True if the point is within or tangent to this rectangle, false if otherwise.</returns>
         public bool IntersectsIncludingEdges(Vector2 point)
         {
             return (point.X >= this.Left && point.X <= this.Right) && (point.Y >= this.Top && point.Y <= this.Bottom);

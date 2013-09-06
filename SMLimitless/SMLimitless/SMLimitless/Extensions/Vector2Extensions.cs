@@ -247,6 +247,11 @@ namespace SMLimitless.Extensions
             return (largestSoFar.X != float.MinValue) ? largestSoFar : Vector2.Zero;
         }
 
+        /// <summary>
+        /// Returns the vector with the lowest Y component, given a collection of vectors.
+        /// </summary>
+        /// <param name="vectors">The collection of vectors.</param>
+        /// <returns>The vector with the lowest Y component.</returns>
         public static Vector2 LeastVectorByY(IEnumerable<Vector2> vectors)
         {
             Vector2 smallestSoFar = new Vector2(float.MaxValue, float.MaxValue);
@@ -262,6 +267,11 @@ namespace SMLimitless.Extensions
             return (smallestSoFar != new Vector2(float.MaxValue)) ? smallestSoFar : Vector2.Zero;
         }
 
+        /// <summary>
+        /// Returns the vector with the lowest X component, given a collection of vectors.
+        /// </summary>
+        /// <param name="vectors">A collection of vectors.</param>
+        /// <returns>The vector with the lowest X component.</returns>
         public static Vector2 LeastVectorByX(IEnumerable<Vector2> vectors)
         {
             Vector2 smallestSoFar = new Vector2(float.MaxValue, float.MaxValue);

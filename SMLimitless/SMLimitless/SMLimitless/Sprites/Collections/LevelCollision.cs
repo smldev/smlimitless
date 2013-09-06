@@ -26,6 +26,46 @@ namespace SMLimitless.Sprites.Collections
         // This will be gutted and replaced for subsequent releases.
 
         /// <summary>
+        /// Returns the resolution with the smallest Y distance, given a collection of resolutions.
+        /// </summary>
+        /// <param name="resolutions">A collection of resolutions.</param>
+        /// <returns>The resolution with the smallest Y distance.</returns>
+        private static Vector2 LeastResolutionByY(IEnumerable<Resolution> resolutions)
+        {
+            Vector2 smallestSoFar = new Vector2(float.MaxValue, float.MaxValue);
+
+            foreach (Resolution resolution in resolutions)
+            {
+                if (Math.Abs(resolution.ResolutionDistance.Y) < Math.Abs(smallestSoFar.Y) && resolution.ResolutionDistance.Y != 0f)
+                {
+                    smallestSoFar = resolution.ResolutionDistance;
+                }
+            }
+
+            return (smallestSoFar != new Vector2(float.MaxValue)) ? smallestSoFar : Vector2.Zero;
+        }
+
+        /// <summary>
+        /// Returns the resolution with the smallest X distance, given a collection of resolutions.
+        /// </summary>
+        /// <param name="resolutions">A collection of resolutions.</param>
+        /// <returns>The resolution with the smallest X distance.</returns>
+        private static Vector2 LeastResolutionByX(IEnumerable<Resolution> resolutions)
+        {
+            Vector2 smallestSoFar = new Vector2(float.MaxValue, float.MaxValue);
+
+            foreach (Resolution resolution in resolutions)
+            {
+                if (Math.Abs(resolution.ResolutionDistance.X) < Math.Abs(smallestSoFar.X) && resolution.ResolutionDistance.X != 0f)
+                {
+                    smallestSoFar = resolution.ResolutionDistance;
+                }
+            }
+
+            return (smallestSoFar != new Vector2(float.MaxValue)) ? smallestSoFar : Vector2.Zero;
+        }
+
+        /// <summary>
         /// Checks and resolves the collisions in this level.
         /// </summary>
         public void CheckCollision()
@@ -48,6 +88,7 @@ namespace SMLimitless.Sprites.Collections
 
                     if (!this.SpriteIsIntersecting(sprite, collidableTiles))
                     {
+                        sprite.IsOnGround = false;
                         continue;
                     }
 
@@ -82,13 +123,26 @@ namespace SMLimitless.Sprites.Collections
                         if (this.SpriteIsIntersecting(sprite, collidableTiles))
                         {
                             sprite.Position = oldPosition;
-                            sprite.IsEmbedded = true;
+                            this.ResolveSpriteVertically(sprite, verticalResolutions);
+                            this.ResolveSpriteHorizontally(sprite, horizontalResolutions);
+
+                            if (this.SpriteIsIntersecting(sprite, collidableTiles))
+                            {
+                                sprite.Position = oldPosition;
+                                sprite.IsEmbedded = true;
+                            }
+                            else
+                            {
+                                sprite.IsOnGround = true;
+                            }
                         }
                     }
-
-                    sprite.IsOnGround = true;
+                    else
+                    {
+                        sprite.IsOnGround = true;
+                    }
                 }
-                else // if Sprite.IsEmbedded
+                else
                 {
                     var collidableTiles = this.quadTree.GetCollidableNormalTiles(sprite);
 
@@ -104,7 +158,7 @@ namespace SMLimitless.Sprites.Collections
             }
 
             stopwatch.Stop();
-            this.debugText = string.Concat(stopwatch.Elapsed.ToString(), ", ", this.sprites.Count, " sprites, IsOnGround: ", this.sprites[0].IsOnGround.ToString());
+            this.debugText = string.Concat(stopwatch.Elapsed.ToString(), ", ", this.sprites.Count, " sprites");
         }
 
         /// <summary>
@@ -126,6 +180,12 @@ namespace SMLimitless.Sprites.Collections
             return false;
         }
 
+        /// <summary>
+        /// Determines if a sprite is intersecting any slopes in a given list.
+        /// </summary>
+        /// <param name="sprite">The sprite to check.</param>
+        /// <param name="collidableSlopes">A collection of slopes to check.</param>
+        /// <returns>True if the sprite intersects one or more of the slopes, false if otherwise.</returns>
         private bool SpriteIsIntersecting(Sprite sprite, List<SlopedTile> collidableSlopes)
         {
             foreach (SlopedTile tile in collidableSlopes)
@@ -140,50 +200,25 @@ namespace SMLimitless.Sprites.Collections
         }
 
         /// <summary>
-        /// Resolves a sprite vertically, given a list of vertical resolution distances.
+        /// Resolves a sprite vertically, given a list of vertical resolution.
         /// </summary>
         /// <param name="sprite">The sprite to resolve.</param>
-        /// <param name="verticalResolutions">A list of all the vertical resolution distances.</param>
+        /// <param name="verticalResolutions">A list of all the vertical resolutions.</param>
         private void ResolveSpriteVertically(Sprite sprite, List<Resolution> verticalResolutions)
         {
             Vector2 greatestResolution = Level.LeastResolutionByY(verticalResolutions);
             sprite.Position += greatestResolution;
         }
 
+        /// <summary>
+        /// Resolves a sprite horizontally, given a list of horizontal resolutions.
+        /// </summary>
+        /// <param name="sprite">The sprite to resolve.</param>
+        /// <param name="horizontalResolutions">A list of all the horizontal resolutions.</param>
         private void ResolveSpriteHorizontally(Sprite sprite, List<Resolution> horizontalResolutions)
         {
             Vector2 greatestResoluton = Level.LeastResolutionByX(horizontalResolutions);
             sprite.Position += greatestResoluton;
-        }
-
-        private static Vector2 LeastResolutionByY(IEnumerable<Resolution> resolutions)
-        {
-            Vector2 smallestSoFar = new Vector2(float.MaxValue, float.MaxValue);
-
-            foreach (Resolution resolution in resolutions)
-            {
-                if (Math.Abs(resolution.ResolutionDistance.Y) < Math.Abs(smallestSoFar.Y) && resolution.ResolutionDistance.Y != 0f)
-                {
-                    smallestSoFar = resolution.ResolutionDistance;
-                }
-            }
-
-            return (smallestSoFar != new Vector2(float.MaxValue)) ? smallestSoFar : Vector2.Zero;
-        }
-
-        private static Vector2 LeastResolutionByX(IEnumerable<Resolution> resolutions)
-        {
-            Vector2 smallestSoFar = new Vector2(float.MaxValue, float.MaxValue);
-
-            foreach (Resolution resolution in resolutions)
-            {
-                if (Math.Abs(resolution.ResolutionDistance.X) < Math.Abs(smallestSoFar.X) && resolution.ResolutionDistance.X != 0f)
-                {
-                    smallestSoFar = resolution.ResolutionDistance;
-                }
-            }
-
-            return (smallestSoFar != new Vector2(float.MaxValue)) ? smallestSoFar : Vector2.Zero;
         }
     }
 }
