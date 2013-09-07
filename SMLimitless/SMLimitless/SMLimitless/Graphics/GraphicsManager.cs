@@ -124,7 +124,7 @@ namespace SMLimitless.Graphics
                 return loadedObjects[filePath].Clone();
             }
 
-            return null; // TODO: see if we can remove this line
+            return null;
         }
 
         /// <summary>

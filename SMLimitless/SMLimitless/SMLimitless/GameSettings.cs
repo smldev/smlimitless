@@ -32,7 +32,7 @@ namespace SMLimitless
             #if DEBUG
             settingsPath = string.Concat(appDirectory, @"\..\..\..\GameSettings.txt");
             #elif !DEBUG
-            settingsPath = string.Concat(appDirectory, @"GameSettings.txt");
+            settingsPath = string.Concat(appDirectory, @"\GameSettings.txt");
             #endif
 
             if (!File.Exists(settingsPath))
