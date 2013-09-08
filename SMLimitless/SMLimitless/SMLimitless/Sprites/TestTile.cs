@@ -32,9 +32,11 @@ namespace SMLimitless.Sprites
         public override void Initialize(Level owner)
         {
             this.Size = new Vector2(16f, 16f);
+#if DEBUG
             this.graphics = new StaticGraphicsObject();
             string absolute = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..\\..\\..\\gfx\\smw_grass_top.png");
             this.graphics.Load(absolute);
+#endif
             base.Initialize(owner);
         }
 
@@ -43,6 +45,9 @@ namespace SMLimitless.Sprites
         /// </summary>
         public override void LoadContent()
         {
+#if !DEBUG
+            this.graphics = (StaticGraphicsObject)SMLimitless.Content.ContentPackageManager.GetGraphicsResource("smw_grass_top");
+#endif
             this.graphics.LoadContent();
         }
 

@@ -31,9 +31,12 @@ namespace SMLimitless.Sprites
         /// <param name="owner">The Level that owns this object.</param>
         public override void Initialize(Level owner)
         {
+            #if DEBUG
             this.graphics = new AnimatedGraphicsObject();
             string absolute = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..\\..\\..\\gfx\\smb3_goomba.png");
             this.graphics = (AnimatedGraphicsObject)GraphicsManager.LoadGraphicsObject(absolute);
+            #endif
+
             this.Size = new Vector2(16, 16);
             base.Initialize(owner);
         }
@@ -43,6 +46,9 @@ namespace SMLimitless.Sprites
         /// </summary>
         public override void LoadContent()
         {
+#if !DEBUG
+            this.graphics = (AnimatedGraphicsObject)SMLimitless.Content.ContentPackageManager.GetGraphicsResource("smb3_goomba");
+#endif
             this.graphics.LoadContent();
         }
 

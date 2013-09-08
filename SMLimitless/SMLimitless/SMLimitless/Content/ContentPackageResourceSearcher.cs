@@ -49,7 +49,7 @@ namespace SMLimitless.Content
             if (!this.filePaths.ContainsKey(resourceName))
             {
                 string packagePath = this.owner.BaseFolderPath;
-                string[] matchingFilePaths = Directory.GetFiles(packagePath, string.Concat("*", resourceName, "*.*"), SearchOption.AllDirectories);
+                string[] matchingFilePaths = Directory.GetFiles(packagePath, string.Concat("*", resourceName, "*.png"), SearchOption.AllDirectories);
 
                 if (matchingFilePaths.Length > 1)
                 {

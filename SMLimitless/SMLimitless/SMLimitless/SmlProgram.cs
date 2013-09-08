@@ -66,6 +66,12 @@ namespace SMLimitless
             // Create a new SpriteBatch, which can be used to draw textures.
             this.spriteBatch = new SpriteBatch(GraphicsDevice);
             GameServices.InitializeServices(this.GraphicsDevice, this.spriteBatch, this.Content);
+
+            #if !DEBUG
+            string contentPackageSettingsPath = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), @"TestPackage\settings.txt");
+            SMLimitless.Content.ContentPackageManager.AddPackage(contentPackageSettingsPath);
+            #endif
+
             ScreenManager.LoadContent();
         }
 

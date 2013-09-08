@@ -33,9 +33,11 @@ namespace SMLimitless.Sprites
         {
             this.Size = new Vector2(16f, 16f);
             this.Collision = TileCollisionType.Solid;
+#if DEBUG
             this.graphics = new StaticGraphicsObject();
             string absolute = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..\\..\\..\\gfx\\smw_concrete_block.png");
             this.graphics.Load(absolute);
+#endif
             base.Initialize(owner);
         }
 
@@ -44,6 +46,9 @@ namespace SMLimitless.Sprites
         /// </summary>
         public override void LoadContent()
         {
+#if !DEBUG
+            this.graphics = (StaticGraphicsObject)SMLimitless.Content.ContentPackageManager.GetGraphicsResource("smw_concrete_block");
+#endif
             this.graphics.LoadContent();
         }
 
