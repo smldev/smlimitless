@@ -95,5 +95,22 @@ namespace SMLimitless.Extensions
 
             return 0f;
         }
+
+        /// <summary>
+        /// Performs a given action a certain number of times.
+        /// Includes an iteration number variable.
+        /// </summary>
+        /// <param name="iterations">The number of times to perform the action.</param>
+        /// <param name="action">The action to perform.</param>
+        /// <remarks>Useful for replacing for loops for small actions.
+        /// This method is zero-based - the first iteration is zero and the
+        /// last iteration is (iterations - 1).</remarks>
+        public static void Times(this int iterations, Action<int> action)
+        {
+            for (int i = 0; i < iterations; i++)
+            {
+                action(i);
+            }
+        }
     }
 }

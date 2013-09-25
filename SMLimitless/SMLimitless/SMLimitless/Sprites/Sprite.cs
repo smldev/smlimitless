@@ -127,7 +127,6 @@ namespace SMLimitless.Sprites
         /// </summary>
         public BoundingRectangle Hitbox
         {
-            // TODO: make this get and set a value constructed in the ctor; it's not going to change - do this for Tile, too
             get
             {
                 return new BoundingRectangle(this.Position, this.Size + this.Position);
@@ -144,7 +143,7 @@ namespace SMLimitless.Sprites
         /// Gets or sets the velocity of this sprite,
         /// measured in pixels per second.
         /// </summary>
-        public Vector2 Velocity { get; set; } // TODO: make set accessor protected again
+        public Vector2 Velocity { get; set; }
 
         /// <summary>
         /// Gets or sets an editor property representing an optional
