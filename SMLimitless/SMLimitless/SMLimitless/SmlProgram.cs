@@ -16,6 +16,7 @@ using Microsoft.Xna.Framework.Media;
 using SMLimitless.Graphics;
 using SMLimitless.Input;
 using SMLimitless.Screens;
+using SMLimitless.Sounds;
 
 namespace SMLimitless
 {
@@ -72,19 +73,6 @@ namespace SMLimitless
             SMLimitless.Content.ContentPackageManager.AddPackage(contentPackageSettingsPath);
             #endif
 
-            //Song song = Song.FromUri("Simple Song", new Uri(@"D:\Documents\Files\Music and Sound\MP3 Players\How I Met Your Mother\Season 8\S8E24 Simple Song.mp3"));
-            Song song = null;
-            try
-            {
-                var ctor = typeof(Song).GetConstructor(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance, null, new[] { typeof(string), typeof(string), typeof(int) }, null);
-                song = (Song)ctor.Invoke(new object[] { "name", @"D:\Documents\Files\Music and Sound\MP3 Player\Music\How I Met Your Mother\Season 8\S8E24 Simple Song.mp3", 0 });
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debugger.Break();
-            }
-            MediaPlayer.Play(song);
-
             ScreenManager.LoadContent();
         }
 
@@ -94,6 +82,7 @@ namespace SMLimitless
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
+            SoundManager.UnloadContent();
         }
 
         /// <summary>

@@ -128,6 +128,9 @@
     <Reference Include="mscorlib">
       <Private>False</Private>
     </Reference>
+    <Reference Include="NAudio">
+      <HintPath>..\..\..\..\..\Files\SML\Audio\NAudio-Release\NAudio.dll</HintPath>
+    </Reference>
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
@@ -193,7 +196,8 @@
     <Compile Include="Screens\ScreenManager.cs" />
     <Compile Include="Screens\TestScreen.cs" />
     <Compile Include="SmlProgram.cs" />
-    <Compile Include="Sound\SoundManager.cs" />
+    <Compile Include="Sounds\Sound.cs" />
+    <Compile Include="Sounds\SoundManager.cs" />
     <Compile Include="Sprites\Collections\Level.cs" />
     <Compile Include="Sprites\Collections\LevelCollision.cs" />
     <Compile Include="Sprites\MouseFollowSprite.cs" />

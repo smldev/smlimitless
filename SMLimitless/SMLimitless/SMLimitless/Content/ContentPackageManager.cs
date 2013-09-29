@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using SMLimitless.Graphics;
+using SMLimitless.Sounds;
 
 namespace SMLimitless.Content
 {
@@ -83,22 +84,28 @@ namespace SMLimitless.Content
             return GraphicsManager.LoadGraphicsObject(resourcePath);
         }
 
-        /// <summary>
-        /// Testing.
-        /// </summary>
-        /// <returns>A value.</returns>
-        public static string Testing()
+        public static Sound GetSoundResource(string resourceName)
         {
-            StringBuilder builder = new StringBuilder();
-            AddPackage(@"D:\Documents\GitHub\smlimitless\ContentPackageTest\settings.txt");
+            string resourcePath = "";
+            int i = 0;
 
-            builder.Append(loadedPackages[0].GetResourcePath("resource1"));
-            builder.Append(Environment.NewLine);
-            builder.Append(loadedPackages[0].GetResourcePath("resource2"));
-            builder.Append(Environment.NewLine);
-            builder.Append(loadedPackages[0].GetResourcePath("resource3"));
+            while (resourcePath == "")
+            {
+                resourcePath = loadedPackages[i].GetResourcePath(resourceName);
+                i++;
+                if (i == loadedPackages.Capacity && resourceName == "")
+                {
+                    throw new ResourceNotFoundException(string.Format("ContentPackageManager.GetSoundResource(string): No resource named {0} exists in any loaded package.", resourceName), ContentPackageManager.loadedPackages);
+                }
+            }
 
-            return builder.ToString();
+            if (!resourcePath.EndsWith(".mp3"))
+            {
+                throw new Exception(string.Format("ContentPackageManager.GetSoundResource(string): File at {0} is not an MP3 sound file.", resourcePath));
+            }
+
+            SoundManager.AddSound(resourceName, resourcePath);
+            return SoundManager.GetSound(resourceName);
         }
     }
 }
