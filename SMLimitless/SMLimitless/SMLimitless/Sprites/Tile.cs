@@ -84,7 +84,8 @@ namespace SMLimitless.Sprites
         /// Initializes this tile.
         /// </summary>
         /// <param name="owner">The Level that owns this tile.</param>
-        public virtual void Initialize(Level owner)
+        /// <param name="contentResourceName">The name of the content resource that is used for this tile's graphics.</param>
+        public virtual void Initialize(Level owner, string contentResourceName)
         {
             this.Owner = owner;
             this.IsActive = true;

@@ -1,4 +1,9 @@
-﻿using System;
+﻿//-----------------------------------------------------------------------
+// <copyright file="SoundManager.cs" company="Chris Akridge">
+//     Copyrighted unter the MIT Public License.
+// </copyright>
+//-----------------------------------------------------------------------
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,13 +15,24 @@ namespace SMLimitless.Sounds
     /// </summary>
     public static class SoundManager
     {
+        /// <summary>
+        /// A dictionary of loaded sounds. The string key is the sound's name, and the Sound value is the loaded sound.
+        /// </summary>
         private static Dictionary<string, Sound> loadedSounds;
 
+        /// <summary>
+        /// Initializes static members of the <see cref="SoundManager"/> class.
+        /// </summary>
         static SoundManager()
         {
             SoundManager.loadedSounds = new Dictionary<string, Sound>();
         }
 
+        /// <summary>
+        /// Loads a sound and adds it to the loaded sounds.
+        /// </summary>
+        /// <param name="name">The name of the sound. This will be used to access the sound.</param>
+        /// <param name="filePath">The path to an MP3 file containing the sound.</param>
         public static void AddSound(string name, string filePath)
         {
             if (!SoundManager.loadedSounds.ContainsKey(name))
@@ -30,10 +46,15 @@ namespace SMLimitless.Sounds
             }
         }
 
+        /// <summary>
+        /// Unloads a sound and removes it from the list of unloaded sounds.
+        /// </summary>
+        /// <param name="name">The name of the sound to unload and remove.</param>
         public static void RemoveSound(string name)
         {
             if (SoundManager.loadedSounds.ContainsKey(name))
             {
+                SoundManager.loadedSounds[name].UnloadContent();
                 SoundManager.loadedSounds.Remove(name);
             }
             else
@@ -42,6 +63,11 @@ namespace SMLimitless.Sounds
             }
         }
 
+        /// <summary>
+        /// Gets a sound by its name.
+        /// </summary>
+        /// <param name="name">The name of the sound.</param>
+        /// <returns>A sound.</returns>
         public static Sound GetSound(string name)
         {
             if (name == null)
@@ -59,16 +85,27 @@ namespace SMLimitless.Sounds
             }
         }
 
+        /// <summary>
+        /// Plays a sound given its name.
+        /// </summary>
+        /// <param name="name">The name of the sound.</param>
         public static void PlaySound(string name)
         {
             SoundManager.GetSound(name).Play();
         }
 
+        /// <summary>
+        /// Stops playback of a sound given its name.
+        /// </summary>
+        /// <param name="name">The name of the sound.</param>
         public static void StopSound(string name)
         {
             SoundManager.GetSound(name).Stop();
         }
 
+        /// <summary>
+        /// Unloads and frees resources associated with all loaded sounds.
+        /// </summary>
         public static void UnloadContent()
         {
             foreach (Sound track in SoundManager.loadedSounds.Values)

@@ -23,9 +23,9 @@ namespace SMLTests
         /// Initializes this tile.
         /// </summary>
         /// <param name="owner">The Level that owns this tile.</param>
-        public override void Initialize(Level owner)
+        public override void Initialize(Level owner, string contentResourceName)
         {
-            base.Initialize(owner);
+            base.Initialize(owner, contentResourceName);
             this.Size = new Vector2(16f, 16f);
         }
 

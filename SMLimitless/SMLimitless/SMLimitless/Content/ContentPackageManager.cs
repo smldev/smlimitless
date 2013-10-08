@@ -84,6 +84,11 @@ namespace SMLimitless.Content
             return GraphicsManager.LoadGraphicsObject(resourcePath);
         }
 
+        /// <summary>
+        /// Gets a loaded sound resource given its name.
+        /// </summary>
+        /// <param name="resourceName">The name of the sound resource.</param>
+        /// <returns>A sound resource.</returns>
         public static Sound GetSoundResource(string resourceName)
         {
             string resourcePath = "";

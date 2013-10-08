@@ -151,6 +151,22 @@ namespace SMLimitless.Physics
             }
         }
 
+        public Vector2 LeftCenter
+        {
+            get
+            {
+                return new Vector2(this.Left, this.Center.Y);
+            }
+        }
+
+        public Vector2 RightCenter
+        {
+            get
+            {
+                return new Vector2(this.Right, this.Center.Y);
+            }
+        }
+
         /// <summary>
         /// Gets or sets the position.
         /// </summary>
@@ -198,6 +214,11 @@ namespace SMLimitless.Physics
             {
                 return this;
             }
+        }
+
+        public bool IsNaN()
+        {
+            return this.min.IsNaN() || this.max.IsNaN();
         }
 
         /// <summary>

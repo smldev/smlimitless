@@ -72,7 +72,7 @@ namespace SMLimitless.Sprites.Collections
         {
             System.Diagnostics.Stopwatch stopwatch = System.Diagnostics.Stopwatch.StartNew();
 
-            foreach (Sprite sprite in this.sprites)
+            foreach (Sprite sprite in this.Sprites)
             {
                 if (!sprite.IsActive || sprite.CollisionMode == SpriteCollisionMode.NoCollision)
                 {
@@ -158,7 +158,7 @@ namespace SMLimitless.Sprites.Collections
             }
 
             stopwatch.Stop();
-            this.debugText = string.Concat(stopwatch.Elapsed.ToString(), ", ", this.sprites.Count, " sprites");
+            this.debugText = string.Concat(stopwatch.Elapsed.ToString(), ", ", this.Sprites.Count, " sprites");
         }
 
         /// <summary>

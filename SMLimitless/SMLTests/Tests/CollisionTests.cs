@@ -212,7 +212,7 @@ namespace SMLTests
 
         private void AddTileToLevel(Level level, Tile tile, Vector2 position)
         {
-            tile.Initialize(level);
+            tile.Initialize(level, "");
             tile.Position = position;
             level.AddTile(tile);
         }
@@ -226,7 +226,7 @@ namespace SMLTests
 
             for (int i = 0; i < tiles.Length; i++)
             {
-                tiles[i].Initialize(level);
+                tiles[i].Initialize(level, "");
                 tiles[i].Position = positions[i];
                 level.AddTile(tiles[i]);
             }

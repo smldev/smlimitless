@@ -27,13 +27,14 @@ namespace SMLimitless.Sprites
         /// Initializes this tile.
         /// </summary>
         /// <param name="owner">The Level that owns this tile.</param>
-        public override void Initialize(Level owner)
+        /// <param name="contentResourceName">The name of the content resource that is used for this tile's graphics.</param>
+        public override void Initialize(Level owner, string contentResourceName)
         {
             this.Size = new Vector2(16f, 16f);
             this.graphics = new StaticGraphicsObject();
             string absolute = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..\\..\\..\\gfx\\smw_grass_slope2.png");
             this.graphics.Load(absolute);
-            base.Initialize(owner);
+            base.Initialize(owner, contentResourceName);
         }
 
         /// <summary>

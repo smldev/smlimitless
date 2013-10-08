@@ -22,6 +22,17 @@ namespace SMLimitless.Sprites.Collections
     /// </summary>
     public sealed partial class Level
     {
+        /*
+         * TODO: Get rid of this whole class
+         * TODO: Create a new level type that uses layers as the primary way of managing tiles/sprites
+         * TODO: Keep the quadtrees, keep the separate lists of tiles and sprites, and keep the update/draw code here
+         * TODO: Make a way to set the background color (maybe also look into gradients)
+         *      http://mattryder.wordpress.com/2011/02/02/xna-creating-a-gradient-styled-texture2d/
+         *      http://stackoverflow.com/questions/16571850/making-a-gradient-between-2-colors-in-xna
+         *      http://gamedev.stackexchange.com/questions/773/what-are-some-good-resources-for-learning-hlsl
+         *      http://blogs.msdn.com/b/shawnhar/archive/2010/04/05/spritebatch-and-custom-shaders-in-xna-game-studio-4-0.aspx
+         */
+
         /// <summary>
         /// Temporary. Keeps track of the number of frames
         /// until the next sprite can be dropped. This field is
@@ -37,7 +48,7 @@ namespace SMLimitless.Sprites.Collections
         /// <summary>
         /// A collection of all the sprites in this level.
         /// </summary>
-        private List<Sprite> sprites;
+        internal List<Sprite> Sprites;
 
         /// <summary>
         /// Testing sprite.
@@ -69,7 +80,9 @@ namespace SMLimitless.Sprites.Collections
         /// <summary>
         /// A backing field for the GravityAcceleration property.
         /// </summary>
-        private float gravityAcceleration = 128f;
+        private float gravityAcceleration = 256f;
+
+        private Layer layer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Level"/> class.
@@ -77,7 +90,7 @@ namespace SMLimitless.Sprites.Collections
         public Level()
         {
             this.tiles = new List<Tile>();
-            this.sprites = new List<Sprite>();
+            this.Sprites = new List<Sprite>();
             this.mouseSprite = new MouseFollowSprite();
 
             this.quadTree = new QuadTree(new Vector2(64f, 64f));
@@ -103,10 +116,14 @@ namespace SMLimitless.Sprites.Collections
             testSprite.Initialize(this);
             this.AddSprite(testSprite);
 
+            SimplePlayer player = new SimplePlayer() { Position = new Vector2(0f, 300f) };
+            player.Initialize(this);
+            this.AddSprite(player);
+
             for (int x = 0; x <= 800; x += 16)
             {
                 TestTile tile = new TestTile() { Position = new Vector2(x, 400f) };
-                tile.Initialize(this);
+                tile.Initialize(this, "");
                 this.AddTile(tile);
             }
 
@@ -115,10 +132,12 @@ namespace SMLimitless.Sprites.Collections
                 for (int y = 416; y <= 480; y += 16)
                 {
                     TestTile2 tile = new TestTile2() { Position = new Vector2(x, y) };
-                    tile.Initialize(this);
+                    tile.Initialize(this, "");
                     this.AddTile(tile);
                 }
             }
+
+            this.layer = new Layer(this);
         }
 
         /// <summary>
@@ -127,7 +146,7 @@ namespace SMLimitless.Sprites.Collections
         public void LoadContent()
         {
             this.tiles.ForEach(t => t.LoadContent());
-            this.sprites.ForEach(s => s.LoadContent());
+            this.Sprites.ForEach(s => s.LoadContent());
         }
 
         /// <summary>
@@ -136,7 +155,7 @@ namespace SMLimitless.Sprites.Collections
         /// <param name="sprite">The sprite to add.</param>
         public void AddSprite(Sprite sprite)
         {
-            this.sprites.Add(sprite);
+            this.Sprites.Add(sprite);
             this.quadTree.Add(sprite);
         }
 
@@ -156,7 +175,7 @@ namespace SMLimitless.Sprites.Collections
         /// <param name="sprite">The sprite to remove.</param>
         public void RemoveSprite(Sprite sprite)
         {
-            this.sprites.Remove(sprite);
+            this.Sprites.Remove(sprite);
             this.quadTree.Remove(sprite);
         }
 
@@ -263,9 +282,10 @@ namespace SMLimitless.Sprites.Collections
                     {
                         Vector2 tilePosition = mousePosition.FloorDivide(16f) * 16f;
                         TestTile3 tile = new TestTile3() { Position = tilePosition };
-                        tile.Initialize(this);
+                        tile.Initialize(this, "");
                         tile.LoadContent();
                         this.AddTile(tile);
+                        this.layer.AddTile(tile);
                     }
                 }
                 else
@@ -277,6 +297,7 @@ namespace SMLimitless.Sprites.Collections
                     if (tile != null)
                     {
                         this.RemoveTile(tile);
+                        this.layer.RemoveTile(tile);
                     }
                 }
             }
@@ -284,9 +305,9 @@ namespace SMLimitless.Sprites.Collections
             if (InputManager.IsCurrentKeyPress(Microsoft.Xna.Framework.Input.Keys.Q))
             {
                 // Clear all sprites in the level.
-                while (this.sprites.Count != 0)
+                while (this.Sprites.Count != 0)
                 {
-                    this.RemoveSprite(this.sprites[0]);
+                    this.RemoveSprite(this.Sprites[0]);
                 }
 
                 var tilesToRemove = this.tiles.Where(t => t is TestTile3).ToList();
@@ -299,9 +320,9 @@ namespace SMLimitless.Sprites.Collections
             if (InputManager.IsCurrentKeyPress(Microsoft.Xna.Framework.Input.Keys.R))
             {
                 // Reset the level.
-                while (this.sprites.Count != 0)
+                while (this.Sprites.Count != 0)
                 {
-                    this.RemoveSprite(this.sprites[0]);
+                    this.RemoveSprite(this.Sprites[0]);
                 }
 
                 while (this.tiles.Count != 0)
@@ -313,7 +334,7 @@ namespace SMLimitless.Sprites.Collections
                 this.LoadContent();
             }
 
-            if (InputManager.IsNewKeyPress(Microsoft.Xna.Framework.Input.Keys.X))
+            if (InputManager.IsNewKeyPress(Microsoft.Xna.Framework.Input.Keys.T))
             {
                 Random random = new Random();
 
@@ -321,7 +342,7 @@ namespace SMLimitless.Sprites.Collections
                 {
                     case 0:
                         // Give all sprites a boost.
-                        this.sprites.ForEach(s => s.Velocity = new Vector2(s.Velocity.X, s.Velocity.Y - random.Next(0, 100)));
+                        this.Sprites.ForEach(s => s.Velocity = new Vector2(s.Velocity.X, s.Velocity.Y - random.Next(0, 100)));
 
                         this.displayText = "Jump!";
                         this.displayTextFrames = 120;
@@ -364,8 +385,13 @@ namespace SMLimitless.Sprites.Collections
                 }
             }
 
+            if (InputManager.IsCurrentKeyPress(Microsoft.Xna.Framework.Input.Keys.C))
+            {
+                this.layer.Translate(InputManager.MousePosition);
+            }
+
             this.tiles.ForEach(t => t.Update());
-            this.sprites.ForEach(s => s.Update());
+            this.Sprites.ForEach(s => s.Update());
             this.quadTree.Update();
             this.CheckCollision();
         }
@@ -376,9 +402,10 @@ namespace SMLimitless.Sprites.Collections
         public void Draw()
         {
             this.tiles.ForEach(t => t.Draw());
-            this.sprites.ForEach(s => s.Draw());
-            this.debugText.DrawString(new Vector2(16f, 16f), Color.White);
+            this.Sprites.ForEach(s => s.Draw());
+            ////this.debugText.DrawString(new Vector2(16f, 16f), Color.White);
             this.debugText = "";
+            this.layer.Draw(Color.Yellow);
 
             if (this.displayTextFrames != 0)
             {

@@ -205,6 +205,7 @@ namespace SMLimitless.Sprites
         /// </summary>
         public virtual void Update()
         {
+            const float MaximumGravitationalVelocity = 350f;
             float delta = GameServices.GameTime.GetElapsedSeconds();
 
             this.PreviousPosition = this.Position;
@@ -219,14 +220,14 @@ namespace SMLimitless.Sprites
             }
             else
             {
-                if (!this.IsOnGround && this.Velocity.Y < 250f)
+                if (!this.IsOnGround && this.Velocity.Y < MaximumGravitationalVelocity)
                 {
                     this.Acceleration = new Vector2(this.Acceleration.X, this.Owner.GravityAcceleration);
                 }
-                else if (this.Velocity.Y > 250f)
+                else if (this.Velocity.Y > MaximumGravitationalVelocity)
                 {
                     this.Acceleration = new Vector2(this.Acceleration.X, 0f);
-                    this.Velocity = new Vector2(this.Velocity.X, 250f);
+                    this.Velocity = new Vector2(this.Velocity.X, MaximumGravitationalVelocity);
                 }
             }
 
