@@ -13,7 +13,7 @@ using SMLimitless.Graphics;
 using SMLimitless.Physics;
 using SMLimitless.Sprites.Collections;
 
-namespace SMLimitless.Sprites
+namespace SMLimitless.Sprites.Testing
 {
     /// <summary>
     /// A test tile.
@@ -30,13 +30,12 @@ namespace SMLimitless.Sprites
         /// </summary>
         /// <param name="owner">The Level that owns this tile.</param>
         /// <param name="contentResourceName">The name of the content resource that is used for this tile's graphics.</param>
-        public override void Initialize(Level owner, string contentResourceName)
+        public void Initialize(TestLevel owner, string contentResourceName)
         {
             this.Size = new Vector2(16f, 16f);
             this.graphics = new StaticGraphicsObject();
             string absolute = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..\\..\\..\\gfx\\smw_grass_slope_bottom1.png");
             this.graphics.Load(absolute);
-            base.Initialize(owner, contentResourceName);
         }
 
         /// <summary>

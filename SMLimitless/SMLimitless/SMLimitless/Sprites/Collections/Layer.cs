@@ -20,7 +20,7 @@ namespace SMLimitless.Sprites.Collections
 
         private LayerAnchorPosition anchorPosition;
         private Vector2 anchorPointBackingField;
-        private Vector2 anchorPoint
+        private Vector2 AnchorPoint
         {
             get
             {
@@ -61,7 +61,7 @@ namespace SMLimitless.Sprites.Collections
         {
             this.owner = owner;
             this.anchorPosition = position;
-            this.anchorPoint = new Vector2(float.NaN);
+            this.AnchorPoint = new Vector2(float.NaN);
             this.velocity = Vector2.Zero;
             this.tiles = new List<Tile>();
             this.sprites = new List<Sprite>();
@@ -72,7 +72,7 @@ namespace SMLimitless.Sprites.Collections
         {
             this.isMainLayer = true;
             this.Bounds = new BoundingRectangle(0, 0, width, height);
-            this.anchorPoint = new Vector2(float.NaN);
+            this.AnchorPoint = new Vector2(float.NaN);
         }
 
         public void AddTile(Tile tile)
@@ -89,7 +89,7 @@ namespace SMLimitless.Sprites.Collections
                 }
                 else
                 {
-                    AdjustBounds(tile);
+                    this.AdjustBounds(tile);
                 }
             }
         }
@@ -126,6 +126,7 @@ namespace SMLimitless.Sprites.Collections
             {
                 throw new Exception("Layer.RemoveTile(tile): Tried to remove a tile that wasn't in the layer.");
             }
+
             this.tiles.Remove(tile);
 
             if (!this.isMainLayer)
@@ -149,7 +150,7 @@ namespace SMLimitless.Sprites.Collections
         {
             if (!this.isMainLayer)
             {
-                Vector2 distance = position - this.anchorPoint;
+                Vector2 distance = position - this.AnchorPoint;
                 this.TranslateRelative(distance);
             }
             else
@@ -162,7 +163,7 @@ namespace SMLimitless.Sprites.Collections
         {
             if (!this.isMainLayer)
             {
-                this.anchorPoint += distance;
+                this.AnchorPoint += distance;
                 this.Bounds = new BoundingRectangle(this.Bounds.X + distance.X, this.Bounds.Y + distance.Y, this.Bounds.Width, this.Bounds.Height);
 
                 foreach (Tile tile in this.tiles)
@@ -189,14 +190,14 @@ namespace SMLimitless.Sprites.Collections
             this.sprites.RemoveAll(s => !s.Hitbox.Intersects(this.Bounds));
 
             // Then, determine if any other sprites in the level are within the bounds of the layer.
-            foreach (Sprite sprite in this.owner.Sprites)
-            {
-                // TODO: This will be changed when levels are changed
-                if (sprite.Hitbox.Bounds.Intersects(this.Bounds))
-                {
-                    this.sprites.Add(sprite);
-                }
-            }
+            //// foreach (Sprite sprite in this.owner.Sprites)
+            ////{
+            ////    // TODO: This will be changed when levels are changed
+            ////    if (sprite.Hitbox.Bounds.Intersects(this.Bounds))
+            ////    {
+            ////        this.sprites.Add(sprite);
+            ////    }
+            ////}
         }
 
         public void Draw(Color color)
@@ -208,7 +209,7 @@ namespace SMLimitless.Sprites.Collections
         {
             if (this.Bounds.IsNaN())
             {
-                this.anchorPoint = new Vector2(float.NaN);
+                this.AnchorPoint = new Vector2(float.NaN);
             }
 
             switch (this.anchorPosition)
@@ -216,31 +217,31 @@ namespace SMLimitless.Sprites.Collections
                 case LayerAnchorPosition.Invalid:
                     throw new Exception("Layer.SetAnchorPoint: Invalid anchor position.");
                 case LayerAnchorPosition.TopLeft:
-                    this.anchorPoint = new Vector2(this.Bounds.Left, this.Bounds.Top);
+                    this.AnchorPoint = new Vector2(this.Bounds.Left, this.Bounds.Top);
                     break;
                 case LayerAnchorPosition.TopRight:
-                    this.anchorPoint = new Vector2(this.Bounds.Right, this.Bounds.Top);
+                    this.AnchorPoint = new Vector2(this.Bounds.Right, this.Bounds.Top);
                     break;
                 case LayerAnchorPosition.BottomLeft:
-                    this.anchorPoint = new Vector2(this.Bounds.Left, this.Bounds.Bottom);
+                    this.AnchorPoint = new Vector2(this.Bounds.Left, this.Bounds.Bottom);
                     break;
                 case LayerAnchorPosition.BottomRight:
-                    this.anchorPoint = new Vector2(this.Bounds.Right, this.Bounds.Bottom);
+                    this.AnchorPoint = new Vector2(this.Bounds.Right, this.Bounds.Bottom);
                     break;
                 case LayerAnchorPosition.TopCenter:
-                    this.anchorPoint = this.Bounds.TopCenter;
+                    this.AnchorPoint = this.Bounds.TopCenter;
                     break;
                 case LayerAnchorPosition.BottomCenter:
-                    this.anchorPoint = this.Bounds.BottomCenter;
+                    this.AnchorPoint = this.Bounds.BottomCenter;
                     break;
                 case LayerAnchorPosition.LeftCenter:
-                    this.anchorPoint = this.Bounds.LeftCenter;
+                    this.AnchorPoint = this.Bounds.LeftCenter;
                     break;
                 case LayerAnchorPosition.RightCenter:
-                    this.anchorPoint = this.Bounds.RightCenter;
+                    this.AnchorPoint = this.Bounds.RightCenter;
                     break;
                 case LayerAnchorPosition.Center:
-                    this.anchorPoint = this.Bounds.Center;
+                    this.AnchorPoint = this.Bounds.Center;
                     break;
                 default:
                     break;

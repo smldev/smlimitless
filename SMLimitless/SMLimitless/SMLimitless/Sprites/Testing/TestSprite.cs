@@ -13,7 +13,7 @@ using SMLimitless.Graphics;
 using SMLimitless.Physics;
 using SMLimitless.Sprites.Collections;
 
-namespace SMLimitless.Sprites
+namespace SMLimitless.Sprites.Testing
 {
     /// <summary>
     /// A testing sprite.
@@ -29,16 +29,10 @@ namespace SMLimitless.Sprites
         /// Initializes this object.
         /// </summary>
         /// <param name="owner">The Level that owns this object.</param>
-        public override void Initialize(Level owner)
+        public void Initialize(TestLevel owner)
         {
-            #if DEBUG
-            this.graphics = new AnimatedGraphicsObject();
-            string absolute = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..\\..\\..\\gfx\\smb3_goomba.png");
-            this.graphics = (AnimatedGraphicsObject)GraphicsManager.LoadGraphicsObject(absolute);
-            #endif
-
             this.Size = new Vector2(16, 16);
-            base.Initialize(owner);
+            this.IsActive = true;
         }
 
         /// <summary>
@@ -46,9 +40,7 @@ namespace SMLimitless.Sprites
         /// </summary>
         public override void LoadContent()
         {
-#if !DEBUG
             this.graphics = (AnimatedGraphicsObject)SMLimitless.Content.ContentPackageManager.GetGraphicsResource("smb3_goomba");
-#endif
             this.graphics.LoadContent();
         }
 

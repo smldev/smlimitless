@@ -14,7 +14,7 @@ using SMLimitless.Graphics;
 using SMLimitless.Input;
 using SMLimitless.Sprites.Collections;
 
-namespace SMLimitless.Sprites
+namespace SMLimitless.Sprites.Testing
 {
     /// <summary>
     /// A testing sprite that the user can control
@@ -36,16 +36,11 @@ namespace SMLimitless.Sprites
         /// Initializes this sprite.
         /// </summary>
         /// <param name="owner">The level that owns this sprite.</param>
-        public override void Initialize(Level owner)
+        public void Initialize(TestLevel owner)
         {
-            #if DEBUG
-            this.graphics = new StaticGraphicsObject();
-            string path = string.Concat(System.IO.Directory.GetCurrentDirectory(), @"\..\Release\TestPackage\Graphics\simple_player.png");
-            this.graphics = (StaticGraphicsObject)GraphicsManager.LoadGraphicsObject(path);
-            #endif
 
             this.Size = new Vector2(16f, 16f);
-            base.Initialize(owner);
+            this.IsActive = true;
         }
 
         /// <summary>
@@ -53,9 +48,7 @@ namespace SMLimitless.Sprites
         /// </summary>
         public override void LoadContent()
         {
-            #if !DEBUG
             this.graphics = (StaticGraphicsObject)SMLimitless.Content.ContentPackageManager.GetGraphicsResource("simple_player");
-            #endif
             this.graphics.LoadContent();
         }
 

@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="TestTile2.cs" company="Chris Akridge">
+// <copyright file="SlopedTestTile2.cs" company="Chris Akridge">
 //     Copyrighted unter the MIT Public License.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -9,18 +9,17 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using SMLimitless.Graphics;
-using SMLimitless.Physics;
 using SMLimitless.Sprites.Collections;
 
-namespace SMLimitless.Sprites
+namespace SMLimitless.Sprites.Testing
 {
     /// <summary>
-    /// A test tile.
+    /// A sloped test tile.
     /// </summary>
-    public class TestTile2 : Tile
+    public class SlopedTestTile2 : SlopedTile
     {
         /// <summary>
-        /// The graphics for this tile.
+        /// The graphics of this tile.
         /// </summary>
         private StaticGraphicsObject graphics;
 
@@ -29,16 +28,12 @@ namespace SMLimitless.Sprites
         /// </summary>
         /// <param name="owner">The Level that owns this tile.</param>
         /// <param name="contentResourceName">The name of the content resource that is used for this tile's graphics.</param>
-        public override void Initialize(Level owner, string contentResourceName)
+        public void Initialize(TestLevel owner, string contentResourceName)
         {
             this.Size = new Vector2(16f, 16f);
-            this.Collision = TileCollisionType.Passive;
-#if DEBUG
             this.graphics = new StaticGraphicsObject();
-            string absolute = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..\\..\\..\\gfx\\smw_grass_center.png");
+            string absolute = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..\\..\\..\\gfx\\smw_grass_slope2.png");
             this.graphics.Load(absolute);
-#endif
-            base.Initialize(owner, contentResourceName);
         }
 
         /// <summary>
@@ -46,9 +41,6 @@ namespace SMLimitless.Sprites
         /// </summary>
         public override void LoadContent()
         {
-#if !DEBUG
-            this.graphics = (StaticGraphicsObject)SMLimitless.Content.ContentPackageManager.GetGraphicsResource("smw_grass_center");
-#endif
             this.graphics.LoadContent();
         }
 
@@ -60,20 +52,20 @@ namespace SMLimitless.Sprites
         }
 
         /// <summary>
+        /// Handles a collision between this tile and a sprite.
+        /// </summary>
+        /// <param name="sprite">The sprite that collided with this tile.</param>
+        /// <param name="intersect">The depth of the intersection.</param>
+        public override void HandleCollision(Sprite sprite, Vector2 intersect)
+        {
+        }
+
+        /// <summary>
         /// Draws this tile.
         /// </summary>
         public override void Draw()
         {
             this.graphics.Draw(this.Position, Color.White);
-        }
-
-        /// <summary>
-        /// Handles a collision between this tile and a sprite.
-        /// </summary>
-        /// <param name="sprite">The sprite that has collided with this tile.</param>
-        /// <param name="intersect">The depth of the intersection.</param>
-        public override void HandleCollision(Sprite sprite, Vector2 intersect)
-        {
         }
     }
 }

@@ -151,6 +151,9 @@ namespace SMLimitless.Physics
             }
         }
 
+        /// <summary>
+        /// Gets the position of the center point on the left edge.
+        /// </summary>
         public Vector2 LeftCenter
         {
             get
@@ -159,6 +162,9 @@ namespace SMLimitless.Physics
             }
         }
 
+        /// <summary>
+        /// Gets the position of the center point on the right edge.
+        /// </summary>
         public Vector2 RightCenter
         {
             get
@@ -216,6 +222,10 @@ namespace SMLimitless.Physics
             }
         }
 
+        /// <summary>
+        /// Checks if any component of this rectangle is Not a Number (NaN).
+        /// </summary>
+        /// <returns>True if any component is equal to float.NaN, false if otherwise.</returns>
         public bool IsNaN()
         {
             return this.min.IsNaN() || this.max.IsNaN();

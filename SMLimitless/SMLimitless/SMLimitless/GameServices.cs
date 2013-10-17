@@ -12,6 +12,7 @@ namespace SMLimitless
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Content;
     using Microsoft.Xna.Framework.Graphics;
+    using SMLimitless.Physics;
     
     /// <summary>
     /// Provides global access to game services.
@@ -72,6 +73,11 @@ namespace SMLimitless
         {
             get { return GetService<GameTime>(); }
         }
+
+        /// <summary>
+        /// Gets or sets the current camera.
+        /// </summary>
+        public static Camera2D Camera { get; set; }
 
         /// <summary>
         /// Gets or sets the size of the window. Measured in pixels.

@@ -54,8 +54,9 @@ namespace SMLimitless
             GameSettings.Initialize();
             InputManager.Initialize();
             ScreenManager.Initalize();
-            ScreenManager.SetRootScreen(new LevelScreen(), "");
+            ScreenManager.SetRootScreen(new TestLevelScreen(), "");
             GameServices.ScreenSize = new Vector2(GraphicsDevice.PresentationParameters.BackBufferWidth, GraphicsDevice.PresentationParameters.BackBufferHeight);
+            GameServices.Camera = new Physics.Camera2D(); // TODO: temporary
             base.Initialize();
         }
 
@@ -68,10 +69,8 @@ namespace SMLimitless
             this.spriteBatch = new SpriteBatch(GraphicsDevice);
             GameServices.InitializeServices(this.GraphicsDevice, this.spriteBatch, this.Content);
 
-            #if !DEBUG
             string contentPackageSettingsPath = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), @"TestPackage\settings.txt");
             SMLimitless.Content.ContentPackageManager.AddPackage(contentPackageSettingsPath);
-            #endif
 
             ScreenManager.LoadContent();
         }
@@ -120,7 +119,7 @@ namespace SMLimitless
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            this.spriteBatch.Begin();
+            this.spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, GameServices.Camera.GetTransformation());
             ScreenManager.Draw();
             this.spriteBatch.End();
 

@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="TestTile5.cs" company="Chris Akridge">
+// <copyright file="TestTile3.cs" company="Chris Akridge">
 //     Copyrighted unter the MIT Public License.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -8,17 +8,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
-using SMLimitless.Extensions;
 using SMLimitless.Graphics;
 using SMLimitless.Physics;
+using SMLimitless.Sprites;
 using SMLimitless.Sprites.Collections;
 
-namespace SMLimitless.Sprites
+namespace SMLimitless.Sprites.Testing
 {
     /// <summary>
     /// A test tile.
     /// </summary>
-    public class TestTile5 : Tile
+    public class TestTile3 : Tile
     {
         /// <summary>
         /// The graphics for this tile.
@@ -30,13 +30,10 @@ namespace SMLimitless.Sprites
         /// </summary>
         /// <param name="owner">The Level that owns this tile.</param>
         /// <param name="contentResourceName">The name of the content resource that is used for this tile's graphics.</param>
-        public override void Initialize(Level owner, string contentResourceName)
+        public void Initialize(TestLevel owner, string contentResourceName)
         {
             this.Size = new Vector2(16f, 16f);
-            this.graphics = new StaticGraphicsObject();
-            string absolute = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..\\..\\..\\gfx\\smw_grass_slope_bottom2.png");
-            this.graphics.Load(absolute);
-            base.Initialize(owner, contentResourceName);
+            this.Collision = TileCollisionType.Solid;
         }
 
         /// <summary>
@@ -44,6 +41,7 @@ namespace SMLimitless.Sprites
         /// </summary>
         public override void LoadContent()
         {
+            this.graphics = (StaticGraphicsObject)SMLimitless.Content.ContentPackageManager.GetGraphicsResource("smw_concrete_block");
             this.graphics.LoadContent();
         }
 
@@ -57,14 +55,14 @@ namespace SMLimitless.Sprites
         /// <summary>
         /// Handles a collision between this tile and a sprite.
         /// </summary>
-        /// <param name="sprite">The sprite that collided with this tile.</param>
+        /// <param name="sprite">The sprite that collided with this one.</param>
         /// <param name="intersect">The depth of the intersection.</param>
         public override void HandleCollision(Sprite sprite, Vector2 intersect)
         {
         }
 
         /// <summary>
-        /// Draws this tile.
+        /// Draws this object.
         /// </summary>
         public override void Draw()
         {

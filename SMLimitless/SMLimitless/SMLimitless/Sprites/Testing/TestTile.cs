@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="SlopedTestTile2.cs" company="Chris Akridge">
+// <copyright file="TestTile.cs" company="Chris Akridge">
 //     Copyrighted unter the MIT Public License.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -8,18 +8,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using SMLimitless.Extensions;
 using SMLimitless.Graphics;
+using SMLimitless.Physics;
 using SMLimitless.Sprites.Collections;
 
-namespace SMLimitless.Sprites
+namespace SMLimitless.Sprites.Testing
 {
     /// <summary>
-    /// A sloped test tile.
+    /// A test tile.
     /// </summary>
-    public class SlopedTestTile2 : SlopedTile
+    public class TestTile : Tile
     {
         /// <summary>
-        /// The graphics of this tile.
+        /// The graphics for this tile.
         /// </summary>
         private StaticGraphicsObject graphics;
 
@@ -28,13 +30,9 @@ namespace SMLimitless.Sprites
         /// </summary>
         /// <param name="owner">The Level that owns this tile.</param>
         /// <param name="contentResourceName">The name of the content resource that is used for this tile's graphics.</param>
-        public override void Initialize(Level owner, string contentResourceName)
+        public void Initialize(TestLevel owner, string contentResourceName)
         {
             this.Size = new Vector2(16f, 16f);
-            this.graphics = new StaticGraphicsObject();
-            string absolute = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..\\..\\..\\gfx\\smw_grass_slope2.png");
-            this.graphics.Load(absolute);
-            base.Initialize(owner, contentResourceName);
         }
 
         /// <summary>
@@ -42,6 +40,7 @@ namespace SMLimitless.Sprites
         /// </summary>
         public override void LoadContent()
         {
+            this.graphics = (StaticGraphicsObject)SMLimitless.Content.ContentPackageManager.GetGraphicsResource("smw_grass_top");
             this.graphics.LoadContent();
         }
 

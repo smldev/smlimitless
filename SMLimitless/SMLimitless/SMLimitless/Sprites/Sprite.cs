@@ -222,7 +222,7 @@ namespace SMLimitless.Sprites
             {
                 if (!this.IsOnGround && this.Velocity.Y < MaximumGravitationalVelocity)
                 {
-                    this.Acceleration = new Vector2(this.Acceleration.X, this.Owner.GravityAcceleration);
+                    this.Acceleration = new Vector2(this.Acceleration.X, Level.GravityAcceleration);
                 }
                 else if (this.Velocity.Y > MaximumGravitationalVelocity)
                 {

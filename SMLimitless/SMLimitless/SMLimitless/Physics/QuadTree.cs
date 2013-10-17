@@ -175,7 +175,7 @@ namespace SMLimitless.Physics
 
             foreach (var cell in intersectingCells)
             {
-                result.AddRange(this.cells[cell].Tiles.Where(t => !(t is SlopedTestTile1))); // this is hackish and will be replaced.
+                result.AddRange(this.cells[cell].Tiles.Where(t => !(t is SMLimitless.Sprites.Testing.SlopedTestTile1))); // this is hackish and will be replaced.
             }
 
             return result;

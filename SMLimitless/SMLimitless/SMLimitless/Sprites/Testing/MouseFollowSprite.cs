@@ -13,7 +13,7 @@ using SMLimitless.Extensions;
 using SMLimitless.Input;
 using SMLimitless.Physics;
 
-namespace SMLimitless.Sprites
+namespace SMLimitless.Sprites.Testing
 {
     /// <summary>
     /// A testing sprite.
