@@ -1,4 +1,9 @@
-﻿using System;
+﻿//-----------------------------------------------------------------------
+// <copyright file="TestLevel.cs" company="Chris Akridge">
+//     Copyrighted unter the MIT Public License.
+// </copyright>
+//-----------------------------------------------------------------------
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -32,7 +37,7 @@ namespace SMLimitless.Sprites.Testing
         /// <summary>
         /// A collection of all the sprites in this level.
         /// </summary>
-        internal List<Sprite> Sprites;
+        private List<Sprite> sprites;
 
         /// <summary>
         /// Testing sprite.
@@ -72,7 +77,7 @@ namespace SMLimitless.Sprites.Testing
         public TestLevel()
         {
             this.tiles = new List<Tile>();
-            this.Sprites = new List<Sprite>();
+            this.sprites = new List<Sprite>();
             this.mouseSprite = new MouseFollowSprite();
 
             this.quadTree = new QuadTree(new Vector2(64f, 64f));
@@ -126,7 +131,7 @@ namespace SMLimitless.Sprites.Testing
         public void LoadContent()
         {
             this.tiles.ForEach(t => t.LoadContent());
-            this.Sprites.ForEach(s => s.LoadContent());
+            this.sprites.ForEach(s => s.LoadContent());
         }
 
         /// <summary>
@@ -135,7 +140,7 @@ namespace SMLimitless.Sprites.Testing
         /// <param name="sprite">The sprite to add.</param>
         public void AddSprite(Sprite sprite)
         {
-            this.Sprites.Add(sprite);
+            this.sprites.Add(sprite);
             this.quadTree.Add(sprite);
         }
 
@@ -155,7 +160,7 @@ namespace SMLimitless.Sprites.Testing
         /// <param name="sprite">The sprite to remove.</param>
         public void RemoveSprite(Sprite sprite)
         {
-            this.Sprites.Remove(sprite);
+            this.sprites.Remove(sprite);
             this.quadTree.Remove(sprite);
         }
 
@@ -283,9 +288,9 @@ namespace SMLimitless.Sprites.Testing
             if (InputManager.IsCurrentKeyPress(Microsoft.Xna.Framework.Input.Keys.Q))
             {
                 // Clear all sprites in the level.
-                while (this.Sprites.Count != 0)
+                while (this.sprites.Count != 0)
                 {
-                    this.RemoveSprite(this.Sprites[0]);
+                    this.RemoveSprite(this.sprites[0]);
                 }
 
                 var tilesToRemove = this.tiles.Where(t => t is TestTile3).ToList();
@@ -298,9 +303,9 @@ namespace SMLimitless.Sprites.Testing
             if (InputManager.IsCurrentKeyPress(Microsoft.Xna.Framework.Input.Keys.R))
             {
                 // Reset the level.
-                while (this.Sprites.Count != 0)
+                while (this.sprites.Count != 0)
                 {
-                    this.RemoveSprite(this.Sprites[0]);
+                    this.RemoveSprite(this.sprites[0]);
                 }
 
                 while (this.tiles.Count != 0)
@@ -320,7 +325,7 @@ namespace SMLimitless.Sprites.Testing
                 {
                     case 0:
                         // Give all sprites a boost.
-                        this.Sprites.ForEach(s => s.Velocity = new Vector2(s.Velocity.X, s.Velocity.Y - random.Next(0, 100)));
+                        this.sprites.ForEach(s => s.Velocity = new Vector2(s.Velocity.X, s.Velocity.Y - random.Next(0, 100)));
 
                         this.displayText = "Jump!";
                         this.displayTextFrames = 120;
@@ -364,7 +369,7 @@ namespace SMLimitless.Sprites.Testing
             }
 
             this.tiles.ForEach(t => t.Update());
-            this.Sprites.ForEach(s => s.Update());
+            this.sprites.ForEach(s => s.Update());
             this.quadTree.Update();
             this.CheckCollision();
         }
@@ -375,7 +380,7 @@ namespace SMLimitless.Sprites.Testing
         public void Draw()
         {
             this.tiles.ForEach(t => t.Draw());
-            this.Sprites.ForEach(s => s.Draw());
+            this.sprites.ForEach(s => s.Draw());
             ////this.debugText.DrawString(new Vector2(16f, 16f), Color.White);
             this.debugText = "";
 
@@ -433,7 +438,7 @@ namespace SMLimitless.Sprites.Testing
         {
             System.Diagnostics.Stopwatch stopwatch = System.Diagnostics.Stopwatch.StartNew();
 
-            foreach (Sprite sprite in this.Sprites)
+            foreach (Sprite sprite in this.sprites)
             {
                 if (!sprite.IsActive || sprite.CollisionMode == SpriteCollisionMode.NoCollision)
                 {
@@ -519,7 +524,7 @@ namespace SMLimitless.Sprites.Testing
             }
 
             stopwatch.Stop();
-            this.debugText = string.Concat(stopwatch.Elapsed.ToString(), ", ", this.Sprites.Count, " sprites");
+            this.debugText = string.Concat(stopwatch.Elapsed.ToString(), ", ", this.sprites.Count, " sprites");
         }
 
         /// <summary>

@@ -1,4 +1,9 @@
-﻿using System;
+﻿//-----------------------------------------------------------------------
+// <copyright file="Camera2D.cs" company="Chris Akridge">
+//     Copyrighted unter the MIT Public License.
+// </copyright>
+//-----------------------------------------------------------------------
+using System;
 using Microsoft.Xna.Framework;
 
 namespace SMLimitless.Physics
@@ -52,6 +57,9 @@ namespace SMLimitless.Physics
         /// </summary>
         public Vector2 Position { get; set; }
 
+        /// <summary>
+        /// Gets a rectangle corresponding to the viewport of the camera.
+        /// </summary>
         public BoundingRectangle Viewport
         {
             get
@@ -60,6 +68,9 @@ namespace SMLimitless.Physics
             }
         }
 
+        /// <summary>
+        /// Gets the size of the viewport of the camera, adjusted for zoom.
+        /// </summary>
         public Vector2 ViewportSize
         {
             get

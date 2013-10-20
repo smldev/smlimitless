@@ -21,6 +21,15 @@ namespace SMLimitless.Sprites.Testing
     public class MouseFollowSprite : Sprite
     {
         /// <summary>
+        /// Gets the name of the category that this sprite is
+        /// categorized within in the level editor.
+        /// </summary>
+        public override string EditorCategory
+        {
+            get { return "Testing"; }
+        }
+
+        /// <summary>
         /// Initializes this sprite.
         /// </summary>
         /// <param name="owner">The level that owns this sprite.</param>

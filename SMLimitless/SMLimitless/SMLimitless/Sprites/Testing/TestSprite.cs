@@ -21,6 +21,15 @@ namespace SMLimitless.Sprites.Testing
     public class TestSprite : Sprite
     {
         /// <summary>
+        /// Gets the name of the category that this sprite is
+        /// categorized within in the level editor.
+        /// </summary>
+        public override string EditorCategory
+        {
+            get { return "Testing"; }
+        }
+
+        /// <summary>
         /// The graphics for this object.
         /// </summary>
         private AnimatedGraphicsObject graphics;

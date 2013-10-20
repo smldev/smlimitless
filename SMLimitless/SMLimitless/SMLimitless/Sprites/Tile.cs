@@ -27,6 +27,12 @@ namespace SMLimitless.Sprites
         public uint ID { get; set; }
 
         /// <summary>
+        /// Gets the name of the category that this tile is
+        /// categorized within in the level editor.
+        /// </summary>
+        public abstract string EditorCategory { get; }
+
+        /// <summary>
         /// Gets or sets the name of this tile used in the level editor.
         /// </summary>
         public string EditorLabel { get; set; }

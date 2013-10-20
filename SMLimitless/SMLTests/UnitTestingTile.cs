@@ -20,6 +20,15 @@ namespace SMLTests
     public class UnitTestingTile : Tile
     {
         /// <summary>
+        /// Gets the name of the category that this tile is
+        /// categorized within in the level editor.
+        /// </summary>
+        public override string EditorCategory
+        {
+            get { return "Testing"; }
+        }
+
+        /// <summary>
         /// Initializes this tile.
         /// </summary>
         /// <param name="owner">The Level that owns this tile.</param>

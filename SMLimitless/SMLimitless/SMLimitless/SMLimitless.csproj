@@ -134,6 +134,7 @@
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml">
       <Private>False</Private>
@@ -155,6 +156,7 @@
     <Compile Include="Content\ContentPackageManager.cs" />
     <Compile Include="Content\ContentPackageResourceSearcher.cs" />
     <Compile Include="Content\ResourceNotFoundException.cs" />
+    <Compile Include="Editor\EditorButton.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Extensions\GameTimeExtensions.cs" />
     <Compile Include="Extensions\ListExtensions.cs" />
@@ -162,6 +164,7 @@
     <Compile Include="Extensions\RectangleExtensions.cs" />
     <Compile Include="Extensions\SpriteBatchExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Extensions\Texture2DExtensions.cs" />
     <Compile Include="Extensions\Vector2Extensions.cs" />
     <Compile Include="GameServices.cs" />
     <Compile Include="GameSettings.cs" />

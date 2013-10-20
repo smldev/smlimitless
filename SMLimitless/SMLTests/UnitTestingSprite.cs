@@ -20,6 +20,15 @@ namespace SMLTests
     public class UnitTestingSprite : Sprite
     {
         /// <summary>
+        /// Gets the name of the category that this tile is
+        /// categorized within in the level editor.
+        /// </summary>
+        public override string EditorCategory
+        {
+            get { return "Testing"; }
+        }
+
+        /// <summary>
         /// Initializes this sprite.
         /// </summary>
         /// <param name="owner">The Level that owns this sprite.</param>

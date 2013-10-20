@@ -23,6 +23,15 @@ namespace SMLimitless.Sprites.Testing
     public class SimplePlayer : Sprite
     {
         /// <summary>
+        /// Gets the name of the category that this sprite is
+        /// categorized within in the level editor.
+        /// </summary>
+        public override string EditorCategory
+        {
+            get { return "Testing"; }
+        }
+
+        /// <summary>
         /// The graphics for this sprite.
         /// </summary>
         private StaticGraphicsObject graphics;
@@ -38,7 +47,6 @@ namespace SMLimitless.Sprites.Testing
         /// <param name="owner">The level that owns this sprite.</param>
         public void Initialize(TestLevel owner)
         {
-
             this.Size = new Vector2(16f, 16f);
             this.IsActive = true;
         }

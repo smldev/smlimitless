@@ -19,6 +19,15 @@ namespace SMLimitless.Sprites.Testing
     public class SlopedTestTile1 : SlopedTile
     {
         /// <summary>
+        /// Gets the name of the category that this tile is
+        /// categorized within in the level editor.
+        /// </summary>
+        public override string EditorCategory
+        {
+            get { return "Testing"; }
+        }
+
+        /// <summary>
         /// The graphics of this tile.
         /// </summary>
         private StaticGraphicsObject graphics;
