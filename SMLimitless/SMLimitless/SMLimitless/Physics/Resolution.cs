@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="Resolution.cs" company="Chris Akridge">
+// <copyright file="Resolution.cs" company="The Limitless Development Team">
 //     Copyrighted unter the MIT Public License.
 // </copyright>
 //-----------------------------------------------------------------------

@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="SimplePlayer.cs" company="Chris Akridge">
+// <copyright file="SimplePlayer.cs" company="The Limitless Development Team">
 //     Copyrighted unter the MIT Public License.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -118,7 +118,6 @@ namespace SMLimitless.Sprites.Testing
         {
             SpriteEffects effects = (this.Direction == SpriteDirection.Right) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
             this.graphics.Draw(new Vector2(this.Position.X, this.Position.Y - 16f), Color.White, effects);
-            this.Velocity.ToString().DrawStringDefault();
         }
 
         /// <summary>

@@ -1,5 +1,5 @@
 ﻿////-----------------------------------------------------------------------
-//// <copyright file="CollisionTests.cs" company="Chris Akridge">
+//// <copyright file="CollisionTests.cs" company="The Limitless Development Team">
 ////     Copyrighted unter the MIT Public License.
 //// </copyright>
 ////-----------------------------------------------------------------------

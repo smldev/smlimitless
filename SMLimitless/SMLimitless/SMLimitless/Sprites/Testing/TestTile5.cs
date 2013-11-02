@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="TestTile5.cs" company="Chris Akridge">
+// <copyright file="TestTile5.cs" company="The Limitless Development Team">
 //     Copyrighted unter the MIT Public License.
 // </copyright>
 //-----------------------------------------------------------------------

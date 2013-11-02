@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------
-// <copyright file="SmlProgram.cs" company="Chris Akridge">
+// <copyright file="SmlProgram.cs" company="The Limitless Development Team">
 //     Copyrighted unter the MIT Public License.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -54,9 +54,9 @@ namespace SMLimitless
             GameSettings.Initialize();
             InputManager.Initialize();
             ScreenManager.Initalize();
-            ScreenManager.SetRootScreen(new TestLevelScreen(), "");
             GameServices.ScreenSize = new Vector2(GraphicsDevice.PresentationParameters.BackBufferWidth, GraphicsDevice.PresentationParameters.BackBufferHeight);
             GameServices.Camera = new Physics.Camera2D(); // TODO: temporary
+            ScreenManager.SetRootScreen(new TestScreen(), "");
             base.Initialize();
         }
 

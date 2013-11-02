@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="ResourceNotFoundException.cs" company="Chris Akridge">
+// <copyright file="ResourceNotFoundException.cs" company="The Limitless Development Team">
 //     Copyrighted under the MIT license.
 // </copyright>
 //-----------------------------------------------------------------------

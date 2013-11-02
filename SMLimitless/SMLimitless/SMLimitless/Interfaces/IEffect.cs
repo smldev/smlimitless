@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="IEffect.cs" company="Chris Akridge">
+// <copyright file="IEffect.cs" company="The Limitless Development Team">
 //     Copyrighted under the MIT license.
 // </copyright>
 //-----------------------------------------------------------------------

@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="Camera2D.cs" company="Chris Akridge">
+// <copyright file="Camera2D.cs" company="The Limitless Development Team">
 //     Copyrighted unter the MIT Public License.
 // </copyright>
 //-----------------------------------------------------------------------

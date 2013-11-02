@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="ContentPackage.cs" company="Chris Akridge">
+// <copyright file="ContentPackage.cs" company="The Limitless Development Team">
 //     Copyrighted under the MIT license.
 // </copyright>
 //-----------------------------------------------------------------------

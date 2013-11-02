@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="CroppedTextureMetadata.cs" company="Chris Akridge">
+// <copyright file="CroppedTextureMetadata.cs" company="The Limitless Development Team">
 //     Copyrighted under the MIT license.
 // </copyright>
 //-----------------------------------------------------------------------

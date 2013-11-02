@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="TestScreen.cs" company="Chris Akridge">
+// <copyright file="TestScreen.cs" company="The Limitless Development Team">
 //     Copyrighted unter the MIT Public License.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -14,6 +14,7 @@ using SMLimitless.Extensions;
 using SMLimitless.Input;
 using SMLimitless.Physics;
 using SMLimitless.Screens.Effects;
+using SMLimitless.Sprites.Collections;
 
 namespace SMLimitless.Screens
 {
@@ -24,12 +25,33 @@ namespace SMLimitless.Screens
     /// </summary>
     public class TestScreen : Screen
     {
+        private BackgroundLayer background;
+
         /// <summary>
         /// Updates the screen.
         /// </summary>
         public override void Update()
         {
             Effect.Update();
+
+            if (InputManager.IsCurrentActionPress(InputAction.Left))
+            {
+                GameServices.Camera.Position = new Vector2(GameServices.Camera.Position.X - 10f, GameServices.Camera.Position.Y);
+            }
+            if (InputManager.IsCurrentActionPress(InputAction.Right))
+            {
+                GameServices.Camera.Position = new Vector2(GameServices.Camera.Position.X + 10f, GameServices.Camera.Position.Y);
+            }
+            if (InputManager.IsCurrentActionPress(InputAction.Up))
+            {
+                GameServices.Camera.Position = new Vector2(GameServices.Camera.Position.X, GameServices.Camera.Position.Y - 10f);
+            }
+            if (InputManager.IsCurrentActionPress(InputAction.Down))
+            {
+                GameServices.Camera.Position = new Vector2(GameServices.Camera.Position.X, GameServices.Camera.Position.Y + 10f);
+            }
+
+            this.background.Update();
         }
 
         /// <summary>
@@ -37,6 +59,7 @@ namespace SMLimitless.Screens
         /// </summary>
         public override void LoadContent()
         {
+            this.background.LoadContent();
         }
 
         /// <summary>
@@ -47,6 +70,9 @@ namespace SMLimitless.Screens
         public override void Initialize(Screen owner, string parameters)
         {
             this.Effect = new FadeEffect();
+            Content.ContentPackageManager.AddPackage(System.IO.Directory.GetCurrentDirectory() + @"\TestPackage\settings.txt");
+            this.background = new BackgroundLayer(GameServices.Camera, new BoundingRectangle(0, 0, 4096, 3072));
+            this.background.Initialize("BackgroundSmall", Sprites.BackgroundScrollDirection.Horizontal, 2f);
         }
 
         /// <summary>
@@ -55,6 +81,8 @@ namespace SMLimitless.Screens
         public override void Draw()
         {
             Effect.Draw();
+            this.background.Draw();
+            this.background.Delta.ToString().DrawStringDefault();
         }
 
         /// <summary>

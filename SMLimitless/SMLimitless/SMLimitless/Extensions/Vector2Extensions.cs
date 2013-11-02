@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="Vector2Extensions.cs" company="Chris Akridge">
+// <copyright file="Vector2Extensions.cs" company="The Limitless Development Team">
 //     Copyrighted under the MIT license.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -78,6 +78,11 @@ namespace SMLimitless.Extensions
         public static Vector2 Abs(this Vector2 vector)
         {
             return new Vector2((float)Math.Abs(vector.X), (float)Math.Abs(vector.Y));
+        }
+
+        public static Vector2 Mod(this Vector2 a, Vector2 b)
+        {
+            return new Vector2(a.X % b.X, a.Y % b.Y);
         }
 
         /// <summary>

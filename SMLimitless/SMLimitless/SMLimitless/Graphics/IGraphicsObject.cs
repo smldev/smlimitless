@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="IGraphicsObject.cs" company="Chris Akridge">
+// <copyright file="IGraphicsObject.cs" company="The Limitless Development Team">
 //     Copyrighted under the MIT license.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -62,5 +62,11 @@ namespace SMLimitless.Graphics
         /// </summary>
         /// <returns>A cloned object.</returns>
         IGraphicsObject Clone();
+
+        /// <summary>
+        /// Gets the size of the texture within this graphics object.
+        /// </summary>
+        /// <returns>A Vector2 representing the size in pixels of the texture.</returns>
+        Vector2 GetSize();
     }
 }

@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="AnimatedGraphicsObject.cs" company="Chris Akridge">
+// <copyright file="AnimatedGraphicsObject.cs" company="The Limitless Development Team">
 //     Copyrighted under the MIT license.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -447,6 +447,18 @@ namespace SMLimitless.Graphics
                 }
 
                 this.isContentLoaded = true;
+            }
+        }
+
+        public Vector2 GetSize()
+        {
+            if (this.isContentLoaded)
+            {
+                return new Vector2(this.textures[0].Width, this.textures[0].Height);
+            }
+            else
+            {
+                throw new Exception("AnimatedGraphicsObject.GetSize(): This object hasn't been fully loaded, and cannot return its size.");
             }
         }
     }

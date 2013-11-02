@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="StaticGraphicsObject.cs" company="Chris Akridge">
+// <copyright file="StaticGraphicsObject.cs" company="The Limitless Development Team">
 //     Copyrighted under the MIT license.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -167,6 +167,18 @@ namespace SMLimitless.Graphics
             {
                 this.texture = fileTexture.Crop(this.CgoSourceRect);
                 this.isContentLoaded = true;
+            }
+        }
+
+        public Vector2 GetSize()
+        {
+            if (this.isContentLoaded)
+            {
+                return new Vector2(this.texture.Width, this.texture.Height);
+            }
+            else
+            {
+                throw new Exception("StaticGraphicsObject.GetSize(): This object isn't fully loaded, and thus cannot return its size.");
             }
         }
     }

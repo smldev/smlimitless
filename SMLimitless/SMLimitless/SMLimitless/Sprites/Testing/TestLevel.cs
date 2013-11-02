@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="TestLevel.cs" company="Chris Akridge">
+// <copyright file="TestLevel.cs" company="The Limitless Development Team">
 //     Copyrighted unter the MIT Public License.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -56,6 +56,7 @@ namespace SMLimitless.Sprites.Testing
         /// </summary>
         private string debugText = "";
 
+#pragma warning disable 414
         /// <summary>
         /// Text to display onscreen.
         /// </summary>
@@ -65,7 +66,7 @@ namespace SMLimitless.Sprites.Testing
         /// The number of frames left to draw the displayText field.
         /// </summary>
         private int displayTextFrames = 0;
-
+#pragma warning restore 414
         /// <summary>
         /// A backing field for the GravityAcceleration property.
         /// </summary>
@@ -381,14 +382,14 @@ namespace SMLimitless.Sprites.Testing
         {
             this.tiles.ForEach(t => t.Draw());
             this.sprites.ForEach(s => s.Draw());
-            ////this.debugText.DrawString(new Vector2(16f, 16f), Color.White);
+            this.debugText.DrawString(new Vector2(16f, 16f), Color.White);
             this.debugText = "";
 
-            if (this.displayTextFrames != 0)
-            {
-                this.displayText.DrawString(new Vector2(16f, 40f), Color.White);
-                this.displayTextFrames--;
-            }
+            ////if (this.displayTextFrames != 0)
+            ////{
+            ////    this.displayText.DrawString(new Vector2(16f, 40f), Color.White);
+            ////    this.displayTextFrames--;
+            ////}
         }
 
         /// <summary>
@@ -524,7 +525,6 @@ namespace SMLimitless.Sprites.Testing
             }
 
             stopwatch.Stop();
-            this.debugText = string.Concat(stopwatch.Elapsed.ToString(), ", ", this.sprites.Count, " sprites");
         }
 
         /// <summary>

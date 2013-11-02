@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="Enums.cs" company="Chris Akridge">
+// <copyright file="Enums.cs" company="The Limitless Development Team">
 //     Copyrighted unter the MIT Public License.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -203,6 +203,14 @@ namespace SMLimitless.Sprites
         /// The sprite does not collide with any object.
         /// </summary>
         NoCollision
+    }
+
+    public enum BackgroundScrollDirection
+    {
+        Fixed,
+        Horizontal,
+        Vertical,
+        Both
     }
 }
 

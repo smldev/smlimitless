@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="Level.cs" company="Chris Akridge">
+// <copyright file="Level.cs" company="The Limitless Development Team">
 //     Copyrighted unter the MIT Public License.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -17,6 +17,16 @@ namespace SMLimitless.Sprites.Collections
     /// </summary>
     public sealed class Level
     {
+        /// <summary>
+        /// Gets the name of the level, which is presented on menu screens.
+        /// </summary>
+        public string Name { get; private set; }
+
+        /// <summary>
+        /// Gets the name of the author who created this level.
+        /// </summary>
+        public string Author { get; private set; }
+
         /// <summary>
         /// The acceleration caused by gravity, measured in pixels per second per second.
         /// </summary>

@@ -1,0 +1,41 @@
+SMLimitless Binary Level Format Draft
+Revision 1 - 10/26/2013
+
+Level Header
+	Magic Number (ASCII String)
+	Level Name (String)
+	Level Author (String)
+Exit Section
+	Exit Count (ushort)
+	Exit Entries
+		Exit Index (ushort)
+		Exit Direction (byte, 0 = none, 1-4 = directions)
+		Exit Sprite Name*
+Sections
+	Section Count (ushort)
+	Section Entries
+		Section Index (ushort)
+		Name (string)
+		Section Background
+			Lowest Layer Type (byte, gradient/solid)
+			Background Layer Count (byte)
+			Background Layers
+				Graphics Resource Name (string)
+				Horizontal/Vertical Tiling (byte, 0 = none, 1 = horizontal, 2 = vertical)
+				Scrolling Rate (float, 1 = same as foreground, <1 = slower than foreground, >1 = faster than foreground)
+				Shading Color (uint as ARGB color, default is 0xFFFFFFFF)
+			Layer Count (ushort)
+			Layers
+				Layer Index (ushort)
+				Layer Name (ushort)
+				Is Main Layer (byte, nonzero is true)
+				Layer Position (Vector2) - only present if Is Main Layer is false
+				Layer Anchor Point (byte - corresponds to LayerAnchorPosition enum, but cast to byte) - ditto
+				Layer Tile Count (uint)
+				Layer Sprite Count (uint)
+				Layer Tiles
+					Qualified Type Name (string)
+					Position (Vector2, relative to level, not layer)
+					
+	
+*This is the name of the sprite serving as the exit. If the sprite has no name, a hidden name is provided at level save time. This name is prefixed with "EXIT_" and should be ignored by level loaders.

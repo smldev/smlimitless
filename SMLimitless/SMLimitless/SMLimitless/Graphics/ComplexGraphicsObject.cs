@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="ComplexGraphicsObject.cs" company="Chris Akridge">
+// <copyright file="ComplexGraphicsObject.cs" company="The Limitless Development Team">
 //     Copyrighted under the MIT license.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -348,6 +348,19 @@ namespace SMLimitless.Graphics
             result.texture = this.texture;
 
             return result;
+        }
+
+        public Vector2 GetSize()
+        {
+            if (this.isContentLoaded)
+            {
+                IGraphicsObject graphicsObject = this.graphicsObjects.First().Value;
+                return graphicsObject.GetSize();
+            }
+            else
+            {
+                throw new Exception("ComplexGraphicsObject.GetSize(): This object isn't fully loaded, and thus cannot return its size.");
+            }
         }
     }
 }
