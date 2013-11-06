@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<VisualState xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ShowCheckBoxes="false">
+  <TopNode>[0-1030]D:\Documents\GitHub\smlimitless\SMLimitless\SMLTests\bin\x86\Debug\SMLTests.dll</TopNode>
+  <SelectedNode>[0-1020]SMLTests.CollisionTests.TriangleIntersectsTest</SelectedNode>
+  <ExcludeCategories>false</ExcludeCategories>
+  <Nodes>
+    <Node UniqueName="[0-1030]D:\Documents\GitHub\smlimitless\SMLimitless\SMLTests\bin\x86\Debug\SMLTests.dll" Expanded="true" />
+    <Node UniqueName="[0-1031]SMLTests" Expanded="true" />
+    <Node UniqueName="[0-1009]SMLTests.CollisionTests" Expanded="true" />
+    <Node UniqueName="[0-1006]SMLTests.GeneralTests" Expanded="true" />
+    <Node UniqueName="[0-1032]SMLTests.Tests" Expanded="true" />
+    <Node UniqueName="[0-1000]SMLTests.Tests.GridTests" Expanded="true" />
+  </Nodes>
+</VisualState>

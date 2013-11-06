@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using SMLimitless.Physics;
+using Microsoft.Xna.Framework;
+using SMLimitless.Sprites.Collections.Structures;
 
 namespace SMLimitless.Sprites.Collections
 {
@@ -20,5 +22,41 @@ namespace SMLimitless.Sprites.Collections
 
         public string Name { get; set; }
         public BoundingRectangle Bounds { get; private set; }
+        public Camera2D Camera { get; private set; }
+
+        public Background Background { get; private set; }
+
+        public Section(BoundingRectangle bounds)
+        {
+            // TODO: temporary
+            this.Bounds = bounds;
+            this.Camera = new Camera2D();
+        }
+
+        public void MoveCamera(Vector2 offset)
+        {
+            this.Camera.Position += offset;
+        }
+
+        public void Initialize(BackgroundData data) 
+        {
+            this.Background = new Background(this);
+            this.Background.Initialize(data);
+        }
+
+        public void LoadContent() 
+        {
+            this.Background.LoadContent();
+        }
+
+        public void Update()
+        {
+            this.Background.Update();
+        }
+
+        public void Draw()
+        {
+            this.Background.Draw();
+        }
     }
 }

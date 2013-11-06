@@ -2,7 +2,6 @@
 ###################
 *.com
 *.class
-*.dll
 *.exe
 *.o
 *.so
@@ -42,7 +41,7 @@ Thumbs.db
 *.suo
 *.pdb
 [Oo]bj
-[Bb]in
+*publish
 *.user
 *.suo
 *.[Cc]ache

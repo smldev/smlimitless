@@ -85,6 +85,7 @@ namespace SMLimitless.Sprites.Collections
             }
 
             this.oldCameraPosition = this.camera.Position;
+            this.backgroundTexture.Update();
         }
 
         public void Draw()
@@ -99,15 +100,87 @@ namespace SMLimitless.Sprites.Collections
             else if (this.ScrollDirection == BackgroundScrollDirection.Horizontal)
             {
                 float baseTextureDrawPositionX = this.camera.Viewport.X + -this.Delta.X;
+                float baseTextureDrawPositionY;
 
-                float minorAxisScrollableHeight = -this.sectionBounds.Y - this.camera.ViewportSize.Y;
-                float viewportOriginRelatingToScrollableHeight = this.camera.Position.Y / minorAxisScrollableHeight;
-                float viewportMinorAxisLine = this.camera.ViewportSize.Y * viewportOriginRelatingToScrollableHeight;
-                float textureMinorAxisLine = this.textureSize.Y * viewportOriginRelatingToScrollableHeight;
-                float baseTextureDrawPositionY = viewportMinorAxisLine - textureMinorAxisLine;
+                if (this.textureSize.Y >= this.camera.ViewportSize.Y)
+                {
+                    float minorAxisScrollableHeight = -this.sectionBounds.Height - this.camera.ViewportSize.Y;
+                    float viewportOriginRelatingToScrollableHeight = this.camera.Position.Y / minorAxisScrollableHeight;
+                    float viewportMinorAxisLine = this.camera.ViewportSize.Y * viewportOriginRelatingToScrollableHeight;
+                    float textureMinorAxisLine = this.textureSize.Y * viewportOriginRelatingToScrollableHeight;
+                    baseTextureDrawPositionY = -(viewportMinorAxisLine - textureMinorAxisLine) + this.camera.Viewport.Y;
+                }
+                else
+                {
+                    baseTextureDrawPositionY = this.camera.Viewport.Y;
+                }
 
                 this.backgroundTexture.Draw(new Vector2(baseTextureDrawPositionX, baseTextureDrawPositionY), Color.White);
+
+                foreach (Vector2 textureDrawPosition in this.GetTextureTileDrawPoints(new Vector2(baseTextureDrawPositionX, baseTextureDrawPositionY)))
+                {
+                    this.backgroundTexture.Draw(textureDrawPosition, Color.White);
+                }
             }
+            else if (this.ScrollDirection == BackgroundScrollDirection.Vertical)
+            {
+                float baseTextureDrawPositionX;
+                float baseTextureDrawPositionY = this.camera.Viewport.Y + -this.Delta.Y;
+
+                if (this.textureSize.X >= this.camera.ViewportSize.X)
+                {
+                    float minorAxisScrollableWidth = -this.sectionBounds.Width - this.camera.ViewportSize.X;
+                    float viewportOriginRelatingToScrollableWidth = this.camera.Viewport.X / minorAxisScrollableWidth;
+                    float viewportMinorAxisLine = this.camera.ViewportSize.X * viewportOriginRelatingToScrollableWidth;
+                    float textureMinorAxisLine = this.textureSize.X * viewportOriginRelatingToScrollableWidth;
+                    baseTextureDrawPositionX = -(viewportMinorAxisLine - textureMinorAxisLine) + this.camera.Viewport.X;
+                }
+                else
+                {
+                    baseTextureDrawPositionX = this.camera.Viewport.X;
+                }
+
+                this.backgroundTexture.Draw(new Vector2(baseTextureDrawPositionX, baseTextureDrawPositionY), Color.White);
+
+                foreach (Vector2 textureDrawPosition in this.GetTextureTileDrawPoints(new Vector2(baseTextureDrawPositionX, baseTextureDrawPositionY)))
+                {
+                    this.backgroundTexture.Draw(textureDrawPosition, Color.White);
+                }
+            }
+            else if (this.ScrollDirection == BackgroundScrollDirection.Both)
+            {
+                float baseTextureDrawPositionX = this.camera.Viewport.X + -this.Delta.X;
+                float baseTextureDrawPositionY = this.camera.Viewport.Y + -this.Delta.Y;
+
+                this.backgroundTexture.Draw(new Vector2(baseTextureDrawPositionX, baseTextureDrawPositionY), Color.White);
+                
+                foreach (Vector2 textureDrawPosition in this.GetTextureTileDrawPoints(new Vector2(baseTextureDrawPositionX, baseTextureDrawPositionY)))
+                {
+                    this.backgroundTexture.Draw(textureDrawPosition, Color.White);
+                }
+            }
+        }
+
+        private List<Vector2> GetTextureTileDrawPoints(Vector2 baseTextureDrawPosition)
+        {
+            Vector2 topLeftCorner = baseTextureDrawPosition;
+            while (topLeftCorner.X > this.camera.Viewport.X) { topLeftCorner.X -= this.textureSize.X; }
+            while (topLeftCorner.Y > this.camera.Viewport.Y) { topLeftCorner.Y -= this.textureSize.Y; }
+
+            Vector2 bottomRightCorner = baseTextureDrawPosition;
+            while (bottomRightCorner.X < this.camera.Viewport.Right) { bottomRightCorner.X += this.textureSize.X; }
+            while (bottomRightCorner.Y < this.camera.Viewport.Bottom) { bottomRightCorner.Y += this.textureSize.Y; }
+
+            List<Vector2> result = new List<Vector2>();
+            for (float x = topLeftCorner.X; x < bottomRightCorner.X; x += textureSize.X)
+            {
+                for (float y = topLeftCorner.Y; y < bottomRightCorner.Y; y += textureSize.Y)
+                {
+                    result.Add(new Vector2(x, y));
+                }
+            }
+
+            return result;
         }
     }
 }

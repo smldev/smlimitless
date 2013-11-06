@@ -206,6 +206,7 @@
     <Compile Include="Sounds\Sound.cs" />
     <Compile Include="Sounds\SoundManager.cs" />
     <Compile Include="Sprites\Assemblies\AssemblyManager.cs" />
+    <Compile Include="Sprites\Collections\Background.cs" />
     <Compile Include="Sprites\Collections\BackgroundLayer.cs" />
     <Compile Include="Sprites\Collections\Layer.cs" />
     <Compile Include="Sprites\Collections\Level.cs" />

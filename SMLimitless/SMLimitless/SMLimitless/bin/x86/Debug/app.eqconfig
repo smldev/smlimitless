@@ -1,0 +1,14 @@
+﻿<config Version="2">
+  <OutputFolder>D:\Documents\GitHub\smlimitless\SMLimitless\SMLimitless\SMLimitless\bin\x86\Debug</OutputFolder>
+  <ReportFolderNetFull>D:\Documents\Files\SML\SlimTune Results</ReportFolderNetFull>
+  <ReportFolderNetCF>\Temp\EQATECProfilerLogs</ReportFolderNetCF>
+  <AutoSnapshot>Main OnStop ApplicationEnd</AutoSnapshot>
+  <TinyMethodAction>CallCount</TinyMethodAction>
+  <ServerControlHost />
+  <ServerControlPort>4515</ServerControlPort>
+  <RuntimeModuleLogLevel>Errors</RuntimeModuleLogLevel>
+  <ExcludeFiles />
+  <SignActions />
+  <AppType>FullNet</AppType>
+  <InputFolderOK>true</InputFolderOK>
+</config>

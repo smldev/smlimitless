@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--This file represents the results of running a test suite-->
+<test-results name="D:\Documents\GitHub\smlimitless\SMLimitless\SMLimitless\SMLimitless\bin\x86\Debug\SMLimitless.exe" total="13" errors="0" failures="1" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2013-07-09" time="14:07:58">
+  <environment nunit-version="2.6.2.12296" clr-version="2.0.50727.4234" os-version="Microsoft Windows NT 6.0.6002 Service Pack 2" platform="Win32NT" cwd="C:\Program Files\NUnit 2.6.2\bin" machine-name="ASPIRE-4400" user="Chris" user-domain="Aspire-4400" />
+  <culture-info current-culture="en-US" current-uiculture="en-US" />
+  <test-suite type="Assembly" name="D:\Documents\GitHub\smlimitless\SMLimitless\SMLimitless\SMLimitless\bin\x86\Debug\SMLimitless.exe" executed="True" result="Failure" success="False" time="0.327" asserts="0">
+    <results>
+      <test-suite type="Namespace" name="SMLimitless" executed="True" result="Failure" success="False" time="0.314" asserts="0">
+        <results>
+          <test-suite type="Namespace" name="Tests" executed="True" result="Failure" success="False" time="0.313" asserts="0">
+            <results>
+              <test-suite type="TestFixture" name="CollisionTests" executed="True" result="Failure" success="False" time="0.273" asserts="0">
+                <results>
+                  <test-case name="SMLimitless.Tests.CollisionTests.LevelCollisionSingleTileTest" executed="True" result="Failure" success="False" time="0.152" asserts="1">
+                    <failure>
+                      <message><![CDATA[  Expected: {X:0 Y:-2}
+  But was:  {X:0 Y:0}
+]]></message>
+                      <stack-trace><![CDATA[at SMLimitless.Tests.CollisionTests.LevelCollisionSingleTileTest() in D:\Documents\GitHub\smlimitless\SMLimitless\SMLimitless\SMLimitless\Tests\CollisionTests.cs:line 172
+]]></stack-trace>
+                    </failure>
+                  </test-case>
+                  <test-case name="SMLimitless.Tests.CollisionTests.RectangleBothEdgesEqualTest" executed="True" result="Success" success="True" time="0.003" asserts="1" />
+                  <test-case name="SMLimitless.Tests.CollisionTests.RectangleDownwardCollisionTest" executed="True" result="Success" success="True" time="0.001" asserts="1" />
+                  <test-case name="SMLimitless.Tests.CollisionTests.RectangleLeftwardCollisionTest" executed="True" result="Success" success="True" time="0.000" asserts="1" />
+                  <test-case name="SMLimitless.Tests.CollisionTests.RectangleRightwardCollisionTest" executed="True" result="Success" success="True" time="0.001" asserts="1" />
+                  <test-case name="SMLimitless.Tests.CollisionTests.RectangleShallowestEdgeHorizontalTest" executed="True" result="Success" success="True" time="0.001" asserts="1" />
+                  <test-case name="SMLimitless.Tests.CollisionTests.RectangleShallowestEdgeVerticalTest" executed="True" result="Success" success="True" time="0.000" asserts="1" />
+                  <test-case name="SMLimitless.Tests.CollisionTests.RectangleUpwardCollisionTest" executed="True" result="Success" success="True" time="0.001" asserts="1" />
+                  <test-case name="SMLimitless.Tests.CollisionTests.TriangleResolutionTest" executed="True" result="Success" success="True" time="0.003" asserts="1" />
+                  <test-case name="SMLimitless.Tests.CollisionTests.TriangleStraightEdgeResolutionTest" executed="True" result="Success" success="True" time="0.000" asserts="1" />
+                </results>
+              </test-suite>
+              <test-suite type="TestFixture" name="GeneralTests" executed="True" result="Success" success="True" time="0.031" asserts="0">
+                <results>
+                  <test-case name="SMLimitless.Tests.GeneralTests.AnotherBasicTest" executed="True" result="Success" success="True" time="0.001" asserts="1" />
+                  <test-case name="SMLimitless.Tests.GeneralTests.MostBasicTest" executed="True" result="Success" success="True" time="0.002" asserts="1" />
+                  <test-case name="SMLimitless.Tests.GeneralTests.VectorEqualityTypeTest" executed="True" result="Success" success="True" time="0.014" asserts="1" />
+                </results>
+              </test-suite>
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+    </results>
+  </test-suite>
+</test-results>

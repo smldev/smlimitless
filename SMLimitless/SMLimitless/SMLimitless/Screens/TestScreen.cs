@@ -15,6 +15,7 @@ using SMLimitless.Input;
 using SMLimitless.Physics;
 using SMLimitless.Screens.Effects;
 using SMLimitless.Sprites.Collections;
+using SMLimitless.Sprites.Collections.Structures;
 
 namespace SMLimitless.Screens
 {
@@ -25,7 +26,7 @@ namespace SMLimitless.Screens
     /// </summary>
     public class TestScreen : Screen
     {
-        private BackgroundLayer background;
+        private Section section;
 
         /// <summary>
         /// Updates the screen.
@@ -51,7 +52,7 @@ namespace SMLimitless.Screens
                 GameServices.Camera.Position = new Vector2(GameServices.Camera.Position.X, GameServices.Camera.Position.Y + 10f);
             }
 
-            this.background.Update();
+            this.section.Update();
         }
 
         /// <summary>
@@ -59,7 +60,7 @@ namespace SMLimitless.Screens
         /// </summary>
         public override void LoadContent()
         {
-            this.background.LoadContent();
+            this.section.LoadContent();
         }
 
         /// <summary>
@@ -71,8 +72,18 @@ namespace SMLimitless.Screens
         {
             this.Effect = new FadeEffect();
             Content.ContentPackageManager.AddPackage(System.IO.Directory.GetCurrentDirectory() + @"\TestPackage\settings.txt");
-            this.background = new BackgroundLayer(GameServices.Camera, new BoundingRectangle(0, 0, 4096, 3072));
-            this.background.Initialize("BackgroundSmall", Sprites.BackgroundScrollDirection.Horizontal, 2f);
+
+            BackgroundData data = new BackgroundData();
+            BackgroundData.BackgroundLayerData layer = new BackgroundData.BackgroundLayerData();
+            BackgroundData.BackgroundLayerData layer2 = new BackgroundData.BackgroundLayerData();
+            layer.SetManually("Notepad", Sprites.BackgroundScrollDirection.Horizontal, 1f);
+            layer2.SetManually("eudcedit", Sprites.BackgroundScrollDirection.Vertical, 0.5f);
+            data.SetManually(Color.LightBlue, Color.Blue, new List<BackgroundData.BackgroundLayerData>() { layer, layer2 });
+
+            section = new Section(new BoundingRectangle(0f, 0f, 4096f, 4096f));
+            section.Initialize(data);
+
+            GameServices.Camera = section.Camera;
         }
 
         /// <summary>
@@ -81,8 +92,7 @@ namespace SMLimitless.Screens
         public override void Draw()
         {
             Effect.Draw();
-            this.background.Draw();
-            this.background.Delta.ToString().DrawStringDefault();
+            section.Draw();
         }
 
         /// <summary>
