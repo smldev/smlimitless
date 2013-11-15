@@ -116,6 +116,14 @@ namespace SMLimitless
             }
         }
 
+        public static string GetSerializerVersion
+        {
+            get
+            {
+                return "SML Alpha v0.01"; // TODO: this should probably be wherever the serializer code will be
+            }
+        }
+
         /// <summary>
         /// Initializes the services container with key game services.
         /// </summary>

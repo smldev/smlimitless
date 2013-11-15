@@ -13,6 +13,7 @@ using SMLimitless.Extensions;
 using SMLimitless.Interfaces;
 using SMLimitless.Physics;
 using SMLimitless.Sprites.Collections;
+using SMLimitless.Sprites.Collections.Structures;
 
 namespace SMLimitless.Sprites
 {
@@ -21,11 +22,6 @@ namespace SMLimitless.Sprites
     /// </summary>
     public abstract class Tile : IName, IEditorObject, IPositionable
     {
-        /// <summary>
-        /// Gets or sets an identification number that identifies all tiles of this kind.
-        /// </summary>
-        public uint ID { get; set; }
-
         /// <summary>
         /// Gets the name of the category that this tile is
         /// categorized within in the level editor.
@@ -80,6 +76,8 @@ namespace SMLimitless.Sprites
         [DefaultValue(""), Description("The name of this tile to be used in event scripting.  This field is optional.")]
         public string Name { get; set; }
 
+        public string GraphicsResourceName { get; protected set; }
+
         /// <summary>
         /// Gets or sets a value that determines how sprites should collide with this tile.
         /// </summary>
@@ -90,12 +88,13 @@ namespace SMLimitless.Sprites
         /// Initializes this tile.
         /// </summary>
         /// <param name="owner">The Level that owns this tile.</param>
-        /// <param name="contentResourceName">The name of the content resource that is used for this tile's graphics.</param>
-        public virtual void Initialize(Level owner, string contentResourceName)
+        /// <param name="graphicsResourceName">The name of the graphics resource that is used for this tile's graphics.</param>
+        public virtual void Initialize(Level owner, string graphicsResourceName)
         {
             this.Owner = owner;
             this.IsActive = true;
             this.Name = "";
+            this.GraphicsResourceName = graphicsResourceName;
         }
 
         /// <summary>

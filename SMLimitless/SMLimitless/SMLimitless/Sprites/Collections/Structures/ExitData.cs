@@ -13,7 +13,7 @@ namespace SMLimitless.Sprites.Collections.Structures
     /// <summary>
     /// Represents an exit. This class is used in saving levels to file.
     /// </summary>
-    internal sealed class ExitData
+    internal sealed class LevelExit
     {
         /// <summary>
         /// Gets the index of the exit.
@@ -35,16 +35,13 @@ namespace SMLimitless.Sprites.Collections.Structures
         public string ObjectName { get; private set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ExitData"/> class.
+        /// Initializes a new instance of the <see cref="LevelExit"/> class.
         /// </summary>
-        /// <param name="index">The value of the ExitIndex property.</param>
-        /// <param name="direction">The value of the ExitDirection property.</param>
-        /// <param name="name">The value of ObjectName property.</param>
-        public ExitData(int index, Direction direction, string name)
+        public LevelExit(int exitIndex, Direction exitDirection, string objectName)
         {
-            this.ExitIndex = index;
-            this.ExitDirection = direction;
-            this.ObjectName = name;
+            this.ExitIndex = exitIndex;
+            this.ExitDirection = exitDirection;
+            this.ObjectName = objectName;
         }
     }
 }

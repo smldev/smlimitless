@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using SMLimitless.Physics;
+using SMLimitless.Sprites.Collections.Structures;
 
 namespace SMLimitless.Sprites.Collections
 {
@@ -17,6 +18,8 @@ namespace SMLimitless.Sprites.Collections
     /// </summary>
     public sealed class Level
     {
+        private List<LevelExit> levelExits;
+
         /// <summary>
         /// Gets the name of the level, which is presented on menu screens.
         /// </summary>
@@ -32,10 +35,10 @@ namespace SMLimitless.Sprites.Collections
         /// </summary>
         public const float GravityAcceleration = 250f;
 
-        /// <summary>
-        /// Gets the main layer of this level.
-        /// </summary>
-        internal Layer MainLayer { get; private set; } // TODO: it's sections you silly
+        public Level()
+        {
+            this.levelExits = new List<LevelExit>();
+        }
 
         /// <summary>
         /// Initializes this level.
@@ -56,5 +59,12 @@ namespace SMLimitless.Sprites.Collections
         /// Draws this level.
         /// </summary>
         public void Draw() { }
+
+        public void LevelExitCleared(string exitSpriteName)
+        {
+            // Look in this.levelExits for an exit with the sprite name
+            // Notify the owner (world/levelpack/whatever) that this exit has been cleared
+            // Give the owner the LevelExit tied to the exitSpriteName
+        }
     }
 }

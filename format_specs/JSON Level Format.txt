@@ -1,0 +1,66 @@
+SMLimitless JSON Level Format
+
+Level Header
+	Serializer Version
+	Level Name
+	Author
+Content Usage
+	Path to Content Package Folder (as many as needed)
+Level Exits
+	Exit Entry
+		Exit Index
+		Exit Direction (0 = none, 1-4 = direction)
+		Exit Sprite Name
+Sections
+	Section Entry
+		Section Index
+		Name
+		Initial Scroll Settings
+			Scroll Type
+			Autoscroll Speed (unused if not autoscrolling)
+			Autoscroll Path Name (unused if not autoscrolling along path)
+		Section Background
+			Gradient Top Color
+			Gradient Bottom Color
+			Background Layer
+				Graphics Resource Name
+				Scroll Direction
+				Scroll Rate
+		Layer
+			Layer Index
+			Layer Name
+			Is Main Layer
+			Layer Anchor Point (NaN if main layer)
+			Layer Anchor Position
+			Layer Tile
+				Qualified Type Name
+				Tile Type (normal/sloped)
+				Tile Collision Type
+				Tile Name
+				Graphics Resource Name
+				Position
+				Initial State
+				Custom Tile Data (varies by tile)
+			Layer Sprite
+				Qualified Type Name
+				Position
+				Is Active
+				Initial State
+				Collision Mode
+				Sprite Name
+				Sprite Message
+				Sprite Is Hostile
+				Sprite Is Moving
+				Initial Direction
+		Paths
+			Points
+		Screen Exit
+			Exit Index
+			Incoming Section
+			Incoming Position
+			Incoming Behavior
+			Outgoing Section
+			Outgoing Position
+			Outgoing Behavior
+	Event Script
+		Script Code

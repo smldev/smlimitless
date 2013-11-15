@@ -20,11 +20,15 @@ namespace SMLimitless.Sprites.Collections
     {
         private Level owner;
 
+        public int Index { get; set; }
         public string Name { get; set; }
         public BoundingRectangle Bounds { get; private set; }
         public Camera2D Camera { get; private set; }
 
         public Background Background { get; private set; }
+
+        internal Layer MainLayer { get; private set; }
+        private List<Layer> layers;
 
         public Section(BoundingRectangle bounds)
         {

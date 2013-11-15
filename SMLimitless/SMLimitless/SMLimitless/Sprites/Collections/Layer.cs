@@ -32,7 +32,7 @@ namespace SMLimitless.Sprites.Collections
         /// <summary>
         /// The level that created this layer.
         /// </summary>
-        private Level owner;
+        private Section owner;
 
         /// <summary>
         /// The collection of tiles in this layer.
@@ -104,6 +104,8 @@ namespace SMLimitless.Sprites.Collections
             }
         }
 
+        public int Index { get; private set; }
+
         /// <summary>
         /// Gets or sets the name of this layer.
         /// </summary>
@@ -115,7 +117,7 @@ namespace SMLimitless.Sprites.Collections
         /// </summary>
         /// <param name="owner">The level that is creating this layer.</param>
         /// <param name="position">The position of the anchor point in relation to the layer.</param>
-        public Layer(Level owner, LayerAnchorPosition position = LayerAnchorPosition.TopLeft)
+        public Layer(Section owner, LayerAnchorPosition position = LayerAnchorPosition.TopLeft)
         {
             this.owner = owner;
             this.anchorPosition = position;
