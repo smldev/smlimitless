@@ -4,15 +4,19 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Newtonsoft.Json.Linq;
 using SMLimitless.Content;
 using SMLimitless.Extensions;
+using SMLimitless.Interfaces;
 using SMLimitless.Graphics;
 using SMLimitless.Physics;
 
 namespace SMLimitless.Sprites.Collections
 {
-    public sealed class BackgroundLayer
+    public sealed class BackgroundLayer : ISerializable
     {
+        private string backgroundTextureResourceName;
+
         private IGraphicsObject backgroundTexture;
         private Camera2D camera;
         private BoundingRectangle sectionBounds;
@@ -35,8 +39,6 @@ namespace SMLimitless.Sprites.Collections
         private Vector2 textureSize;
         private Vector2 delta;
 
-        
-
         public BackgroundLayer(Camera2D ownerCamera, BoundingRectangle sectionBounds)
         {
             this.camera = ownerCamera;
@@ -45,6 +47,8 @@ namespace SMLimitless.Sprites.Collections
 
         public void Initialize(string backgroundTextureResourceName, BackgroundScrollDirection scrollDirection, float scrollRate)
         {
+            // TODO: Remove this code (and the arguments)
+            this.backgroundTextureResourceName = backgroundTextureResourceName;
             this.backgroundTexture = ContentPackageManager.GetGraphicsResource(backgroundTextureResourceName);
             this.ScrollDirection = scrollDirection;
             this.ScrollRate = scrollRate;
@@ -181,6 +185,35 @@ namespace SMLimitless.Sprites.Collections
             }
 
             return result;
+        }
+
+        public object GetSerializableObjects()
+        {
+            return new
+            {
+                resourceName = this.backgroundTextureResourceName,
+                scrollDirection = (int)this.ScrollDirection,
+                scrollRate = this.ScrollRate
+            };
+        }
+
+        public string Serialize()
+        {
+            return JObject.FromObject(this.GetSerializableObjects()).ToString();
+        }
+
+        public void Deserialize(string json)
+        {
+            JObject obj = JObject.Parse(json);
+
+            string resourceName = (string)obj["resourceName"];
+            BackgroundScrollDirection direction = (BackgroundScrollDirection)(int)obj["scrollDirection"];
+            float scrollRate = (float)obj["scrollRate"];
+
+            this.backgroundTextureResourceName = resourceName;
+            this.backgroundTexture = ContentPackageManager.GetGraphicsResource(backgroundTextureResourceName);
+            this.ScrollDirection = direction;
+            this.ScrollRate = scrollRate;
         }
     }
 }

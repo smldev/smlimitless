@@ -124,6 +124,14 @@ namespace SMLimitless
             }
         }
 
+        public static Vector2 QuadTreeCellSize
+        {
+            get
+            {
+                return new Vector2(64f, 64f);
+            }
+        }
+
         /// <summary>
         /// Initializes the services container with key game services.
         /// </summary>

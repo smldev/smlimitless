@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="MouseFollowSprite.cs" company="The Limitless Development Team">
+// <copyright file="TestSprite.cs" company="The Limitless Development Team">
 //     Copyrighted unter the MIT Public License.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -8,17 +8,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using SMLimitless.Extensions;
-using SMLimitless.Input;
+using SMLimitless.Graphics;
 using SMLimitless.Physics;
+using SMLimitless.Sprites;
+using SMLimitless.Sprites.Testing;
 
-namespace SMLimitless.Sprites.Testing
+namespace SmlSample
 {
     /// <summary>
     /// A testing sprite.
     /// </summary>
-    public class MouseFollowSprite : Sprite
+    public class TestSprite : Sprite
     {
         /// <summary>
         /// Gets the name of the category that this sprite is
@@ -30,53 +31,49 @@ namespace SMLimitless.Sprites.Testing
         }
 
         /// <summary>
-        /// Initializes this sprite.
+        /// The graphics for this object.
         /// </summary>
-        /// <param name="owner">The level that owns this sprite.</param>
-        public override void Initialize(Collections.Level owner)
+        private AnimatedGraphicsObject graphics;
+
+        public TestSprite()
         {
-            this.Size = new Vector2(16f, 16f);
-            base.Initialize(owner);
+            this.Size = new Vector2(16, 16);
+            this.IsActive = true;
         }
-        
+
         /// <summary>
-        /// Updates this sprite.
+        /// Initializes this object.
+        /// </summary>
+        /// <param name="owner">The Level that owns this object.</param>
+        public void Initialize(TestLevel owner)
+        {
+        }
+
+        /// <summary>
+        /// Loads the content for this object.
+        /// </summary>
+        public override void LoadContent()
+        {
+            this.graphics = (AnimatedGraphicsObject)SMLimitless.Content.ContentPackageManager.GetGraphicsResource("smb3_goomba");
+            this.graphics.LoadContent();
+        }
+
+        /// <summary>
+        /// Updates this object.
         /// </summary>
         public override void Update()
         {
-            float distance = 2f;
-            if (InputManager.IsCurrentKeyPress(Keys.Up))
-            {
-                this.Position = new Vector2(Position.X, Position.Y - distance);
-            }
-
-            if (InputManager.IsCurrentKeyPress(Keys.Down))
-            {
-                this.Position = new Vector2(Position.X, Position.Y + distance);
-            }
-
-            if (InputManager.IsCurrentKeyPress(Keys.Left))
-            {
-                this.Position = new Vector2(Position.X - 1.0f, Position.Y);
-            }
-
-            if (InputManager.IsCurrentKeyPress(Keys.Right))
-            {
-                this.Position = new Vector2(Position.X + 1.0f, Position.Y);
-            }
-
-            if (InputManager.IsNewActionPress(InputAction.Jump))
-            {
-                this.Position = new Vector2(Position.X, Position.Y + -20f);
-            }
+            this.graphics.Update();
+            this.Velocity = new Vector2(30f, Velocity.Y);
+            base.Update();
         }
 
         /// <summary>
-        /// Draws this sprite.
+        /// Draws this object.
         /// </summary>
         public override void Draw()
         {
-            GameServices.SpriteBatch.DrawRectangle(Hitbox.ToRectangle(), Color.Red);
+            this.graphics.Draw(this.Position, Color.White, false);
         }
 
         /// <summary>
@@ -98,11 +95,13 @@ namespace SMLimitless.Sprites.Testing
         {
         }
 
-        /// <summary>
-        /// Loads the content for this sprite.
-        /// </summary>
-        public override void LoadContent()
+        public override void DeserializeCustomObjects(SMLimitless.Sprites.Assemblies.JsonHelper customObjects)
         {
+        }
+
+        public override object GetCustomSerializableObjects()
+        {
+            return null;
         }
     }
 }

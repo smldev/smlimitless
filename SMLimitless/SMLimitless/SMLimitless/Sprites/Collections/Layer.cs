@@ -9,15 +9,18 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Newtonsoft.Json.Linq;
 using SMLimitless.Extensions;
+using SMLimitless.Interfaces;
 using SMLimitless.Physics;
+using SMLimitless.Sprites.Assemblies;
 
 namespace SMLimitless.Sprites.Collections
 {
     /// <summary>
     /// A collection of sprites and tiles that form levels.
     /// </summary>
-    public sealed class Layer
+    public sealed class Layer : ISerializable
     {
         /// <summary>
         /// A value indicating whether this is the main layer for the level.
@@ -126,6 +129,48 @@ namespace SMLimitless.Sprites.Collections
             this.tiles = new List<Tile>();
             this.sprites = new List<Sprite>();
             this.Bounds = new BoundingRectangle(new Vector2(float.NaN), new Vector2(float.NaN));
+        }
+
+        public void Initialize()
+        {
+        }
+
+        public void LoadContent()
+        {
+            this.tiles.ForEach(t => t.LoadContent());
+        }
+
+        /// <summary>
+        /// Updates this layer.
+        /// </summary>
+        public void Update()
+        {
+            // TODO: change this method to account for active/inactive layers, tiles and sprites
+
+            if (!this.isMainLayer)
+            {
+                // Determine if any sprites are no longer within the bounds of the layer.
+                this.sprites.RemoveAll(s => !s.Hitbox.Intersects(this.Bounds));
+
+                // Then, determine if any other sprites in the level are within the bounds of the layer.
+                List<Sprite> nearbySprites = this.owner.QuadTree.GetNearbySprites(this.Bounds);
+                foreach (Sprite sprite in nearbySprites)
+                {
+                    if (sprite.Hitbox.Intersects(this.Bounds))
+                    {
+                        this.sprites.Add(sprite);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Draws the bounds of this layer.
+        /// </summary>
+        /// <param name="color">The color used to draw the bounds.</param>
+        public void Draw(Color color)
+        {
+            this.Bounds.DrawOutline(color);
         }
 
         /// <summary>
@@ -277,36 +322,6 @@ namespace SMLimitless.Sprites.Collections
         }
 
         /// <summary>
-        /// Updates this layer.
-        /// </summary>
-        public void Update()
-        {
-            // TODO: change this method to account for active/inactive layers, tiles and sprites
-
-            // Determine if any sprites are no longer within the bounds of the layer.
-            this.sprites.RemoveAll(s => !s.Hitbox.Intersects(this.Bounds));
-
-            // Then, determine if any other sprites in the level are within the bounds of the layer.
-            //// foreach (Sprite sprite in this.owner.Sprites)
-            ////{
-            ////    // TODO: This will be changed when levels are changed
-            ////    if (sprite.Hitbox.Bounds.Intersects(this.Bounds))
-            ////    {
-            ////        this.sprites.Add(sprite);
-            ////    }
-            ////}
-        }
-
-        /// <summary>
-        /// Draws the bounds of this layer.
-        /// </summary>
-        /// <param name="color">The color used to draw the bounds.</param>
-        public void Draw(Color color)
-        {
-            this.Bounds.DrawOutline(color);
-        }
-
-        /// <summary>
         /// Sets the anchor point.
         /// </summary>
         private void SetAnchorPoint()
@@ -319,7 +334,7 @@ namespace SMLimitless.Sprites.Collections
             switch (this.anchorPosition)
             {
                 case LayerAnchorPosition.Invalid:
-                    throw new Exception("Layer.SetAnchorPoint: Invalid anchor position.");
+                    break;
                 case LayerAnchorPosition.TopLeft:
                     this.AnchorPoint = new Vector2(this.Bounds.Left, this.Bounds.Top);
                     break;
@@ -349,6 +364,49 @@ namespace SMLimitless.Sprites.Collections
                     break;
                 default:
                     break;
+            }
+        }
+
+        public object GetSerializableObjects()
+        {
+            List<object> tileObjects = new List<object>(this.tiles.Count);
+            this.tiles.ForEach(t => tileObjects.Add(t.GetSerializableObjects())); // there's probably a better way to do this but I have very little LINQ-fu
+
+            return new
+            {
+                index = this.Index,
+                name = this.Name,
+                isMainLayer = this.isMainLayer,
+                anchorPoint = (this.anchorPosition != LayerAnchorPosition.Invalid) ? this.AnchorPoint : new Vector2(float.NaN, float.NaN),
+                anchorPosition = (int)this.anchorPosition,
+                tiles = tileObjects,
+            };
+        }
+
+        public string Serialize()
+        {
+            return JObject.FromObject(this.GetSerializableObjects()).ToString();
+        }
+
+        public void Deserialize(string json)
+        {
+            JObject obj = JObject.Parse(json);
+
+            // Deserialize the root level items first.
+            this.Index = (int)obj["index"];
+            this.Name = (string)obj["name"];
+            this.isMainLayer = (bool)obj["isMainLayer"];
+            this.anchorPosition = (LayerAnchorPosition)(int)obj["anchorPosition"];
+
+            // Now, deserialize the nested tiles.
+            JArray tiles = (JArray)obj["tiles"];
+
+            foreach (var tileData in tiles)
+            {
+                string typeName = (string)tileData["typeName"];
+                Tile tile = AssemblyManager.GetTileByFullName(typeName);
+                tile.Deserialize(tileData.ToString());
+                this.tiles.Add(tile);
             }
         }
     }

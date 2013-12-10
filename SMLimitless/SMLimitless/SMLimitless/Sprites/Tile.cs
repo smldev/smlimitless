@@ -9,9 +9,11 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Newtonsoft.Json.Linq;
 using SMLimitless.Extensions;
 using SMLimitless.Interfaces;
 using SMLimitless.Physics;
+using SMLimitless.Sprites.Assemblies;
 using SMLimitless.Sprites.Collections;
 using SMLimitless.Sprites.Collections.Structures;
 
@@ -20,7 +22,7 @@ namespace SMLimitless.Sprites
     /// <summary>
     /// The base type of all tiles.
     /// </summary>
-    public abstract class Tile : IName, IEditorObject, IPositionable
+    public abstract class Tile : IName, IEditorObject, IPositionable, ISerializable
     {
         /// <summary>
         /// Gets the name of the category that this tile is
@@ -43,11 +45,15 @@ namespace SMLimitless.Sprites
         /// </summary>
         public bool IsActive { get; set; }
 
+        public string InitialState { get; private set; }
+
         /// <summary>
         /// Gets or sets a string indicating the state of this tile.
         /// Please see http://smlimitless.wikia.com/wiki/Sprite_State for more information.
         /// </summary>
         public string State { get; set; }
+
+        public Vector2 InitialPosition { get; private set; }
 
         /// <summary>
         /// Gets or sets the position of this tile.
@@ -224,5 +230,48 @@ namespace SMLimitless.Sprites
         /// <param name="sprite">The sprite that has collided with this tile.</param>
         /// <param name="intersect">The depth of the intersection.</param>
         public abstract void HandleCollision(Sprite sprite, Vector2 intersect);
+
+        public abstract object GetCustomSerializableObjects();
+
+        public abstract void DeserializeCustomObjects(JsonHelper customObjects);
+
+        public object GetSerializableObjects()
+        {
+            return new
+            {
+                typeName = this.GetType().FullName,
+                collisionType = (int)this.Collision,
+                name = this.Name,
+                graphicsResource = this.GraphicsResourceName,
+                position = this.InitialPosition,
+                state = this.InitialState,
+                customData = this.GetCustomSerializableObjects()
+            };
+        }
+
+        public string Serialize()
+        {
+            return JObject.FromObject(this.GetSerializableObjects()).ToString();
+        }
+
+        public void Deserialize(string json)
+        {
+            try
+            {
+                JObject obj = JObject.Parse(json);
+                this.Collision = (TileCollisionType)(int)obj["collisionType"];
+                this.Name = (string)obj["name"];
+                this.GraphicsResourceName = (string)obj["graphicsResource"];
+                this.InitialPosition = obj["position"].ToVector2();
+                this.Position = this.InitialPosition;
+                this.InitialState = (string)obj["state"];
+                this.State = this.InitialState;
+                this.DeserializeCustomObjects(new JsonHelper(obj["customData"]));
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
     }
 }

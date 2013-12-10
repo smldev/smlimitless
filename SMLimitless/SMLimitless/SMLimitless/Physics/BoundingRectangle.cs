@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SMLimitless.Extensions;
 using SMLimitless.Interfaces;
+using Newtonsoft.Json.Linq;
 
 namespace SMLimitless.Physics
 {
@@ -28,6 +29,11 @@ namespace SMLimitless.Physics
         /// The size of the rectangle.
         /// </summary>
         private Vector2 max;
+
+        public BoundingRectangle()
+            : this(0, 0, 0, 0)
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BoundingRectangle"/> class.
@@ -509,6 +515,36 @@ namespace SMLimitless.Physics
         public void DrawOutline(Color color)
         {
             GameServices.SpriteBatch.DrawRectangleEdges(this.ToRectangle(), color);
+        }
+
+        public string ToSimpleString()
+        {
+            return string.Format("{0}, {1}, {2}, {3}", this.X, this.Y, this.Width, this.Height);
+        }
+
+        public static BoundingRectangle FromSimpleString(string input)
+        {
+            string[] components = input.Split(',');
+
+            if (components.Length != 4)
+            {
+                throw new Exception("BoundingRectangle.Deserialize(string): Invalid input.");
+            }
+
+            for (int i = 1; i < 4; i++)
+            {
+                components[i] = components[i].TrimStart();
+            }
+
+            float x, y, width, height;
+
+            if (!float.TryParse(components[0], out x)) { throw new Exception(string.Format("BoundingRectangle.Deserialize(string): Invalid value for X component. Input is {0}.", input)); }
+            if (!float.TryParse(components[1], out y)) { throw new Exception(string.Format("BoundingRectangle.Deserialize(string): Invalid value for Y component. Input is {0}.", input)); }
+            if (!float.TryParse(components[2], out width)) { throw new Exception(string.Format("BoundingRectangle.Deserialize(string): Invalid value for Width component. Input is {0}.", input)); }
+            if (!float.TryParse(components[3], out height)) { throw new Exception(string.Format("BoundingRectangle.Deserialize(string): Invalid value for Height component. Input is {0}.", input)); }
+
+            return new BoundingRectangle(x, y, width, height);
+
         }
 
         /// <summary>

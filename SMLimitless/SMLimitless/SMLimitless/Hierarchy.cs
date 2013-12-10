@@ -18,6 +18,8 @@ namespace SMLimitless
     /// <typeparam name="T">Any class.</typeparam>
     public class Hierarchy<T> where T : class
     {
+        // TODO: this goes to SMLimitless.Collections
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Hierarchy{T}"/> class.
         /// </summary>

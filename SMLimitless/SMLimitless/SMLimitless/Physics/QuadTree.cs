@@ -175,7 +175,7 @@ namespace SMLimitless.Physics
 
             foreach (var cell in intersectingCells)
             {
-                result.AddRange(this.cells[cell].Tiles.Where(t => !(t is SMLimitless.Sprites.Testing.SlopedTestTile1))); // this is hackish and will be replaced.
+                result.AddRange(this.cells[cell].Tiles.Where(t => t.GetType().FullName != "SmlSample.SlopedTestTile1")); // this is hackish and will be replaced.
             }
 
             return result;
@@ -261,6 +261,30 @@ namespace SMLimitless.Physics
             }
 
             return this.cells[cell].Tiles;
+        }
+
+        public List<Sprite> GetNearbySprites(BoundingRectangle rect)
+        {
+            // Get all the cells the rect intersects plus a "ring" around these cells
+            Vector2 topLeftCell = this.GetCellNumberAtPosition(new Vector2(rect.Left, rect.Top)) + new Vector2(-1f, -1f);
+            Vector2 topRightCell = this.GetCellNumberAtPosition(new Vector2(rect.Right, rect.Top)) + new Vector2(1f, -1f);
+            Vector2 bottomLeftCell = this.GetCellNumberAtPosition(new Vector2(rect.Left, rect.Bottom)) + new Vector2(-1f, 1f);
+            Vector2 bottomRightCell = this.GetCellNumberAtPosition(new Vector2(rect.Right, rect.Bottom)) + new Vector2(1f, 1f);
+
+            List<Sprite> result = new List<Sprite>();
+            for (int y = (int)topLeftCell.Y; y < (int)bottomLeftCell.Y; y++)
+            {
+                for (int x = (int)topLeftCell.X; x < (int)topRightCell.X; x++)
+                {
+                    Vector2 cell = new Vector2(x, y);
+                    if (this.cells.ContainsKey(cell))
+                    {
+                        result.AddRange(this.cells[cell].Sprites);
+                    }
+                }
+            }
+
+            return result;
         }
 
         /// <summary>

@@ -204,6 +204,30 @@ namespace SMLimitless.Sprites
         /// </summary>
         NoCollision
     }
+}
+
+namespace SMLimitless.Sprites.Collections
+{
+    public enum CameraScrollType
+    {
+        FreelyMoving,
+        Fixed,
+        HorizontalOnly,
+        HorizontalUnlessRunning,
+        VerticalOnly,
+        AutoScroll,
+        AutoScrollAlongPath
+    }
+
+    public enum ScreenExitBehavior
+    {
+        Default,
+        PipeDown,
+        PipeUp,
+        PipeLeft,
+        PipeRight,
+        DoorEnter
+    }
 
     public enum BackgroundScrollDirection
     {

@@ -12,9 +12,10 @@ using Microsoft.Xna.Framework.Graphics;
 using SMLimitless.Extensions;
 using SMLimitless.Graphics;
 using SMLimitless.Input;
-using SMLimitless.Sprites.Collections;
+using SMLimitless.Sprites;
+using SMLimitless.Sprites.Testing;
 
-namespace SMLimitless.Sprites.Testing
+namespace SmlSample
 {
     /// <summary>
     /// A testing sprite that the user can control
@@ -41,14 +42,18 @@ namespace SMLimitless.Sprites.Testing
         /// </summary>
         private int jumpTimeout = 5;
 
+        public SimplePlayer()
+        {
+            this.Size = new Vector2(16f, 16f);
+            this.IsActive = true;
+        }
+
         /// <summary>
         /// Initializes this sprite.
         /// </summary>
         /// <param name="owner">The level that owns this sprite.</param>
         public void Initialize(TestLevel owner)
         {
-            this.Size = new Vector2(16f, 16f);
-            this.IsActive = true;
         }
 
         /// <summary>
@@ -153,6 +158,15 @@ namespace SMLimitless.Sprites.Testing
             {
                 this.Velocity = new Vector2(this.Velocity.X + amount, this.Velocity.Y);
             }
+        }
+
+        public override void DeserializeCustomObjects(SMLimitless.Sprites.Assemblies.JsonHelper customObjects)
+        {
+        }
+
+        public override object GetCustomSerializableObjects()
+        {
+            return null;
         }
     }
 }

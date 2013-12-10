@@ -7,9 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Microsoft.Xna.Framework;
+using Newtonsoft.Json.Linq;
 using SMLimitless.Extensions;
 using SMLimitless.Interfaces;
 using SMLimitless.Physics;
+using SMLimitless.Sprites.Assemblies;
 using SMLimitless.Sprites.Collections;
 
 namespace SMLimitless.Sprites
@@ -17,7 +19,7 @@ namespace SMLimitless.Sprites
     /// <summary>
     /// The base type for all sprites.
     /// </summary>
-    public abstract class Sprite : IName, IEditorObject, IPositionable
+    public abstract class Sprite : IName, IEditorObject, IPositionable, ISerializable
     {
         /// <summary>
         /// A backing field for the IsEmbedded property.
@@ -55,6 +57,8 @@ namespace SMLimitless.Sprites
         /// </summary>
         public bool IsActive { get; set; }
 
+        public string InitialState { get; private set; }
+
         /// <summary>
         /// Gets or sets a string representing the state of this sprite.
         /// Please see http://smlimitless.wikia.com/wiki/Sprite_State for more information.
@@ -66,6 +70,8 @@ namespace SMLimitless.Sprites
         /// Please see the SpriteCollisionMode documentation for more information.
         /// </summary>
         public SpriteCollisionMode CollisionMode { get; protected set; }
+
+        public Vector2 InitialPosition { get; private set; }
 
         /// <summary>
         /// Gets or sets the last position of this sprite.
@@ -195,9 +201,9 @@ namespace SMLimitless.Sprites
             this.Owner = owner;
 
             // Initialize all the properties
-            this.IsActive = true;
-            this.IsHostile = true;
-            this.IsMoving = true;
+            //this.IsActive = true;
+            //this.IsHostile = true;
+            //this.IsMoving = true;
             this.Direction = SpriteDirection.FacePlayer;
         }
 
@@ -260,5 +266,56 @@ namespace SMLimitless.Sprites
         /// <param name="sprite">The sprite that has collided with this one.</param>
         /// <param name="intersect">The depth of the intersection.</param>
         public abstract void HandleSpriteCollision(Sprite sprite, Vector2 intersect);
+
+        public abstract object GetCustomSerializableObjects();
+
+        public abstract void DeserializeCustomObjects(JsonHelper customObjects);
+
+        public object GetSerializableObjects()
+        {
+            return new
+            {
+                typeName = this.GetType().FullName,
+                position = this.InitialPosition,
+                isActive = this.IsActive,
+                state = this.InitialState,
+                collision = (int)this.CollisionMode,
+                name = this.Name,
+                message = this.Message,
+                isHostile = this.IsHostile,
+                isMoving = this.IsMoving,
+                direction = this.Direction,
+                customObjects = this.GetCustomSerializableObjects()
+            };
+        }
+
+        public string Serialize()
+        {
+            return JObject.FromObject(this.GetSerializableObjects()).ToString();
+        }
+
+        public void Deserialize(string json)
+        {
+            try
+            {
+                JObject obj = JObject.Parse(json);
+                this.InitialPosition = obj["position"].ToVector2();
+                this.Position = this.InitialPosition;
+                this.IsActive = (bool)obj["isActive"];
+                this.InitialState = (string)obj["state"];
+                this.State = this.InitialState;
+                this.CollisionMode = (SpriteCollisionMode)(int)obj["collision"];
+                this.Name = (string)obj["name"];
+                this.Message = (string)obj["message"];
+                this.IsHostile = (bool)obj["isHostile"];
+                this.IsMoving = (bool)obj["isMoving"];
+                this.Direction = (SpriteDirection)(int)obj["direction"];
+                this.DeserializeCustomObjects(new JsonHelper(obj["customObject"]));
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
     }
 }

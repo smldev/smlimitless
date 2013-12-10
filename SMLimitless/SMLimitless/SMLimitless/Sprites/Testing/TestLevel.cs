@@ -13,6 +13,8 @@ using SMLimitless.Extensions;
 using SMLimitless.Input;
 using SMLimitless.Interfaces;
 using SMLimitless.Physics;
+using SMLimitless.Sprites.Assemblies;
+using SMLimitless.Sprites.Collections;
 
 namespace SMLimitless.Sprites.Testing
 {
@@ -42,7 +44,7 @@ namespace SMLimitless.Sprites.Testing
         /// <summary>
         /// Testing sprite.
         /// </summary>
-        private MouseFollowSprite mouseSprite;
+        private Sprite mouseSprite;
 
         /// <summary>
         /// A lazy QuadTree that divides up the level into
@@ -77,9 +79,11 @@ namespace SMLimitless.Sprites.Testing
         /// </summary>
         public TestLevel()
         {
+            AssemblyManager.LoadAssembly(@"TestPackage\SmlSample.dll");
+
             this.tiles = new List<Tile>();
             this.sprites = new List<Sprite>();
-            this.mouseSprite = new MouseFollowSprite();
+            this.mouseSprite = AssemblyManager.GetSpriteByFullName("SmlSample.MouseFollowSprite");
 
             this.quadTree = new QuadTree(new Vector2(64f, 64f));
         }
@@ -100,18 +104,21 @@ namespace SMLimitless.Sprites.Testing
         /// </summary>
         public void Initialize()
         {
-            TestSprite testSprite = new TestSprite() { Position = new Vector2(0f, 300f) };
-            testSprite.Initialize(this);
+            Sprite testSprite = AssemblyManager.GetSpriteByFullName("SmlSample.TestSprite");
+            testSprite.Position = new Vector2(0f, 300f);
+            testSprite.Initialize(null);
             this.AddSprite(testSprite);
 
-            SimplePlayer player = new SimplePlayer() { Position = new Vector2(0f, 300f) };
-            player.Initialize(this);
+            Sprite player = AssemblyManager.GetSpriteByFullName("SmlSample.SimplePlayer");
+            player.Position = new Vector2(0f, 300f);
+            player.Initialize(null);
             this.AddSprite(player);
 
             for (int x = 0; x <= 800; x += 16)
             {
-                TestTile tile = new TestTile() { Position = new Vector2(x, 400f) };
-                tile.Initialize(this, "");
+                Tile tile = AssemblyManager.GetTileByFullName("SmlSample.TestTile");
+                tile.Position = new Vector2(x, 400f);
+                tile.Initialize(null, "");
                 this.AddTile(tile);
             }
 
@@ -119,8 +126,9 @@ namespace SMLimitless.Sprites.Testing
             {
                 for (int y = 416; y <= 480; y += 16)
                 {
-                    TestTile2 tile = new TestTile2() { Position = new Vector2(x, y) };
-                    tile.Initialize(this, "");
+                    Tile tile = AssemblyManager.GetTileByFullName("SmlSample.TestTile2");
+                    tile.Position = new Vector2(x, y);
+                    tile.Initialize(null, "");
                     this.AddTile(tile);
                 }
             }
@@ -242,8 +250,9 @@ namespace SMLimitless.Sprites.Testing
                     // Add a sprite to the level.
                     Vector2 mousePosition = new Vector2(InputManager.CurrentMouseState.X, InputManager.CurrentMouseState.Y);
                     mousePosition = new Vector2(mousePosition.X - 8f, mousePosition.Y - 8f);
-                    TestSprite testSprite = new TestSprite() { Position = mousePosition };
-                    testSprite.Initialize(this);
+                    Sprite testSprite = (Sprite)AssemblyManager.GetSpriteByFullName("SmlSample.TestSprite");
+                    testSprite.Position = mousePosition;
+                    testSprite.Initialize(null);
                     testSprite.LoadContent();
                     this.AddSprite(testSprite);
                     this.framesUntilNextSprite = 5;
@@ -267,8 +276,10 @@ namespace SMLimitless.Sprites.Testing
                     if (this.GetTileAtPosition(mousePosition) == null)
                     {
                         Vector2 tilePosition = mousePosition.FloorDivide(16f) * 16f;
-                        TestTile3 tile = new TestTile3() { Position = tilePosition };
-                        tile.Initialize(this, "");
+                        //TestTile3 tile = new TestTile3() { Position = tilePosition };
+                        Tile tile = AssemblyManager.GetTileByFullName("SmlSample.TestTile3");
+                        tile.Position = tilePosition;
+                        tile.Initialize(null, "");
                         tile.LoadContent();
                         this.AddTile(tile);
                     }
@@ -294,7 +305,7 @@ namespace SMLimitless.Sprites.Testing
                     this.RemoveSprite(this.sprites[0]);
                 }
 
-                var tilesToRemove = this.tiles.Where(t => t is TestTile3).ToList();
+                var tilesToRemove = this.tiles.Where(t => t.GetType().FullName == "SmlSample.TestTile3").ToList();
                 foreach (Tile tile in tilesToRemove)
                 {
                     this.RemoveTile(tile);
@@ -353,9 +364,10 @@ namespace SMLimitless.Sprites.Testing
                         int spriteCount = random.Next(1, 11);
                         for (int i = 0; i < spriteCount; i++)
                         {
-                            TestSprite sprite = new TestSprite() { Position = new Vector2(random.Next(0, 785), random.Next(-400, 1)) };
+                            Sprite sprite = AssemblyManager.GetSpriteByFullName("SmlSample.TestSprite");
+                            sprite.Position = new Vector2(random.Next(0, 785), random.Next(-400, 1));
                             sprite.Velocity = new Vector2(sprite.Velocity.X, random.Next(-20, 0));
-                            sprite.Initialize(this);
+                            sprite.Initialize(null);
                             sprite.LoadContent();
 
                             this.AddSprite(sprite);

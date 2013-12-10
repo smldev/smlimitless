@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SMLimitless.Extensions;
+using SMLimitless.Graphics;
 using SMLimitless.Input;
 using SMLimitless.Physics;
 using SMLimitless.Screens.Effects;
@@ -26,33 +27,12 @@ namespace SMLimitless.Screens
     /// </summary>
     public class TestScreen : Screen
     {
-        private Section section;
-
         /// <summary>
         /// Updates the screen.
         /// </summary>
         public override void Update()
         {
             Effect.Update();
-
-            if (InputManager.IsCurrentActionPress(InputAction.Left))
-            {
-                GameServices.Camera.Position = new Vector2(GameServices.Camera.Position.X - 10f, GameServices.Camera.Position.Y);
-            }
-            if (InputManager.IsCurrentActionPress(InputAction.Right))
-            {
-                GameServices.Camera.Position = new Vector2(GameServices.Camera.Position.X + 10f, GameServices.Camera.Position.Y);
-            }
-            if (InputManager.IsCurrentActionPress(InputAction.Up))
-            {
-                GameServices.Camera.Position = new Vector2(GameServices.Camera.Position.X, GameServices.Camera.Position.Y - 10f);
-            }
-            if (InputManager.IsCurrentActionPress(InputAction.Down))
-            {
-                GameServices.Camera.Position = new Vector2(GameServices.Camera.Position.X, GameServices.Camera.Position.Y + 10f);
-            }
-
-            this.section.Update();
         }
 
         /// <summary>
@@ -60,7 +40,6 @@ namespace SMLimitless.Screens
         /// </summary>
         public override void LoadContent()
         {
-            this.section.LoadContent();
         }
 
         /// <summary>
@@ -71,19 +50,6 @@ namespace SMLimitless.Screens
         public override void Initialize(Screen owner, string parameters)
         {
             this.Effect = new FadeEffect();
-            Content.ContentPackageManager.AddPackage(System.IO.Directory.GetCurrentDirectory() + @"\TestPackage\settings.txt");
-
-            BackgroundData data = new BackgroundData();
-            BackgroundData.BackgroundLayerData layer = new BackgroundData.BackgroundLayerData();
-            BackgroundData.BackgroundLayerData layer2 = new BackgroundData.BackgroundLayerData();
-            layer.SetManually("Notepad", Sprites.BackgroundScrollDirection.Horizontal, 1f);
-            layer2.SetManually("eudcedit", Sprites.BackgroundScrollDirection.Vertical, 0.5f);
-            data.SetManually(Color.LightBlue, Color.Blue, new List<BackgroundData.BackgroundLayerData>() { layer, layer2 });
-
-            section = new Section(new BoundingRectangle(0f, 0f, 4096f, 4096f));
-            section.Initialize(data);
-
-            GameServices.Camera = section.Camera;
         }
 
         /// <summary>
@@ -92,7 +58,6 @@ namespace SMLimitless.Screens
         public override void Draw()
         {
             Effect.Draw();
-            section.Draw();
         }
 
         /// <summary>

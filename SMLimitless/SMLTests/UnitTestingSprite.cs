@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using SMLimitless.Sprites;
+using SMLimitless.Sprites.Assemblies;
 using SMLimitless.Sprites.Collections;
 
 namespace SMLTests
@@ -68,6 +69,15 @@ namespace SMLTests
         /// <param name="intersect">The depth of the intersection.</param>
         public override void HandleSpriteCollision(Sprite sprite, Vector2 intersect)
         {
+        }
+
+        public override void DeserializeCustomObjects(JsonHelper customObjects)
+        {
+        }
+
+        public override object GetCustomSerializableObjects()
+        {
+            return null;
         }
     }
 }

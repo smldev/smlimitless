@@ -112,5 +112,10 @@ namespace SMLimitless.Extensions
                 action(i);
             }
         }
+
+        ////public static bool Equals(this float a, float b, float epsilon)
+        ////{
+
+        ////}
     }
 }

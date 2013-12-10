@@ -4,12 +4,15 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Newtonsoft.Json.Linq;
+using SMLimitless.Extensions;
+using SMLimitless.Interfaces;
 using SMLimitless.Physics;
 using SMLimitless.Sprites.Collections.Structures;
 
 namespace SMLimitless.Sprites.Collections
 {
-    public sealed class Background
+    public sealed class Background : ISerializable
     {
         public Color TopColor { get; private set; }
         public Color BottomColor { get; private set; }
@@ -25,17 +28,17 @@ namespace SMLimitless.Sprites.Collections
             this.owner = owner;
         }
 
-        public void Initialize(BackgroundData data)
+        public void Initialize()
         {
-            this.TopColor = data.TopColor;
-            this.BottomColor = data.BottomColor;
+            //this.TopColor = data.TopColor;
+            //this.BottomColor = data.BottomColor;
 
-            foreach (var layerData in data.Layers)
-            {
-                BackgroundLayer layer = new BackgroundLayer(owner.Camera, owner.Bounds);
-                layer.Initialize(layerData.GraphicsName, layerData.ScrollDirection, layerData.ScrollRate);
-                this.layers.Add(layer);
-            }
+            //foreach (var layerData in data.Layers)
+            //{
+            //    BackgroundLayer layer = new BackgroundLayer(owner.Camera, owner.Bounds);
+            //    layer.Initialize(layerData.GraphicsName, layerData.ScrollDirection, layerData.ScrollRate);
+            //    this.layers.Add(layer);
+            //}
         }
 
         public void LoadContent()
@@ -78,6 +81,54 @@ namespace SMLimitless.Sprites.Collections
             {
                 layer.LoadContent();
             }
+        }
+
+        public object GetSerializableObjects()
+        {
+            List<object> backgroundLayerObjects = new List<object>(this.layers.Count);
+            this.layers.ForEach(b => backgroundLayerObjects.Add(b.GetSerializableObjects()));
+
+            return new
+            {
+                topColor = this.TopColor,
+                bottomColor = this.BottomColor,
+                layers = backgroundLayerObjects
+            };
+        }
+
+        public string Serialize()
+        {
+            return JObject.FromObject(this.GetSerializableObjects()).ToString();
+        }
+
+        public void Deserialize(string json)
+        {
+            JObject obj = JObject.Parse(json);
+
+            // Deserialize the root objects first.
+            this.TopColor = obj["topColor"].ToColor();
+            this.BottomColor = obj["bottomColor"].ToColor();
+
+            // Now, get the layers.
+            JArray layersData = (JArray)obj["layers"];
+
+            foreach (var layerData in layersData)
+            {
+                BackgroundLayer layer = new BackgroundLayer(owner.Camera, owner.Bounds);
+                layer.Deserialize(layerData.ToString());
+                //layer.Initialize();
+                this.layers.Add(layer);
+            }
+        }
+
+        public void CreateTestBackground()
+        {
+            BackgroundLayer layer = new BackgroundLayer(GameServices.Camera, this.owner.Bounds);
+            layer.Initialize("smb3_goomba", BackgroundScrollDirection.Both, 256.54f);
+            this.layers.Add(layer);
+
+            this.TopColor = new Color(2, 3, 4, 5);
+            this.BottomColor = new Color(255, 254, 253, 252);
         }
     }
 }

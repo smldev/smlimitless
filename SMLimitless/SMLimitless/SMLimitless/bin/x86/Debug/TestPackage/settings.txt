@@ -3,4 +3,4 @@
 [ContentPackage]
 Name = SML Sample Content Package
 Author = Celarix
-AssemblyPath = sml_sample.dll
+AssemblyPath = SmlSample.dll

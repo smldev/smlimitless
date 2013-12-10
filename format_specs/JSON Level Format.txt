@@ -15,6 +15,8 @@ Sections
 	Section Entry
 		Section Index
 		Name
+		Bounds Start
+		Bounds Size
 		Initial Scroll Settings
 			Scroll Type
 			Autoscroll Speed (unused if not autoscrolling)
@@ -34,24 +36,23 @@ Sections
 			Layer Anchor Position
 			Layer Tile
 				Qualified Type Name
-				Tile Type (normal/sloped)
 				Tile Collision Type
 				Tile Name
 				Graphics Resource Name
 				Position
 				Initial State
 				Custom Tile Data (varies by tile)
-			Layer Sprite
-				Qualified Type Name
-				Position
-				Is Active
-				Initial State
-				Collision Mode
-				Sprite Name
-				Sprite Message
-				Sprite Is Hostile
-				Sprite Is Moving
-				Initial Direction
+		Sprite
+			Qualified Type Name
+			Position
+			Is Active
+			Initial State
+			Collision Mode
+			Sprite Name
+			Sprite Message
+			Sprite Is Hostile
+			Sprite Is Moving
+			Initial Direction
 		Paths
 			Points
 		Screen Exit

@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="TestTile.cs" company="The Limitless Development Team">
+// <copyright file="SlopedTestTile1.cs" company="The Limitless Development Team">
 //     Copyrighted unter the MIT Public License.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -8,17 +8,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
-using SMLimitless.Extensions;
 using SMLimitless.Graphics;
-using SMLimitless.Physics;
-using SMLimitless.Sprites.Collections;
+using SMLimitless.Sprites;
+using SMLimitless.Sprites.Testing;
 
-namespace SMLimitless.Sprites.Testing
+namespace SmlSample
 {
     /// <summary>
-    /// A test tile.
+    /// A sloped test tile.
     /// </summary>
-    public class TestTile : Tile
+    public class SlopedTestTile1 : SlopedTile
     {
         /// <summary>
         /// Gets the name of the category that this tile is
@@ -30,9 +29,17 @@ namespace SMLimitless.Sprites.Testing
         }
 
         /// <summary>
-        /// The graphics for this tile.
+        /// The graphics of this tile.
         /// </summary>
         private StaticGraphicsObject graphics;
+
+        public SlopedTestTile1()
+        {
+            this.Size = new Vector2(16f, 16f);
+            this.graphics = new StaticGraphicsObject();
+            string absolute = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..\\..\\..\\gfx\\smw_grass_slope1.png");
+            this.graphics.Load(absolute);
+        }
 
         /// <summary>
         /// Initializes this tile.
@@ -41,7 +48,6 @@ namespace SMLimitless.Sprites.Testing
         /// <param name="contentResourceName">The name of the content resource that is used for this tile's graphics.</param>
         public void Initialize(TestLevel owner, string contentResourceName)
         {
-            this.Size = new Vector2(16f, 16f);
         }
 
         /// <summary>
@@ -49,7 +55,6 @@ namespace SMLimitless.Sprites.Testing
         /// </summary>
         public override void LoadContent()
         {
-            this.graphics = (StaticGraphicsObject)SMLimitless.Content.ContentPackageManager.GetGraphicsResource("smw_grass_top");
             this.graphics.LoadContent();
         }
 
@@ -75,6 +80,15 @@ namespace SMLimitless.Sprites.Testing
         public override void Draw()
         {
             this.graphics.Draw(this.Position, Color.White);
+        }
+
+        public override void DeserializeCustomObjects(SMLimitless.Sprites.Assemblies.JsonHelper customObjects)
+        {
+        }
+
+        public override object GetCustomSerializableObjects()
+        {
+            return null;
         }
     }
 }

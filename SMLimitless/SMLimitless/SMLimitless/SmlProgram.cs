@@ -55,8 +55,10 @@ namespace SMLimitless
             InputManager.Initialize();
             ScreenManager.Initalize();
             GameServices.ScreenSize = new Vector2(GraphicsDevice.PresentationParameters.BackBufferWidth, GraphicsDevice.PresentationParameters.BackBufferHeight);
+            string contentPackageSettingsPath = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), @"TestPackage\settings.txt");
+            SMLimitless.Content.ContentPackageManager.AddPackage(contentPackageSettingsPath);
             GameServices.Camera = new Physics.Camera2D(); // TODO: temporary
-            ScreenManager.SetRootScreen(new TestScreen(), "");
+            ScreenManager.SetRootScreen(new TestLevelScreen(), "");
             base.Initialize();
         }
 
@@ -68,9 +70,6 @@ namespace SMLimitless
             // Create a new SpriteBatch, which can be used to draw textures.
             this.spriteBatch = new SpriteBatch(GraphicsDevice);
             GameServices.InitializeServices(this.GraphicsDevice, this.spriteBatch, this.Content);
-
-            string contentPackageSettingsPath = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), @"TestPackage\settings.txt");
-            SMLimitless.Content.ContentPackageManager.AddPackage(contentPackageSettingsPath);
 
             ScreenManager.LoadContent();
         }

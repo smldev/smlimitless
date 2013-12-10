@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Newtonsoft.Json.Linq;
 
 namespace SMLimitless.Extensions
 {
@@ -291,5 +292,39 @@ namespace SMLimitless.Extensions
 
             return (smallestSoFar != new Vector2(float.MaxValue)) ? smallestSoFar : Vector2.Zero;
         }
+
+        public static Vector2 ToVector2(this JToken jsonEntry)
+        {
+            string json = (string)jsonEntry;
+            string[] values = json.Split(',');
+
+            if (values.Length != 2)
+            {
+                throw new ArgumentException("Vector2Extensions.ToVector2(JToken): Tried to turn a non-vector object into a vector.");
+            }
+
+            if (values[0].Contains("NaN") || values[1].Contains("NaN"))
+            {
+                return new Vector2(float.NaN, float.NaN);
+            }
+
+            values[1] = values[1].TrimStart(); // there's a space on the front
+            float x, y;
+            if (!float.TryParse(values[0], out x)) { throw new ArgumentException("Vector2Extensions.ToVector2(JToken): Invalid value for X component."); }
+            if (!float.TryParse(values[1], out y)) { throw new ArgumentException("Vector2Extensions.ToVector2(JToken): Invalid value for Y component."); }
+
+            return new Vector2(x, y);
+        }
+
+        public static float GetAngleBetweenVectors(this Vector2 a, Vector2 b)
+        {
+            // Credit to http://stackoverflow.com/a/13459068/2709212
+            return MathHelper.ToDegrees((float)Math.Atan2(b.Y - a.Y, b.X - a.X));
+        }
+
+        ////public static bool EqualityWithinEpsilon(this Vector2 a, Vector2 b, float epsilon)
+        ////{
+        // we have a lot of learning to do before this can work
+        ////}
     }
 }

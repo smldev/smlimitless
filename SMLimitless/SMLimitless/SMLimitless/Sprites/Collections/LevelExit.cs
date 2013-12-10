@@ -7,13 +7,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Newtonsoft.Json.Linq;
+using SMLimitless.Interfaces;
 
-namespace SMLimitless.Sprites.Collections.Structures
+namespace SMLimitless.Sprites.Collections
 {
     /// <summary>
     /// Represents an exit. This class is used in saving levels to file.
     /// </summary>
-    internal sealed class LevelExit
+    internal sealed class LevelExit : ISerializable
     {
         /// <summary>
         /// Gets the index of the exit.
@@ -42,6 +44,30 @@ namespace SMLimitless.Sprites.Collections.Structures
             this.ExitIndex = exitIndex;
             this.ExitDirection = exitDirection;
             this.ObjectName = objectName;
+        }
+
+        public object GetSerializableObjects()
+        {
+            return new
+            {
+                exitIndex = this.ExitIndex,
+                exitDirection = this.ExitDirection,
+                objectName = this.ObjectName
+            };
+        }
+
+        public string Serialize()
+        {
+            return JObject.FromObject(this.GetSerializableObjects()).ToString();
+        }
+
+        public void Deserialize(string json)
+        {
+            JObject obj = JObject.Parse(json);
+
+            this.ExitIndex = (int)obj["exitIndex"];
+            this.ExitDirection = (Direction)(int)obj["exitDirection"];
+            this.ObjectName = (string)obj["objectName"];
         }
     }
 }
