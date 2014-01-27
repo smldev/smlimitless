@@ -1,0 +1,184 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3792C005-C22E-4401-A30D-766806456CB5}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SMLimitless</RootNamespace>
+    <AssemblyName>SMLimitless</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\WindowsGL\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;WINDOWS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\WindowsGL\Release\</OutputPath>
+    <DefineConstants>TRACE;WINDOWS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>SML Icon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Collections\Grid.cs" />
+    <Compile Include="Collections\SizedGrid.cs" />
+    <Compile Include="Content\ContentPackage.cs" />
+    <Compile Include="Content\ContentPackageManager.cs" />
+    <Compile Include="Content\ContentPackageResourceSearcher.cs" />
+    <Compile Include="Content\ResourceNotFoundException.cs" />
+    <Compile Include="Editor\EditorButton.cs" />
+    <Compile Include="Enums.cs" />
+    <Compile Include="Extensions\ColorExtensions.cs" />
+    <Compile Include="Extensions\GameTimeExtensions.cs" />
+    <Compile Include="Extensions\ListExtensions.cs" />
+    <Compile Include="Extensions\NumericExtensions.cs" />
+    <Compile Include="Extensions\RectangleExtensions.cs" />
+    <Compile Include="Extensions\SpriteBatchExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Extensions\Texture2DExtensions.cs" />
+    <Compile Include="Extensions\TypeExtensions.cs" />
+    <Compile Include="Extensions\Vector2Extensions.cs" />
+    <Compile Include="GameServices.cs" />
+    <Compile Include="GameSettings.cs" />
+    <Compile Include="Graphics\AnimatedGraphicsObject.cs" />
+    <Compile Include="Graphics\BitmapFont.cs" />
+    <Compile Include="Graphics\ComplexGraphicsObject.cs" />
+    <Compile Include="Graphics\CroppedTextureMetadata.cs" />
+    <Compile Include="Graphics\GraphicsManager.cs" />
+    <Compile Include="Graphics\IGraphicsObject.cs" />
+    <Compile Include="Graphics\StaticGraphicsObject.cs" />
+    <Compile Include="Hierarchy.cs" />
+    <Compile Include="Input\InputManager.cs" />
+    <Compile Include="Input\InputObject.cs" />
+    <Compile Include="Interfaces\ICollidableShape.cs" />
+    <Compile Include="Interfaces\IEditorObject.cs" />
+    <Compile Include="Interfaces\IEffect.cs" />
+    <Compile Include="Interfaces\IName.cs" />
+    <Compile Include="Interfaces\IPositionable.cs" />
+    <Compile Include="Interfaces\ISerializable.cs" />
+    <Compile Include="IO\DataReader.cs" />
+    <Compile Include="Physics\BoundingRectangle.cs" />
+    <Compile Include="Physics\Camera2D.cs" />
+    <Compile Include="Physics\Interpolator.cs" />
+    <Compile Include="Physics\InterpolatorScales.cs" />
+    <Compile Include="Physics\IntVector2.cs" />
+    <Compile Include="Physics\Path.cs" />
+    <Compile Include="Physics\QuadTree.cs" />
+    <Compile Include="Physics\QuadTreeCell.cs" />
+    <Compile Include="Physics\Resolution.cs" />
+    <Compile Include="Physics\RightTriangle.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Screens\BlankScreen.cs" />
+    <Compile Include="Screens\Effects\FadeEffect.cs" />
+    <Compile Include="Screens\LevelScreen.cs" />
+    <Compile Include="Screens\Screen.cs" />
+    <Compile Include="Screens\ScreenManager.cs" />
+    <Compile Include="Screens\TestLevelScreen.cs" />
+    <Compile Include="Screens\TestScreen.cs" />
+    <Compile Include="SmlProgram.cs" />
+    <Compile Include="Sounds\Sound.cs" />
+    <Compile Include="Sounds\SoundManager.cs" />
+    <Compile Include="Sprites\Assemblies\AssemblyManager.cs" />
+    <Compile Include="Sprites\Assemblies\JsonHelper.cs" />
+    <Compile Include="Sprites\Collections\Background.cs" />
+    <Compile Include="Sprites\Collections\BackgroundLayer.cs" />
+    <Compile Include="Sprites\Collections\EventScript.cs" />
+    <Compile Include="Sprites\Collections\Layer.cs" />
+    <Compile Include="Sprites\Collections\Level.cs" />
+    <Compile Include="Sprites\Collections\LevelExit.cs" />
+    <Compile Include="Sprites\Collections\ScreenExit.cs" />
+    <Compile Include="Sprites\Collections\Section.cs" />
+    <Compile Include="Sprites\Collections\Structures\BackgroundData.cs" />
+    <Compile Include="Sprites\Collections\Structures\TileData.cs" />
+    <Compile Include="Sprites\SlopedTile.cs" />
+    <Compile Include="Sprites\Sprite.cs" />
+    <Compile Include="Sprites\Testing\TestLevel.cs" />
+    <Compile Include="Sprites\Tile.cs" />
+    <Compile Include="Testing.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="NAudio">
+      <HintPath>..\..\..\..\..\Files\SML\Audio\NAudio-Release\NAudio.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\..\..\..\Files\SML\Libraries\Json50r8\Bin\Net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenTK">
+      <HintPath>$(MSBuildExtensionsPath)\..\MonoGame\v3.0\Assemblies\WindowsGL\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoGame.Framework">
+      <HintPath>$(MSBuildExtensionsPath)\..\MonoGame\v3.0\Assemblies\WindowsGL\MonoGame.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Lidgren.Network">
+      <HintPath>$(MSBuildExtensionsPath)\..\MonoGame\v3.0\Assemblies\WindowsGL\Lidgren.Network.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="Tao.Sdl">
+      <HintPath>$(MSBuildExtensionsPath)\..\MonoGame\v3.0\Assemblies\WindowsGL\Tao.Sdl.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\..\..\..\..\..\..\Program Files %28x86%29\MonoGame\v3.0\Assemblies\WindowsGL\SDL.dll">
+      <Link>SDL.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Game.ico" />
+    <Content Include="GameSettings.txt" />
+    <Content Include="gfx\complex_spritesheet.png" />
+    <Content Include="gfx\complex_spritesheet.txt" />
+    <Content Include="gfx\smb3_goomba.png" />
+    <Content Include="gfx\smb3_goomba.txt" />
+    <Content Include="gfx\smb_grass_top.png" />
+    <Content Include="gfx\smw_concrete_block.png" />
+    <Content Include="gfx\smw_grass_center.png" />
+    <Content Include="gfx\smw_grass_slope1.png" />
+    <Content Include="gfx\smw_grass_slope2.png" />
+    <Content Include="gfx\smw_grass_slope_bottom1.png" />
+    <Content Include="gfx\smw_grass_slope_bottom2.png" />
+    <Content Include="gfx\smw_grass_top.png" />
+    <Content Include="gfx\smw_player_big.png" />
+    <Content Include="gfx\smw_player_big.txt" />
+    <Content Include="gfx\smw_player_simple.png" />
+    <Content Include="gfx\smw_player_simple.txt" />
+    <Content Include="gfx\test_sheet.png" />
+    <Content Include="Icon.ico" />
+    <Content Include="SML Icon.ico" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Properties\app.manifest" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(ProgramFiles)\MSBuild\StyleCop\v4.7\StyleCop.Targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

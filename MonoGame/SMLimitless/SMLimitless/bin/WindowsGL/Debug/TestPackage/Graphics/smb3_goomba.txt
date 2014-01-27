@@ -1,0 +1,3 @@
+[Animated]
+FrameWidth = 16
+CycleLength = 1

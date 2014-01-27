@@ -1,0 +1,6 @@
+; Super Mario Limitless
+; Content Package Settings Format Specification
+[ContentPackage]
+Name = SML Sample Content Package
+Author = Celarix
+AssemblyPath = SmlSample.dll

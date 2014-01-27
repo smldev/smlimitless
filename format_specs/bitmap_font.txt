@@ -1,0 +1,10 @@
+; Super Mario Limitless
+; Bitmap Font Configuration File Format Specification
+; NOTE: This format DOES NOT allow comments. Comments added only for clarity.
+
+size = 8,8
+A = 0,0 ; character on the left, position on the right
+B = 8,0
+C = 16,0
+D = 24,0 ; all left-hand sides must be one character, excluding "size" and "unknown"
+unknown = 128,0 ; the unknown character is used for any character not appearing in the bitmap font
