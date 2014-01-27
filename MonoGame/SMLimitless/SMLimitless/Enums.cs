@@ -172,16 +172,6 @@ namespace SMLimitless.Sprites
         Passive
     }
 
-    [Flags]
-    public enum TileCollidableSides
-    {
-        None = 0,
-        Top = 1,
-        Bottom = 2,
-        Left = 4,
-        Right = 8
-    }
-
     /// <summary>
     /// Enumerates different modes of collision handling
     /// that sprites can choose between.

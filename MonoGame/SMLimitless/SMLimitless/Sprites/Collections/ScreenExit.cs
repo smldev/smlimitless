@@ -93,20 +93,13 @@ namespace SMLimitless.Sprites.Collections
         /// <param name="json">A valid JSON string.</param>
         public void Deserialize(string json)
         {
-            try
-            {
-                JObject obj = JObject.Parse(json);
-                this.SectionIndex = (int)obj["sectionIndex"];
-                this.Position = obj["position"].ToVector2();
-                this.EntranceBehavior = (ScreenExitBehavior)(int)obj["entranceBehavior"];
-                this.DestinationSectionIndex = (int)obj["destinationSectionIndex"];
-                this.DestinationPosition = obj["destinationPosition"].ToVector2();
-                this.ExitBehavior = (ScreenExitBehavior)(int)obj["exitBehavior"];
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            JObject obj = JObject.Parse(json);
+            this.SectionIndex = (int)obj["sectionIndex"];
+            this.Position = obj["position"].ToVector2();
+            this.EntranceBehavior = (ScreenExitBehavior)(int)obj["entranceBehavior"];
+            this.DestinationSectionIndex = (int)obj["destinationSectionIndex"];
+            this.DestinationPosition = obj["destinationPosition"].ToVector2();
+            this.ExitBehavior = (ScreenExitBehavior)(int)obj["exitBehavior"];
         }
     }
 }

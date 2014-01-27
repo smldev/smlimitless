@@ -13,7 +13,6 @@ using Newtonsoft.Json.Linq;
 using SMLimitless.Extensions;
 using SMLimitless.Interfaces;
 using SMLimitless.Physics;
-using SMLimitless.Sprites.Collections.Structures;
 
 namespace SMLimitless.Sprites.Collections
 {

@@ -113,6 +113,11 @@ namespace SMLimitless.Content
             return SoundManager.GetSound(resourceName);
         }
 
+        /// <summary>
+        /// Gets the absolute file path of a resource, given the resource's name.
+        /// </summary>
+        /// <param name="resourceName">The name of the resource.</param>
+        /// <returns>The resource's absolute file path.</returns>
         public static string GetAbsoluteFilePath(string resourceName)
         {
             string resourcePath = "";

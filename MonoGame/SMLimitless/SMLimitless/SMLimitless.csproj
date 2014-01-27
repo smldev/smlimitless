@@ -108,8 +108,6 @@
     <Compile Include="Sprites\Collections\LevelExit.cs" />
     <Compile Include="Sprites\Collections\ScreenExit.cs" />
     <Compile Include="Sprites\Collections\Section.cs" />
-    <Compile Include="Sprites\Collections\Structures\BackgroundData.cs" />
-    <Compile Include="Sprites\Collections\Structures\TileData.cs" />
     <Compile Include="Sprites\SlopedTile.cs" />
     <Compile Include="Sprites\Sprite.cs" />
     <Compile Include="Sprites\Testing\TestLevel.cs" />

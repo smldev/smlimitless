@@ -15,7 +15,6 @@ using SMLimitless.Interfaces;
 using SMLimitless.Physics;
 using SMLimitless.Sprites.Assemblies;
 using SMLimitless.Sprites.Collections;
-using SMLimitless.Sprites.Collections.Structures;
 
 namespace SMLimitless.Sprites
 {
@@ -45,6 +44,9 @@ namespace SMLimitless.Sprites
         /// </summary>
         public bool IsActive { get; set; }
 
+        /// <summary>
+        /// Gets the state of the tile when it was first loaded into the level.
+        /// </summary>
         public string InitialState { get; private set; }
 
         /// <summary>
@@ -53,6 +55,9 @@ namespace SMLimitless.Sprites
         /// </summary>
         public string State { get; set; }
 
+        /// <summary>
+        /// Gets the position of the tile when it was first loaded into the level.
+        /// </summary>
         public Vector2 InitialPosition { get; private set; }
 
         /// <summary>
@@ -82,6 +87,9 @@ namespace SMLimitless.Sprites
         [DefaultValue(""), Description("The name of this tile to be used in event scripting.  This field is optional.")]
         public string Name { get; set; }
 
+        /// <summary>
+        /// Gets or sets the name of the graphics resource used by this tile.
+        /// </summary>
         public string GraphicsResourceName { get; protected set; }
 
         /// <summary>
@@ -231,10 +239,22 @@ namespace SMLimitless.Sprites
         /// <param name="intersect">The depth of the intersection.</param>
         public abstract void HandleCollision(Sprite sprite, Vector2 intersect);
 
+        /// <summary>
+        /// Gets an anonymous object containing key custom objects to save to the level file.
+        /// </summary>
+        /// <returns>An anonymous object.</returns>
         public abstract object GetCustomSerializableObjects();
 
+        /// <summary>
+        /// Loads key custom objects from the level file.
+        /// </summary>
+        /// <param name="customObjects">An object containing key custom objects.</param>
         public abstract void DeserializeCustomObjects(JsonHelper customObjects);
 
+        /// <summary>
+        /// Gets an anonymous object containing key object to save to the level file.
+        /// </summary>
+        /// <returns>An anonymous object.</returns>
         public object GetSerializableObjects()
         {
             return new
@@ -249,29 +269,30 @@ namespace SMLimitless.Sprites
             };
         }
 
+        /// <summary>
+        /// Returns a JSON string containing key objects of this tile.
+        /// </summary>
+        /// <returns>A valid JSON string.</returns>
         public string Serialize()
         {
             return JObject.FromObject(this.GetSerializableObjects()).ToString();
         }
 
+        /// <summary>
+        /// Loads this tile from a valid JSON string containing key objects of this tile.
+        /// </summary>
+        /// <param name="json">A valid JSON string.</param>
         public void Deserialize(string json)
         {
-            try
-            {
-                JObject obj = JObject.Parse(json);
-                this.Collision = (TileCollisionType)(int)obj["collisionType"];
-                this.Name = (string)obj["name"];
-                this.GraphicsResourceName = (string)obj["graphicsResource"];
-                this.InitialPosition = obj["position"].ToVector2();
-                this.Position = this.InitialPosition;
-                this.InitialState = (string)obj["state"];
-                this.State = this.InitialState;
-                this.DeserializeCustomObjects(new JsonHelper(obj["customData"]));
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            JObject obj = JObject.Parse(json);
+            this.Collision = (TileCollisionType)(int)obj["collisionType"];
+            this.Name = (string)obj["name"];
+            this.GraphicsResourceName = (string)obj["graphicsResource"];
+            this.InitialPosition = obj["position"].ToVector2();
+            this.Position = this.InitialPosition;
+            this.InitialState = (string)obj["state"];
+            this.State = this.InitialState;
+            this.DeserializeCustomObjects(new JsonHelper(obj["customData"]));
         }
     }
 }

@@ -16,7 +16,6 @@ using SMLimitless.Input;
 using SMLimitless.Physics;
 using SMLimitless.Screens.Effects;
 using SMLimitless.Sprites.Collections;
-using SMLimitless.Sprites.Collections.Structures;
 
 namespace SMLimitless.Screens
 {

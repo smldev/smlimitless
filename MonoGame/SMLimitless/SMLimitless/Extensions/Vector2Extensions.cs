@@ -164,64 +164,6 @@ namespace SMLimitless.Extensions
         }
 
         /// <summary>
-        /// Checks the equality of the components of a collection of Vector2s.
-        /// </summary>
-        /// <param name="vectors">The collection to check.</param>
-        /// <returns>The equality of the components of a collection of Vector2s.</returns>
-        [Obsolete]
-        public static VectorCollectionEqualityTypes GetVectorEqualityTypes(IEnumerable<Vector2> vectors)
-        {
-            float lastX = float.NaN;
-            float lastY = float.NaN;
-            bool someXComponentsEqual = false, someYComponentsEqual = false;
-
-            vectors = vectors.OrderBy(v => v.X);
-            foreach (Vector2 vector in vectors)
-            {
-                if (vector.X == lastX)
-                {
-                    someXComponentsEqual = true;
-                    break;
-                }
-                else
-                {
-                    lastX = vector.X;
-                }
-            }
-
-            vectors = vectors.OrderBy(v => v.Y);
-            foreach (Vector2 vector in vectors)
-            {
-                if (vector.Y == lastY)
-                {
-                    someYComponentsEqual = true;
-                    break;
-                }
-                else
-                {
-                    lastY = vector.Y;
-                }
-            }
-
-            if (someXComponentsEqual && someYComponentsEqual)
-            {
-                return VectorCollectionEqualityTypes.Both;
-            }
-            else if (someXComponentsEqual)
-            {
-                return VectorCollectionEqualityTypes.SomeXComponentsEqual;
-            }
-            else if (someYComponentsEqual)
-            {
-                return VectorCollectionEqualityTypes.SomeYComponentsEqual;
-            }
-            else
-            {
-                return VectorCollectionEqualityTypes.NoEquality;
-            }
-        }
-
-        /// <summary>
         /// Returns a vector with the largest Y component, given a collection of vectors.
         /// </summary>
         /// <param name="vectors">A collection of vectors.</param>
@@ -327,6 +269,11 @@ namespace SMLimitless.Extensions
             return new Vector2(x, y);
         }
 
+        /// <summary>
+        /// Converts a string, formatted as "x,y", into a Vector2.
+        /// </summary>
+        /// <param name="value">The string from which to convert.</param>
+        /// <returns>A Vector2 containing the values of the string.</returns>
         public static Vector2 FromString(this string value)
         {
             string[] values = value.Split(',');

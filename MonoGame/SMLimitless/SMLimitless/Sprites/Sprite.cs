@@ -57,6 +57,9 @@ namespace SMLimitless.Sprites
         /// </summary>
         public bool IsActive { get; set; }
 
+        /// <summary>
+        /// Gets the state of this sprite when it was first loaded into the level.
+        /// </summary>
         public string InitialState { get; private set; }
 
         /// <summary>
@@ -71,6 +74,9 @@ namespace SMLimitless.Sprites
         /// </summary>
         public SpriteCollisionMode CollisionMode { get; protected set; }
 
+        /// <summary>
+        /// Gets the position of this sprite when it was first loaded into the level.
+        /// </summary>
         public Vector2 InitialPosition { get; private set; }
 
         /// <summary>
@@ -200,10 +206,10 @@ namespace SMLimitless.Sprites
         {
             this.Owner = owner;
 
-            // Initialize all the properties
-            //this.IsActive = true;
-            //this.IsHostile = true;
-            //this.IsMoving = true;
+            //// Initialize all the properties
+            ////this.IsActive = true;
+            ////this.IsHostile = true;
+            ////this.IsMoving = true;
             this.Direction = SpriteDirection.FacePlayer;
         }
 
@@ -267,10 +273,22 @@ namespace SMLimitless.Sprites
         /// <param name="intersect">The depth of the intersection.</param>
         public abstract void HandleSpriteCollision(Sprite sprite, Vector2 intersect);
 
+        /// <summary>
+        /// Gets any objects that custom sprites wish to be saved to the level file.
+        /// </summary>
+        /// <returns>An anonymous object containing objects to be saved to the level file.</returns>
         public abstract object GetCustomSerializableObjects();
 
+        /// <summary>
+        /// Deserializes any objects that custom sprites have written to the level file.
+        /// </summary>
+        /// <param name="customObjects">An object containing the objects of the custom sprites.</param>
         public abstract void DeserializeCustomObjects(JsonHelper customObjects);
 
+        /// <summary>
+        /// Gets an anonymous object containing objects of the sprite to be saved to the level file.
+        /// </summary>
+        /// <returns>An anonymous object.</returns>
         public object GetSerializableObjects()
         {
             return new
@@ -289,33 +307,34 @@ namespace SMLimitless.Sprites
             };
         }
 
+        /// <summary>
+        /// Returns a JSON string containing key objects of this sprite.
+        /// </summary>
+        /// <returns>A JSON string.</returns>
         public string Serialize()
         {
             return JObject.FromObject(this.GetSerializableObjects()).ToString();
         }
 
+        /// <summary>
+        /// Loads this sprite using a valid JSON string.
+        /// </summary>
+        /// <param name="json">A JSON string containing key objects of this sprite.</param>
         public void Deserialize(string json)
         {
-            try
-            {
-                JObject obj = JObject.Parse(json);
-                this.InitialPosition = obj["position"].ToVector2();
-                this.Position = this.InitialPosition;
-                this.IsActive = (bool)obj["isActive"];
-                this.InitialState = (string)obj["state"];
-                this.State = this.InitialState;
-                this.CollisionMode = (SpriteCollisionMode)(int)obj["collision"];
-                this.Name = (string)obj["name"];
-                this.Message = (string)obj["message"];
-                this.IsHostile = (bool)obj["isHostile"];
-                this.IsMoving = (bool)obj["isMoving"];
-                this.Direction = (SpriteDirection)(int)obj["direction"];
-                this.DeserializeCustomObjects(new JsonHelper(obj["customObject"]));
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            JObject obj = JObject.Parse(json);
+            this.InitialPosition = obj["position"].ToVector2();
+            this.Position = this.InitialPosition;
+            this.IsActive = (bool)obj["isActive"];
+            this.InitialState = (string)obj["state"];
+            this.State = this.InitialState;
+            this.CollisionMode = (SpriteCollisionMode)(int)obj["collision"];
+            this.Name = (string)obj["name"];
+            this.Message = (string)obj["message"];
+            this.IsHostile = (bool)obj["isHostile"];
+            this.IsMoving = (bool)obj["isMoving"];
+            this.Direction = (SpriteDirection)(int)obj["direction"];
+            this.DeserializeCustomObjects(new JsonHelper(obj["customObject"]));
         }
     }
 }

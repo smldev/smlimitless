@@ -54,6 +54,9 @@ namespace SMLimitless.Sprites.Testing
         /// </summary>
         private QuadTree quadTree;
 
+        /// <summary>
+        /// A temporary font.
+        /// </summary>
         private BitmapFont font;
 
         /// <summary>
@@ -135,8 +138,6 @@ namespace SMLimitless.Sprites.Testing
                     this.AddTile(tile);
                 }
             }
-
-            
         }
 
         /// <summary>
@@ -284,7 +285,8 @@ namespace SMLimitless.Sprites.Testing
                     if (this.GetTileAtPosition(mousePosition) == null)
                     {
                         Vector2 tilePosition = mousePosition.FloorDivide(16f) * 16f;
-                        //TestTile3 tile = new TestTile3() { Position = tilePosition };
+
+                        ////TestTile3 tile = new TestTile3() { Position = tilePosition };
                         Tile tile = AssemblyManager.GetTileByFullName("SmlSample.TestTile3");
                         tile.Position = tilePosition;
                         tile.Initialize(null, "");

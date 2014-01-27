@@ -11,7 +11,6 @@ using Microsoft.Xna.Framework;
 using Newtonsoft.Json.Linq;
 using SMLimitless.Interfaces;
 using SMLimitless.Physics;
-using SMLimitless.Sprites.Collections.Structures;
 
 namespace SMLimitless.Sprites.Collections
 {

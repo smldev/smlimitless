@@ -13,7 +13,6 @@ using SMLimitless.Extensions;
 using SMLimitless.Interfaces;
 using SMLimitless.Physics;
 using SMLimitless.Sprites.Assemblies;
-using SMLimitless.Sprites.Collections.Structures;
 
 namespace SMLimitless.Sprites.Collections
 {
@@ -28,12 +27,12 @@ namespace SMLimitless.Sprites.Collections
         public Level Owner { get; private set; }
 
         /// <summary>
-        /// Gets the index number of this section.
+        /// Gets or sets the index number of this section.
         /// </summary>
         public int Index { get; set; }
 
         /// <summary>
-        /// Gets the name of this section, or the empty string if there is no name.
+        /// Gets or sets the name of this section, or the empty string if there is no name.
         /// </summary>
         public string Name { get; set; }
 
@@ -71,6 +70,7 @@ namespace SMLimitless.Sprites.Collections
 
                 return this.autoscrollSpeed;
             }
+
             private set
             {
                 if (this.ScrollType != CameraScrollType.AutoScroll)
@@ -101,6 +101,7 @@ namespace SMLimitless.Sprites.Collections
 
                 return this.autoscrollPathName;
             }
+
             private set
             {
                 if (this.ScrollType != CameraScrollType.AutoScrollAlongPath)
@@ -174,7 +175,6 @@ namespace SMLimitless.Sprites.Collections
         /// </summary>
         public void Initialize()
         {
-  
         }
 
         /// <summary>
