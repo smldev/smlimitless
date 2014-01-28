@@ -44,7 +44,7 @@ namespace SMLimitless.Content
         /// <summary>
         /// Adds a package to this manager.
         /// </summary>
-        /// <param name="settingsFolder">The path to the package's folder.</param>
+        /// <param name="settingsFolder">The absolute path to the package's folder.</param>
         public static void AddPackageFromFolder(string settingsFolder)
         {
             ContentPackage package = new ContentPackage();
@@ -127,7 +127,7 @@ namespace SMLimitless.Content
             {
                 resourcePath = loadedPackages[i].GetResourcePath(resourceName);
                 i++;
-                if (i == loadedPackages.Count && resourceName == "")
+                if (i == loadedPackages.Count && resourcePath == "")
                 {
                     throw new ResourceNotFoundException(string.Format("ContentPackageManager.GetAbsoluteFilePath(string): No resource named {0} exists in any loaded package.", resourceName), ContentPackageManager.loadedPackages);
                 }

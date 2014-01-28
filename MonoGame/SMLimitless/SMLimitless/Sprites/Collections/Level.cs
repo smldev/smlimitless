@@ -42,6 +42,11 @@ namespace SMLimitless.Sprites.Collections
         private List<Section> sections;
 
         /// <summary>
+        /// The section that the player is currently in.
+        /// </summary>
+        private Section activeSection;
+
+        /// <summary>
         /// A collection of all the paths to the content package folders used in this level.
         /// </summary>
         private List<string> contentFolderPaths;
@@ -73,6 +78,7 @@ namespace SMLimitless.Sprites.Collections
         {
             this.levelExits = new List<LevelExit>();
             this.sections = new List<Section>();
+            this.eventScript = new EventScript();
         }
 
         /// <summary>
@@ -83,17 +89,26 @@ namespace SMLimitless.Sprites.Collections
         /// <summary>
         /// Loads the content of this level.
         /// </summary>
-        public void LoadContent() { }
+        public void LoadContent() 
+        {
+            this.sections.ForEach(s => s.LoadContent());
+        }
 
         /// <summary>
         /// Updates this level.
         /// </summary>
-        public void Update() { }
+        public void Update() 
+        {
+            this.activeSection.Update();
+        }
 
         /// <summary>
         /// Draws this level.
         /// </summary>
-        public void Draw() { }
+        public void Draw() 
+        {
+            this.activeSection.Draw();
+        }
 
         /// <summary>
         /// Notifies this level that a level exit has been cleared.
@@ -166,6 +181,7 @@ namespace SMLimitless.Sprites.Collections
             JArray levelExitObjects = (JArray)obj["levelExit"];
 
             this.contentFolderPaths = contentObjects.ToObject<List<string>>();
+            Content.ContentPackageManager.AddPackageFromFolder(System.IO.Directory.GetCurrentDirectory() + @"\" + this.contentFolderPaths[0]); // TODO: temporary
 
             foreach (var sectionObject in sectionObjects)
             {
@@ -181,6 +197,8 @@ namespace SMLimitless.Sprites.Collections
                 levelExit.Deserialize(levelExitObject.ToString());
                 this.levelExits.Add(levelExit);
             }
+
+            this.activeSection = this.sections.First(s => s.Index == 0);
         }
     }
 }

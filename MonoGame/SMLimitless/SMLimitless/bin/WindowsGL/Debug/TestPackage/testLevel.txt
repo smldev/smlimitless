@@ -1,0 +1,81 @@
+{
+	"header" : {
+		"version" : "Version 0.01",
+		"name" : "SML Test Level #2 (1/28/2014)",
+		"author" : "Celarix"
+	},
+	"script" : "",
+	"contentPackages" : [
+		"TestPackage"
+	],
+	"sections" : [
+		{
+			"index" : 0,
+			"name" : "Main Section",
+			"bounds" : "0,0,3200,960",
+			"scrollType" : 0,
+			"autoscrollSpeed" : "0,0",
+			"autoscrollPathName" : "",
+			"background" : {
+				"topColor" : "0,0,0,0",
+				"bottomColor" : "0,0,0,0",
+				"layers" : [
+					{
+						"resourceName" : "Background",
+						"scrollDirection" : 1,
+						"scrollRate" : 1.0
+					}
+				]
+			},
+			"layers" : [
+				{
+					"index" : 0,
+					"name" : "Main Layer",
+					"isMainLayer" : true,
+					"anchorPosition" : 1,
+					"tiles" : [
+						{
+							"typeName" : "SmlSample.TestTile",
+							"collisionType" : 0,
+							"name" : "",
+							"graphicsResource" : "smw_grass_top",
+							"position" : "400, 240",
+							"state" : "default",
+							"customData": {}
+						}
+					]
+				}
+			],
+			"sprites" : [
+				{
+					"typeName" : "SmlSample.TestSprite",
+					"position" : "400, 208",
+					"isActive" : true,
+					"state" : "default",
+					"collision" : 0,
+					"name" : "",
+					"message" : "",
+					"isHostile" : true,
+					"isMoving" : true,
+					"direction" : 0,
+					"customObject" : {}
+				}
+			],
+			"paths" :[
+				{
+					"points" : [
+						"0,0",
+						"16,16"
+					]
+				}
+			]
+		}
+	],
+	"levelExit" : [
+		{
+			"exitIndex" : 0,
+			"exitDirection" : 0,
+			"objectName" : ""
+		}
+	]
+}

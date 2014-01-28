@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using SMLimitless.Interfaces;
 using SMLimitless.IO;
+using SMLimitless.Sprites.Assemblies;
 
 namespace SMLimitless.Content
 {
@@ -90,6 +91,9 @@ namespace SMLimitless.Content
                 {
                     throw new FileNotFoundException(string.Format("ContentPackage.ctor(string): The assembly file at {0} does not exist. Please check the settings file at {1}.", this.AssemblyPath, settingsPath));
                 }
+
+                // Now load the assembly.
+                AssemblyManager.LoadAssembly(this.AssemblyPath);
 
                 this.isLoaded = true;
             }

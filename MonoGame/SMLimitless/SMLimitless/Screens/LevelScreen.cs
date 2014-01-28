@@ -27,11 +27,12 @@ namespace SMLimitless.Screens
         /// Initializes this screen.
         /// </summary>
         /// <param name="owner">The screen that is creating this one.</param>
-        /// <param name="parameters">Parameters to specify how the screen should be initialized. Not currently used.</param>
+        /// <param name="parameters">Parameters to specify how the screen should be initialized. Contains a path to the level file to load.</param>
         public override void Initialize(Screen owner, string parameters)
         {
             this.level = new Level();
             this.level.Initialize();
+            this.level.Deserialize(System.IO.File.ReadAllText(parameters));
         }
 
         /// <summary>

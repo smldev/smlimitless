@@ -191,6 +191,9 @@ namespace SMLimitless.Sprites.Collections
         public void Update()
         {
             this.Background.Update();
+
+            Vector2 direction = Input.InputManager.GetDirectionalInputVector() * 2f;
+            this.Camera.Position += direction;
         }
 
         /// <summary>

@@ -321,6 +321,34 @@ namespace SMLimitless.Input
             InputObject inputObject = InputManager.inputBindings[action];
             return inputObject.IsDown(InputManager.LastKeyboardState, InputManager.LastMouseState) && inputObject.IsUp(InputManager.CurrentKeyboardState, InputManager.CurrentMouseState);
         }
+
+        /// <summary>
+        /// Returns a vector that represents the arrow keys being pressed.
+        /// </summary>
+        /// <returns>A vector.</returns>
+        public static Vector2 GetDirectionalInputVector()
+        {
+            Vector2 result = Vector2.Zero;
+            if (IsCurrentActionPress(InputAction.Left))
+            {
+                result.X = -1f;
+            }
+            else if (IsCurrentActionPress(InputAction.Right))
+            {
+                result.X = 1f;
+            }
+
+            if (IsCurrentActionPress(InputAction.Up))
+            {
+                result.Y = -1f;
+            }
+            else if (IsCurrentActionPress(InputAction.Down))
+            {
+                result.Y = 1f;
+            }
+
+            return result;
+        }
     }
 
     /// <summary>
