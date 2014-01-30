@@ -322,7 +322,7 @@ namespace SMLimitless.Physics
                  (int)this.CellSize.Y);
 
                 batch.DrawRectangleEdges(drawBounds, Color.White);
-                batch.DrawString(GameServices.DebugFontSmall, cell.Key.ToString(), new Vector2((cell.Key.X * this.CellSize.X) + 2, (cell.Key.Y * this.CellSize.Y) + 2), Color.White);
+                GameServices.DebugFont.DrawString(cell.Key.ToString(), new Vector2((cell.Key.X * this.CellSize.X) + 2, (cell.Key.Y * this.CellSize.Y) + 2));
             }
         }
 

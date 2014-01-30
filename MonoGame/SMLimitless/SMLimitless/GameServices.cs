@@ -13,6 +13,7 @@ namespace SMLimitless
     using Microsoft.Xna.Framework.Content;
     using Microsoft.Xna.Framework.Graphics;
     using SMLimitless.Physics;
+    using SMLimitless.Graphics;
     
     /// <summary>
     /// Provides global access to game services.
@@ -84,39 +85,7 @@ namespace SMLimitless
         /// </summary>
         public static Vector2 ScreenSize { get; set; }
 
-        /// <summary>
-        /// Gets a font, Consolas 6 point.
-        /// </summary>
-        public static SpriteFont DebugFontSmall
-        {
-            get
-            {
-                throw new Exception("Font not supported."); // TODO: fix this font with some sprite font or something
-                ////if (debugFontSmall == null)
-                ////{
-                ////    debugFontSmall = GetService<ContentManager>().Load<SpriteFont>("DebugFontSmall");
-                ////}
-
-                ////return debugFontSmall;
-            }
-        }
-
-        /// <summary>
-        /// Gets a font, Consolas 20 point.
-        /// </summary>
-        public static SpriteFont DebugFontLarge
-        {
-            get
-            {
-                throw new Exception("Font not supported."); // TODO: fix this font with some sprite font or something
-                ////if (debugFontLarge == null)
-                ////{
-                ////    debugFontLarge = GetService<ContentManager>().Load<SpriteFont>("DebugFontLarge");
-                ////}
-
-                ////return debugFontLarge;
-            }
-        }
+        public static BitmapFont DebugFont { get; private set; }
 
         /// <summary>
         /// Gets the size, in pixels, of a QuadTree cell.
@@ -140,6 +109,13 @@ namespace SMLimitless
             AddService<GraphicsDevice>(graphicsDevice);
             AddService<SpriteBatch>(spriteBatch);
             AddService<ContentManager>(content);
+        }
+
+        public static void InitializeFont(string contentResourceName)
+        {
+            DebugFont = new BitmapFont();
+            DebugFont.Initialize(contentResourceName);
+            DebugFont.LoadContent();
         }
 
         /// <summary>
@@ -169,6 +145,14 @@ namespace SMLimitless
         public static void RemoveService<T>()
         {
             Container.RemoveService(typeof(T));
+        }
+
+        public static void DrawStringDefault(string text)
+        {
+            if (DebugFont != null)
+            {
+                DebugFont.DrawString(text, new Vector2(16f, 16f), 2f);
+            }
         }
     }
 }

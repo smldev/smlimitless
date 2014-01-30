@@ -202,6 +202,7 @@ namespace SMLimitless.Sprites.Collections
         public void Draw()
         {
             this.Background.Draw();
+            GameServices.DrawStringDefault(this.Camera.Position.ToString());
         }
 
         /// <summary>

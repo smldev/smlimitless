@@ -381,7 +381,7 @@ namespace SMLimitless.Physics
                 drawBounds.DrawOutline(Color.Red);
 
                 // Draw some useful debug information.
-                GameServices.SpriteBatch.DrawString(GameServices.DebugFontSmall, this.ToString(), new Vector2(this.Bounds.X, this.Bounds.Y), Color.White);
+                GameServices.DebugFont.DrawString(this.ToString(), new Vector2(this.Bounds.X, this.Bounds.Y));
             }
         }
 

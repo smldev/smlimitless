@@ -289,7 +289,7 @@ namespace SMLimitless.Graphics
             this.Draw(position, color);
             if (debug)
             {
-                GameServices.SpriteBatch.DrawString(GameServices.DebugFontSmall, this.frameIndex.ToString(), position, Color.White);
+                GameServices.DebugFont.DrawString(this.frameIndex.ToString(), position);
             }
         }
 
@@ -305,7 +305,7 @@ namespace SMLimitless.Graphics
             this.Draw(position, color, spriteEffects);
             if (debug)
             {
-                GameServices.SpriteBatch.DrawString(GameServices.DebugFontSmall, this.frameIndex.ToString(), position, Color.White);
+                GameServices.DebugFont.DrawString(this.frameIndex.ToString(), position);
             }
         }
 
