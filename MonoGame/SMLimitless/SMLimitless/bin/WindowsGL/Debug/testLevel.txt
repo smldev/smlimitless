@@ -12,7 +12,7 @@
 		{
 			"index" : 0,
 			"name" : "Main Section",
-			"bounds" : "0,0,3200,960",
+			"bounds" : "0,0,3200,1920",
 			"scrollType" : 0,
 			"autoscrollSpeed" : "0,0",
 			"autoscrollPathName" : "",
@@ -22,8 +22,8 @@
 				"layers" : [
 					{
 						"resourceName" : "Background",
-						"scrollDirection" : 1,
-						"scrollRate" : 1.0
+						"scrollDirection" : 3,
+						"scrollRate" : 1
 					}
 				]
 			},

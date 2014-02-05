@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 using System;
 using Microsoft.Xna.Framework;
+using SMLimitless.Interfaces;
 
 namespace SMLimitless.Physics
 {
@@ -18,6 +19,8 @@ namespace SMLimitless.Physics
         /// A backing field for the Zoom property.
         /// </summary>
         private float zoom;
+
+        private Vector2 position;
 
         /// <summary>
         /// A field containing the matrix transformation for the camera.

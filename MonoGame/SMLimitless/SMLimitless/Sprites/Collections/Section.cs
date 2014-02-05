@@ -143,6 +143,10 @@ namespace SMLimitless.Sprites.Collections
         /// </summary>
         private List<Path> paths;
 
+        private bool isInitialized;
+        private bool isContentLoaded;
+        private bool isSectionLoaded;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Section"/> class.
         /// </summary>
@@ -159,6 +163,8 @@ namespace SMLimitless.Sprites.Collections
             this.sprites = new List<Sprite>();
             this.paths = new List<Path>();
             this.Background = new Background(this);
+
+            GameServices.Camera = this.Camera;
         }
 
         /// <summary>
@@ -167,7 +173,36 @@ namespace SMLimitless.Sprites.Collections
         /// <param name="offset">The distance to move the camera by.</param>
         public void MoveCamera(Vector2 offset)
         {
-            this.Camera.Position += offset;
+            if (!this.isSectionLoaded)
+            {
+                throw new Exception("Section.MoveCamera(Vector2): The section isn't loaded - the section needs to be loaded before anything can happen.");
+            }
+
+            // Ensure the camera falls within bounds.
+            Vector2 newPosition = this.Camera.Position + offset;
+
+            if (newPosition.X < 0f)
+            {
+                newPosition.X = 0f;
+            }
+
+            if (newPosition.Y < 0f)
+            {
+                newPosition.Y = 0f;
+            }
+
+            Vector2 viewportBottomRight = new Vector2(newPosition.X + this.Camera.ViewportSize.X, newPosition.Y + this.Camera.ViewportSize.Y);
+            if (viewportBottomRight.X > this.Bounds.Right)
+            {
+                newPosition.X -= viewportBottomRight.X - this.Bounds.Right;
+            }
+
+            if (viewportBottomRight.Y > this.Bounds.Bottom)
+            {
+                newPosition.Y -= viewportBottomRight.Y - this.Bounds.Bottom;
+            }
+
+            this.Camera.Position = newPosition;
         }
 
         /// <summary>
@@ -175,6 +210,10 @@ namespace SMLimitless.Sprites.Collections
         /// </summary>
         public void Initialize()
         {
+            if (!this.isInitialized)
+            {
+                this.isInitialized = true;
+            }
         }
 
         /// <summary>
@@ -182,7 +221,11 @@ namespace SMLimitless.Sprites.Collections
         /// </summary>
         public void LoadContent() 
         {
-            this.Background.LoadContent();
+            if (!this.isContentLoaded)
+            {
+                this.Background.LoadContent();
+                this.isContentLoaded = true;
+            }
         }
 
         /// <summary>
@@ -192,8 +235,17 @@ namespace SMLimitless.Sprites.Collections
         {
             this.Background.Update();
 
-            Vector2 direction = Input.InputManager.GetDirectionalInputVector() * 2f;
-            this.Camera.Position += direction;
+            Vector2 direction = Input.InputManager.GetDirectionalInputVector() * 20f;
+            this.MoveCamera(direction);
+
+            if (Input.InputManager.IsCurrentKeyPress(Microsoft.Xna.Framework.Input.Keys.A))
+            {
+                this.Camera.Zoom += 0.01f;
+            }
+            else if (Input.InputManager.IsCurrentKeyPress(Microsoft.Xna.Framework.Input.Keys.Z))
+            {
+                this.Camera.Zoom -= 0.01f;
+            }
         }
 
         /// <summary>
@@ -202,7 +254,7 @@ namespace SMLimitless.Sprites.Collections
         public void Draw()
         {
             this.Background.Draw();
-            GameServices.DrawStringDefault(this.Camera.Position.ToString());
+            GameServices.DebugFont.DrawString(this.Camera.ViewportSize.ToString() + " " + this.Camera.Position.ToString(), new Vector2(16f) + this.Camera.Position, 2f);
         }
 
         /// <summary>
@@ -248,44 +300,49 @@ namespace SMLimitless.Sprites.Collections
         /// <param name="json">A valid JSON string.</param>
         public void Deserialize(string json)
         {
-            JObject obj = JObject.Parse(json);
-
-            // First, deserialize the root objects.
-            this.Index = (int)obj["index"];
-            this.Name = (string)obj["name"];
-            this.Bounds = BoundingRectangle.FromSimpleString((string)obj["bounds"]);
-            this.ScrollType = (CameraScrollType)(int)obj["scrollType"];
-            this.autoscrollSpeed = obj["autoscrollSpeed"].ToVector2();
-            this.autoscrollPathName = (string)obj["autoscrollPathName"];
-            this.Background.Deserialize(obj["background"].ToString());
-            
-            // Next, deserialize the nested objects.
-            JArray layersData = (JArray)obj["layers"];
-            JArray spritesData = (JArray)obj["sprites"];
-            JArray pathsData = (JArray)obj["paths"];
-
-            foreach (var layerData in layersData)
+            if (!this.isSectionLoaded)
             {
-                Layer layer = new Layer(this);
-                layer.Deserialize(layerData.ToString());
-                layer.Initialize();
-                this.layers.Add(layer);
-            }
+                JObject obj = JObject.Parse(json);
 
-            foreach (var spriteData in spritesData)
-            {
-                string typeName = (string)spriteData["typeName"];
-                Sprite sprite = AssemblyManager.GetSpriteByFullName(typeName);
-                sprite.Deserialize(spriteData.ToString());
-                sprite.Initialize(this.Owner);
-                this.sprites.Add(sprite);
-            }
+                // First, deserialize the root objects.
+                this.Index = (int)obj["index"];
+                this.Name = (string)obj["name"];
+                this.Bounds = BoundingRectangle.FromSimpleString((string)obj["bounds"]);
+                this.ScrollType = (CameraScrollType)(int)obj["scrollType"];
+                this.autoscrollSpeed = obj["autoscrollSpeed"].ToVector2();
+                this.autoscrollPathName = (string)obj["autoscrollPathName"];
+                this.Background.Deserialize(obj["background"].ToString());
 
-            foreach (var pathData in pathsData)
-            {
-                Path path = new Path(null);
-                path.Deserialize(pathData.ToString());
-                this.paths.Add(path);
+                // Next, deserialize the nested objects.
+                JArray layersData = (JArray)obj["layers"];
+                JArray spritesData = (JArray)obj["sprites"];
+                JArray pathsData = (JArray)obj["paths"];
+
+                foreach (var layerData in layersData)
+                {
+                    Layer layer = new Layer(this);
+                    layer.Deserialize(layerData.ToString());
+                    layer.Initialize();
+                    this.layers.Add(layer);
+                }
+
+                foreach (var spriteData in spritesData)
+                {
+                    string typeName = (string)spriteData["typeName"];
+                    Sprite sprite = AssemblyManager.GetSpriteByFullName(typeName);
+                    sprite.Deserialize(spriteData.ToString());
+                    sprite.Initialize(this.Owner);
+                    this.sprites.Add(sprite);
+                }
+
+                foreach (var pathData in pathsData)
+                {
+                    Path path = new Path(null);
+                    path.Deserialize(pathData.ToString());
+                    this.paths.Add(path);
+                }
+
+                this.isSectionLoaded = true;
             }
         }
     }
