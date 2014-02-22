@@ -264,7 +264,7 @@ namespace SMLimitless.Physics
         /// Returns a string representing the components of this rectangle.
         /// </summary>
         /// <returns>A string in the format "X, Y, Width, Height".</returns>
-        public string ToSimpleString()
+        public string Serialize()
         {
             return string.Format("{0}, {1}, {2}, {3}", this.X, this.Y, this.Width, this.Height);
         }
@@ -353,6 +353,18 @@ namespace SMLimitless.Physics
                 {
                     return rectCenterPoint.Y < pointOnSlope.Y;
                 }
+            }
+        }
+
+        public bool Within(Vector2 point, bool adjacentPointsAreWithin)
+        {
+            if (adjacentPointsAreWithin)
+            {
+                return IntersectsIncludingEdges(point);
+            }
+            else
+            {
+                return Intersects(point);
             }
         }
 

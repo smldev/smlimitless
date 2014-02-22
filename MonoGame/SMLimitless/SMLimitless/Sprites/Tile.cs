@@ -37,7 +37,7 @@ namespace SMLimitless.Sprites
         /// <summary>
         /// Gets or sets the Level that owns this tile.
         /// </summary>
-        public Level Owner { get; set; }
+        public Section Owner { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this tile is active or not.
@@ -58,7 +58,7 @@ namespace SMLimitless.Sprites
         /// <summary>
         /// Gets the position of the tile when it was first loaded into the level.
         /// </summary>
-        public Vector2 InitialPosition { get; private set; }
+        public Vector2 InitialPosition { get; protected set; }
 
         /// <summary>
         /// Gets or sets the position of this tile.
@@ -103,12 +103,11 @@ namespace SMLimitless.Sprites
         /// </summary>
         /// <param name="owner">The Level that owns this tile.</param>
         /// <param name="graphicsResourceName">The name of the graphics resource that is used for this tile's graphics.</param>
-        public virtual void Initialize(Level owner, string graphicsResourceName)
+        public virtual void Initialize(Section owner)
         {
             this.Owner = owner;
             this.IsActive = true;
             this.Name = "";
-            this.GraphicsResourceName = graphicsResourceName;
         }
 
         /// <summary>
@@ -263,7 +262,7 @@ namespace SMLimitless.Sprites
                 collisionType = (int)this.Collision,
                 name = this.Name,
                 graphicsResource = this.GraphicsResourceName,
-                position = this.InitialPosition,
+                position = this.InitialPosition.Serialize(),
                 state = this.InitialState,
                 customData = this.GetCustomSerializableObjects()
             };

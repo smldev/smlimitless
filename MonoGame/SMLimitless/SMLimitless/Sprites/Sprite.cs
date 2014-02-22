@@ -48,9 +48,9 @@ namespace SMLimitless.Sprites
         public string EditorLabel { get; protected set; }
 
         /// <summary>
-        /// Gets or sets the level that owns this sprite.
+        /// Gets or sets the section that owns this sprite.
         /// </summary>
-        public Level Owner { get; set; }
+        public Section Owner { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this sprite is actively updating or not.
@@ -77,7 +77,7 @@ namespace SMLimitless.Sprites
         /// <summary>
         /// Gets the position of this sprite when it was first loaded into the level.
         /// </summary>
-        public Vector2 InitialPosition { get; private set; }
+        public Vector2 InitialPosition { get; protected set; }
 
         /// <summary>
         /// Gets or sets the last position of this sprite.
@@ -202,7 +202,7 @@ namespace SMLimitless.Sprites
         /// Initializes this sprite.
         /// </summary>
         /// <param name="owner">The level that owns this sprites.</param>
-        public virtual void Initialize(Level owner)
+        public virtual void Initialize(Section owner)
         {
             this.Owner = owner;
 
@@ -294,7 +294,7 @@ namespace SMLimitless.Sprites
             return new
             {
                 typeName = this.GetType().FullName,
-                position = this.InitialPosition,
+                position = this.InitialPosition.Serialize(),
                 isActive = this.IsActive,
                 state = this.InitialState,
                 collision = (int)this.CollisionMode,
@@ -302,7 +302,7 @@ namespace SMLimitless.Sprites
                 message = this.Message,
                 isHostile = this.IsHostile,
                 isMoving = this.IsMoving,
-                direction = this.Direction,
+                direction = (int)this.Direction,
                 customObjects = this.GetCustomSerializableObjects()
             };
         }

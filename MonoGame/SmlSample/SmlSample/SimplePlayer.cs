@@ -13,6 +13,7 @@ using SMLimitless.Extensions;
 using SMLimitless.Graphics;
 using SMLimitless.Input;
 using SMLimitless.Sprites;
+using SMLimitless.Sprites.Collections;
 using SMLimitless.Sprites.Testing;
 
 namespace SmlSample
@@ -52,8 +53,9 @@ namespace SmlSample
         /// Initializes this sprite.
         /// </summary>
         /// <param name="owner">The level that owns this sprite.</param>
-        public void Initialize(TestLevel owner)
+        public override void Initialize(Section owner)
         {
+            base.Initialize(owner);
         }
 
         /// <summary>

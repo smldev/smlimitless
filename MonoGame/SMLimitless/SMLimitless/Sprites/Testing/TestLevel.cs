@@ -124,7 +124,7 @@ namespace SMLimitless.Sprites.Testing
             {
                 Tile tile = AssemblyManager.GetTileByFullName("SmlSample.TestTile");
                 tile.Position = new Vector2(x, 400f);
-                tile.Initialize(null, "");
+                tile.Initialize(null);
                 this.AddTile(tile);
             }
 
@@ -134,7 +134,7 @@ namespace SMLimitless.Sprites.Testing
                 {
                     Tile tile = AssemblyManager.GetTileByFullName("SmlSample.TestTile2");
                     tile.Position = new Vector2(x, y);
-                    tile.Initialize(null, "");
+                    tile.Initialize(null);
                     this.AddTile(tile);
                 }
             }
@@ -289,7 +289,7 @@ namespace SMLimitless.Sprites.Testing
                         ////TestTile3 tile = new TestTile3() { Position = tilePosition };
                         Tile tile = AssemblyManager.GetTileByFullName("SmlSample.TestTile3");
                         tile.Position = tilePosition;
-                        tile.Initialize(null, "");
+                        tile.Initialize(null);
                         tile.LoadContent();
                         this.AddTile(tile);
                     }

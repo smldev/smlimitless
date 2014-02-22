@@ -133,6 +133,8 @@ namespace SMLimitless.Sprites.Collections
         /// </summary>
         private List<Layer> layers;
 
+        private List<Tile> tiles;
+
         /// <summary>
         /// A collection of all the sprites in this section.
         /// </summary>
@@ -160,6 +162,7 @@ namespace SMLimitless.Sprites.Collections
             this.Owner = owner;
             this.QuadTree = new QuadTree(GameServices.QuadTreeCellSize);
             this.layers = new List<Layer>();
+            this.tiles = new List<Tile>();
             this.sprites = new List<Sprite>();
             this.paths = new List<Path>();
             this.Background = new Background(this);
@@ -212,6 +215,7 @@ namespace SMLimitless.Sprites.Collections
         {
             if (!this.isInitialized)
             {
+                this.Background.Initialize();
                 this.isInitialized = true;
             }
         }
@@ -224,18 +228,23 @@ namespace SMLimitless.Sprites.Collections
             if (!this.isContentLoaded)
             {
                 this.Background.LoadContent();
+                this.tiles.ForEach(t => t.LoadContent());
+                this.sprites.ForEach(s => s.LoadContent());
                 this.isContentLoaded = true;
             }
         }
-
+        
         /// <summary>
         /// Updates this section.
         /// </summary>
         public void Update()
         {
             this.Background.Update();
+            this.tiles.ForEach(t => t.Update());
+            this.sprites.ForEach(s => s.Update());
+            this.QuadTree.Update();
 
-            Vector2 direction = Input.InputManager.GetDirectionalInputVector() * 20f;
+            Vector2 direction = Input.InputManager.GetDirectionalInputVector() * 2f;
             this.MoveCamera(direction);
 
             if (Input.InputManager.IsCurrentKeyPress(Microsoft.Xna.Framework.Input.Keys.A))
@@ -246,6 +255,11 @@ namespace SMLimitless.Sprites.Collections
             {
                 this.Camera.Zoom -= 0.01f;
             }
+            else if (Input.InputManager.IsNewKeyPress(Microsoft.Xna.Framework.Input.Keys.W))
+            {
+                string file = Owner.Serialize();
+                System.IO.File.WriteAllText(System.IO.Directory.GetCurrentDirectory() + @"\level.txt", file);
+            }
         }
 
         /// <summary>
@@ -255,6 +269,61 @@ namespace SMLimitless.Sprites.Collections
         {
             this.Background.Draw();
             GameServices.DebugFont.DrawString(this.Camera.ViewportSize.ToString() + " " + this.Camera.Position.ToString(), new Vector2(16f) + this.Camera.Position, 2f);
+
+            this.tiles.ForEach(t => t.Draw());
+            this.sprites.ForEach(s => s.Draw());
+        }
+
+        public void AddTile(Tile tile)
+        {
+            if (tile == null)
+            {
+                throw new ArgumentNullException("Section.AddTile(Tile): Tile cannot be null.");
+            }
+
+            this.tiles.Add(tile);
+            this.MainLayer.AddTile(tile);
+            this.QuadTree.Add(tile);
+        }
+
+        public void RemoveTile(Tile tile)
+        {
+            if (this.tiles.Contains(tile))
+            {
+                this.tiles.Remove(tile);
+                this.QuadTree.Remove(tile);
+                this.layers.ForEach(l => l.RemoveTile(tile));
+            }
+        }
+
+        public Tile GetTileAtPosition(Vector2 position, bool adjacentPointsAreWithin)
+        {
+            var tiles = this.QuadTree.GetTilesInCell(this.QuadTree.GetCellNumberAtPosition(position));
+
+            if (tiles == null)
+            {
+                return null;
+            }
+
+            foreach (Tile tile in tiles)
+            {
+                if (tile.Hitbox.Within(position, adjacentPointsAreWithin))
+                {
+                    return tile;
+                }
+            }
+
+            return null;
+        }
+
+        public void SetMainLayer(Layer layer)
+        {
+            if (this.MainLayer != null)
+            {
+                throw new Exception("Section.SetMainLayer(Layer): A layer tried to set itself as this section's main layer, but this section already has a main layer.");
+            }
+
+            this.MainLayer = layer;
         }
 
         /// <summary>
@@ -274,9 +343,9 @@ namespace SMLimitless.Sprites.Collections
             {
                 index = this.Index,
                 name = this.Name,
-                bounds = this.Bounds.ToSimpleString(),
+                bounds = this.Bounds.Serialize(),
                 scrollType = (int)this.ScrollType,
-                autoscrollSpeed = (this.ScrollType == CameraScrollType.AutoScroll) ? this.autoscrollSpeed : new Vector2(float.NaN),
+                autoscrollSpeed = (this.ScrollType == CameraScrollType.AutoScroll) ? this.autoscrollSpeed.Serialize() : new Vector2(float.NaN).Serialize(),
                 autoscrollPathName = (this.ScrollType == CameraScrollType.AutoScrollAlongPath) ? this.autoscrollPathName : null,
                 background = this.Background.GetSerializableObjects(),
                 layers = layerObjects,
@@ -331,8 +400,9 @@ namespace SMLimitless.Sprites.Collections
                     string typeName = (string)spriteData["typeName"];
                     Sprite sprite = AssemblyManager.GetSpriteByFullName(typeName);
                     sprite.Deserialize(spriteData.ToString());
-                    sprite.Initialize(this.Owner);
+                    sprite.Initialize(this);
                     this.sprites.Add(sprite);
+                    this.QuadTree.Add(sprite);
                 }
 
                 foreach (var pathData in pathsData)

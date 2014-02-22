@@ -129,7 +129,7 @@ namespace SMLimitless.Content
             string authorString = string.Format("Author: {0}", this.Author);
             string assemblyPathString = string.Format("Assembly Path: {0}", this.AssemblyPath);
             string baseFolderPathString = string.Format("Base Folder Path: {0}", this.BaseFolderPath);
-            return string.Format("{0}, {1}, {2}, {3}, {4}", nameString, authorString, assemblyPathString, baseFolderPathString);
+            return string.Format("{0}, {1}, {2}, {3}", nameString, authorString, assemblyPathString, baseFolderPathString);
         }
     }
 }

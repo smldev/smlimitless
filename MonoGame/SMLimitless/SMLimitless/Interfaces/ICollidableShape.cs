@@ -37,5 +37,12 @@ namespace SMLimitless.Interfaces
         /// <returns>True if the rectangle intersects this shape, false if it doesn't.</returns>
         /// <remarks>This method returns False if the rectangle is directly against this shape but not within it.</remarks>
         bool Intersects(BoundingRectangle that);
+
+        /// <summary>
+        /// Determines if a point is within this shape.
+        /// </summary>
+        /// <param name="point">The point to check.</param>
+        /// <returns>True if the point is within the shape, false if otherwise.</returns>
+        bool Within(Vector2 point, bool adjacentPointsAreWithin);
     }
 }

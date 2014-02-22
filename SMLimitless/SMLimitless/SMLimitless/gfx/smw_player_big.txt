@@ -1,3 +1,0 @@
-[Animated]
-FrameWidth = 160
-CycleLength = 0.5

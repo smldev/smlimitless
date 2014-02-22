@@ -178,7 +178,7 @@ namespace SMLimitless.Sprites.Collections
             // Then deserialize the nested objects.
             JArray contentObjects = (JArray)obj["contentPackages"];
             JArray sectionObjects = (JArray)obj["sections"];
-            JArray levelExitObjects = (JArray)obj["levelExit"];
+            JArray levelExitObjects = (JArray)obj["levelExits"];
 
             this.contentFolderPaths = contentObjects.ToObject<List<string>>();
             Content.ContentPackageManager.AddPackageFromFolder(System.IO.Directory.GetCurrentDirectory() + @"\" + this.contentFolderPaths[0]); // TODO: temporary

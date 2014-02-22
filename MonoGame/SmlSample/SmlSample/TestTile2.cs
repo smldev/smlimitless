@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework;
 using SMLimitless.Graphics;
 using SMLimitless.Physics;
 using SMLimitless.Sprites;
+using SMLimitless.Sprites.Collections;
 using SMLimitless.Sprites.Testing;
 
 namespace SmlSample
@@ -38,6 +39,7 @@ namespace SmlSample
         {
             this.Size = new Vector2(16f, 16f);
             this.Collision = TileCollisionType.Passive;
+            this.GraphicsResourceName = "smw_grass_center";
         }
 
         /// <summary>
@@ -45,8 +47,10 @@ namespace SmlSample
         /// </summary>
         /// <param name="owner">The Level that owns this tile.</param>
         /// <param name="contentResourceName">The name of the content resource that is used for this tile's graphics.</param>
-        public void Initialize(TestLevel owner, string contentResourceName)
+        public override void Initialize(Section owner)
         {
+            base.Initialize(owner);
+            this.InitialPosition = this.Position;
         }
 
         /// <summary>

@@ -253,6 +253,53 @@ namespace SMLimitless.Physics
             return rect.Intersects(this);
         }
 
+        public bool Within(Vector2 point, bool adjacentPointsAreWithin)
+        {
+            if (!this.Bounds.Within(point, adjacentPointsAreWithin))
+            {
+                return false;
+            }
+
+            float pointOnSlopeY = this.GetPointOnSlope(point.X).Y;
+
+            if (this.SlopedSides == RtSlopedSides.TopLeft || this.SlopedSides == RtSlopedSides.TopRight)
+            {
+                if (adjacentPointsAreWithin)
+                {
+                    if (pointOnSlopeY > point.Y)
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    if (pointOnSlopeY >= point.Y)
+                    {
+                        return false;
+                    }
+                }
+            }
+            else if (this.SlopedSides == RtSlopedSides.BottomLeft || this.SlopedSides == RtSlopedSides.BottomRight)
+            {
+                if (adjacentPointsAreWithin)
+                {
+                    if (pointOnSlopeY < point.Y)
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    if (pointOnSlopeY <= point.Y)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
         /// <summary>
         /// Gets the minimum distance to move a given rectangle such that
         /// it will no longer be intersecting this right triangle.

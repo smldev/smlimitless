@@ -155,7 +155,7 @@ namespace SMLimitless.Physics
         {
             return new
             {
-                points = this.points,
+                points = this.points.Serialize(),
             };
         }
 

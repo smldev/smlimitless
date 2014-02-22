@@ -8,8 +8,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using SMLimitless.Content;
 using SMLimitless.Graphics;
 using SMLimitless.Sprites;
+using SMLimitless.Sprites.Collections;
 using SMLimitless.Sprites.Testing;
 
 namespace SmlSample
@@ -36,9 +38,7 @@ namespace SmlSample
         public SlopedTestTile1()
         {
             this.Size = new Vector2(16f, 16f);
-            this.graphics = new StaticGraphicsObject();
-            string absolute = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..\\..\\..\\gfx\\smw_grass_slope1.png");
-            this.graphics.Load(absolute);
+            this.GraphicsResourceName = "smw_grass_slope1";
         }
 
         /// <summary>
@@ -46,8 +46,11 @@ namespace SmlSample
         /// </summary>
         /// <param name="owner">The Level that owns this tile.</param>
         /// <param name="contentResourceName">The name of the content resource that is used for this tile's graphics.</param>
-        public void Initialize(TestLevel owner, string contentResourceName)
+        public override void Initialize(Section owner)
         {
+            base.Initialize(owner);
+            this.graphics = (StaticGraphicsObject)ContentPackageManager.GetGraphicsResource("smw_grass_slope1");
+            this.InitialPosition = this.Position;
         }
 
         /// <summary>

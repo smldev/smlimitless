@@ -25,7 +25,7 @@ namespace SMLimitless.Sprites.Collections
         /// <summary>
         /// A value indicating whether this is the main layer for the level.
         /// </summary>
-        private bool isMainLayer;
+        public bool isMainLayer;
 
         /// <summary>
         /// A value indicating whether this layer is actively drawn and updated.
@@ -389,7 +389,7 @@ namespace SMLimitless.Sprites.Collections
                 index = this.Index,
                 name = this.Name,
                 isMainLayer = this.isMainLayer,
-                anchorPoint = (this.anchorPosition != LayerAnchorPosition.Invalid) ? this.AnchorPoint : new Vector2(float.NaN, float.NaN),
+                anchorPoint = (this.anchorPosition != LayerAnchorPosition.Invalid) ? this.AnchorPoint.Serialize() : new Vector2(float.NaN, float.NaN).Serialize(),
                 anchorPosition = (int)this.anchorPosition,
                 tiles = tileObjects,
             };
@@ -418,6 +418,12 @@ namespace SMLimitless.Sprites.Collections
             this.isMainLayer = (bool)obj["isMainLayer"];
             this.anchorPosition = (LayerAnchorPosition)(int)obj["anchorPosition"];
 
+            // If this is a main layer, set this as the section's main layer.
+            if (this.isMainLayer)
+            {
+                this.owner.SetMainLayer(this);
+            }
+
             // Now, deserialize the nested tiles.
             JArray tiles = (JArray)obj["tiles"];
 
@@ -426,7 +432,9 @@ namespace SMLimitless.Sprites.Collections
                 string typeName = (string)tileData["typeName"];
                 Tile tile = AssemblyManager.GetTileByFullName(typeName);
                 tile.Deserialize(tileData.ToString());
+                tile.Initialize(this.owner);
                 this.tiles.Add(tile);
+                this.owner.AddTile(tile);
             }
         }
     }

@@ -248,7 +248,7 @@ namespace SMLimitless.Extensions
         /// <returns>A Vector2 converted from the token.</returns>
         public static Vector2 ToVector2(this JToken jsonEntry)
         {
-            string json = (string)jsonEntry;
+            string json = jsonEntry.ToString();
             string[] values = json.Split(',');
 
             if (values.Length != 2)
@@ -285,6 +285,16 @@ namespace SMLimitless.Extensions
             if (!float.TryParse(values[1], out y)) { throw new Exception(string.Format("Vector2Extensions.FromString(this string): Invalid value for Y component. Got {0}.", values[1])); }
 
             return new Vector2(x, y);
+        }
+
+        public static string Serialize(this Vector2 value)
+        {
+            return string.Format("{0}, {1}", value.X, value.Y);
+        }
+
+        public static List<string> Serialize(this List<Vector2> value)
+        {
+            return value.Select(v => v.Serialize()).ToList(); // yay LINQ
         }
 
         /// <summary>

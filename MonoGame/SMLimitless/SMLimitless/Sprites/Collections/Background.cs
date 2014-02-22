@@ -137,8 +137,8 @@ namespace SMLimitless.Sprites.Collections
 
             return new
             {
-                topColor = this.TopColor,
-                bottomColor = this.BottomColor,
+                topColor = this.TopColor.Serialize(),
+                bottomColor = this.BottomColor.Serialize(),
                 layers = backgroundLayerObjects
             };
         }

@@ -58,5 +58,10 @@ namespace SMLimitless.Extensions
 
             return new Color(red, green, blue, alpha);
         }
+
+        public static string Serialize(this Color value)
+        {
+            return string.Format("{0}, {1}, {2}, {3}", value.R, value.G, value.B, value.A);
+        }
     }
 }

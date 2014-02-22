@@ -135,8 +135,8 @@ namespace SMLimitless.Graphics
             var clone = new StaticGraphicsObject();
             clone.texture = this.texture;
             clone.filePath = this.filePath;
-            clone.isLoaded = true;
-            clone.isContentLoaded = true;
+            clone.isLoaded = this.isLoaded;
+            clone.isContentLoaded = this.isContentLoaded;
             return clone;
         }
 

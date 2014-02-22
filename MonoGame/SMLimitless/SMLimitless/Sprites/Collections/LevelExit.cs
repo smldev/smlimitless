@@ -58,7 +58,7 @@ namespace SMLimitless.Sprites.Collections
             return new
             {
                 exitIndex = this.ExitIndex,
-                exitDirection = this.ExitDirection,
+                exitDirection = (int)this.ExitDirection,
                 objectName = this.ObjectName
             };
         }
