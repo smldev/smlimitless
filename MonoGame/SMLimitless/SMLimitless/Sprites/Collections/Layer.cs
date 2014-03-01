@@ -433,8 +433,12 @@ namespace SMLimitless.Sprites.Collections
                 Tile tile = AssemblyManager.GetTileByFullName(typeName);
                 tile.Deserialize(tileData.ToString());
                 tile.Initialize(this.owner);
-                this.tiles.Add(tile);
                 this.owner.AddTile(tile);
+
+                if (!this.isMainLayer)
+                {
+                    this.tiles.Add(tile);
+                }
             }
         }
     }

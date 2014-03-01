@@ -93,7 +93,7 @@ namespace SMLimitless.Extensions
         /// </summary>
         /// <param name="value">The string to draw.</param>
         /// <param name="position">The position on the screen to draw it at.</param>
-        /// <param name="color">The color of the text.</param>
+        /// <param name="scale">Optional, default is 1. The size of the text to draw.</param>
         public static void DrawString(this string value, Microsoft.Xna.Framework.Vector2 position, float scale = 1f)
         {
             GameServices.DebugFont.DrawString(value, position, scale);

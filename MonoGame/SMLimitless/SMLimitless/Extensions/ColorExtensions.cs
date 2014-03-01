@@ -59,6 +59,11 @@ namespace SMLimitless.Extensions
             return new Color(red, green, blue, alpha);
         }
 
+        /// <summary>
+        /// Serializes a color, producing a string usable by serializers/deserializers.
+        /// </summary>
+        /// <param name="value">The color to serialize.</param>
+        /// <returns>A string in the format of "R, G, B, A".</returns>
         public static string Serialize(this Color value)
         {
             return string.Format("{0}, {1}, {2}, {3}", value.R, value.G, value.B, value.A);

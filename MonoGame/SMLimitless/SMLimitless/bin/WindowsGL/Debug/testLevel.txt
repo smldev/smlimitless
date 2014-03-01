@@ -46,168 +46,6 @@
               "collisionType": 0,
               "name": "",
               "graphicsResource": "smw_grass_top",
-              "position": "400, 240",
-              "state": "default",
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.TestTile",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_top",
-              "position": "400, 240",
-              "state": "default",
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.TestTile",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_top",
-              "position": "160, 272",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.TestTile",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_top",
-              "position": "144, 240",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.TestTile",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_top",
-              "position": "144, 224",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.TestTile",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_top",
-              "position": "128, 176",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.TestTile",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_top",
-              "position": "128, 160",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.TestTile",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_top",
-              "position": "128, 144",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.TestTile",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_top",
-              "position": "176, 128",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.TestTile",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_top",
-              "position": "240, 112",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.TestTile",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_top",
-              "position": "336, 112",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.TestTile",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_top",
-              "position": "400, 128",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.TestTile",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_top",
-              "position": "448, 144",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.TestTile",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_top",
-              "position": "480, 160",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.TestTile",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_top",
-              "position": "496, 160",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.TestTile",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_top",
-              "position": "496, 192",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.TestTile",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_top",
-              "position": "496, 208",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.TestTile",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_top",
-              "position": "480, 224",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.TestTile",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_top",
               "position": "480, 256",
               "state": null,
               "customData": null
@@ -307,96 +145,6 @@
               "collisionType": 0,
               "name": "",
               "graphicsResource": "smw_grass_top",
-              "position": "240, 272",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.TestTile",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_top",
-              "position": "272, 256",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.TestTile",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_top",
-              "position": "336, 224",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.TestTile",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_top",
-              "position": "400, 224",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.TestTile",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_top",
-              "position": "560, 208",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.TestTile",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_top",
-              "position": "608, 208",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.TestTile",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_top",
-              "position": "640, 208",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.TestTile",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_top",
-              "position": "656, 224",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.TestTile",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_top",
-              "position": "656, 240",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.TestTile",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_top",
-              "position": "656, 272",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.TestTile",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_top",
               "position": "640, 288",
               "state": null,
               "customData": null
@@ -470,132 +218,6 @@
               "name": "",
               "graphicsResource": "smw_grass_top",
               "position": "176, 288",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.TestTile",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_top",
-              "position": "112, 256",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.TestTile",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_top",
-              "position": "112, 240",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.TestTile",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_top",
-              "position": "96, 224",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.TestTile",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_top",
-              "position": "96, 208",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.TestTile",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_top",
-              "position": "112, 192",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.TestTile",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_top",
-              "position": "144, 176",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.TestTile",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_top",
-              "position": "176, 160",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.TestTile",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_top",
-              "position": "208, 160",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.TestTile",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_top",
-              "position": "224, 160",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.TestTile",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_top",
-              "position": "256, 160",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.TestTile",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_top",
-              "position": "272, 176",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.TestTile",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_top",
-              "position": "304, 176",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.TestTile",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_top",
-              "position": "304, 192",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.TestTile",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_top",
-              "position": "320, 192",
               "state": null,
               "customData": null
             },
@@ -1217,33 +839,6 @@
               "name": "",
               "graphicsResource": "smw_grass_slope1",
               "position": "384, 256",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.SlopedTestTile1",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_slope1",
-              "position": "400, 240",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.SlopedTestTile1",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_slope1",
-              "position": "400, 240",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.SlopedTestTile1",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_slope1",
-              "position": "400, 240",
               "state": null,
               "customData": null
             },
@@ -13250,6 +12845,51 @@
               "name": "",
               "graphicsResource": "smw_concrete_block",
               "position": "1840, 0",
+              "state": null,
+              "customData": null
+            },
+            {
+              "typeName": "SmlSample.SlopedTestTile1",
+              "collisionType": 0,
+              "name": "",
+              "graphicsResource": "smw_grass_slope1",
+              "position": "400, 240",
+              "state": null,
+              "customData": null
+            },
+            {
+              "typeName": "SmlSample.SlopedTestTile1",
+              "collisionType": 0,
+              "name": "",
+              "graphicsResource": "smw_grass_slope1",
+              "position": "400, 240",
+              "state": null,
+              "customData": null
+            },
+            {
+              "typeName": "SmlSample.SlopedTestTile1",
+              "collisionType": 0,
+              "name": "",
+              "graphicsResource": "smw_grass_slope1",
+              "position": "400, 240",
+              "state": null,
+              "customData": null
+            },
+            {
+              "typeName": "SmlSample.SlopedTestTile1",
+              "collisionType": 0,
+              "name": "",
+              "graphicsResource": "smw_grass_slope1",
+              "position": "400, 240",
+              "state": null,
+              "customData": null
+            },
+            {
+              "typeName": "SmlSample.SlopedTestTile1",
+              "collisionType": 0,
+              "name": "",
+              "graphicsResource": "smw_grass_slope1",
+              "position": "400, 240",
               "state": null,
               "customData": null
             }

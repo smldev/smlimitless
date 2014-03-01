@@ -268,7 +268,7 @@ namespace SMLimitless.Sprites.Collections
         public void Draw()
         {
             this.Background.Draw();
-            GameServices.DebugFont.DrawString(this.Camera.ViewportSize.ToString() + " " + this.Camera.Position.ToString(), new Vector2(16f) + this.Camera.Position, 2f);
+            GameServices.DebugFont.DrawString(this.sprites[0].Position.ToString(), new Vector2(16f));
 
             this.tiles.ForEach(t => t.Draw());
             this.sprites.ForEach(s => s.Draw());
