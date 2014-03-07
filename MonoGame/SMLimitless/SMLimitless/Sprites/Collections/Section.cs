@@ -133,6 +133,10 @@ namespace SMLimitless.Sprites.Collections
         /// </summary>
         private List<Layer> layers;
 
+        /// <summary>
+        /// A list of all tiles in this section.
+        /// </summary>
+        /// <remarks>This list is a reflection of all the layers' tile lists.</remarks>
         private List<Tile> tiles;
 
         /// <summary>
@@ -145,8 +149,19 @@ namespace SMLimitless.Sprites.Collections
         /// </summary>
         private List<Path> paths;
 
+        /// <summary>
+        /// A field that stores whether the section has been initialized.
+        /// </summary>
         private bool isInitialized;
+
+        /// <summary>
+        /// A field that stores whether the content for this section has been loaded.
+        /// </summary>
         private bool isContentLoaded;
+
+        /// <summary>
+        /// A fielded that stores whether the section has loaded from the file.
+        /// </summary>
         private bool isSectionLoaded;
 
         /// <summary>
@@ -257,7 +272,7 @@ namespace SMLimitless.Sprites.Collections
             }
             else if (Input.InputManager.IsNewKeyPress(Microsoft.Xna.Framework.Input.Keys.W))
             {
-                string file = Owner.Serialize();
+                string file = this.Owner.Serialize();
                 System.IO.File.WriteAllText(System.IO.Directory.GetCurrentDirectory() + @"\level.txt", file);
             }
         }
@@ -274,6 +289,10 @@ namespace SMLimitless.Sprites.Collections
             this.sprites.ForEach(s => s.Draw());
         }
 
+        /// <summary>
+        /// Adds a tile to this section.
+        /// </summary>
+        /// <param name="tile">The tile to add.</param>
         public void AddTile(Tile tile)
         {
             if (tile == null)
@@ -286,6 +305,10 @@ namespace SMLimitless.Sprites.Collections
             this.QuadTree.Add(tile);
         }
 
+        /// <summary>
+        /// Removes a tile from this level.
+        /// </summary>
+        /// <param name="tile">The tile to remove.</param>
         public void RemoveTile(Tile tile)
         {
             if (this.tiles.Contains(tile))
@@ -296,6 +319,12 @@ namespace SMLimitless.Sprites.Collections
             }
         }
 
+        /// <summary>
+        /// Gets the tile at the given position.
+        /// </summary>
+        /// <param name="position">The position from which to get the tile.</param>
+        /// <param name="adjacentPointsAreWithin">If true, the method will return a tile if the point is on the edge of the tile.</param>
+        /// <returns>The tile at the position, or null if there is no tile there.</returns>
         public Tile GetTileAtPosition(Vector2 position, bool adjacentPointsAreWithin)
         {
             var tiles = this.QuadTree.GetTilesInCell(this.QuadTree.GetCellNumberAtPosition(position));
@@ -316,6 +345,10 @@ namespace SMLimitless.Sprites.Collections
             return null;
         }
 
+        /// <summary>
+        /// Sets a given layer as the main layer.
+        /// </summary>
+        /// <param name="layer">The layer to set.</param>
         public void SetMainLayer(Layer layer)
         {
             if (this.MainLayer != null)

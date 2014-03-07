@@ -56,7 +56,7 @@ namespace SMLimitless.Sprites
         public string State { get; set; }
 
         /// <summary>
-        /// Gets the position of the tile when it was first loaded into the level.
+        /// Gets or sets the position of the tile when it was first loaded into the level.
         /// </summary>
         public Vector2 InitialPosition { get; protected set; }
 
@@ -101,8 +101,7 @@ namespace SMLimitless.Sprites
         /// <summary>
         /// Initializes this tile.
         /// </summary>
-        /// <param name="owner">The Level that owns this tile.</param>
-        /// <param name="graphicsResourceName">The name of the graphics resource that is used for this tile's graphics.</param>
+        /// <param name="owner">The Section that owns this tile.</param>
         public virtual void Initialize(Section owner)
         {
             this.Owner = owner;
@@ -183,7 +182,7 @@ namespace SMLimitless.Sprites
         /// <remarks>This method accounts for the different tile collision types.</remarks>
         internal virtual Vector2 GetCollisionResolution(Sprite sprite)
         {
-            Vector2 resolution = this.Hitbox.GetCollisionResolution(sprite.Hitbox).ResolutionDistance;
+            Vector2 resolution = this.Hitbox.GetCollisionResolution(sprite.Hitbox);
 
             switch (this.Collision)
             {
@@ -228,7 +227,7 @@ namespace SMLimitless.Sprites
         /// <param name="sprite">The sprite that intersected this tile.</param>
         public virtual void HandleCollision(Sprite sprite)
         {
-            this.HandleCollision(sprite, this.Hitbox.GetCollisionResolution(sprite.Hitbox).ResolutionDistance);
+            this.HandleCollision(sprite, this.Hitbox.GetCollisionResolution(sprite.Hitbox));
         }
 
         /// <summary>

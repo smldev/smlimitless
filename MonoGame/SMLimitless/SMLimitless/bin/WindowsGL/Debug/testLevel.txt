@@ -12909,7 +12909,20 @@
           "isMoving": true,
           "direction": 0,
           "customObjects": null
-        }
+        },
+		{
+			"typeName": "SmlSample.TestSprite",
+			"position": "16, 16",
+			"isActive": true,
+			"state": "default",
+			"collision": 0,
+			"name": "",
+			"message": "",
+			"isHostile": true,
+			"isMoving": true,
+			"direction": 0,
+			"customObjects": null
+		}
       ],
       "paths": [
         {

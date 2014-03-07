@@ -28,7 +28,15 @@ namespace SMLimitless.Interfaces
         /// </summary>
         /// <param name="that">The rectangle to resolve.</param>
         /// <returns>The distance to move the rectangle by.</returns>
-        Resolution GetCollisionResolution(BoundingRectangle that);
+        Vector2 GetCollisionResolution(BoundingRectangle that);
+
+        /// <summary>
+        /// Gets the depth of an intersection between this shape
+        /// and a rectangle.
+        /// </summary>
+        /// <param name="that">The rectangle to check for.</param>
+        /// <returns>A vector representing the depth.</returns>
+        Vector2 GetIntersectionDepth(BoundingRectangle that);
 
         /// <summary>
         /// Determines if a rectangle intersects this shape.
@@ -42,6 +50,7 @@ namespace SMLimitless.Interfaces
         /// Determines if a point is within this shape.
         /// </summary>
         /// <param name="point">The point to check.</param>
+        /// <param name="adjacentPointsAreWithin">If true, any point on the edge of the shape will be considered within.</param>
         /// <returns>True if the point is within the shape, false if otherwise.</returns>
         bool Within(Vector2 point, bool adjacentPointsAreWithin);
     }

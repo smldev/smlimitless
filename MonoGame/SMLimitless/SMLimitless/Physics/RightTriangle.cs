@@ -253,6 +253,12 @@ namespace SMLimitless.Physics
             return rect.Intersects(this);
         }
 
+        /// <summary>
+        /// Determines if a point is within this triangle.
+        /// </summary>
+        /// <param name="point">The point to check.</param>
+        /// <param name="adjacentPointsAreWithin">If true, any point on the edge of the shape will be considered within.</param>
+        /// <returns>True if the point is within the shape, false if otherwise.</returns>
         public bool Within(Vector2 point, bool adjacentPointsAreWithin)
         {
             if (!this.Bounds.Within(point, adjacentPointsAreWithin))
@@ -312,14 +318,13 @@ namespace SMLimitless.Physics
         /// triangles) is within the bounds. If it is, the method treats it as a slope collision 
         /// by checking if the point is between the slope and the top. If it isn't, the collision
         /// is treated as a collision between two rectangles.</remarks>
-        public Resolution GetCollisionResolution(BoundingRectangle rect)
+        public Vector2 GetCollisionResolution(BoundingRectangle rect)
         {
             Vector2 rectCollisionPoint = (this.SlopedSides == RtSlopedSides.TopLeft || this.SlopedSides == RtSlopedSides.TopRight) ? rect.BottomCenter : rect.TopCenter;
-            Vector2 pointOnSlope = this.GetPointOnSlope(rect.Center.X);
 
             if (!this.Bounds.IntersectsIncludingEdges(rectCollisionPoint))
             {
-                Vector2 resolution = this.Bounds.GetCollisionResolution(rect).ResolutionDistance;
+                Vector2 resolution = this.Bounds.GetCollisionResolution(rect);
                 Vector2 result = Vector2.Zero;
 
                 if (this.HorizontalSlopedSide == HorizontalDirection.Right)
@@ -357,12 +362,23 @@ namespace SMLimitless.Physics
                 }
 
                 // TODO: The above could be condensed into two conditionals, but alas, I'm too tired at the moment.
-                return new Resolution(result);
+                return result;
             }
             else
             {
-                return new Resolution(this.ResolveSlopeCollision(rect, this.Bounds.GetCollisionResolution(rect).ResolutionDistance), ResolutionType.Slope);
+                return this.ResolveSlopeCollision(rect, this.Bounds.GetCollisionResolution(rect));
             }
+        }
+
+        /// <summary>
+        /// Returns the depth of the intersection between this triangle
+        /// and a given rectangle.
+        /// </summary>
+        /// <param name="that">The given rectangle.</param>
+        /// <returns>A vector representing the collision depth.</returns>
+        public Vector2 GetIntersectionDepth(BoundingRectangle that)
+        {
+            return this.GetCollisionResolution(that);
         }
 
         /// <summary>

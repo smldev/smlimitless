@@ -20,8 +20,6 @@ namespace SMLimitless.Physics
         /// </summary>
         private float zoom;
 
-        private Vector2 position;
-
         /// <summary>
         /// A field containing the matrix transformation for the camera.
         /// </summary>

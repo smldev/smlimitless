@@ -287,11 +287,21 @@ namespace SMLimitless.Extensions
             return new Vector2(x, y);
         }
 
+        /// <summary>
+        /// Produces a string representation of this vector usable for serializers and deserializers.
+        /// </summary>
+        /// <param name="value">The vector to serialize.</param>
+        /// <returns>A string in the format of "X, Y".</returns>
         public static string Serialize(this Vector2 value)
         {
             return string.Format("{0}, {1}", value.X, value.Y);
         }
 
+        /// <summary>
+        /// Produces a list of strings containing serialized forms of a list of vectors.
+        /// </summary>
+        /// <param name="value">The vectors to serialize.</param>
+        /// <returns>A list of strings in the format of "X, Y".</returns>
         public static List<string> Serialize(this List<Vector2> value)
         {
             return value.Select(v => v.Serialize()).ToList(); // yay LINQ

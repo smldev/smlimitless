@@ -12,8 +12,8 @@ namespace SMLimitless
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Content;
     using Microsoft.Xna.Framework.Graphics;
-    using SMLimitless.Physics;
     using SMLimitless.Graphics;
+    using SMLimitless.Physics;
     
     /// <summary>
     /// Provides global access to game services.
@@ -85,6 +85,9 @@ namespace SMLimitless
         /// </summary>
         public static Vector2 ScreenSize { get; set; }
 
+        /// <summary>
+        /// Gets a bitmap font used for drawing debug text to screen.
+        /// </summary>
         public static BitmapFont DebugFont { get; private set; }
 
         /// <summary>
@@ -111,6 +114,10 @@ namespace SMLimitless
             AddService<ContentManager>(content);
         }
 
+        /// <summary>
+        /// Initializes the debug font.
+        /// </summary>
+        /// <param name="contentResourceName">The name of the font's content resource.</param>
         public static void InitializeFont(string contentResourceName)
         {
             DebugFont = new BitmapFont();
@@ -147,6 +154,10 @@ namespace SMLimitless
             Container.RemoveService(typeof(T));
         }
 
+        /// <summary>
+        /// Draws a given string using the debug font at {X: 16, Y:16} at double scale.
+        /// </summary>
+        /// <param name="text">The text to draw.</param>
         public static void DrawStringDefault(string text)
         {
             if (DebugFont != null)

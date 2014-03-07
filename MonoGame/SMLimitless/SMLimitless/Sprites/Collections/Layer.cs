@@ -25,7 +25,7 @@ namespace SMLimitless.Sprites.Collections
         /// <summary>
         /// A value indicating whether this is the main layer for the level.
         /// </summary>
-        public bool isMainLayer;
+        private bool isMainLayer;
 
         /// <summary>
         /// A value indicating whether this layer is actively drawn and updated.

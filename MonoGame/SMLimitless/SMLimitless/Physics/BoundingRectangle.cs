@@ -356,15 +356,21 @@ namespace SMLimitless.Physics
             }
         }
 
+        /// <summary>
+        /// Determines if a point is within this rectangle.
+        /// </summary>
+        /// <param name="point">The point to check.</param>
+        /// <param name="adjacentPointsAreWithin">If true, any point on the edge of the shape will be considered within.</param>
+        /// <returns>True if the point is within the shape, false if otherwise.</returns>
         public bool Within(Vector2 point, bool adjacentPointsAreWithin)
         {
             if (adjacentPointsAreWithin)
             {
-                return IntersectsIncludingEdges(point);
+                return this.IntersectsIncludingEdges(point);
             }
             else
             {
-                return Intersects(point);
+                return this.Intersects(point);
             }
         }
 
@@ -432,21 +438,21 @@ namespace SMLimitless.Physics
         /// the intersection depth. It then determines which of the two axes has the smallest absolute
         /// value and zeroes out the other. This way of collision resolution is called the "shallowest edge"
         /// method, and it allows quick determination of which axis to resolve along.</remarks>
-        public Resolution GetCollisionResolution(BoundingRectangle that)
+        public Vector2 GetCollisionResolution(BoundingRectangle that)
         {
             Vector2 intersection = this.GetIntersectionDepth(that);
 
             if (intersection.IsNaN())
             {
-                return Resolution.Zero;
+                return new Vector2(float.NaN, float.NaN);
             }
             else if (Math.Abs(intersection.X) < Math.Abs(intersection.Y))
             {
-                return new Resolution(new Vector2(intersection.X, 0f));
+                return new Vector2(intersection.X, 0f);
             }
             else
             {
-                return new Resolution(new Vector2(0f, intersection.Y));
+                return new Vector2(0f, intersection.Y);
             }
         }
 

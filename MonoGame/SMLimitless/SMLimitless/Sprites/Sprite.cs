@@ -75,7 +75,7 @@ namespace SMLimitless.Sprites
         public SpriteCollisionMode CollisionMode { get; protected set; }
 
         /// <summary>
-        /// Gets the position of this sprite when it was first loaded into the level.
+        /// Gets or sets the position of this sprite when it was first loaded into the level.
         /// </summary>
         public Vector2 InitialPosition { get; protected set; }
 
@@ -234,7 +234,7 @@ namespace SMLimitless.Sprites
                 // both left and right or both up and down.  We should move left until
                 // we're out of being embedded.
                 this.Acceleration = Vector2.Zero;
-                ////this.Velocity = new Vector2(-25f, 0f);
+                this.Velocity = new Vector2(-25f, 0f);
             }
             else
             {
@@ -251,7 +251,7 @@ namespace SMLimitless.Sprites
 
             this.Velocity += this.Acceleration * delta;
 
-            this.Position += this.Velocity * delta;
+            ////this.Position += this.Velocity * delta;
         }
 
         /// <summary>

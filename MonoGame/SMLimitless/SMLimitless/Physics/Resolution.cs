@@ -14,6 +14,7 @@ namespace SMLimitless.Physics
     /// <summary>
     /// Represents a collision resolution between a sprite and a tile.
     /// </summary>
+    [Obsolete]
     public struct Resolution
     {
         /// <summary>
