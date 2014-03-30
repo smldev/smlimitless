@@ -23,6 +23,9 @@ namespace SMLimitless.Sprites
     /// </summary>
     public abstract class Tile : IName, IEditorObject, IPositionable, ISerializable
     {
+        private Vector2 size;
+        private Vector2 position;
+
         /// <summary>
         /// Gets the name of the category that this tile is
         /// categorized within in the level editor.
@@ -63,23 +66,39 @@ namespace SMLimitless.Sprites
         /// <summary>
         /// Gets or sets the position of this tile.
         /// </summary>
-        public Vector2 Position { get; set; }
+        public virtual Vector2 Position
+        {
+            get
+            {
+                return this.position;
+            }
+            set
+            {
+                this.position = value;
+                this.Hitbox = new BoundingRectangle(this.Position.X, this.Position.Y, this.Size.X, this.Size.Y);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the size of this tile.
         /// </summary>
-        public Vector2 Size { get; set; }
+        public virtual Vector2 Size
+        {
+            get
+            {
+                return this.size;
+            }
+            set
+            {
+                this.size = value;
+                this.Hitbox = new BoundingRectangle(this.Position.X, this.Position.Y, this.Size.X, this.Size.Y);
+            }
+        }
 
         /// <summary>
         /// Gets a rectangle representing this tile's hitbox.
         /// </summary>
-        public virtual ICollidableShape Hitbox
-        {
-            get
-            {
-                return new BoundingRectangle(this.Position, this.Size + this.Position);
-            }
-        }
+        public virtual ICollidableShape Hitbox { get; protected set; }
 
         /// <summary>
         /// Gets or sets the name of this tile to be used in event scripting.  This field is optional.

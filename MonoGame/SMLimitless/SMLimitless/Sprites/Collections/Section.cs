@@ -164,6 +164,12 @@ namespace SMLimitless.Sprites.Collections
         /// </summary>
         private bool isSectionLoaded;
 
+        // Temp collision fields
+        private int xResolutions;
+        private int yResolutions;
+        private string lastXCollisionData = "";
+        private string lastYCollisionData = "";
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Section"/> class.
         /// </summary>
@@ -254,13 +260,134 @@ namespace SMLimitless.Sprites.Collections
         /// </summary>
         public void Update()
         {
+            this.xResolutions = 0;
+            this.yResolutions = 0;
+
             this.Background.Update();
             this.tiles.ForEach(t => t.Update());
             this.sprites.ForEach(s => s.Update());
             this.QuadTree.Update();
 
-            Vector2 direction = Input.InputManager.GetDirectionalInputVector() * 2f;
-            this.MoveCamera(direction);
+            foreach (Sprite sprite in this.sprites)
+            {
+                bool spriteOnGround = sprite.IsOnGround;
+                bool spriteOnSlope = sprite.IsOnSlope;
+                float delta = GameServices.GameTime.GetElapsedSeconds();
+
+                List<Tile> collidableTiles = new List<Tile>();
+                List<Tile> collidingTiles = new List<Tile>();
+                List<Vector2> collidingDepths = new List<Vector2>();
+
+                // First, we'll step the X position of the sprite and then check for collisions.
+                sprite.Position = new Vector2(sprite.Position.X + sprite.Velocity.X * delta, sprite.Position.Y);
+                this.QuadTree.PlaceSprite(sprite);
+                collidableTiles = this.QuadTree.GetCollidableTiles(sprite);
+
+                foreach (Tile tile in collidableTiles)
+                {
+                    if (tile.Intersects(sprite))
+                    {
+                        Vector2 collisionDepth = tile.GetCollisionResolution(sprite);
+
+                        if (collisionDepth.X == 0f)
+                        {
+                            // Skip the collision if it's vertical
+                            continue;
+                        }
+                        else
+                        {
+                            if (!spriteOnSlope || this.ResolveCollisionWhileOnSlipe(sprite, tile))
+                            {
+                                sprite.Position = new Vector2(sprite.Position.X + collisionDepth.X, sprite.Position.Y);
+                            }
+                            else
+                            {
+                                continue;
+                            }
+                        }
+                    }
+                }
+
+                //sprite.IsOnGround = false;
+                //sprite.IsOnSlope = false;
+
+                // Next, we'll step the Y position of the sprite and check for collisions.
+                // We'll also set on ground and on slope flags here.
+                if (sprite.Velocity.Y < 0)
+                {
+                    // If the sprite is moving upward
+                    sprite.IsOnGround = false;
+                    sprite.IsOnSlope = false;
+                }
+                else if (sprite.Velocity.Y > 0 && (sprite.IsOnGround || sprite.IsOnSlope))
+                {
+                    // If the sprite is falling but it's already atop a tile
+                    sprite.Velocity = new Vector2(sprite.Velocity.X, 0f);
+                }
+
+                sprite.Position = new Vector2(sprite.Position.X, sprite.Position.Y + sprite.Velocity.Y * delta);
+                this.QuadTree.PlaceSprite(sprite);
+                collidableTiles = this.QuadTree.GetCollidableTiles(sprite);
+
+                foreach (Tile tile in collidableTiles)
+                {
+                    if (tile.Intersects(sprite))
+                    {
+                        Vector2 collisionDepth = tile.GetCollisionResolution(sprite);
+
+                        if (collisionDepth.Y == 0)
+                        {
+                            // Skip the collision if it's horizontal
+                            continue;
+                        }
+                        else
+                        {
+                            sprite.Position = new Vector2(sprite.Position.X, sprite.Position.Y + collisionDepth.Y);
+                            sprite.RestingTile = tile;
+                            if (tile is SlopedTile)
+                            {
+                                sprite.IsOnSlope = true;
+                            }
+                            sprite.IsOnGround = true;
+                        }
+                    }
+                }
+
+                // We want the sprite to follow the top surface of the tile its resting on.
+                Vector2 bottomCenterCheckPoint = new Vector2(sprite.Hitbox.BottomCenter.X, sprite.Hitbox.BottomCenter.Y + 1f);
+                Tile restingTile = this.GetTileAtPosition(bottomCenterCheckPoint, false);
+
+                if (restingTile == null)
+                {
+                    // Since there's no tile under the bottom center point, we don't have to care too much.
+                    continue;
+                }
+                else
+                {
+                    sprite.Position = new Vector2(sprite.Position.X, restingTile.Hitbox.GetTopPoint(bottomCenterCheckPoint.X) - sprite.Hitbox.Height);
+                }
+            }
+
+            // Update the camera's position (temp).
+            Sprite player = this.sprites.Where(s => s.GetType().Name.Contains("SimplePlayer")).FirstOrDefault();
+            if (player != null)
+            {
+                float cameraX = MathHelper.Clamp(player.Hitbox.Center.X - 400f, this.Bounds.X, this.Bounds.Width);
+                float cameraY = MathHelper.Clamp(player.Hitbox.Center.Y - 240f, this.Bounds.Y, this.Bounds.Height);
+                Vector2 offset = new Vector2(cameraX - this.Camera.Position.X, cameraY - this.Camera.Position.Y);
+                this.MoveCamera(offset);
+            }
+
+            TempUpdate();
+        }
+
+        /// <summary>
+        /// Temporary code for the update routine.
+        /// </summary>
+        private void TempUpdate()
+        {
+            ////Vector2 direction = Input.InputManager.GetDirectionalInputVector() * 2f;
+            ////this.MoveCamera(direction);
 
             if (Input.InputManager.IsCurrentKeyPress(Microsoft.Xna.Framework.Input.Keys.A))
             {
@@ -275,7 +402,7 @@ namespace SMLimitless.Sprites.Collections
                 string file = this.Owner.Serialize();
                 System.IO.File.WriteAllText(System.IO.Directory.GetCurrentDirectory() + @"\level.txt", file);
             }
-        }
+        }   
 
         /// <summary>
         /// Draws this section to the screen.
@@ -283,9 +410,17 @@ namespace SMLimitless.Sprites.Collections
         public void Draw()
         {
             this.Background.Draw();
-            GameServices.DebugFont.DrawString(this.sprites[0].Position.ToString(), new Vector2(16f));
 
             this.tiles.ForEach(t => t.Draw());
+
+            foreach (Tile t in this.tiles)
+            {
+                if (t.GetType().Name.EndsWith("TestTile"))
+                {
+                    t.Hitbox.Bounds.DrawOutline(Color.White);
+                }
+            }
+
             this.sprites.ForEach(s => s.Draw());
         }
 
@@ -357,6 +492,53 @@ namespace SMLimitless.Sprites.Collections
             }
 
             this.MainLayer = layer;
+        }
+
+        private SlopedTile GetSlopeWithSprite(Sprite sprite)
+        {
+            // In order to allow sprites to walk up onto solid tiles from slopes,
+            // we must ensure that sprites do not collide with solid tiles before
+            // they leave the slope. The first step is to determine which sloped tile
+            // the sprite is in contact with. Since a sprite can be in contact with a
+            // slope on its top or bottom side, we'll grab both and return the one that's
+            // not null. If the sprite is in contact with both, it doesn't really matter.
+
+            Vector2 topCenter = sprite.Hitbox.TopCenter;
+            Vector2 bottomCenter = sprite.Hitbox.BottomCenter;
+
+            SlopedTile slopeAbove = this.GetTileAtPosition(new Vector2(topCenter.X, topCenter.Y - 1f), true) as SlopedTile;
+            SlopedTile slopeBelow = this.GetTileAtPosition(new Vector2(bottomCenter.X, bottomCenter.Y + 1f), true) as SlopedTile;
+
+            if (slopeBelow != null)
+            {
+                return slopeBelow;
+            }
+            else if (slopeAbove != null)
+            {
+                return slopeAbove;
+            }
+            else // if they're both null or both not null
+            {
+                return null;
+            }
+        }
+
+        private bool ResolveCollisionWhileOnSlipe(Sprite sprite, Tile tile)
+        {
+            SlopedTile slope = this.GetSlopeWithSprite(sprite);
+
+            // If the current colliding tile is closer to the slope than the sprite's width
+            // and the top of the current colliding tile is between the top-Y and bottom-Y-coordinate of the slope...
+            if (Math.Abs(tile.Position.X - slope.Position.X) < sprite.Hitbox.Width &&
+                (tile.Hitbox.Bounds.Top >= slope.Hitbox.Bounds.Top && tile.Hitbox.Bounds.Top <= slope.Hitbox.Bounds.Bottom))
+            {
+                // ...ignore the tile.
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
 
         /// <summary>
