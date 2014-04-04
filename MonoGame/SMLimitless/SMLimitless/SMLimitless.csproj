@@ -72,6 +72,7 @@
     <Compile Include="Interfaces\ICollidableShape.cs" />
     <Compile Include="Interfaces\IEditorObject.cs" />
     <Compile Include="Interfaces\IEffect.cs" />
+    <Compile Include="Interfaces\IGridObject.cs" />
     <Compile Include="Interfaces\IName.cs" />
     <Compile Include="Interfaces\IPositionable.cs" />
     <Compile Include="Interfaces\ISerializable.cs" />
@@ -103,6 +104,7 @@
     <Compile Include="Sprites\Collections\Background.cs" />
     <Compile Include="Sprites\Collections\BackgroundLayer.cs" />
     <Compile Include="Sprites\Collections\EventScript.cs" />
+    <Compile Include="Sprites\Collections\GridLayer.cs" />
     <Compile Include="Sprites\Collections\Layer.cs" />
     <Compile Include="Sprites\Collections\Level.cs" />
     <Compile Include="Sprites\Collections\LevelExit.cs" />

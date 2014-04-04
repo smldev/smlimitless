@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using SMLimitless.Extensions;
 using SMLimitless.Interfaces;
 using SMLimitless.Physics;
 
@@ -44,6 +45,22 @@ namespace SMLimitless.Collections
         /// Gets the height of a grid cell, usually in pixels.
         /// </summary>
         public int CellHeight { get; private set; }
+
+        public int Width
+        {
+            get
+            {
+                return this.grid.Width;
+            }
+        }
+
+        public int Height
+        {
+            get
+            {
+                return this.grid.Height;
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SizedGrid{T}"/> class.
@@ -153,6 +170,76 @@ namespace SMLimitless.Collections
             }
         }
 
+        public SizedGrid<T> GetSubgrid(int x, int y, int width, int height)
+        {
+            if (!this.IndexWithinBounds(x, y))
+            {
+                throw new ArgumentException(string.Format("SizedGrid.GetSubgrid(int, int, int, int): The starting position {0}, {1} is not within the grid.", x, y));
+            }
+            
+            if (!this.IndexWithinBounds(x + width, y + height))
+            {
+                throw new ArgumentException(string.Format("SizedGrid.GetSubgrid(int, int, int, int): The ending position {0}, {1} is not within the grid.", x + width, y + height));
+            }
+
+            SizedGrid<T> result = new SizedGrid<T>(this.CellWidth, this.CellWidth, width, height);
+            int resultX = 0, resultY = 0;
+
+            for (int yPos = y; yPos < y + height; yPos++)
+            {
+                for (int xPos = x; xPos < x + width; xPos++)
+                {
+                    result[resultX, resultY] = this[xPos, yPos];
+                    resultX++;
+                }
+
+                resultY++;
+                resultX = 0;
+            }
+
+            return result;
+        }
+
+        public Point GetCellAtPosition(Vector2 position)
+        {
+            int x = (int)(position.X / this.CellWidth);
+            int y = (int)(position.Y / this.CellHeight);
+
+            return new Point(x, y);
+        }
+
+        public T GetObjectAtPosition(Vector2 position)
+        {
+            Point cell = this.GetCellAtPosition(position);
+            return this[cell.X, cell.Y];
+        }
+
+        public void Draw(Vector2 position, Color lineColor)
+        {
+            // The total number of vertical lines to draw is (height + 1).
+            // The total number of horizontal lines to draw is (width + 1).
+
+            float gridWidth = this.CellWidth * this.grid.Width;
+            float gridHeight = this.CellHeight * this.grid.Height;
+
+            float xPosition = position.X;
+            float yPosition = position.Y;
+
+            for (int y = 0; y <= this.grid.Height; y++)
+            {
+                GameServices.SpriteBatch.DrawLine(1f, lineColor, new Vector2(xPosition, yPosition), new Vector2(xPosition + gridWidth, yPosition));
+                yPosition += this.CellHeight;
+            }
+
+            yPosition = position.Y;
+
+            for (int x = 0; x <= this.grid.Width; x++)
+            {
+                GameServices.SpriteBatch.DrawLine(1f, lineColor, new Vector2(xPosition, yPosition), new Vector2(xPosition, yPosition + gridHeight));
+                xPosition += this.CellWidth;
+            }
+        }
+
         // Exception Checking Methods
 
         /// <summary>
@@ -161,7 +248,7 @@ namespace SMLimitless.Collections
         /// <param name="x">The X-coordinate of the coordinate to check.</param>
         /// <param name="y">The Y-coordinate of the coordinate to check.</param>
         /// <returns>True if the cell falls within the grid, false if otherwise.</returns>
-        private bool IndexWithinBounds(int x, int y)
+        public bool IndexWithinBounds(int x, int y)
         {
             return (x >= 0 && x < (this.grid.Width * this.CellWidth)) && (y >= 0 && y < (this.grid.Height * this.CellHeight));
         }
@@ -171,7 +258,7 @@ namespace SMLimitless.Collections
         /// </summary>
         /// <param name="point">The point to check.</param>
         /// <returns>True if the point falls within the grid, false if otherwise.</returns>
-        private bool PointWithinBounds(Vector2 point)
+        public bool PointWithinBounds(Vector2 point)
         {
             int rightEdge = this.grid.Width * this.CellWidth;
             int bottomEdge = this.grid.Height * this.CellHeight;

@@ -343,5 +343,10 @@ namespace SMLimitless.Extensions
         ////{
         // we have a lot of learning to do before this can work
         ////}
+
+        public static string Serialize(this Point value)
+        {
+            return string.Format("{0}, {1}", value.X, value.Y);
+        }
     }
 }

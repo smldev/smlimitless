@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json.Linq;
+using SMLimitless.Collections;
 using SMLimitless.Extensions;
 using SMLimitless.Interfaces;
 using SMLimitless.Physics;
@@ -21,7 +22,7 @@ namespace SMLimitless.Sprites
     /// <summary>
     /// The base type of all tiles.
     /// </summary>
-    public abstract class Tile : IName, IEditorObject, IPositionable, ISerializable
+    public abstract class Tile : IName, IEditorObject, IGridObject<Tile>, IPositionable, ISerializable
     {
         private Vector2 size;
         private Vector2 position;
@@ -99,6 +100,9 @@ namespace SMLimitless.Sprites
         /// Gets a rectangle representing this tile's hitbox.
         /// </summary>
         public virtual ICollidableShape Hitbox { get; protected set; }
+
+        public SizedGrid<Tile> Grid { get; private set; }
+        public Point GridCell { get; private set; }
 
         /// <summary>
         /// Gets or sets the name of this tile to be used in event scripting.  This field is optional.
@@ -256,6 +260,39 @@ namespace SMLimitless.Sprites
         /// <param name="intersect">The depth of the intersection.</param>
         public abstract void HandleCollision(Sprite sprite, Vector2 intersect);
 
+        public Tile Neighbor(Direction direction)
+        {
+            Point neighborCell = Point.Zero;
+            switch (direction)
+            {
+                case Direction.None:
+                    throw new ArgumentException("Tile.Neighbor(Direction): The \"none\" direction is not valid.");
+                case Direction.Up:
+                    neighborCell = new Point(this.GridCell.X, this.GridCell.Y - 1);
+                    break;
+                case Direction.Down:
+                    neighborCell = new Point(this.GridCell.X, this.GridCell.Y + 1);
+                    break;
+                case Direction.Left:
+                    neighborCell = new Point(this.GridCell.X - 1, this.GridCell.Y);
+                    break;
+                case Direction.Right:
+                    neighborCell = new Point(this.GridCell.X + 1, this.GridCell.Y);
+                    break;
+                default:
+                    break;
+            }
+
+            if (!this.Grid.IndexWithinBounds(neighborCell.X, neighborCell.Y))
+            {
+                return null;
+            }
+            else
+            {
+                return this.Grid[neighborCell.X, neighborCell.Y];
+            }
+        }
+
         /// <summary>
         /// Gets an anonymous object containing key custom objects to save to the level file.
         /// </summary>
@@ -281,6 +318,7 @@ namespace SMLimitless.Sprites
                 name = this.Name,
                 graphicsResource = this.GraphicsResourceName,
                 position = this.InitialPosition.Serialize(),
+                //gridCell = this.GridCell.Serialize(),
                 state = this.InitialState,
                 customData = this.GetCustomSerializableObjects()
             };

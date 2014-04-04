@@ -101,6 +101,14 @@ namespace SMLimitless
             }
         }
 
+        public static Vector2 GameObjectSize
+        {
+            get
+            {
+                return new Vector2(16f);
+            }
+        }
+
         /// <summary>
         /// Initializes the services container with key game services.
         /// </summary>
