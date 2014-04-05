@@ -376,7 +376,7 @@ namespace SMLimitless.Physics
         /// Places a sprite in the proper cell(s).
         /// </summary>
         /// <param name="sprite">The sprite to place.</param>
-        public void PlaceSprite(Sprite sprite)
+        private void PlaceSprite(Sprite sprite)
         {
             var intersectingCells = this.GetIntersectingCells(sprite);
 
@@ -398,7 +398,7 @@ namespace SMLimitless.Physics
         /// Places a tile in the proper cell(s).
         /// </summary>
         /// <param name="tile">The tile to place.</param>
-        public void PlaceTile(Tile tile)
+        private void PlaceTile(Tile tile)
         {
             var intersectingCells = this.GetIntersectingCells(tile);
 

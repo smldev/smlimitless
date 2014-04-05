@@ -53,12 +53,5 @@ namespace SMLimitless.Interfaces
         /// <param name="adjacentPointsAreWithin">If true, any point on the edge of the shape will be considered within.</param>
         /// <returns>True if the point is within the shape, false if otherwise.</returns>
         bool Within(Vector2 point, bool adjacentPointsAreWithin);
-
-        /// <summary>
-        /// Given an X-coordinate, this returns the location of the top of the tile at that X-coordinate.
-        /// </summary>
-        /// <param name="x">The X-coordinate to check for.</param>
-        /// <returns>A Y-coordinate.</returns>
-        float GetTopPoint(float x);
     }
 }

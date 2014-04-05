@@ -19,8 +19,6 @@ namespace SMLimitless.Physics
     /// </summary>
     public class RightTriangle : ICollidableShape
     {
-        private RtSlopedSides testSlopedSides;
-
         /// <summary>
         /// Gets or sets the rectangle that completely contains the triangle.
         /// </summary>
@@ -29,20 +27,8 @@ namespace SMLimitless.Physics
         /// <summary>
         /// Gets or sets a value indicating which sides of the triangle are sloped.
         /// </summary>
-        public RtSlopedSides SlopedSides
-        {
-            // TODO: get rid of the debug logic (and testSlopedSides)
-            get
-            {
-                return this.testSlopedSides;
-            }
-            set
-            {
-                if (this.testSlopedSides == RtSlopedSides.TopRight && value == RtSlopedSides.TopLeft)
-                    System.Diagnostics.Debugger.Break();
-                this.testSlopedSides = value;
-            }
-        }
+        public RtSlopedSides SlopedSides { get; set; }
+
         /// <summary>
         /// Gets the slope (rise over run) of the triangle.
         /// </summary>
@@ -393,18 +379,6 @@ namespace SMLimitless.Physics
         public Vector2 GetIntersectionDepth(BoundingRectangle that)
         {
             return this.GetCollisionResolution(that);
-        }
-
-        public float GetTopPoint(float x)
-        {
-            if (this.SlopedSides == RtSlopedSides.BottomLeft || this.SlopedSides == RtSlopedSides.BottomRight)
-            {
-                return this.Bounds.GetTopPoint(x);
-            }
-            else
-            {
-                return this.GetPointOnSlope(x).Y;
-            }
         }
 
         /// <summary>

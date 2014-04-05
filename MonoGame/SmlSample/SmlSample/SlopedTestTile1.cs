@@ -10,7 +10,6 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using SMLimitless.Content;
 using SMLimitless.Graphics;
-using SMLimitless.Physics;
 using SMLimitless.Sprites;
 using SMLimitless.Sprites.Collections;
 using SMLimitless.Sprites.Testing;
@@ -39,7 +38,6 @@ namespace SmlSample
         public SlopedTestTile1()
         {
             this.Size = new Vector2(16f, 16f);
-            this.SlopedSides = RtSlopedSides.TopLeft;
             this.GraphicsResourceName = "smw_grass_slope1";
         }
 

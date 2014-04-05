@@ -21,8 +21,6 @@ namespace SMLimitless.Sprites
     /// </summary>
     public abstract class Sprite : IName, IEditorObject, IPositionable, ISerializable
     {
-        private Vector2 position;
-
         /// <summary>
         /// A backing field for the IsEmbedded property.
         /// </summary>
@@ -89,17 +87,7 @@ namespace SMLimitless.Sprites
         /// <summary>
         /// Gets or sets the current position of this sprite.
         /// </summary>
-        public Vector2 Position
-        {
-            get
-            {
-                return this.position;
-            }
-            set
-            {
-                this.position = new Vector2(value.X.CorrectPrecision(), value.Y.CorrectPrecision());
-            }
-        }
+        public Vector2 Position { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this 
@@ -174,8 +162,6 @@ namespace SMLimitless.Sprites
         /// measured in pixels per second.
         /// </summary>
         public Vector2 Velocity { get; set; }
-
-        public Tile RestingTile { get; set; }
 
         /// <summary>
         /// Gets or sets an editor property representing an optional

@@ -244,7 +244,7 @@ namespace SMLimitless.Sprites.Collections
         /// <summary>
         /// Loads the content for this section.
         /// </summary>
-        public void LoadContent() 
+        public void LoadContent()
         {
             if (!this.isContentLoaded)
             {
@@ -254,7 +254,7 @@ namespace SMLimitless.Sprites.Collections
                 this.isContentLoaded = true;
             }
         }
-        
+
         /// <summary>
         /// Updates this section.
         /// </summary>
@@ -307,8 +307,9 @@ namespace SMLimitless.Sprites.Collections
                         }
                     }
                 }
-                sprite.IsOnGround = false;
-                sprite.IsOnSlope = false;
+
+                //sprite.IsOnGround = false;
+                //sprite.IsOnSlope = false;
 
                 // Next, we'll step the Y position of the sprite and check for collisions.
                 // We'll also set on ground and on slope flags here.
@@ -342,7 +343,7 @@ namespace SMLimitless.Sprites.Collections
                         else
                         {
                             sprite.Position = new Vector2(sprite.Position.X, sprite.Position.Y + collisionDepth.Y);
-                            sprite.RestingTile = tile;
+                            ////sprite.RestingTile = tile;
                             if (tile is SlopedTile)
                             {
                                 sprite.IsOnSlope = true;
@@ -352,19 +353,19 @@ namespace SMLimitless.Sprites.Collections
                     }
                 }
 
-                ////// We want the sprite to follow the top surface of the tile its resting on.
-                ////Vector2 bottomCenterCheckPoint = new Vector2(sprite.Hitbox.BottomCenter.X, sprite.Hitbox.BottomCenter.Y + 1f);
-                ////Tile restingTile = this.GetTileAtPosition(bottomCenterCheckPoint, false);
+                // We want the sprite to follow the top surface of the tile its resting on.
+                Vector2 bottomCenterCheckPoint = new Vector2(sprite.Hitbox.BottomCenter.X, sprite.Hitbox.BottomCenter.Y + 1f);
+                Tile restingTile = this.GetTileAtPosition(bottomCenterCheckPoint, false);
 
-                ////if (restingTile == null)
-                ////{
-                ////    // Since there's no tile under the bottom center point, we don't have to care too much.
-                ////    continue;
-                ////}
-                ////else
-                ////{
-                ////    sprite.Position = new Vector2(sprite.Position.X, restingTile.Hitbox.GetTopPoint(bottomCenterCheckPoint.X) - sprite.Hitbox.Height);
-                ////}
+                if (restingTile == null)
+                {
+                    // Since there's no tile under the bottom center point, we don't have to care too much.
+                    continue;
+                }
+                else
+                {
+                    ////sprite.Position = new Vector2(sprite.Position.X, restingTile.Hitbox.GetTopPoint(bottomCenterCheckPoint.X) - sprite.Hitbox.Height);
+                }
             }
 
             // Update the camera's position (temp).
@@ -401,7 +402,7 @@ namespace SMLimitless.Sprites.Collections
                 string file = this.Owner.Serialize();
                 System.IO.File.WriteAllText(System.IO.Directory.GetCurrentDirectory() + @"\level.txt", file);
             }
-        }   
+        }
 
         /// <summary>
         /// Draws this section to the screen.
@@ -421,7 +422,6 @@ namespace SMLimitless.Sprites.Collections
             }
 
             this.sprites.ForEach(s => s.Draw());
-            this.sprites.ForEach(s => s.Hitbox.DrawOutline(Color.Red));
         }
 
         /// <summary>

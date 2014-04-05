@@ -456,15 +456,6 @@ namespace SMLimitless.Physics
             }
         }
 
-        public float GetTopPoint(float x)
-        {
-            if (x >= this.Left && x <= this.Right)
-            {
-                return this.Top;
-            }
-            return float.NaN;
-        }
-
         /// <summary>
         /// Returns a standard Rectangle that uses integral components.
         /// </summary>

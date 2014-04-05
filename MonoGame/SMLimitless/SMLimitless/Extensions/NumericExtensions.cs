@@ -77,25 +77,6 @@ namespace SMLimitless.Extensions
             return input;
         }
 
-        public static float CorrectPrecision(this float value)
-        {
-            int nextInteger = (int)(value + 1f);
-            int lastInteger = (int)(value);
-
-            if (Math.Abs(nextInteger - value) < 0.0001f)
-            {
-                return (float)nextInteger;
-            }
-            else if (Math.Abs(value - lastInteger) < 0.0001f)
-            {
-                return (float)lastInteger;
-            }
-            else
-            {
-                return value;
-            }
-        }
-
         /// <summary>
         /// Returns a number representing the sign of a given number.
         /// </summary>
@@ -136,14 +117,5 @@ namespace SMLimitless.Extensions
         ////{
 
         ////}
-
-        public static float Abs(this float value)
-        {
-            if (value < 0f)
-            {
-                return -value;
-            }
-            return value;
-        }
     }
 }

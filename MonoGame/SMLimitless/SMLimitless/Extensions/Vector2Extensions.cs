@@ -78,7 +78,7 @@ namespace SMLimitless.Extensions
         /// <returns>A vector with the absolute values of the components.</returns>
         public static Vector2 Abs(this Vector2 vector)
         {
-            return new Vector2(Math.Abs(vector.X), Math.Abs(vector.Y));
+            return new Vector2((float)Math.Abs(vector.X), (float)Math.Abs(vector.Y));
         }
 
         /// <summary>
@@ -134,26 +134,6 @@ namespace SMLimitless.Extensions
         public static bool LessThanOrEqualTo(this Vector2 left, Vector2 right)
         {
             return (left.X <= right.X) && (left.Y <= right.Y);
-        }
-
-        public static bool GreaterThan(this Vector2 left, float right)
-        {
-            return (left.X > right) && (left.Y > right);
-        }
-
-        public static bool LessThan(this Vector2 left, float right)
-        {
-            return (left.X < right) && (left.Y < right);
-        }
-
-        public static bool GreaterThanOrEqualTo(this Vector2 left, float right)
-        {
-            return (left.X >= right) && (left.Y >= right);
-        }
-
-        public static bool LessThanOrEqualTo(this Vector2 left, float right)
-        {
-            return (left.X <= right) && (left.Y <= right);
         }
 
         /// <summary>

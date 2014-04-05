@@ -12911,14 +12911,14 @@
           "customObjects": null
         },
 		{
-			"typeName": "SmlSample.SimplePlayer",
-			"position": "0, 0",
+			"typeName": "SmlSample.TestSprite",
+			"position": "16, 16",
 			"isActive": true,
 			"state": "default",
 			"collision": 0,
 			"name": "",
 			"message": "",
-			"isHostile": false,
+			"isHostile": true,
 			"isMoving": true,
 			"direction": 0,
 			"customObjects": null
