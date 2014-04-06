@@ -14,7 +14,7 @@ using SMLimitless.Extensions;
 using SMLimitless.Input;
 using SMLimitless.Physics;
 using SMLimitless.Sprites;
-using SMLimitless.Sprites.Testing;
+
 
 namespace SmlSample
 {
@@ -35,15 +35,6 @@ namespace SmlSample
         public MouseFollowSprite()
         {
             this.Size = new Vector2(16f, 16f);
-        }
-
-        /// <summary>
-        /// Initializes this sprite.
-        /// </summary>
-        /// <param name="owner">The level that owns this sprite.</param>
-        public void Initialize(TestLevel owner)
-        {
-            
         }
         
         /// <summary>

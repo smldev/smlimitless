@@ -12,7 +12,7 @@ using SMLimitless.Graphics;
 using SMLimitless.Physics;
 using SMLimitless.Sprites;
 using SMLimitless.Sprites.Collections;
-using SMLimitless.Sprites.Testing;
+
 
 namespace SmlSample
 {

@@ -25,16 +25,6 @@ namespace SMLimitless
         /// </summary>
         private static GameServiceContainer container;
 
-        /////// <summary>
-        /////// The field for the small debug font.
-        /////// </summary>
-        ////private static SpriteFont debugFontSmall;
-
-        /////// <summary>
-        /////// The field for the large debug font.
-        /////// </summary>
-        ////private static SpriteFont debugFontLarge;
-
         /// <summary>
         /// Gets the GameServicesContainer that stores references to the services added.
         /// </summary>

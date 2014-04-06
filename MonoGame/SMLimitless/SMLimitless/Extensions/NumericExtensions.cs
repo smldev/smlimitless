@@ -117,5 +117,31 @@ namespace SMLimitless.Extensions
         ////{
 
         ////}
+
+        /// <summary>
+        /// Corrects the value of a single-precision float to the nearest integral value if the float is very close to that value.
+        /// </summary>
+        /// <param name="value">The value to correct.</param>
+        /// <returns>A whole-number corrected value, or the value if it was not close enough to the nearest integers.</returns>
+        public static float CorrectPrecision(this float value)
+        {
+            float epsilon = 0.0001f;
+
+            int ceiling = (int)(value + 1f);
+            int floor = (int)value;
+
+            if (Math.Abs(ceiling - value) < epsilon)
+            {
+                return ceiling;
+            }
+            else if (Math.Abs(value - floor) < epsilon)
+            {
+                return floor;
+            }
+            else
+            {
+                return value;
+            }
+        }
     }
 }

@@ -21,15 +21,9 @@ namespace SMLimitless.Sprites
     /// </summary>
     public abstract class Sprite : IName, IEditorObject, IPositionable, ISerializable
     {
-        /// <summary>
-        /// A backing field for the IsEmbedded property.
-        /// </summary>
-        private bool isEmbedded;
+        private Vector2 position;
 
-        /// <summary>
-        /// A backing field for the IsOnGround property.
-        /// </summary>
-        private bool isOnGround;
+        private Tile restingTile;
 
         /// <summary>
         /// Gets or sets an identification number that identifies all sprites of this kind.
@@ -87,24 +81,24 @@ namespace SMLimitless.Sprites
         /// <summary>
         /// Gets or sets the current position of this sprite.
         /// </summary>
-        public Vector2 Position { get; set; }
+        public Vector2 Position
+        {
+            get
+            {
+                return this.position;
+            }
+            set
+            {
+                // Round values to nearest integer in case of really small precision errors.
+                this.position = new Vector2(value.X.CorrectPrecision(), value.Y.CorrectPrecision());
+            }
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether this 
         /// sprite is embedded inside of a tile.
         /// </summary>
-        public bool IsEmbedded
-        {
-            get
-            {
-                return this.isEmbedded;
-            }
-
-            set
-            {
-                this.isEmbedded = value;
-            }
-        }
+        public bool IsEmbedded { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this
@@ -112,20 +106,9 @@ namespace SMLimitless.Sprites
         /// </summary>
         public bool IsOnGround
         {
-            get 
-            { 
-                return this.isOnGround; 
-            }
-
-            set
+            get
             {
-                if (value)
-                {
-                    this.Velocity = new Vector2(this.Velocity.X, 0f);
-                    this.Acceleration = new Vector2(this.Acceleration.X, 0f);
-                }
-
-                this.isOnGround = value;
+                return this.RestingTile != null;
             }
         }
 
@@ -133,7 +116,33 @@ namespace SMLimitless.Sprites
         /// Gets or sets a value indicating whether this
         /// sprite is sitting on a slope.
         /// </summary>
-        public bool IsOnSlope { get; set; }
+        public bool IsOnSlope
+        {
+            get
+            {
+                return this.RestingSlope != null;
+            }
+        }
+
+        public Tile RestingTile
+        {
+            get
+            {
+                return this.restingTile;
+            }
+            set
+            {
+                if (value != null)
+                {
+                    // Stop the sprite's downward movement, if any
+                    this.Velocity = new Vector2(this.Velocity.X, 0f);
+                    this.Acceleration = new Vector2(this.Acceleration.X, 0f);
+                }
+
+                this.restingTile = value;
+            }
+        }
+        public SlopedTile RestingSlope { get; set; }
 
         /// <summary>
         /// Gets or sets the size in pixels of this sprite.

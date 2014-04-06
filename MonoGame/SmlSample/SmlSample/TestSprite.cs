@@ -12,7 +12,7 @@ using SMLimitless.Extensions;
 using SMLimitless.Graphics;
 using SMLimitless.Physics;
 using SMLimitless.Sprites;
-using SMLimitless.Sprites.Testing;
+
 
 namespace SmlSample
 {
@@ -39,14 +39,6 @@ namespace SmlSample
         {
             this.Size = new Vector2(16, 16);
             this.IsActive = true;
-        }
-
-        /// <summary>
-        /// Initializes this object.
-        /// </summary>
-        /// <param name="owner">The Level that owns this object.</param>
-        public void Initialize(TestLevel owner)
-        {
         }
 
         /// <summary>

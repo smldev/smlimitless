@@ -127,8 +127,6 @@ namespace SMLimitless.Collections
             return result;
         }
 
-        // Exception Checking Methods
-
         /// <summary>
         /// Checks whether a given grid cell coordinate is within the bounds of the grid.
         /// </summary>

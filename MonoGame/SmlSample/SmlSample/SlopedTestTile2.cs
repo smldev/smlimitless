@@ -12,7 +12,6 @@ using SMLimitless.Content;
 using SMLimitless.Graphics;
 using SMLimitless.Sprites;
 using SMLimitless.Sprites.Collections;
-using SMLimitless.Sprites.Testing;
 
 namespace SmlSample
 {
@@ -38,6 +37,7 @@ namespace SmlSample
         public SlopedTestTile2()
         {
             this.Size = new Vector2(16f, 16f);
+            this.SlopedSides = SMLimitless.Physics.RtSlopedSides.TopRight;
             this.GraphicsResourceName = "smw_grass_slope2";
         }
 

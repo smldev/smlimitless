@@ -66,7 +66,7 @@
     <Compile Include="Graphics\GraphicsManager.cs" />
     <Compile Include="Graphics\IGraphicsObject.cs" />
     <Compile Include="Graphics\StaticGraphicsObject.cs" />
-    <Compile Include="Hierarchy.cs" />
+    <Compile Include="Collections\Hierarchy.cs" />
     <Compile Include="Input\InputManager.cs" />
     <Compile Include="Input\InputObject.cs" />
     <Compile Include="Interfaces\ICollidableShape.cs" />
@@ -94,7 +94,6 @@
     <Compile Include="Screens\LevelScreen.cs" />
     <Compile Include="Screens\Screen.cs" />
     <Compile Include="Screens\ScreenManager.cs" />
-    <Compile Include="Screens\TestLevelScreen.cs" />
     <Compile Include="Screens\TestScreen.cs" />
     <Compile Include="SmlProgram.cs" />
     <Compile Include="Sounds\Sound.cs" />
@@ -112,7 +111,6 @@
     <Compile Include="Sprites\Collections\Section.cs" />
     <Compile Include="Sprites\SlopedTile.cs" />
     <Compile Include="Sprites\Sprite.cs" />
-    <Compile Include="Sprites\Testing\TestLevel.cs" />
     <Compile Include="Sprites\Tile.cs" />
     <Compile Include="Testing.cs" />
   </ItemGroup>

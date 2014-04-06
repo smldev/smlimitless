@@ -3,7 +3,7 @@
 //     Copyrighted under the MIT license.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace SMLimitless
+namespace SMLimitless.Collections
 {
     using System;
     using System.Collections.Generic;
@@ -18,8 +18,6 @@ namespace SMLimitless
     /// <typeparam name="T">Any class.</typeparam>
     public class Hierarchy<T> where T : class
     {
-        // TODO: this goes to SMLimitless.Collections
-
         /// <summary>
         /// Initializes a new instance of the <see cref="Hierarchy{T}"/> class.
         /// </summary>
