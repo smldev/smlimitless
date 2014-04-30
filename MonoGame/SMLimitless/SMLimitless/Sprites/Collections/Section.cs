@@ -490,6 +490,26 @@ namespace SMLimitless.Sprites.Collections
             }
         }
 
+        private bool ResolveVerticalCollisions(Sprite sprite, out float newYCoordinate)
+        {
+            // Take a square tile with a slope top-right edged slope
+            // to its right. We'd like sprites to start walking down
+            // the slope when the bottom-center point of the sprite
+            // goes over the slope, but due to the square tile, the
+            // sprite doesn't follow the slope until the left edge
+            // of the sprite is past the tile. This method checks
+            // if there's a tile under the bottom center point of
+            // the sprite, and if there is, returns the Y-coordinate
+            // to place the sprite at. If there is no tile under the
+            // bottom center point, the code then checks the bottom
+            // left and bottom right points.
+
+            // TODO: implement
+
+            newYCoordinate = float.NaN;
+            return false;
+        }
+
         private bool ResolveHorizontalCollision(Sprite sprite, Tile tile)
         {
             // Sprites collide with slopes at their bottom-center point,
