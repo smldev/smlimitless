@@ -263,7 +263,6 @@ namespace SMLimitless.Sprites
                 name = this.Name,
                 graphicsResource = this.GraphicsResourceName,
                 position = this.InitialPosition.Serialize(),
-                //gridCell = this.GridCell.Serialize(),
                 state = this.InitialState,
                 customData = this.GetCustomSerializableObjects()
             };

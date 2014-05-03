@@ -83,7 +83,7 @@ namespace SMLimitless.Collections
         {
             if (!this.Children.Contains(node))
             {
-                throw new Exception("Hierarchy<T>.Remove: Node not found.");
+                throw new Exception("Hierarchy<T>.Remove(Hierarchy<T>): The node given to remove is not present in the hierarchy.");
             }
 
             this.Children.Remove(node);

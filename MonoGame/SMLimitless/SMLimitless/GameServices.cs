@@ -91,6 +91,9 @@ namespace SMLimitless
             }
         }
 
+        /// <summary>
+        /// Gets the standard size for a game object (tile/sprite/etc). Subject to change.
+        /// </summary>
         public static Vector2 GameObjectSize
         {
             get

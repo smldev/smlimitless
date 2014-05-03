@@ -162,7 +162,7 @@ namespace SMLimitless.Graphics
         /// <param name="filePath">The file path to the image to use.</param>
         public void Load(string filePath)
         {
-            throw new Exception("AnimatedGraphicsObject.Load(string): Use the overload Load(string, DataReader) instead.");
+            throw new InvalidOperationException("AnimatedGraphicsObject.Load(string): Use the overload Load(string, DataReader) instead.");
         }
 
         /// <summary>
@@ -179,7 +179,7 @@ namespace SMLimitless.Graphics
 
                 if (config[0] != "[Animated]" && config[0] != "[Animated_RunOnce]")
                 {
-                    throw new Exception(string.Format("AnimatedGraphicsObject.Load(string, DataReader): Invalid or corrupt configuration data (expected header [Animated] or [Animated_RunOnce], got header {0})", config[0]));
+                    throw new InvalidDataException(string.Format("AnimatedGraphicsObject.Load(string, DataReader): Invalid or corrupt configuration data (expected header [Animated] or [Animated_RunOnce], got header {0})", config[0]));
                 }
 
                 Dictionary<string, string> data;
@@ -212,7 +212,7 @@ namespace SMLimitless.Graphics
 
                 if (fullTexture.Width % this.frameWidth != 0)
                 {
-                    throw new Exception("AnimatedGraphicsObject.LoadContent(): The specified frame width for this texture is invalid.");
+                    throw new InvalidDataException(string.Format("AnimatedGraphicsObject.LoadContent(): The specified frame width for this texture is invalid. Expected texture with width divisble by {0}, got texture of width {1}.", this.frameWidth, fullTexture.Width));
                 }
 
                 for (int x = 0; x < fullTexture.Width; x += this.frameWidth)
@@ -462,7 +462,7 @@ namespace SMLimitless.Graphics
             }
             else
             {
-                throw new Exception("AnimatedGraphicsObject.GetSize(): This object hasn't been fully loaded, and cannot return its size.");
+                throw new InvalidOperationException("AnimatedGraphicsObject.GetSize(): This object hasn't been fully loaded, and cannot return its size.");
             }
         }
     }

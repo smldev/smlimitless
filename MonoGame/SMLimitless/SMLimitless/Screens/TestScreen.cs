@@ -27,7 +27,6 @@ namespace SMLimitless.Screens
     /// </summary>
     public class TestScreen : Screen
     {
-
         /// <summary>
         /// Updates the screen.
         /// </summary>

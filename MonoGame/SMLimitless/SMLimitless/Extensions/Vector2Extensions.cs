@@ -253,7 +253,7 @@ namespace SMLimitless.Extensions
 
             if (values.Length != 2)
             {
-                throw new ArgumentException("Vector2Extensions.ToVector2(JToken): Tried to turn a non-vector object into a vector.");
+                throw new ArgumentException(string.Format("Vector2Extensions.ToVector2(JToken): Tried to turn a non-vector object into a vector.", json));
             }
 
             if (values[0].Contains("NaN") || values[1].Contains("NaN"))
@@ -263,8 +263,8 @@ namespace SMLimitless.Extensions
 
             values[1] = values[1].TrimStart(); // there's a space on the front
             float x, y;
-            if (!float.TryParse(values[0], out x)) { throw new ArgumentException("Vector2Extensions.ToVector2(JToken): Invalid value for X component."); }
-            if (!float.TryParse(values[1], out y)) { throw new ArgumentException("Vector2Extensions.ToVector2(JToken): Invalid value for Y component."); }
+            if (!float.TryParse(values[0], out x)) { throw new ArgumentException(string.Format("Vector2Extensions.ToVector2(JToken): Invalid value {0} for X component.", values[0])); }
+            if (!float.TryParse(values[1], out y)) { throw new ArgumentException(string.Format("Vector2Extensions.ToVector2(JToken): Invalid value {0} for Y component.", values[1])); }
 
             return new Vector2(x, y);
         }
@@ -324,6 +324,11 @@ namespace SMLimitless.Extensions
         // we have a lot of learning to do before this can work
         ////}
 
+        /// <summary>
+        /// Returns a string representation of a point suitable for JSON serialization.
+        /// </summary>
+        /// <param name="value">The point to serialize.</param>
+        /// <returns>A string in the format "{x}, {y}".</returns>
         public static string Serialize(this Point value)
         {
             return string.Format("{0}, {1}", value.X, value.Y);

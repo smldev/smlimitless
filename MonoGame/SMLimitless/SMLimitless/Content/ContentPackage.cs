@@ -75,7 +75,7 @@ namespace SMLimitless.Content
             {
                 if (!File.Exists(settingsPath))
                 {
-                    throw new FileNotFoundException(string.Format("ContentPackage.Load(string): The file at {0} does not exist.", settingsPath));
+                    throw new FileNotFoundException(string.Format("ContentPackage.Load(string): The settings file at {0} does not exist.", settingsPath));
                 }
 
                 this.settingsFilePath = settingsPath;

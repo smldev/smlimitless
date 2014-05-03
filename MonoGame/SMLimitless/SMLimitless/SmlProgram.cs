@@ -53,7 +53,7 @@ namespace SMLimitless
         {
             GameSettings.Initialize();
             InputManager.Initialize();
-            ScreenManager.Initalize();
+            ScreenManager.Initialize();
             GameServices.ScreenSize = new Vector2(GraphicsDevice.PresentationParameters.BackBufferWidth, GraphicsDevice.PresentationParameters.BackBufferHeight);
             string contentPackageSettingsPath = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), @"TestPackage\settings.txt");
             ////SMLimitless.Content.ContentPackageManager.AddPackage(contentPackageSettingsPath);

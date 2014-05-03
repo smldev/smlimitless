@@ -49,7 +49,7 @@ namespace SMLimitless.Collections
         {
             if (width <= 0 || height <= 0)
             {
-                throw new Exception(string.Format("Grid<T>.ctor(int, int): Grid width and height must be greater than zero. Width: {0}, Height: {1}", width, height));
+                throw new ArgumentOutOfRangeException(string.Format("Grid<T>.ctor(int, int): Grid width and height must be greater than zero. Width: {0}, Height: {1}", width, height));
             }
 
             this.values = new T[width, height];
@@ -69,7 +69,7 @@ namespace SMLimitless.Collections
             {
                 if (!this.IndexWithinBounds(x, y))
                 {
-                    throw new Exception(string.Format("Grid<T>.this[int, int].get: Index of value to retrieve must be within the bounds of the grid. X: {0}, Y: {1}", x, y));
+                    throw new ArgumentOutOfRangeException(string.Format("Grid<T>.this[int, int].get: Index of value to retrieve must be within the bounds of the grid. X: {0}, Y: {1}", x, y));
                 }
 
                 return this.values[x, y];
@@ -79,7 +79,7 @@ namespace SMLimitless.Collections
             {
                 if (!this.IndexWithinBounds(x, y))
                 {
-                    throw new Exception(string.Format("Grid<T>.this[int, int].set: Index of value to set must be within the bounds of the grid. X: {0}, Y: {1}", x, y));
+                    throw new ArgumentOutOfRangeException(string.Format("Grid<T>.this[int, int].set: Index of value to set must be within the bounds of the grid. X: {0}, Y: {1}", x, y));
                 }
 
                 this.values[x, y] = value;
@@ -98,15 +98,15 @@ namespace SMLimitless.Collections
         {
             if (width <= 0 || height <= 0)
             {
-                throw new Exception(string.Format("Grid<T>.GetSubgrid(int, int, int, int): The subgrid must have a width and a height greater than zero. X: {0}, Y: {1}, Width: {2}, Height: {3}", x, y, width, height));
+                throw new ArgumentOutOfRangeException(string.Format("Grid<T>.GetSubgrid(int, int, int, int): The subgrid must have a width and a height greater than zero. X: {0}, Y: {1}, Width: {2}, Height: {3}", x, y, width, height));
             }
             else if (!this.IndexWithinBounds(x, y))
             {
-                throw new Exception(string.Format("Grid<T>.GetSubgrid(int, int, int, int): Origin of the subgrid must be within the original grid. X: {0}, Y: {1}, Width: {2}, Height: {3}", x, y, width, height));
+                throw new ArgumentOutOfRangeException(string.Format("Grid<T>.GetSubgrid(int, int, int, int): Origin of the subgrid must be within the original grid. X: {0}, Y: {1}, Width: {2}, Height: {3}", x, y, width, height));
             }
             else if (!this.IndexWithinBounds(x + width, y + height))
             {
-                throw new Exception(string.Format("Grid<T>.GetSubgrid(int, int, int, int): The subgrid must be entirely contained within the original grid. X: {0}, Y: {1}, Width: {2}, Height: {3}", x, y, width, height));
+                throw new ArgumentOutOfRangeException(string.Format("Grid<T>.GetSubgrid(int, int, int, int): The subgrid must be entirely contained within the original grid. X: {0}, Y: {1}, Width: {2}, Height: {3}", x, y, width, height));
             }
 
             Grid<T> result = new Grid<T>(width, height);

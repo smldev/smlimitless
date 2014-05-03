@@ -21,8 +21,15 @@ namespace SMLimitless.Sprites
     /// </summary>
     public abstract class Sprite : IName, IEditorObject, IPositionable, ISerializable
     {
+        /// <summary>
+        /// A backing field for the Position property.
+        /// </summary>
         private Vector2 position;
 
+        /// <summary>
+        /// The tile upon which this sprite is resting.
+        /// This will be null if the sprite is in the air.
+        /// </summary>
         private Tile restingTile;
 
         /// <summary>
@@ -85,8 +92,9 @@ namespace SMLimitless.Sprites
         {
             get
             {
-                return this.position;
+               return this.position;
             }
+
             set
             {
                 // Round values to nearest integer in case of really small precision errors.
@@ -101,7 +109,7 @@ namespace SMLimitless.Sprites
         public bool IsEmbedded { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this
+        /// Gets a value indicating whether this
         /// sprite is on the ground.
         /// </summary>
         public bool IsOnGround
@@ -113,7 +121,7 @@ namespace SMLimitless.Sprites
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this
+        /// Gets a value indicating whether this
         /// sprite is sitting on a slope.
         /// </summary>
         public bool IsOnSlope
@@ -124,12 +132,16 @@ namespace SMLimitless.Sprites
             }
         }
 
+        /// <summary>
+        /// Gets or sets the tile that this sprite is resting on the top of.
+        /// </summary>
         public Tile RestingTile
         {
             get
             {
                 return this.restingTile;
             }
+
             set
             {
                 if (value != null)
@@ -142,6 +154,10 @@ namespace SMLimitless.Sprites
                 this.restingTile = value;
             }
         }
+
+        /// <summary>
+        /// Gets or sets the sloped tile that this sprite is resting on top of.
+        /// </summary>
         public SlopedTile RestingSlope { get; set; }
 
         /// <summary>

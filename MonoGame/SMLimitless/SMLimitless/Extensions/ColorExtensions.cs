@@ -45,7 +45,7 @@ namespace SMLimitless.Extensions
 
             if (values.Length != 4)
             {
-                throw new ArgumentException("ColorExtensions.ToColor(this JToken): Tried to turn a non-color object into a color.");
+                throw new ArgumentException(string.Format("ColorExtensions.ToColor(this JToken): Tried to turn a non-color object into a color. Entry: {0}", json));
             }
 
             for (int i = 1; i < 4; i++) { values[i] = values[i].TrimStart(); } // there are spaces on the front of [1] through [3]

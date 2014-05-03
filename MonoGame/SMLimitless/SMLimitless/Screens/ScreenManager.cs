@@ -29,7 +29,7 @@ namespace SMLimitless.Screens
         /// <summary>
         /// Initializes this ScreenManager.
         /// </summary>
-        public static void Initalize()
+        public static void Initialize()
         {
             screens = new Hierarchy<Screen>(null);
         }

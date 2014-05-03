@@ -46,6 +46,9 @@ namespace SMLimitless.Collections
         /// </summary>
         public int CellHeight { get; private set; }
 
+        /// <summary>
+        /// Gets the width of the grid, represented as (width in cells * width of cell).
+        /// </summary>
         public int Width
         {
             get
@@ -54,6 +57,9 @@ namespace SMLimitless.Collections
             }
         }
 
+        /// <summary>
+        /// Gets the height of the grid, represented as (height in cells * height of cell).
+        /// </summary>
         public int Height
         {
             get
@@ -73,11 +79,11 @@ namespace SMLimitless.Collections
         {
             if (cellWidth <= 0 || cellHeight <= 0)
             {
-                throw new Exception(string.Format("SizedGrid<T>.ctor(int, int, int, int): Cell width and height must be greater than zero. Cell Width: {0}, Cell Height: {1}, Grid Width: {2}, Grid Height: {3}", cellWidth, cellHeight, gridWidth, gridHeight));
+                throw new ArgumentOutOfRangeException(string.Format("SizedGrid<T>.ctor(int, int, int, int): Cell width and height must be greater than zero. Cell Width: {0}, Cell Height: {1}, Grid Width: {2}, Grid Height: {3}", cellWidth, cellHeight, gridWidth, gridHeight));
             }
             else if (gridWidth <= 0 || gridHeight <= 0)
             {
-                throw new Exception(string.Format("SizedGrid<T>.ctor(int, int, int, int): Grid width and height must be greater than zero. Cell Width: {0}, Cell Height: {1}, Grid Width: {2}, Grid Height: {3}", cellWidth, cellHeight, gridWidth, gridHeight));
+                throw new ArgumentOutOfRangeException(string.Format("SizedGrid<T>.ctor(int, int, int, int): Grid width and height must be greater than zero. Cell Width: {0}, Cell Height: {1}, Grid Width: {2}, Grid Height: {3}", cellWidth, cellHeight, gridWidth, gridHeight));
             }
 
             this.grid = new Grid<T>(gridWidth, gridHeight);
@@ -154,7 +160,7 @@ namespace SMLimitless.Collections
             }
             else if (!this.IndexWithinBounds((int)item.Position.X, (int)item.Position.Y))
             {
-                throw new Exception(string.Format("SizedGrid<T>.Remove(IPositionable): Cannot remove an item that does not fall within the grid. X:{0}, Y:{1}", item.Position.X, item.Position.Y));
+                throw new ArgumentOutOfRangeException(string.Format("SizedGrid<T>.Remove(IPositionable): Cannot remove an item that does not fall within the grid. X:{0}, Y:{1}", item.Position.X, item.Position.Y));
             }
 
             var startingCell = new IntVector2((int)item.Position.X / this.CellWidth, (int)item.Position.Y / this.CellHeight);
@@ -170,6 +176,14 @@ namespace SMLimitless.Collections
             }
         }
 
+        /// <summary>
+        /// Returns a portion of this grid.
+        /// </summary>
+        /// <param name="x">The X-position on this grid of the top-left corner of the subgrid.</param>
+        /// <param name="y">The Y-position on this grid of the top-left corner of the subgrid.</param>
+        /// <param name="width">The width of the subgrid.</param>
+        /// <param name="height">The height of the subgrid.</param>
+        /// <returns>A portion of this grid.</returns>
         public SizedGrid<T> GetSubgrid(int x, int y, int width, int height)
         {
             if (!this.IndexWithinBounds(x, y))
@@ -200,6 +214,11 @@ namespace SMLimitless.Collections
             return result;
         }
 
+        /// <summary>
+        /// Returns the cell number for a given position.
+        /// </summary>
+        /// <param name="position">The position to return for.</param>
+        /// <returns>The cell number for the given position.</returns>
         public Point GetCellAtPosition(Vector2 position)
         {
             int x = (int)(position.X / this.CellWidth);
@@ -208,17 +227,26 @@ namespace SMLimitless.Collections
             return new Point(x, y);
         }
 
+        /// <summary>
+        /// Returns the object at the given position on the grid.
+        /// </summary>
+        /// <param name="position">The position to return for.</param>
+        /// <returns>The object at the position, or null if there is no object.</returns>
         public T GetObjectAtPosition(Vector2 position)
         {
             Point cell = this.GetCellAtPosition(position);
             return this[cell.X, cell.Y];
         }
 
+        /// <summary>
+        /// Draws the cell borders of this grid.
+        /// </summary>
+        /// <param name="position">The position to start drawing the grid at.</param>
+        /// <param name="lineColor">The color of the cell lines.</param>
         public void Draw(Vector2 position, Color lineColor)
         {
             // The total number of vertical lines to draw is (height + 1).
             // The total number of horizontal lines to draw is (width + 1).
-
             float gridWidth = this.CellWidth * this.grid.Width;
             float gridHeight = this.CellHeight * this.grid.Height;
 

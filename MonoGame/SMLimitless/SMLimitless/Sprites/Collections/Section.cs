@@ -266,7 +266,7 @@ namespace SMLimitless.Sprites.Collections
                 List<Tile> collidingTiles = new List<Tile>();
 
                 // First, move the sprite vertically.
-                sprite.Position = new Vector2(sprite.Position.X, sprite.Position.Y + sprite.Velocity.Y * delta);
+                sprite.Position = new Vector2(sprite.Position.X, sprite.Position.Y + (sprite.Velocity.Y * delta));
                 this.QuadTree.PlaceSprite(sprite);
 
                 // Get all collidable (nearby) tiles.
@@ -279,7 +279,8 @@ namespace SMLimitless.Sprites.Collections
                     {
                         Vector2 resolutionDistance = tile.GetCollisionResolution(sprite);
 
-                        if (resolutionDistance.Y == 0) // If the resolution isn't vertical...
+                        // If the resolution isn't vertical...
+                        if (resolutionDistance.Y == 0)
                         {
                             // Go on to the next one.
                             continue;
@@ -320,7 +321,8 @@ namespace SMLimitless.Sprites.Collections
                     {
                         Vector2 resolutionDistance = tile.GetCollisionResolution(sprite);
 
-                        if (resolutionDistance.X == 0) // If the resolution is not horizontal...
+                        // If the resolution is not horizontal...
+                        if (resolutionDistance.X == 0) 
                         {
                             // ...go to the next tile.
                             continue;
@@ -461,35 +463,12 @@ namespace SMLimitless.Sprites.Collections
             this.MainLayer = layer;
         }
 
-        private SlopedTile GetSlopeWithSprite(Sprite sprite)
-        {
-            // In order to allow sprites to walk up onto solid tiles from slopes,
-            // we must ensure that sprites do not collide with solid tiles before
-            // they leave the slope. The first step is to determine which sloped tile
-            // the sprite is in contact with. Since a sprite can be in contact with a
-            // slope on its top or bottom side, we'll grab both and return the one that's
-            // not null. If the sprite is in contact with both, it doesn't really matter.
-
-            Vector2 topCenter = sprite.Hitbox.TopCenter;
-            Vector2 bottomCenter = sprite.Hitbox.BottomCenter;
-
-            SlopedTile slopeAbove = this.GetTileAtPosition(new Vector2(topCenter.X, topCenter.Y - 1f), true) as SlopedTile;
-            SlopedTile slopeBelow = this.GetTileAtPosition(new Vector2(bottomCenter.X, bottomCenter.Y + 1f), true) as SlopedTile;
-
-            if (slopeBelow != null)
-            {
-                return slopeBelow;
-            }
-            else if (slopeAbove != null)
-            {
-                return slopeAbove;
-            }
-            else // if they're both null or both not null
-            {
-                return null;
-            }
-        }
-
+        /// <summary>
+        /// Determines if a sprite should follow the terrain or resolve vertical collisions.
+        /// </summary>
+        /// <param name="sprite">The sprite to check.</param>
+        /// <param name="newYCoordinate">The Y position to move the sprite to.</param>
+        /// <returns>True if the sprite doesn't need to follow terrain, false if otherwise.</returns>
         private bool ResolveVerticalCollisions(Sprite sprite, out float newYCoordinate)
         {
             // Take a square tile with a slope top-right edged slope
@@ -505,11 +484,16 @@ namespace SMLimitless.Sprites.Collections
             // left and bottom right points.
 
             // TODO: implement
-
             newYCoordinate = float.NaN;
             return false;
         }
 
+        /// <summary>
+        /// Determines if a sprite ascending a slope should collide with a given tile.
+        /// </summary>
+        /// <param name="sprite">The sprite to check.</param>
+        /// <param name="tile">The tile to check.</param>
+        /// <returns>True if the sprite should collide with the tile, false if otherwise.</returns>
         private bool ResolveHorizontalCollision(Sprite sprite, Tile tile)
         {
             // Sprites collide with slopes at their bottom-center point,
@@ -518,7 +502,6 @@ namespace SMLimitless.Sprites.Collections
             // because part of the sprite's hitbox is within the slope.
             // This method checks if a sprite should collide with a given
             // tile by checking if the top of the tile is below the slope.
-
             if (sprite == null || tile == null)
             {
                 throw new ArgumentNullException(string.Format("Section.ResolveHorizontalCollision(Sprite, Tile): The {0} argument is null.", (sprite == null) ? "sprite" : "tile"));
@@ -533,10 +516,12 @@ namespace SMLimitless.Sprites.Collections
             float tileEdgeToCheck = (sprite.Direction == SpriteDirection.Left) ? tile.Hitbox.Bounds.Right : tile.Hitbox.Bounds.Left;
             float slopeIntersectPoint = ((RightTriangle)sprite.RestingSlope.Hitbox).GetPointOnLine(tileEdgeToCheck).Y;
 
-            if (tile.Hitbox.Bounds.Top < slopeIntersectPoint) // If the tile's top is above the slope...
+            // If the tile's top is above the slope...
+            if (tile.Hitbox.Bounds.Top < slopeIntersectPoint)
             {
                 return true;
             }
+
             return false;
         }
 
