@@ -63,7 +63,7 @@ namespace SMLimitless.Collections
         /// Adds some data to a node, and adds that node to this node.
         /// </summary>
         /// <param name="data">The data to add to this node.</param>
-        /// <returns>A new <see cref="Hierarchy"/> instance containing the data.</returns>
+        /// <returns>A new <see cref="Hierarchy{T}"/> instance containing the data.</returns>
         public Hierarchy<T> Add(T data)
         {
             var node = new Hierarchy<T>(data);
