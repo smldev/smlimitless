@@ -33,20 +33,14 @@ namespace SMLimitless.Sprites
         private Tile restingTile;
 
         /// <summary>
+        /// Gets a list of all the components used by this sprite instance.
+        /// </summary>
+        protected List<SpriteComponent> Components { get; private set; }
+
+        /// <summary>
         /// Gets or sets an identification number that identifies all sprites of this kind.
         /// </summary>
         public uint ID { get; set; }
-
-        /// <summary>
-        /// Gets the name of the category that this sprite is
-        /// categorized within in the level editor.
-        /// </summary>
-        public abstract string EditorCategory { get; }
-
-        /// <summary>
-        /// Gets or sets the name of this sprite used in the level editor.
-        /// </summary>
-        public string EditorLabel { get; protected set; }
 
         /// <summary>
         /// Gets or sets the section that owns this sprite.
@@ -101,6 +95,34 @@ namespace SMLimitless.Sprites
                 this.position = new Vector2(value.X.CorrectPrecision(), value.Y.CorrectPrecision());
             }
         }
+
+        /// <summary>
+        /// Gets or sets the size in pixels of this sprite.
+        /// </summary>
+        public Vector2 Size { get; protected set; }
+
+        /// <summary>
+        /// Gets a rectangle representing this sprite's hitbox.
+        /// </summary>
+        public BoundingRectangle Hitbox
+        {
+            get
+            {
+                return new BoundingRectangle(this.Position, this.Size + this.Position);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the acceleration of this sprite,
+        /// measured in pixels per second per second.
+        /// </summary>
+        public Vector2 Acceleration { get; set; }
+
+        /// <summary>
+        /// Gets or sets the velocity of this sprite,
+        /// measured in pixels per second.
+        /// </summary>
+        public Vector2 Velocity { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this 
@@ -161,32 +183,15 @@ namespace SMLimitless.Sprites
         public SlopedTile RestingSlope { get; set; }
 
         /// <summary>
-        /// Gets or sets the size in pixels of this sprite.
+        /// Gets the name of the category that this sprite is
+        /// categorized within in the level editor.
         /// </summary>
-        public Vector2 Size { get; protected set; }
+        public abstract string EditorCategory { get; }
 
         /// <summary>
-        /// Gets a rectangle representing this sprite's hitbox.
+        /// Gets or sets the name of this sprite used in the level editor.
         /// </summary>
-        public BoundingRectangle Hitbox
-        {
-            get
-            {
-                return new BoundingRectangle(this.Position, this.Size + this.Position);
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the acceleration of this sprite,
-        /// measured in pixels per second per second.
-        /// </summary>
-        public Vector2 Acceleration { get; set; }
-
-        /// <summary>
-        /// Gets or sets the velocity of this sprite,
-        /// measured in pixels per second.
-        /// </summary>
-        public Vector2 Velocity { get; set; }
+        public string EditorLabel { get; protected set; }
 
         /// <summary>
         /// Gets or sets an editor property representing an optional
@@ -230,7 +235,7 @@ namespace SMLimitless.Sprites
         public virtual void Initialize(Section owner)
         {
             this.Owner = owner;
-
+            this.Components = new List<SpriteComponent>();
             //// Initialize all the properties
             ////this.IsActive = true;
             ////this.IsHostile = true;
@@ -250,6 +255,8 @@ namespace SMLimitless.Sprites
         {
             const float MaximumGravitationalVelocity = 350f;
             float delta = GameServices.GameTime.GetElapsedSeconds();
+
+            this.Components.ForEach(c => c.Update());
 
             this.PreviousPosition = this.Position;
 
@@ -275,8 +282,6 @@ namespace SMLimitless.Sprites
             }
 
             this.Velocity += this.Acceleration * delta;
-
-            ////this.Position += this.Velocity * delta;
         }
 
         /// <summary>
@@ -289,14 +294,20 @@ namespace SMLimitless.Sprites
         /// </summary>
         /// <param name="tile">The tile that this sprite has collided with.</param>
         /// <param name="intersect">The depth of the intersection.</param>
-        public abstract void HandleTileCollision(Tile tile, Vector2 intersect);
+        public virtual void HandleTileCollision(Tile tile, Vector2 intersect)
+        {
+            this.Components.ForEach(f => f.HandleTileCollision(tile));
+        }
 
         /// <summary>
         /// Handles a collision between this sprite and another.
         /// </summary>
         /// <param name="sprite">The sprite that has collided with this one.</param>
         /// <param name="intersect">The depth of the intersection.</param>
-        public abstract void HandleSpriteCollision(Sprite sprite, Vector2 intersect);
+        public virtual void HandleSpriteCollision(Sprite sprite, Vector2 intersect)
+        {
+            this.Components.ForEach(f => f.HandleSpriteCollision(sprite));
+        }
 
         /// <summary>
         /// Gets any objects that custom sprites wish to be saved to the level file.

@@ -14,6 +14,8 @@ using SMLimitless.Interfaces;
 
 namespace SMLimitless.Physics
 {
+    // why is this a class? make it a struct
+
     /// <summary>
     /// Represents a right triangle, used for sloped tiles.
     /// </summary>

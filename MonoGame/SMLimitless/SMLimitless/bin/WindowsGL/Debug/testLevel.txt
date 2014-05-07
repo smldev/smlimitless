@@ -12892,6 +12892,150 @@
               "position": "400, 240",
               "state": null,
               "customData": null
+            },
+            {
+              "typeName": "SmlSample.TestTile3",
+              "collisionType": 0,
+              "name": "",
+              "graphicsResource": "smw_concrete_block",
+              "position": "288, 80",
+              "state": null,
+              "customData": null
+            },
+            {
+              "typeName": "SmlSample.TestTile3",
+              "collisionType": 0,
+              "name": "",
+              "graphicsResource": "smw_concrete_block",
+              "position": "288, 96",
+              "state": null,
+              "customData": null
+            },
+            {
+              "typeName": "SmlSample.TestTile3",
+              "collisionType": 0,
+              "name": "",
+              "graphicsResource": "smw_concrete_block",
+              "position": "288, 112",
+              "state": null,
+              "customData": null
+            },
+            {
+              "typeName": "SmlSample.TestTile3",
+              "collisionType": 0,
+              "name": "",
+              "graphicsResource": "smw_concrete_block",
+              "position": "304, 112",
+              "state": null,
+              "customData": null
+            },
+            {
+              "typeName": "SmlSample.TestTile3",
+              "collisionType": 0,
+              "name": "",
+              "graphicsResource": "smw_concrete_block",
+              "position": "320, 112",
+              "state": null,
+              "customData": null
+            },
+            {
+              "typeName": "SmlSample.TestTile3",
+              "collisionType": 0,
+              "name": "",
+              "graphicsResource": "smw_concrete_block",
+              "position": "336, 112",
+              "state": null,
+              "customData": null
+            },
+            {
+              "typeName": "SmlSample.TestTile3",
+              "collisionType": 0,
+              "name": "",
+              "graphicsResource": "smw_concrete_block",
+              "position": "352, 112",
+              "state": null,
+              "customData": null
+            },
+            {
+              "typeName": "SmlSample.TestTile3",
+              "collisionType": 0,
+              "name": "",
+              "graphicsResource": "smw_concrete_block",
+              "position": "368, 112",
+              "state": null,
+              "customData": null
+            },
+            {
+              "typeName": "SmlSample.TestTile3",
+              "collisionType": 0,
+              "name": "",
+              "graphicsResource": "smw_concrete_block",
+              "position": "384, 112",
+              "state": null,
+              "customData": null
+            },
+            {
+              "typeName": "SmlSample.TestTile3",
+              "collisionType": 0,
+              "name": "",
+              "graphicsResource": "smw_concrete_block",
+              "position": "400, 112",
+              "state": null,
+              "customData": null
+            },
+            {
+              "typeName": "SmlSample.TestTile3",
+              "collisionType": 0,
+              "name": "",
+              "graphicsResource": "smw_concrete_block",
+              "position": "416, 112",
+              "state": null,
+              "customData": null
+            },
+            {
+              "typeName": "SmlSample.TestTile3",
+              "collisionType": 0,
+              "name": "",
+              "graphicsResource": "smw_concrete_block",
+              "position": "432, 112",
+              "state": null,
+              "customData": null
+            },
+            {
+              "typeName": "SmlSample.TestTile3",
+              "collisionType": 0,
+              "name": "",
+              "graphicsResource": "smw_concrete_block",
+              "position": "448, 112",
+              "state": null,
+              "customData": null
+            },
+            {
+              "typeName": "SmlSample.TestTile3",
+              "collisionType": 0,
+              "name": "",
+              "graphicsResource": "smw_concrete_block",
+              "position": "464, 112",
+              "state": null,
+              "customData": null
+            },
+            {
+              "typeName": "SmlSample.TestTile3",
+              "collisionType": 0,
+              "name": "",
+              "graphicsResource": "smw_concrete_block",
+              "position": "464, 96",
+              "state": null,
+              "customData": null
+            },
+            {
+              "typeName": "SmlSample.TestTile3",
+              "collisionType": 0,
+              "name": "",
+              "graphicsResource": "smw_concrete_block",
+              "position": "464, 80",
+              "state": null,
+              "customData": null
             }
           ]
         }
@@ -12910,19 +13054,58 @@
           "direction": 0,
           "customObjects": null
         },
+        {
+          "typeName": "SmlSample.SimplePlayer",
+          "position": "0, 0",
+          "isActive": true,
+          "state": "default",
+          "collision": 0,
+          "name": "",
+          "message": "",
+          "isHostile": false,
+          "isMoving": true,
+          "direction": 0,
+          "customObjects": null
+        },
+        {
+          "typeName": "SmlSample.TestSprite",
+          "position": "400, 100",
+          "isActive": true,
+          "state": "default",
+          "collision": 0,
+          "name": "",
+          "message": null,
+          "isHostile": true,
+          "isMoving": true,
+          "direction": 0,
+          "customObjects": null
+        },
 		{
-			"typeName": "SmlSample.SimplePlayer",
-			"position": "0, 0",
-			"isActive": true,
-			"state": "default",
-			"collision": 0,
-			"name": "",
-			"message": "",
-			"isHostile": false,
-			"isMoving": true,
-			"direction": 0,
-			"customObjects": null
-		}
+          "typeName": "SmlSample.TestSprite",
+          "position": "440, 100",
+          "isActive": true,
+          "state": "default",
+          "collision": 0,
+          "name": "",
+          "message": null,
+          "isHostile": true,
+          "isMoving": true,
+          "direction": 0,
+          "customObjects": null
+        },
+		{
+          "typeName": "SmlSample.TestSprite",
+          "position": "460, 100",
+          "isActive": true,
+          "state": "default",
+          "collision": 0,
+          "name": "",
+          "message": null,
+          "isHostile": true,
+          "isMoving": true,
+          "direction": 0,
+          "customObjects": null
+        }
       ],
       "paths": [
         {

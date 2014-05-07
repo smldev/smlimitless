@@ -333,6 +333,7 @@ namespace SMLimitless.Sprites.Collections
                             {
                                 // Resolve the collision.
                                 sprite.Position = new Vector2(sprite.Position.X + resolutionDistance.X, sprite.Position.Y);
+                                sprite.Velocity = new Vector2(0f, sprite.Velocity.Y);
                                 collidingTiles.Add(tile);
                             }
                         }

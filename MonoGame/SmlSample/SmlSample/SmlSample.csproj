@@ -66,6 +66,7 @@
   <ItemGroup>
     <Compile Include="AssemblyMetadata.cs" />
     <Compile Include="Class1.cs" />
+    <Compile Include="Components\BasicWalkerComponent.cs" />
     <Compile Include="MouseFollowSprite.cs" />
     <Compile Include="PainterSprite.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

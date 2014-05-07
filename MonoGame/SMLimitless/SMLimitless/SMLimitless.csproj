@@ -110,6 +110,7 @@
     <Compile Include="Sprites\Collections\Section.cs" />
     <Compile Include="Sprites\SlopedTile.cs" />
     <Compile Include="Sprites\Sprite.cs" />
+    <Compile Include="Sprites\SpriteComponent.cs" />
     <Compile Include="Sprites\Tile.cs" />
     <Compile Include="Testing.cs" />
   </ItemGroup>

@@ -13,6 +13,7 @@ using SMLimitless.Interfaces;
 namespace SMLimitless.Physics
 {
     // Credit to fbrookie.
+    // TODO: why is this a class? make it a struct
 
     /// <summary>
     /// Using Rectangle for Collision bounds causes 'jiggling' as Rectangle 

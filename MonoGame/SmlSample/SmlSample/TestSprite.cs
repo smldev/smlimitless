@@ -41,6 +41,13 @@ namespace SmlSample
             this.IsActive = true;
         }
 
+        public override void Initialize(SMLimitless.Sprites.Collections.Section owner)
+        {
+            base.Initialize(owner);
+            this.Components.Add(new Components.BasicWalkerComponent(40f, SMLimitless.Direction.Left));
+            this.Components[0].Initialize(this);
+        }
+
         /// <summary>
         /// Loads the content for this object.
         /// </summary>
@@ -55,8 +62,8 @@ namespace SmlSample
         /// </summary>
         public override void Update()
         {
+            this.Components[0].Update();
             this.graphics.Update();
-            this.Velocity = new Vector2(30f, Velocity.Y);
             base.Update();
         }
 
