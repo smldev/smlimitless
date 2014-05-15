@@ -55,13 +55,13 @@ namespace SMLimitless.Sprites
         /// <summary>
         /// Gets the state of this sprite when it was first loaded into the level.
         /// </summary>
-        public string InitialState { get; private set; }
+        public SpriteState InitialState { get; private set; }
 
         /// <summary>
         /// Gets or sets a string representing the state of this sprite.
         /// Please see http://smlimitless.wikia.com/wiki/Sprite_State for more information.
         /// </summary>
-        public string State { get; protected set; }
+        public SpriteState State { get; protected set; }
 
         /// <summary>
         /// Gets or sets the current collision mode of this sprite.
@@ -332,7 +332,7 @@ namespace SMLimitless.Sprites
                 typeName = this.GetType().FullName,
                 position = this.InitialPosition.Serialize(),
                 isActive = this.IsActive,
-                state = this.InitialState,
+                state = (int)this.InitialState,
                 collision = (int)this.CollisionMode,
                 name = this.Name,
                 message = this.Message,
@@ -362,7 +362,7 @@ namespace SMLimitless.Sprites
             this.InitialPosition = obj["position"].ToVector2();
             this.Position = this.InitialPosition;
             this.IsActive = (bool)obj["isActive"];
-            this.InitialState = (string)obj["state"];
+            this.InitialState = (SpriteState)(int)obj["state"];
             this.State = this.InitialState;
             this.CollisionMode = (SpriteCollisionMode)(int)obj["collision"];
             this.Name = (string)obj["name"];

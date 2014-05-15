@@ -177,6 +177,42 @@ namespace SMLimitless.Sprites
         /// </summary>
         NoCollision
     }
+
+    /// <summary>
+    /// Enumerates the different states of sprites.
+    /// </summary>
+    public enum SpriteState
+    {
+        /// <summary>
+        /// The default state.
+        /// </summary>
+        Default,
+
+        /// <summary>
+        /// Sprites in this state have been temporarily stopped by the player and are usually harmless.
+        /// </summary>
+        Stunned,
+
+        /// <summary>
+        /// Sprites in this state are projectiles that can render damage to other sprites.
+        /// </summary>
+        Projectile,
+
+        /// <summary>
+        /// Sprites in this state are fire projectiles that can render damage to other sprites.
+        /// </summary>
+        ProjectileFire,
+
+        /// <summary>
+        /// Sprites in this state are ice projectiles that can freeze other sprites.
+        /// </summary>
+        ProjectileIce,
+
+        /// <summary>
+        /// Sprites in this state are dead and should not be interacted with.
+        /// </summary>
+        Dead
+    }
 }
 
 namespace SMLimitless.Sprites.Collections

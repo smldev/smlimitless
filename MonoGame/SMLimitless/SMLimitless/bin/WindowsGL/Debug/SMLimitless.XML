@@ -593,6 +593,41 @@
             The sprite does not collide with any object.
             </summary>
         </member>
+        <member name="T:SMLimitless.Sprites.SpriteState">
+            <summary>
+            Enumerates the different states of sprites.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.SpriteState.Default">
+            <summary>
+            The default state.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.SpriteState.Stunned">
+            <summary>
+            Sprites in this state have been temporarily stopped by the player and are usually harmless.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.SpriteState.Projectile">
+            <summary>
+            Sprites in this state are projectiles that can render damage to other sprites.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.SpriteState.ProjectileFire">
+            <summary>
+            Sprites in this state are fire projectiles that can render damage to other sprites.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.SpriteState.ProjectileIce">
+            <summary>
+            Sprites in this state are ice projectiles that can freeze other sprites.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.SpriteState.Dead">
+            <summary>
+            Sprites in this state are dead and should not be interacted with.
+            </summary>
+        </member>
         <member name="T:SMLimitless.Sprites.Collections.CameraScrollType">
             <summary>
             Enumerates the ways a camera scrolls through a section.
