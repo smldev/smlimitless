@@ -11,6 +11,8 @@ using Microsoft.Xna.Framework.Graphics;
 using SMLimitless.Extensions;
 using SMLimitless.Graphics;
 
+using DrawRect = System.Drawing.Rectangle;
+
 namespace SMLimitless.Editor
 {
     /// <summary>
@@ -31,16 +33,9 @@ namespace SMLimitless.Editor
         public int Y { get; set; }
 
         /// <summary>
-        /// Gets or sets the width of the button in pixels.
+        /// Gets or sets the size of the button in pixels.
         /// </summary>
-        public int Width { get; set; }
-
-        /// <summary>
-        /// Gets or sets the height of the button in pixels.
-        /// </summary>
-        public int Height { get; set; }
-
-        // TODO: make above a Rectangle
+        public DrawRect Size { get; set; }
 
         /// <summary>
         /// Gets the image displayed on the button.
@@ -68,8 +63,7 @@ namespace SMLimitless.Editor
         {
             this.X = x;
             this.Y = y;
-            this.Width = width;
-            this.Height = height;
+            this.Size = new DrawRect(x, y, width, height);
         }
 
         /// <summary>

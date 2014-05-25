@@ -42,7 +42,7 @@ namespace SMLimitless.Sounds
             }
             else
             {
-                throw new Exception(string.Format("SoundManager.AddMusicTrack(string, string): Tried to add a music track named \"{0}\", but a track with that name was already loaded.", name));
+                throw new ArgumentException(string.Format("SoundManager.AddMusicTrack(string, string): Tried to add a music track named \"{0}\", but a track with that name was already loaded.", name));
             }
         }
 
@@ -59,7 +59,7 @@ namespace SMLimitless.Sounds
             }
             else
             {
-                throw new Exception(string.Format("SoundManager.RemoveMusicTrack(string, string): Tried to remove a music track named \"{0}\", but it wasn't loaded.", name));
+                throw new ArgumentException(string.Format("SoundManager.RemoveMusicTrack(string, string): Tried to remove a music track named \"{0}\", but it wasn't loaded.", name));
             }
         }
 

@@ -37,19 +37,6 @@ namespace SMLimitless.Sprites.Collections
         public string ObjectName { get; private set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LevelExit"/> class.
-        /// </summary>
-        /// <param name="exitIndex">The index number of the level exit.</param>
-        /// <param name="exitDirection">The direction on the overworld that this exit clears.</param>
-        /// <param name="objectName">The name of the sprite that serves as this exit.</param>
-        public LevelExit(int exitIndex, Direction exitDirection, string objectName)
-        {
-            this.ExitIndex = exitIndex;
-            this.ExitDirection = exitDirection;
-            this.ObjectName = objectName;
-        }
-
-        /// <summary>
         /// Gets an anonymous object containing key objects of this exit.
         /// </summary>
         /// <returns>An anonymous object containing key objects of this exit.</returns>

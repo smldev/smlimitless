@@ -25,6 +25,11 @@ namespace SMLimitless.Sprites.Collections
     public sealed class BackgroundLayer : ISerializable
     {
         /// <summary>
+        /// Determines whether the content for this background layer has been loaded.
+        /// </summary>
+        private bool isContentLoaded;
+
+        /// <summary>
         /// The resource name of the background texture.
         /// </summary>
         private string backgroundTextureResourceName;
@@ -110,14 +115,18 @@ namespace SMLimitless.Sprites.Collections
         /// </summary>
         public void LoadContent()
         {
-            // TODO: add an isContentLoaded flag
-            if (this.backgroundTexture == null)
+            if (!this.isContentLoaded)
             {
-                throw new Exception("BackgroundLayer.LoadContent(): Tried to load content before initializing the object. Please call Initialize() first.");
-            }
+                if (this.backgroundTexture == null)
+                {
+                    throw new InvalidOperationException("BackgroundLayer.LoadContent(): Tried to load content before initializing the object. Please call Initialize() first.");
+                }
 
-            this.backgroundTexture.LoadContent();
-            this.textureSize = this.backgroundTexture.GetSize();
+                this.backgroundTexture.LoadContent();
+                this.textureSize = this.backgroundTexture.GetSize();
+
+                this.isContentLoaded = true;
+            }
         }
 
         /// <summary>

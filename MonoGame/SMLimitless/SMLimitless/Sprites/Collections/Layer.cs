@@ -192,7 +192,7 @@ namespace SMLimitless.Sprites.Collections
         {
             if (this.owner.MainLayer != null)
             {
-                throw new Exception("Layer.SetMainLayer(float, float): This level already has a main layer.");
+                throw new InvalidOperationException("Layer.SetMainLayer(float, float): This section already has a main layer.");
             }
 
             this.isMainLayer = true;
@@ -263,7 +263,7 @@ namespace SMLimitless.Sprites.Collections
         {
             if (!this.tiles.Contains(tile))
             {
-                throw new Exception("Layer.RemoveTile(tile): Tried to remove a tile that wasn't in the layer.");
+                throw new ArgumentException("Layer.RemoveTile(tile): Tried to remove a tile that wasn't in the layer.");
             }
 
             this.tiles.Remove(tile);
@@ -298,7 +298,7 @@ namespace SMLimitless.Sprites.Collections
             }
             else
             {
-                throw new Exception("Layer.Translate(Vector2): Tried to move a main layer. Main layers cannot move.");
+                throw new InvalidOperationException("Layer.Translate(Vector2): Tried to move a main layer. Main layers cannot move.");
             }
         }
 
@@ -325,7 +325,7 @@ namespace SMLimitless.Sprites.Collections
             }
             else
             {
-                throw new Exception("Layer.TranslateRelative(Vector2): Tried to move a main layer. Main layers cannot move.");
+                throw new InvalidOperationException("Layer.TranslateRelative(Vector2): Tried to move a main layer. Main layers cannot move.");
             }
         }
 

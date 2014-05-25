@@ -78,7 +78,7 @@ namespace SMLimitless.Content
 
             if (!resourcePath.EndsWith(".png"))
             {
-                throw new Exception(string.Format("ContentPackageManager.GetGraphicsResource(string): File at {0} is not a PNG image file.", resourcePath));
+                throw new ArgumentException(string.Format("ContentPackageManager.GetGraphicsResource(string): File at {0} is not a PNG image file.", resourcePath));
             }
 
             return GraphicsManager.LoadGraphicsObject(resourcePath);
@@ -106,7 +106,7 @@ namespace SMLimitless.Content
 
             if (!resourcePath.EndsWith(".mp3"))
             {
-                throw new Exception(string.Format("ContentPackageManager.GetSoundResource(string): File at {0} is not an MP3 sound file.", resourcePath));
+                throw new ArgumentException(string.Format("ContentPackageManager.GetSoundResource(string): File at {0} is not an MP3 sound file.", resourcePath));
             }
 
             SoundManager.AddSound(resourceName, resourcePath);

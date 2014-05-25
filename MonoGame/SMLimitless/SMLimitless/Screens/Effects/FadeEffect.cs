@@ -152,7 +152,7 @@ namespace SMLimitless.Screens.Effects
             }
             else if (!this.isInitialized)
             {
-                throw new Exception("The fade effect was not properly initialized.  Please set the screen size.");
+                throw new InvalidOperationException("The fade effect was not properly initialized.  Please set the screen size.");
             }
         }
 

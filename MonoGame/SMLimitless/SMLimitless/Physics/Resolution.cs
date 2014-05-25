@@ -73,11 +73,11 @@ namespace SMLimitless.Physics
             {
                 if (value == ResolutionType.None && this.resolution != Vector2.Zero)
                 {
-                    throw new Exception("Resolution.Type.set: Tried to set a non-zero resolution's type to None.");
+                    throw new ArgumentException("Resolution.Type.set: Tried to set a non-zero resolution's type to None.");
                 }
                 else if (value != ResolutionType.None && this.resolution == Vector2.Zero)
                 {
-                    throw new Exception("Resolution.Type.set: Tried to set a zero resolution's type to non-zero.");
+                    throw new ArgumentException("Resolution.Type.set: Tried to set a zero resolution's type to non-zero.");
                 }
 
                 this.type = value;
@@ -105,11 +105,11 @@ namespace SMLimitless.Physics
 
             if (resolution == Vector2.Zero && type != ResolutionType.None)
             {
-                throw new Exception("Resolution.ctor(Vector2, ResolutionType): Tried to set a zero resolution to a non-zero resolution type.");
+                throw new ArgumentException("Resolution.ctor(Vector2, ResolutionType): Tried to set a zero resolution to a non-zero resolution type.");
             }
             else if (resolution != Vector2.Zero && type == ResolutionType.None)
             {
-                throw new Exception("Resolution.ctor(Vector2, ResolutionType): Tried to set a non-zero resolution to a zero resolution type.");
+                throw new ArgumentException("Resolution.ctor(Vector2, ResolutionType): Tried to set a non-zero resolution to a zero resolution type.");
             }
 
             this.type = type;

@@ -146,18 +146,18 @@ namespace SMLimitless.Extensions
             var values = input.Split(',');
             if (values.Length != 2)
             {
-                throw new Exception(string.Format("Vector2Extensions.Parse(string): Attempted to parse invalid string {0}", input));
+                throw new ArgumentException(string.Format("Vector2Extensions.Parse(string): Attempted to parse invalid string {0}", input));
             }
 
             float x, y;
             if (!float.TryParse(values[0], out x))
             {
-                throw new Exception(string.Format("Vector2Extensions.Parse(string): X Component of vector is not a valid number. Tried to parse {0}", values[0]));
+                throw new ArgumentException(string.Format("Vector2Extensions.Parse(string): X Component of vector is not a valid number. Tried to parse {0}", values[0]));
             }
 
             if (!float.TryParse(values[1], out y))
             {
-                throw new Exception(string.Format("Vector2Extensions.Parse(string): Y Component of vector is not a valid number. Tried to parse {0}", values[1]));
+                throw new ArgumentException(string.Format("Vector2Extensions.Parse(string): Y Component of vector is not a valid number. Tried to parse {0}", values[1]));
             }
 
             return new Vector2(x, y);
@@ -281,8 +281,8 @@ namespace SMLimitless.Extensions
 
             float x, y;
 
-            if (!float.TryParse(values[0], out x)) { throw new Exception(string.Format("Vector2Extensions.FromString(this string): Invalid value for X component. Got {0}.", values[0])); }
-            if (!float.TryParse(values[1], out y)) { throw new Exception(string.Format("Vector2Extensions.FromString(this string): Invalid value for Y component. Got {0}.", values[1])); }
+            if (!float.TryParse(values[0], out x)) { throw new ArgumentException(string.Format("Vector2Extensions.FromString(this string): Invalid value for X component. Got {0}.", values[0])); }
+            if (!float.TryParse(values[1], out y)) { throw new ArgumentException(string.Format("Vector2Extensions.FromString(this string): Invalid value for Y component. Got {0}.", values[1])); }
 
             return new Vector2(x, y);
         }

@@ -53,7 +53,7 @@ namespace SMLimitless.Content
 
                 if (matchingFilePaths.Length > 1)
                 {
-                    throw new Exception(string.Format("ContentPackageResourceSearcher.GetPathToResource(string): Multiple files with resource name {0}.", resourceName));
+                    throw new ArgumentException(string.Format("ContentPackageResourceSearcher.GetPathToResource(string): Multiple files with resource name {0}.", resourceName));
                 }
                 else if (matchingFilePaths.Length == 0)
                 {

@@ -80,7 +80,6 @@ namespace SMLimitless
         /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
             SoundManager.UnloadContent();
         }
 
@@ -103,7 +102,6 @@ namespace SMLimitless
                 GameServices.AddService<GameTime>(gameTime);
             }
 
-            // TODO: Add your update logic here
             InputManager.Update();
             ScreenManager.Update();
 

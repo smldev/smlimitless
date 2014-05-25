@@ -82,7 +82,7 @@ namespace SMLimitless.Graphics
         /// <param name="config">A DataReader containing the configuration file for this object.</param>
         public void Load(string filePath, DataReader config)
         {
-            throw new Exception("StaticGraphicsObject.Load(string, DataReader): Static objects do not accepts configuration files.  Please use Load(string) instead.");
+            throw new InvalidOperationException("StaticGraphicsObject.Load(string, DataReader): Static objects do not accepts configuration files.  Please use Load(string) instead.");
         }
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace SMLimitless.Graphics
             }
             else
             {
-                throw new Exception("StaticGraphicsObject.GetSize(): This object isn't fully loaded, and thus cannot return its size.");
+                throw new InvalidOperationException("StaticGraphicsObject.GetSize(): This object isn't fully loaded, and thus cannot return its size.");
             }
         }
     }

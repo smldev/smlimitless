@@ -13,13 +13,12 @@ using SMLimitless.Interfaces;
 namespace SMLimitless.Physics
 {
     // Credit to fbrookie.
-    // TODO: why is this a class? make it a struct
 
     /// <summary>
     /// Using Rectangle for Collision bounds causes 'jiggling' as Rectangle 
     /// must round values to integers. This struct uses float for precision.
     /// </summary>
-    public class BoundingRectangle : ICollidableShape
+    public struct BoundingRectangle : ICollidableShape
     {
         /// <summary>
         /// The position of the top-left corner.
@@ -32,15 +31,7 @@ namespace SMLimitless.Physics
         private Vector2 max;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BoundingRectangle"/> class.
-        /// </summary>
-        public BoundingRectangle()
-            : this(0, 0, 0, 0)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BoundingRectangle"/> class.
+        /// Initializes a new instance of the <see cref="BoundingRectangle"/> struct.
         /// </summary>
         /// <param name="rectangle">The <see cref="Rectangle"/> used to create this rectangle.</param>
         public BoundingRectangle(Rectangle rectangle)
@@ -49,7 +40,7 @@ namespace SMLimitless.Physics
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BoundingRectangle"/> class.
+        /// Initializes a new instance of the <see cref="BoundingRectangle"/> struct.
         /// </summary>
         /// <param name="start">The position of the top-left corner.</param>
         /// <param name="end">The size of the rectangle.</param>
@@ -59,7 +50,7 @@ namespace SMLimitless.Physics
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BoundingRectangle"/> class.
+        /// Initializes a new instance of the <see cref="BoundingRectangle"/> struct.
         /// </summary>
         /// <param name="x">The X-coordinate of the top-left corner.</param>
         /// <param name="y">The Y-coordinate of the top-right corner.</param>
@@ -243,7 +234,7 @@ namespace SMLimitless.Physics
 
             if (components.Length != 4)
             {
-                throw new Exception("BoundingRectangle.Deserialize(string): Invalid input.");
+                throw new ArgumentException(string.Format("BoundingRectangle.Deserialize(string): The input was not in a valid form. Input: {0}", input));
             }
 
             for (int i = 1; i < 4; i++)
@@ -253,10 +244,10 @@ namespace SMLimitless.Physics
 
             float x, y, width, height;
 
-            if (!float.TryParse(components[0], out x)) { throw new Exception(string.Format("BoundingRectangle.Deserialize(string): Invalid value for X component. Input is {0}.", input)); }
-            if (!float.TryParse(components[1], out y)) { throw new Exception(string.Format("BoundingRectangle.Deserialize(string): Invalid value for Y component. Input is {0}.", input)); }
-            if (!float.TryParse(components[2], out width)) { throw new Exception(string.Format("BoundingRectangle.Deserialize(string): Invalid value for Width component. Input is {0}.", input)); }
-            if (!float.TryParse(components[3], out height)) { throw new Exception(string.Format("BoundingRectangle.Deserialize(string): Invalid value for Height component. Input is {0}.", input)); }
+            if (!float.TryParse(components[0], out x)) { throw new ArgumentException(string.Format("BoundingRectangle.Deserialize(string): Invalid value for X component. Input is {0}.", input)); }
+            if (!float.TryParse(components[1], out y)) { throw new ArgumentException(string.Format("BoundingRectangle.Deserialize(string): Invalid value for Y component. Input is {0}.", input)); }
+            if (!float.TryParse(components[2], out width)) { throw new ArgumentException(string.Format("BoundingRectangle.Deserialize(string): Invalid value for Width component. Input is {0}.", input)); }
+            if (!float.TryParse(components[3], out height)) { throw new ArgumentException(string.Format("BoundingRectangle.Deserialize(string): Invalid value for Height component. Input is {0}.", input)); }
 
             return new BoundingRectangle(x, y, width, height);
         }

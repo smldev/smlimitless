@@ -22,9 +22,18 @@ namespace SMLimitless
             /// <param name="args">Command-line arguments.</param>
             public static void Main(string[] args)
             {
-                using (SmlProgram game = new SmlProgram())
+                try
                 {
-                    game.Run();
+                    using (SmlProgram game = new SmlProgram())
+                    {
+                        game.Run();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // TODO: get rid of this catch block whenever we get UIs working
+                    string message = string.Format("An unhandled exception has occurred in Super Mario Limitless.{0}Exception: {1}{0}{0}Message: {2}", Environment.NewLine, ex.GetType().FullName, ex.Message);
+                    System.Windows.Forms.MessageBox.Show(message, "Unhandled Exception", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
                 }
             }
         }

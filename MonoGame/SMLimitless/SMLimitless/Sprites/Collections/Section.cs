@@ -65,7 +65,7 @@ namespace SMLimitless.Sprites.Collections
             {
                 if (this.ScrollType != CameraScrollType.AutoScroll)
                 {
-                    throw new Exception("Section.AutoscrollSpeed.get: Section scroll type is not autoscrolling.");
+                    throw new InvalidOperationException("Section.AutoscrollSpeed.get: Section scroll type is not autoscrolling.");
                 }
 
                 return this.autoscrollSpeed;
@@ -75,7 +75,7 @@ namespace SMLimitless.Sprites.Collections
             {
                 if (this.ScrollType != CameraScrollType.AutoScroll)
                 {
-                    throw new Exception("Section.AutoscrollSpeed.set: Section scroll type is not autoscrolling.");
+                    throw new InvalidOperationException("Section.AutoscrollSpeed.set: Section scroll type is not autoscrolling.");
                 }
 
                 this.autoscrollSpeed = value;
@@ -96,7 +96,7 @@ namespace SMLimitless.Sprites.Collections
             {
                 if (this.ScrollType != CameraScrollType.AutoScrollAlongPath)
                 {
-                    throw new Exception("Section.AutoscrollPathName.get: Section scroll type is not autoscrolling.");
+                    throw new InvalidOperationException("Section.AutoscrollPathName.get: Section scroll type is not autoscrolling.");
                 }
 
                 return this.autoscrollPathName;
@@ -106,7 +106,7 @@ namespace SMLimitless.Sprites.Collections
             {
                 if (this.ScrollType != CameraScrollType.AutoScrollAlongPath)
                 {
-                    throw new Exception("Section.AutoscrollPathName.set: Section scroll type is not autoscrolling.");
+                    throw new InvalidOperationException("Section.AutoscrollPathName.set: Section scroll type is not autoscrolling.");
                 }
 
                 this.autoscrollPathName = value;
@@ -167,12 +167,9 @@ namespace SMLimitless.Sprites.Collections
         /// <summary>
         /// Initializes a new instance of the <see cref="Section"/> class.
         /// </summary>
-        /// <param name="bounds">The bounds of this section.</param>
         /// <param name="owner">The level that owns this section.</param>
-        public Section(BoundingRectangle bounds, Level owner)
+        public Section(Level owner)
         {
-            // TODO: temporary
-            this.Bounds = bounds;
             this.Camera = new Camera2D();
             this.Owner = owner;
             this.QuadTree = new QuadTree(GameServices.QuadTreeCellSize);
@@ -193,7 +190,7 @@ namespace SMLimitless.Sprites.Collections
         {
             if (!this.isSectionLoaded)
             {
-                throw new Exception("Section.MoveCamera(Vector2): The section isn't loaded - the section needs to be loaded before anything can happen.");
+                throw new InvalidOperationException("Section.MoveCamera(Vector2): The section isn't loaded - the section needs to be loaded before anything can happen.");
             }
 
             // Ensure the camera falls within bounds.
@@ -458,7 +455,7 @@ namespace SMLimitless.Sprites.Collections
         {
             if (this.MainLayer != null)
             {
-                throw new Exception("Section.SetMainLayer(Layer): A layer tried to set itself as this section's main layer, but this section already has a main layer.");
+                throw new InvalidOperationException("Section.SetMainLayer(Layer): A layer tried to set itself as this section's main layer, but this section already has a main layer.");
             }
 
             this.MainLayer = layer;

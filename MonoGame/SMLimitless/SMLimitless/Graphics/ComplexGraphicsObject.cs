@@ -78,7 +78,7 @@ namespace SMLimitless.Graphics
                 }
                 else
                 {
-                    throw new Exception(string.Format("ComplexGraphicsObject.CurrentObjectName.set: There is no object named {0} loaded. Please check the config at {1}.", value, this.configFilePath));
+                    throw new ArgumentException(string.Format("ComplexGraphicsObject.CurrentObjectName.set: There is no object named {0} loaded. Please check the config at {1}.", value, this.configFilePath));
                 }
             }
         }
@@ -101,7 +101,7 @@ namespace SMLimitless.Graphics
         /// <param name="filePath">The file path to the image.</param>
         public void Load(string filePath)
         {
-            throw new Exception("ComplexGraphicsObject.Load(string): Cannot load from a single file. Please use either StaticGraphicsObject or the (string, DataReader) overload.");
+            throw new InvalidOperationException("ComplexGraphicsObject.Load(string): Cannot load from a single file. Please use either StaticGraphicsObject or the (string, DataReader) overload.");
         }
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace SMLimitless.Graphics
 
                 if (!(config[0] == "[Complex]"))
                 {
-                    throw new Exception("ComplexGraphicsObject.Load(string, DataReader): Invalid or corrupt configuration file.");
+                    throw new FormatException("ComplexGraphicsObject.Load(string, DataReader): Invalid or corrupt configuration file.");
                 }
 
                 var settings = config.ReadFullSection("[Complex]");
@@ -128,7 +128,7 @@ namespace SMLimitless.Graphics
                 this.FrameSize = Vector2Extensions.Parse(settings["FrameSize"]);
                 if (!int.TryParse(settings["TotalGraphicsObjects"], out totalGraphicsObjects))
                 { 
-                    throw new Exception(string.Format("ComplexGraphicsObject.Load(string, DataReader): Invalid number of graphics objects specified. Got {0}.", settings["TotalGraphicsObjects"])); 
+                    throw new FormatException(string.Format("ComplexGraphicsObject.Load(string, DataReader): Invalid number of graphics objects specified. Got {0}.", settings["TotalGraphicsObjects"])); 
                 }
 
                 startingObject = settings["StartingObject"];
@@ -189,7 +189,7 @@ namespace SMLimitless.Graphics
                     }
                     else
                     {
-                        throw new Exception(string.Format("ComplexGraphicsObject.LoadContent(): Unrecognized graphics object type. Please check config at {0}.", this.configFilePath));
+                        throw new InvalidCastException(string.Format("ComplexGraphicsObject.LoadContent(): Unrecognized graphics object type. Please check config at {0}.", this.configFilePath));
                     }
                 }
 
@@ -261,7 +261,7 @@ namespace SMLimitless.Graphics
             }
             else
             {
-                throw new Exception("ComplexGraphicsObject.SetSpeed(decimal): Tried to set an object that wasn't animated.");
+                throw new InvalidOperationException("ComplexGraphicsObject.SetSpeed(decimal): Tried to set the speed of an object that wasn't animated.");
             }
         }
 
@@ -281,7 +281,7 @@ namespace SMLimitless.Graphics
             }
             else
             {
-                throw new Exception("ComplexGraphicsObject.SetSpeed(int): Tried to set an object that wasn't animated.");
+                throw new InvalidOperationException("ComplexGraphicsObject.SetSpeed(int): Tried to set the speed of an object that wasn't animated.");
             }
         }
 
@@ -301,7 +301,7 @@ namespace SMLimitless.Graphics
             }
             else
             {
-                throw new Exception("ComplexGraphicsObjects.AdjustSpeed(float): Tried to adjust an object that wasn't animated.");
+                throw new InvalidOperationException("ComplexGraphicsObjects.AdjustSpeed(float): Tried to adjust an object that wasn't animated.");
             }
         }
 
@@ -321,7 +321,7 @@ namespace SMLimitless.Graphics
             }
             else
             {
-                throw new Exception("ComplexGraphicsObjects.Reset(bool): Tried to reset an object that wasn't animated.");
+                throw new InvalidOperationException("ComplexGraphicsObjects.Reset(bool): Tried to reset an object that wasn't animated.");
             }
         }
 
@@ -363,7 +363,7 @@ namespace SMLimitless.Graphics
             }
             else
             {
-                throw new Exception("ComplexGraphicsObject.GetSize(): This object isn't fully loaded, and thus cannot return its size.");
+                throw new InvalidOperationException("ComplexGraphicsObject.GetSize(): This object isn't fully loaded, and thus cannot return its size.");
             }
         }
     }

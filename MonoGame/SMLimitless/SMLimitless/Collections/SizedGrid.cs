@@ -102,13 +102,19 @@ namespace SMLimitless.Collections
         {
             get
             {
-                // TODO: add bounds check
+                if (!this.IndexWithinBounds(x, y))
+                {
+                    throw new ArgumentOutOfRangeException(string.Format("SizedGrid<T>.this[int, int].get: The provided cell number fell outside the range of the grid. The grid has the size of {0}x{1} cells and the requested cell was {2}, {3}.", this.grid.Width, this.grid.Height, x, y));
+                }
                 return this.grid[x, y];
             }
 
             private set
             {
-                // TODO: add bounds check
+                if (!this.IndexWithinBounds(x, y))
+                {
+                    throw new ArgumentOutOfRangeException(string.Format("SizedGrid<T>.this[int, int].set: The provided cell number fell outside the range of the grid. The grid has the size of {0}x{1} cells and the requested cell was {2}, {3}.", this.grid.Width, this.grid.Height, x, y));
+                }
                 this.grid[x, y] = value;
             }
         }
@@ -123,11 +129,11 @@ namespace SMLimitless.Collections
         {
             if (item.Position.X % this.CellWidth != 0 || item.Position.Y % this.CellHeight != 0)
             {
-                // TODO: add exception here
+                throw new ArgumentException(string.Format("SizedGrid<T>.Add(IPositionable): The item's position does not align to the grid. Items must be aligned to ({0}, {1})-pixel boundaries. Item's position is {2}, {3}.", this.CellWidth, this.CellHeight, item.Position.X, item.Position.Y));
             }
             else if (item.Size.X % this.CellWidth != 0 || item.Size.Y % this.CellHeight != 0)
             {
-                // TODO: ditto
+                throw new ArgumentException(string.Format("SizedGrid<T>.Add(IPositionable): The item's size is not a multiple of the grid's cell size. Each grid cell has a size of {0}, {1}, and the item has a size of {2}, {3}.", this.CellWidth, this.CellHeight, item.Position.X, item.Position.Y));
             }
 
             var startingCell = new IntVector2((int)item.Position.X / this.CellWidth, (int)item.Position.Y / this.CellHeight);
@@ -276,7 +282,7 @@ namespace SMLimitless.Collections
         /// <returns>True if the cell falls within the grid, false if otherwise.</returns>
         public bool IndexWithinBounds(int x, int y)
         {
-            return (x >= 0 && x < (this.grid.Width * this.CellWidth)) && (y >= 0 && y < (this.grid.Height * this.CellHeight));
+            return (x >= 0 && x < this.grid.Width) && (y >= 0 && y < this.grid.Height);
         }
 
         /// <summary>

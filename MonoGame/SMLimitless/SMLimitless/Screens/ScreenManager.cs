@@ -88,7 +88,7 @@ namespace SMLimitless.Screens
             }
             else
             {
-                throw new Exception("ScreenManager.AddScreen: Could not find the screen's parent node.");
+                throw new ArgumentException("ScreenManager.AddScreen(Screen, Screen): Could not find the screen's parent node.");
             }
         }
 

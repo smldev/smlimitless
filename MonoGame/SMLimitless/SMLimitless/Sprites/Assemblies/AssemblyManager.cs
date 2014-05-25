@@ -53,7 +53,7 @@ namespace SMLimitless.Sprites.Assemblies
             Assembly assembly = Assembly.LoadFile(fullPath);
             if (!ValidateAssembly(assembly))
             {
-                throw new Exception(string.Format("AssemblyManager.LoadAssembly(string, ushort): The assembly named {0} does not meet assembly requirements.", assembly.FullName)); // TODO: get an AssemblyName here
+                throw new InvalidOperationException(string.Format("AssemblyManager.LoadAssembly(string, ushort): The assembly named {0} does not meet assembly requirements.", assembly.FullName));
             }
 
             loadedAssemblies.Add(assembly);
@@ -69,7 +69,7 @@ namespace SMLimitless.Sprites.Assemblies
         {
             if (!typeToAssemblyDictionary.ContainsKey(spriteFullName))
             {
-                throw new Exception(string.Format("AssemblyManager.GetSpriteByFullName(string): The sprite named {0} is not present in any loaded assembly.", spriteFullName));
+                throw new ArgumentException(string.Format("AssemblyManager.GetSpriteByFullName(string): The sprite named {0} is not present in any loaded assembly.", spriteFullName));
             }
 
             Assembly containingAssembly = typeToAssemblyDictionary[spriteFullName];
@@ -85,7 +85,7 @@ namespace SMLimitless.Sprites.Assemblies
         {
             if (!typeToAssemblyDictionary.ContainsKey(tileFullName))
             {
-                throw new Exception(string.Format("AssemblyManager.GetTileByFullName(string): The tile named {0} is not present in any loaded assembly.", tileFullName));
+                throw new ArgumentException(string.Format("AssemblyManager.GetTileByFullName(string): The tile named {0} is not present in any loaded assembly.", tileFullName));
             }
 
             Assembly containingAssembly = typeToAssemblyDictionary[tileFullName];

@@ -105,8 +105,6 @@ namespace SMLimitless.Sprites
     /// </summary>
     public enum TileCollisionType
     {
-        // TODO: turn this into a flags enum [ Top | Bottom | Left | Right | Slope ]
-
         /// <summary>
         /// This tile is completely solid on all sides.
         /// Sprites that are embedded in the tiles will be forced to the left.

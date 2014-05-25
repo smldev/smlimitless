@@ -167,7 +167,7 @@ namespace SMLimitless.Sprites.Collections
             // Check if the versions match.
             if ((string)obj["header"]["version"] != Level.SerializerVersion)
             {
-                throw new Exception(string.Format("Level.Deserialize(string): This level was created with a different version of the serializer. Expected {0}, got {1}.", Level.SerializerVersion, (string)obj["header"]["version"]));
+                throw new FormatException(string.Format("Level.Deserialize(string): This level was created with a different version of the serializer. Expected {0}, got {1}.", Level.SerializerVersion, (string)obj["header"]["version"]));
             }
 
             // Deserialize the root objects first.
@@ -185,7 +185,7 @@ namespace SMLimitless.Sprites.Collections
 
             foreach (var sectionObject in sectionObjects)
             {
-                Section section = new Section(new BoundingRectangle(), this); // TODO: get rid of that first param
+                Section section = new Section(this);
                 section.Initialize();
                 section.Deserialize(sectionObject.ToString());
                 this.sections.Add(section);
@@ -193,7 +193,7 @@ namespace SMLimitless.Sprites.Collections
 
             foreach (var levelExitObject in levelExitObjects)
             {
-                LevelExit levelExit = new LevelExit(int.MinValue, Direction.None, null); // TODO: get rid of ALL these params
+                LevelExit levelExit = new LevelExit();
                 levelExit.Deserialize(levelExitObject.ToString());
                 this.levelExits.Add(levelExit);
             }

@@ -423,14 +423,9 @@
             Gets or sets the distance from the top edge of the window in pixels.
             </summary>
         </member>
-        <member name="P:SMLimitless.Editor.EditorButton.Width">
+        <member name="P:SMLimitless.Editor.EditorButton.Size">
             <summary>
-            Gets or sets the width of the button in pixels.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Editor.EditorButton.Height">
-            <summary>
-            Gets or sets the height of the button in pixels.
+            Gets or sets the size of the button in pixels.
             </summary>
         </member>
         <member name="P:SMLimitless.Editor.EditorButton.ButtonImage">
@@ -2835,27 +2830,22 @@
             The size of the rectangle.
             </summary>
         </member>
-        <member name="M:SMLimitless.Physics.BoundingRectangle.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:SMLimitless.Physics.BoundingRectangle"/> class.
-            </summary>
-        </member>
         <member name="M:SMLimitless.Physics.BoundingRectangle.#ctor(Microsoft.Xna.Framework.Rectangle)">
             <summary>
-            Initializes a new instance of the <see cref="T:SMLimitless.Physics.BoundingRectangle"/> class.
+            Initializes a new instance of the <see cref="T:SMLimitless.Physics.BoundingRectangle"/> struct.
             </summary>
             <param name="rectangle">The <see cref="T:Microsoft.Xna.Framework.Rectangle"/> used to create this rectangle.</param>
         </member>
         <member name="M:SMLimitless.Physics.BoundingRectangle.#ctor(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2)">
             <summary>
-            Initializes a new instance of the <see cref="T:SMLimitless.Physics.BoundingRectangle"/> class.
+            Initializes a new instance of the <see cref="T:SMLimitless.Physics.BoundingRectangle"/> struct.
             </summary>
             <param name="start">The position of the top-left corner.</param>
             <param name="end">The size of the rectangle.</param>
         </member>
         <member name="M:SMLimitless.Physics.BoundingRectangle.#ctor(System.Single,System.Single,System.Single,System.Single)">
             <summary>
-            Initializes a new instance of the <see cref="T:SMLimitless.Physics.BoundingRectangle"/> class.
+            Initializes a new instance of the <see cref="T:SMLimitless.Physics.BoundingRectangle"/> struct.
             </summary>
             <param name="x">The X-coordinate of the top-left corner.</param>
             <param name="y">The Y-coordinate of the top-right corner.</param>
@@ -4883,6 +4873,11 @@
             Contains one image that scrolls at a given rate.
             </summary>
         </member>
+        <member name="F:SMLimitless.Sprites.Collections.BackgroundLayer.isContentLoaded">
+            <summary>
+            Determines whether the content for this background layer has been loaded.
+            </summary>
+        </member>
         <member name="F:SMLimitless.Sprites.Collections.BackgroundLayer.backgroundTextureResourceName">
             <summary>
             The resource name of the background texture.
@@ -5343,14 +5338,6 @@
             Represents an exit. This class is used in saving levels to file.
             </summary>
         </member>
-        <member name="M:SMLimitless.Sprites.Collections.LevelExit.#ctor(System.Int32,SMLimitless.Direction,System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:SMLimitless.Sprites.Collections.LevelExit"/> class.
-            </summary>
-            <param name="exitIndex">The index number of the level exit.</param>
-            <param name="exitDirection">The direction on the overworld that this exit clears.</param>
-            <param name="objectName">The name of the sprite that serves as this exit.</param>
-        </member>
         <member name="M:SMLimitless.Sprites.Collections.LevelExit.GetSerializableObjects">
             <summary>
             Gets an anonymous object containing key objects of this exit.
@@ -5502,11 +5489,10 @@
             A fielded that stores whether the section has loaded from the file.
             </summary>
         </member>
-        <member name="M:SMLimitless.Sprites.Collections.Section.#ctor(SMLimitless.Physics.BoundingRectangle,SMLimitless.Sprites.Collections.Level)">
+        <member name="M:SMLimitless.Sprites.Collections.Section.#ctor(SMLimitless.Sprites.Collections.Level)">
             <summary>
             Initializes a new instance of the <see cref="T:SMLimitless.Sprites.Collections.Section"/> class.
             </summary>
-            <param name="bounds">The bounds of this section.</param>
             <param name="owner">The level that owns this section.</param>
         </member>
         <member name="M:SMLimitless.Sprites.Collections.Section.MoveCamera(Microsoft.Xna.Framework.Vector2)">

@@ -63,7 +63,7 @@ namespace SMLimitless.Graphics
 
             if (!filePath.EndsWith(".png"))
             {
-                throw new Exception(string.Format("BitmapFont.Initialize(string): The file at {0} is not a valid PNG file.", filePath));
+                throw new ArgumentException(string.Format("BitmapFont.Initialize(string): The file at {0} is not a valid PNG file.", filePath));
             }
 
             string configPath = string.Concat(filePath.Substring(0, filePath.Length - 3), "txt");
@@ -85,7 +85,7 @@ namespace SMLimitless.Graphics
 
             if (!config[0].ToLowerInvariant().StartsWith("size"))
             {
-                throw new Exception("BitmapFont.LoadContent(): The configuration file requires the first item to be the size of a character.");
+                throw new FormatException("BitmapFont.LoadContent(): The configuration file requires the first item to be the size of a character.");
             }
 
             this.characterSize = config[0].Split('=')[1].TrimStart().FromString();
