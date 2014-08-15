@@ -52,7 +52,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\MonoGame\v3.0\Assemblies\WindowsGL\MonoGame.Framework.dll</HintPath>
     </Reference>
-    <Reference Include="SMLimitless">
+    <Reference Include="SMLimitless, Version=0.0.1.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\SMLimitless\SMLimitless\bin\WindowsGL\Debug\SMLimitless.exe</HintPath>
     </Reference>
     <Reference Include="System" />

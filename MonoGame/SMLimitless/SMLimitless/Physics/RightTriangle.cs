@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="RightTriangle.cs" company="The Limitless Development Team">
-//     Copyrighted unter the MIT Public License.
+//     Copyrighted under the MIT Public License.
 // </copyright>
 //-----------------------------------------------------------------------
 
@@ -381,6 +381,20 @@ namespace SMLimitless.Physics
         public Vector2 GetIntersectionDepth(BoundingRectangle that)
         {
             return this.GetCollisionResolution(that);
+        }
+
+        /// <summary>
+        /// Gets the position of the top of this triangle, given an X-coordinate.
+        /// </summary>
+        /// <param name="x">The X-coordinate to check.</param>
+        /// <returns>The position of the top of this triangle.</returns>
+        public Vector2 GetTopPoint(float x)
+        {
+            if (this.SlopedSides == RtSlopedSides.TopLeft || this.SlopedSides == RtSlopedSides.TopRight)
+            {
+                return this.GetPointOnSlope(x);
+            }
+            return new Vector2(x, this.Bounds.Top);
         }
 
         /// <summary>

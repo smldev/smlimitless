@@ -49,6 +49,7 @@
     <Compile Include="Editor\EditorButton.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Extensions\ColorExtensions.cs" />
+    <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Extensions\GameTimeExtensions.cs" />
     <Compile Include="Extensions\ListExtensions.cs" />
     <Compile Include="Extensions\NumericExtensions.cs" />

@@ -41,7 +41,7 @@ namespace SmlSample
         /// <summary>
         /// The maximum number of frames that a jump impulse will be applied for.
         /// </summary>
-        private int jumpTimeout = 5;
+        private int jumpTimeout = 25;
 
         public SimplePlayer()
         {
@@ -104,7 +104,7 @@ namespace SmlSample
                 this.AdjustVelocity(AccelerationImpulse);
             }
 
-            if (InputManager.IsCurrentActionPress(InputAction.Jump) && this.jumpTimeout > 0)
+            if (InputManager.IsCurrentActionPress(InputAction.Jump))
             {
                 this.Velocity = new Vector2(this.Velocity.X, (this.Velocity.Y <= MaxJumpVelocity) ? MaxJumpVelocity : this.Velocity.Y - JumpImpulse);
                 this.jumpTimeout--;
@@ -143,6 +143,17 @@ namespace SmlSample
         /// <param name="intersect">The depth of the collision.</param>
         public override void HandleSpriteCollision(Sprite sprite, Vector2 intersect)
         {
+            if (sprite.GetType() == typeof(TestSprite))
+            {
+                if (this.Velocity.Y > 0f)
+                {
+                    // Kill the sprite if we're falling.
+                    sprite.Damage();
+
+                    // Give us an upward boost.
+                    this.Velocity = new Vector2(this.Velocity.X, 250f);
+                }
+            }
         }
 
         /// <summary>

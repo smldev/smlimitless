@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="Level.cs" company="The Limitless Development Team">
-//     Copyrighted unter the MIT Public License.
+//     Copyrighted under the MIT Public License.
 // </copyright>
 //-----------------------------------------------------------------------
 using System;
@@ -69,7 +69,7 @@ namespace SMLimitless.Sprites.Collections
         /// <summary>
         /// The acceleration caused by gravity, measured in pixels per second per second.
         /// </summary>
-        public const float GravityAcceleration = 250f;
+        public const float GravityAcceleration = 25f;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Level"/> class.

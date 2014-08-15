@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="ICollidableShape.cs" company="The Limitless Development Team">
-//     Copyrighted unter the MIT Public License.
+//     Copyrighted under the MIT Public License.
 // </copyright>
 //-----------------------------------------------------------------------
 using System;
@@ -53,5 +53,12 @@ namespace SMLimitless.Interfaces
         /// <param name="adjacentPointsAreWithin">If true, any point on the edge of the shape will be considered within.</param>
         /// <returns>True if the point is within the shape, false if otherwise.</returns>
         bool Within(Vector2 point, bool adjacentPointsAreWithin);
+
+        /// <summary>
+        /// Gets the location of the top of the shape, given an X-coordinate.
+        /// </summary>
+        /// <param name="x">The X-coordinate to get the top of the shape for.</param>
+        /// <returns>A vector with the X position set to the X parameter, and the Y position set to the position of the top of the shape.</returns>
+        Vector2 GetTopPoint(float x);
     }
 }

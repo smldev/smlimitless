@@ -82,7 +82,11 @@ namespace SmlSample
         /// <param name="intersect">The depth of the intersection.</param>
         public override void HandleSpriteCollision(Sprite sprite, Vector2 intersect)
         {
-            throw new NotImplementedException();
+        }
+
+        public override void Damage()
+        {
+            this.RemoveOnNextFrame = true;
         }
 
         /// <summary>

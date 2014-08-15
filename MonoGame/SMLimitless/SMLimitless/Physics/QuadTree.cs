@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="QuadTree.cs" company="The Limitless Development Team">
-//     Copyrighted unter the MIT Public License.
+//     Copyrighted under the MIT Public License.
 // </copyright>
 //-----------------------------------------------------------------------
 using System;
@@ -146,7 +146,13 @@ namespace SMLimitless.Physics
         {
             var result = new List<Sprite>();
             var intersectingCells = this.GetIntersectingCells(sprite);
-            intersectingCells.ForEach(cell => result.AddRange(this.cells[cell].Sprites));
+            foreach (Vector2 cell in intersectingCells)
+            {
+                if (this.cells.ContainsKey(cell))
+                {
+                    result.AddRange(this.cells[cell].Sprites);
+                }
+            }
             return result;
         }
 
@@ -293,6 +299,63 @@ namespace SMLimitless.Physics
 
             return result;
         }
+
+		/// <summary>
+		/// Returns a collection of tiles that intersects a certain horizontal line segment.
+		/// </summary>
+		/// <param name="start">The starting position of the line segment.</param>
+		/// <param name="direction">The direction (left or right) to search for tiles in.</param>
+		/// <param name="searchDistance">The distance in quadtree cells to search for tiles.</param>
+		/// <returns></returns>
+		public List<Tile> GetTilesIntersectingHorizontalLine(Vector2 start, Direction direction, int searchDistance)
+		{
+			if (direction != Direction.Up && direction != Direction.Down)
+			{
+				throw new ArgumentException(string.Format("QuadTree.GetTilesIntersectingHorizontalLine(Vector2, Direction, int): The provided direction must be Left or Right. It was {0}.", direction));
+			}
+			else if (searchDistance <= 0)
+			{
+				throw new ArgumentException(string.Format("QuadTree.GetTilesIntersectingHorizontalLine(Vector2, Direction, int): The search distance must be greater than zero. Search distance was {0}.", searchDistance));
+			}
+
+			int scan = (direction == Direction.Right) ? 1 : -1;
+			List<Tile> result = new List<Tile>();
+			Vector2 startCell = this.GetCellNumberAtPosition(start);
+			Vector2 endCell = new Vector2(startCell.X + (searchDistance * scan), startCell.Y);
+
+			this.cells.Where(c => c.Key.X.BetweenInclusive(startCell.X, endCell.X)).ForEach(c => result.AddRange(c.Value.Tiles));
+
+			return result;
+		}
+
+		/// <summary>
+		/// Obsolete.
+		/// </summary>
+		/// <param name="start">The start.</param>
+		/// <param name="direction">The direction.</param>
+		/// <param name="searchDistance">The search distance.</param>
+		/// <returns>A value.</returns>
+		[Obsolete]
+		public List<Tile> GetTilesIntersectingVerticalLine(Vector2 start, Direction direction, int searchDistance)
+		{
+			if (direction != Direction.Up && direction != Direction.Down)
+			{
+				throw new ArgumentException(string.Format("QuadTree.GetTilesIntersectingVerticalLine(Vector2, Direction, int): The provided direction must be Up or Down. It was {0}.", direction));
+			}
+			else if (searchDistance <= 0)
+			{
+				throw new ArgumentException(string.Format("QuadTree.GetTilesIntersectingVerticalLine(Vector2, Direction, int): The search distance must be greater than zero. Search distance was {0}.", searchDistance));
+			}
+
+			int scan = (direction == Direction.Down) ? 1 : -1;
+			List<Tile> result = new List<Tile>();
+			Vector2 startCell = this.GetCellNumberAtPosition(start);
+			Vector2 endCell = new Vector2(startCell.X, startCell.Y + (searchDistance * scan));
+
+			this.cells.Where(c => c.Key.Y.BetweenInclusive(startCell.Y, endCell.Y)).ForEach(c => result.AddRange(c.Value.Tiles));
+
+			return result;
+		}
 
         /// <summary>
         /// Updates the QuadTree, recalculating the cells for every tile.

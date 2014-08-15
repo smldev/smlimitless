@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="BoundingRectangle.cs" company="The Limitless Development Team">
-//     Copyrighted unter the MIT Public License.
+//     Copyrighted under the MIT Public License.
 // </copyright>
 //-----------------------------------------------------------------------
 using System;
@@ -446,6 +446,16 @@ namespace SMLimitless.Physics
             {
                 return new Vector2(0f, intersection.Y);
             }
+        }
+
+        /// <summary>
+        /// Gets the Y-coordinate of the top of this rectangle.
+        /// </summary>
+        /// <param name="x">The x-coordinate to check for.</param>
+        /// <returns>The Y-coordinate of the top of this rectangle.</returns>
+        public Vector2 GetTopPoint(float x)
+        {
+            return new Vector2(x, this.Top);
         }
 
         /// <summary>

@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="Camera2D.cs" company="The Limitless Development Team">
-//     Copyrighted unter the MIT Public License.
+//     Copyrighted under the MIT Public License.
 // </copyright>
 //-----------------------------------------------------------------------
 using System;
@@ -19,6 +19,11 @@ namespace SMLimitless.Physics
         /// A backing field for the Zoom property.
         /// </summary>
         private float zoom;
+
+        /// <summary>
+        /// A backing field for the Position property;
+        /// </summary>
+        private Vector2 position;
 
         /// <summary>
         /// A field containing the matrix transformation for the camera.
@@ -56,7 +61,17 @@ namespace SMLimitless.Physics
         /// <summary>
         /// Gets or sets the position of the top-left corner of the camera's view.
         /// </summary>
-        public Vector2 Position { get; set; }
+        public Vector2 Position
+        {
+            get
+            {
+                return this.position;
+            }
+            set
+            {
+                this.position = new Vector2((int)value.X, (int)value.Y);
+            }
+        }
 
         /// <summary>
         /// Gets a rectangle corresponding to the viewport of the camera.

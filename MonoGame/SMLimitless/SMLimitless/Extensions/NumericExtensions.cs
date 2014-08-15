@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="NumericExtensions.cs" company="The Limitless Development Team">
-//     Copyrighted unter the MIT Public License.
+//     Copyrighted under the MIT Public License.
 // </copyright>
 //-----------------------------------------------------------------------
 using System;
@@ -143,5 +143,29 @@ namespace SMLimitless.Extensions
                 return value;
             }
         }
+
+		/// <summary>
+		/// Determines if a number if between two other numbers.
+		/// </summary>
+		/// <param name="x">The number to check.</param>
+		/// <param name="a">The first number of the range.</param>
+		/// <param name="b">The second number of the range.</param>
+		/// <returns></returns>
+		public static bool BetweenInclusive(this float x, float a, float b)
+		{
+			if (a > b)
+			{
+				return (x >= a) && (x <= b);
+			}
+			else if (a < b)
+			{
+				return (x >= b) && (x <= a);
+			}
+			else if (a == b)
+			{
+				return (x == a) && (x == b);
+			}
+			return false;
+		}
     }
 }

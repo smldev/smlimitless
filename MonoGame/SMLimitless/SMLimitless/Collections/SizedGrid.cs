@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="SizedGrid.cs" company="The Limitless Development Team">
-//     Copyrighted unter the MIT Public License.
+//     Copyrighted under the MIT Public License.
 // </copyright>
 //-----------------------------------------------------------------------
 using System;
@@ -106,6 +106,7 @@ namespace SMLimitless.Collections
                 {
                     throw new ArgumentOutOfRangeException(string.Format("SizedGrid<T>.this[int, int].get: The provided cell number fell outside the range of the grid. The grid has the size of {0}x{1} cells and the requested cell was {2}, {3}.", this.grid.Width, this.grid.Height, x, y));
                 }
+
                 return this.grid[x, y];
             }
 
@@ -115,6 +116,7 @@ namespace SMLimitless.Collections
                 {
                     throw new ArgumentOutOfRangeException(string.Format("SizedGrid<T>.this[int, int].set: The provided cell number fell outside the range of the grid. The grid has the size of {0}x{1} cells and the requested cell was {2}, {3}.", this.grid.Width, this.grid.Height, x, y));
                 }
+
                 this.grid[x, y] = value;
             }
         }

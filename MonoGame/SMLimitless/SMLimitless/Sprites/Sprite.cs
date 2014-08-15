@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="Sprite.cs" company="The Limitless Development Team">
-//     Copyrighted unter the MIT Public License.
+//     Copyrighted under the MIT Public License.
 // </copyright>
 //-----------------------------------------------------------------------
 using System;
@@ -26,11 +26,7 @@ namespace SMLimitless.Sprites
         /// </summary>
         private Vector2 position;
 
-        /// <summary>
-        /// The tile upon which this sprite is resting.
-        /// This will be null if the sprite is in the air.
-        /// </summary>
-        private Tile restingTile;
+        private Vector2 velocity;
 
         /// <summary>
         /// Gets a list of all the components used by this sprite instance.
@@ -51,6 +47,12 @@ namespace SMLimitless.Sprites
         /// Gets or sets a value indicating whether this sprite is actively updating or not.
         /// </summary>
         public bool IsActive { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this sprite
+        /// should be removed from its owner section on the next frame.
+        /// </summary>
+        public bool RemoveOnNextFrame { get; set; }
 
         /// <summary>
         /// Gets the state of this sprite when it was first loaded into the level.
@@ -122,7 +124,17 @@ namespace SMLimitless.Sprites
         /// Gets or sets the velocity of this sprite,
         /// measured in pixels per second.
         /// </summary>
-        public Vector2 Velocity { get; set; }
+        public Vector2 Velocity
+        {
+            get
+            {
+                return this.velocity;
+            }
+            set
+            {
+                this.velocity = value;
+            }
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether this 
@@ -134,13 +146,7 @@ namespace SMLimitless.Sprites
         /// Gets a value indicating whether this
         /// sprite is on the ground.
         /// </summary>
-        public bool IsOnGround
-        {
-            get
-            {
-                return this.RestingTile != null;
-            }
-        }
+		public bool IsOnGround { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether this
@@ -150,37 +156,47 @@ namespace SMLimitless.Sprites
         {
             get
             {
-                return this.RestingSlope != null;
+                return this.RestingSlope != null && this.Velocity.Y >= 0;
             }
         }
 
         /// <summary>
-        /// Gets or sets the tile that this sprite is resting on the top of.
+        /// Gets the tile that this sprite is resting on the top of.
         /// </summary>
         public Tile RestingTile
         {
             get
             {
-                return this.restingTile;
-            }
-
-            set
-            {
-                if (value != null)
-                {
-                    // Stop the sprite's downward movement, if any
-                    this.Velocity = new Vector2(this.Velocity.X, 0f);
-                    this.Acceleration = new Vector2(this.Acceleration.X, 0f);
-                }
-
-                this.restingTile = value;
+				/*
+				 * Where you left off (oh, god):
+				 * Sprites do not follow terrain quite well. When moving downwards from a square tile to a slope,
+				 * the sprite does not follow the terrain. The IsOnGround flag returns false, so the normal handler
+				 * is running and resolving the sprite normally, preventing it from falling onto the slope properly.
+				 * Probably the best course of action is to a) turn IsOnGround into a standard flag, b) disable gravity
+				 * on upwards collisions until the sprite jumps or the resting tile is removed, and c) create a flag for
+				 * sprites to follow terrain (IsFollowingTerrain) or something, where the sprite's Y position is always
+				 * determined by the top point of the tile beneath it, and the vertical collision handler doesn't run.
+				 * We might even need raycasting.
+				 */
+                Vector2 checkPoint = new Vector2((int)this.Hitbox.Center.X, (int)(this.Hitbox.Bottom + 1f));
+				return this.Owner.GetTileAtPositionByBounds(checkPoint, adjacentPointsAreWithin: true);
             }
         }
 
         /// <summary>
         /// Gets or sets the sloped tile that this sprite is resting on top of.
         /// </summary>
-        public SlopedTile RestingSlope { get; set; }
+        public SlopedTile RestingSlope
+        {
+            get
+            {
+                if (this.RestingTile is SlopedTile)
+                {
+                    return (SlopedTile)this.RestingTile;
+                }
+                return null;
+            }
+        }
 
         /// <summary>
         /// Gets the name of the category that this sprite is
@@ -268,9 +284,26 @@ namespace SMLimitless.Sprites
                 this.Acceleration = Vector2.Zero;
                 this.Velocity = new Vector2(-25f, 0f);
             }
+			else if (this.IsOnGround)
+			{
+				if (this.Velocity.Y >= 0f)
+				{
+					this.Velocity = new Vector2(this.Velocity.X, 0);
+					this.Acceleration = new Vector2(this.Acceleration.X, 0f);
+				}
+				if (this.Velocity.Y <= 0f)
+				{
+					this.IsOnGround = false;
+					this.Acceleration -= this.Acceleration * 0.01f;
+				}
+				else
+				{
+					this.Acceleration -= this.Acceleration * 0.01f;
+				}
+			}
             else
             {
-                if (!this.IsOnGround && this.Velocity.Y < MaximumGravitationalVelocity)
+                if (this.Velocity.Y < MaximumGravitationalVelocity)
                 {
                     this.Acceleration = new Vector2(this.Acceleration.X, Level.GravityAcceleration);
                 }
@@ -307,6 +340,13 @@ namespace SMLimitless.Sprites
         public virtual void HandleSpriteCollision(Sprite sprite, Vector2 intersect)
         {
             this.Components.ForEach(f => f.HandleSpriteCollision(sprite));
+        }
+
+        /// <summary>
+        /// Performs an action for when this sprite takes damage.
+        /// </summary>
+        public virtual void Damage()
+        {
         }
 
         /// <summary>

@@ -863,6 +863,19 @@
             <param name="value">The color to serialize.</param>
             <returns>A string in the format of "R, G, B, A".</returns>
         </member>
+        <member name="T:SMLimitless.Extensions.EnumerableExtensions">
+            <summary>
+            Provides extensions for the enumerable classes and interfaces.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Extensions.EnumerableExtensions.ForEach``1(System.Collections.Generic.IEnumerable{``0},System.Action{``0})">
+            <summary>
+            Enumerates over every item in an enumerable and performs a given action on it.
+            </summary>
+            <typeparam name="T">The type of the items to enumerate over.</typeparam>
+            <param name="items">The enumerable containing the items.</param>
+            <param name="action">The action to perform on the items.</param>
+        </member>
         <member name="T:SMLimitless.Extensions.GameTimeExtensions">
             <summary>
             Contains extension methods for the GameTime class.
@@ -954,6 +967,15 @@
             </summary>
             <param name="value">The value to correct.</param>
             <returns>A whole-number corrected value, or the value if it was not close enough to the nearest integers.</returns>
+        </member>
+        <member name="M:SMLimitless.Extensions.NumericExtensions.BetweenInclusive(System.Single,System.Single,System.Single)">
+            <summary>
+            Determines if a number if between two other numbers.
+            </summary>
+            <param name="x">The number to check.</param>
+            <param name="a">The first number of the range.</param>
+            <param name="b">The second number of the range.</param>
+            <returns></returns>
         </member>
         <member name="T:SMLimitless.Extensions.RectangleExtensions">
             <summary>
@@ -2547,6 +2569,13 @@
             <param name="adjacentPointsAreWithin">If true, any point on the edge of the shape will be considered within.</param>
             <returns>True if the point is within the shape, false if otherwise.</returns>
         </member>
+        <member name="M:SMLimitless.Interfaces.ICollidableShape.GetTopPoint(System.Single)">
+            <summary>
+            Gets the location of the top of the shape, given an X-coordinate.
+            </summary>
+            <param name="x">The X-coordinate to get the top of the shape for.</param>
+            <returns>A vector with the X position set to the X parameter, and the Y position set to the position of the top of the shape.</returns>
+        </member>
         <member name="P:SMLimitless.Interfaces.ICollidableShape.Bounds">
             <summary>
             Gets a rectangle which fully contains this collidable shape.
@@ -2934,6 +2963,13 @@
             value and zeroes out the other. This way of collision resolution is called the "shallowest edge"
             method, and it allows quick determination of which axis to resolve along.</remarks>
         </member>
+        <member name="M:SMLimitless.Physics.BoundingRectangle.GetTopPoint(System.Single)">
+            <summary>
+            Gets the Y-coordinate of the top of this rectangle.
+            </summary>
+            <param name="x">The x-coordinate to check for.</param>
+            <returns>The Y-coordinate of the top of this rectangle.</returns>
+        </member>
         <member name="M:SMLimitless.Physics.BoundingRectangle.ToRectangle">
             <summary>
             Returns a standard Rectangle that uses integral components.
@@ -3053,6 +3089,11 @@
         <member name="F:SMLimitless.Physics.Camera2D.zoom">
             <summary>
             A backing field for the Zoom property.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.Camera2D.position">
+            <summary>
+            A backing field for the Position property;
             </summary>
         </member>
         <member name="F:SMLimitless.Physics.Camera2D.transform">
@@ -3732,6 +3773,24 @@
             <param name="rect">The rectangle to retrieve sprites from.</param>
             <returns>A collection of sprites.</returns>
         </member>
+        <member name="M:SMLimitless.Physics.QuadTree.GetTilesIntersectingHorizontalLine(Microsoft.Xna.Framework.Vector2,SMLimitless.Direction,System.Int32)">
+            <summary>
+            Returns a collection of tiles that intersects a certain horizontal line segment.
+            </summary>
+            <param name="start">The starting position of the line segment.</param>
+            <param name="direction">The direction (left or right) to search for tiles in.</param>
+            <param name="searchDistance">The distance in quadtree cells to search for tiles.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SMLimitless.Physics.QuadTree.GetTilesIntersectingVerticalLine(Microsoft.Xna.Framework.Vector2,SMLimitless.Direction,System.Int32)">
+            <summary>
+            Obsolete.
+            </summary>
+            <param name="start">The start.</param>
+            <param name="direction">The direction.</param>
+            <param name="searchDistance">The search distance.</param>
+            <returns>A value.</returns>
+        </member>
         <member name="M:SMLimitless.Physics.QuadTree.Update">
             <summary>
             Updates the QuadTree, recalculating the cells for every tile.
@@ -3974,6 +4033,13 @@
             </summary>
             <param name="that">The given rectangle.</param>
             <returns>A vector representing the collision depth.</returns>
+        </member>
+        <member name="M:SMLimitless.Physics.RightTriangle.GetTopPoint(System.Single)">
+            <summary>
+            Gets the position of the top of this triangle, given an X-coordinate.
+            </summary>
+            <param name="x">The X-coordinate to check.</param>
+            <returns>The position of the top of this triangle.</returns>
         </member>
         <member name="M:SMLimitless.Physics.RightTriangle.ResolveSlopeCollision(SMLimitless.Physics.BoundingRectangle,Microsoft.Xna.Framework.Vector2)">
             <summary>
@@ -5538,6 +5604,19 @@
             </summary>
             <param name="tile">The tile to remove.</param>
         </member>
+        <member name="M:SMLimitless.Sprites.Collections.Section.RemoveSprite(SMLimitless.Sprites.Sprite)">
+            <summary>
+            Removes a sprite from this section.
+            </summary>
+            <param name="sprite">The sprite to remove.</param>
+        </member>
+        <member name="M:SMLimitless.Sprites.Collections.Section.RemoveSprites(System.Collections.Generic.List{SMLimitless.Sprites.Sprite})">
+            <summary>
+            Removes a list of sprites from the section at once.
+            </summary>
+            <param name="spritesToRemove">A list of the sprites to remove.</param>
+            <remarks>This method will not throw an exception if any of the sprites to remove are not present in this section.</remarks>
+        </member>
         <member name="M:SMLimitless.Sprites.Collections.Section.GetTileAtPosition(Microsoft.Xna.Framework.Vector2,System.Boolean)">
             <summary>
             Gets the tile at the given position.
@@ -5545,6 +5624,14 @@
             <param name="position">The position from which to get the tile.</param>
             <param name="adjacentPointsAreWithin">If true, the method will return a tile if the point is on the edge of the tile.</param>
             <returns>The tile at the position, or null if there is no tile there.</returns>
+        </member>
+        <member name="M:SMLimitless.Sprites.Collections.Section.GetTileByDirection(SMLimitless.Sprites.Sprite,SMLimitless.Direction)">
+            <summary>
+            Obsolete.
+            </summary>
+            <param name="sprite">A sprite.</param>
+            <param name="direction">A direction.</param>
+            <returns></returns>
         </member>
         <member name="M:SMLimitless.Sprites.Collections.Section.SetMainLayer(SMLimitless.Sprites.Collections.Layer)">
             <summary>
@@ -5819,12 +5906,6 @@
             A backing field for the Position property.
             </summary>
         </member>
-        <member name="F:SMLimitless.Sprites.Sprite.restingTile">
-            <summary>
-            The tile upon which this sprite is resting.
-            This will be null if the sprite is in the air.
-            </summary>
-        </member>
         <member name="M:SMLimitless.Sprites.Sprite.Initialize(SMLimitless.Sprites.Collections.Section)">
             <summary>
             Initializes this sprite.
@@ -5859,6 +5940,11 @@
             </summary>
             <param name="sprite">The sprite that has collided with this one.</param>
             <param name="intersect">The depth of the intersection.</param>
+        </member>
+        <member name="M:SMLimitless.Sprites.Sprite.Damage">
+            <summary>
+            Performs an action for when this sprite takes damage.
+            </summary>
         </member>
         <member name="M:SMLimitless.Sprites.Sprite.GetCustomSerializableObjects">
             <summary>
@@ -5908,6 +5994,12 @@
         <member name="P:SMLimitless.Sprites.Sprite.IsActive">
             <summary>
             Gets or sets a value indicating whether this sprite is actively updating or not.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Sprite.RemoveOnNextFrame">
+            <summary>
+            Gets or sets a value indicating whether this sprite
+            should be removed from its owner section on the next frame.
             </summary>
         </member>
         <member name="P:SMLimitless.Sprites.Sprite.InitialState">
@@ -5984,7 +6076,7 @@
         </member>
         <member name="P:SMLimitless.Sprites.Sprite.RestingTile">
             <summary>
-            Gets or sets the tile that this sprite is resting on the top of.
+            Gets the tile that this sprite is resting on the top of.
             </summary>
         </member>
         <member name="P:SMLimitless.Sprites.Sprite.RestingSlope">

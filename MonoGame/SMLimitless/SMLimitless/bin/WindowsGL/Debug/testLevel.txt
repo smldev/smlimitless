@@ -559,33 +559,6 @@
               "collisionType": 0,
               "name": "",
               "graphicsResource": "smw_grass_slope2",
-              "position": "48, 256",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.SlopedTestTile2",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_slope2",
-              "position": "48, 256",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.SlopedTestTile2",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_slope2",
-              "position": "48, 256",
-              "state": null,
-              "customData": null
-            },
-            {
-              "typeName": "SmlSample.SlopedTestTile2",
-              "collisionType": 0,
-              "name": "",
-              "graphicsResource": "smw_grass_slope2",
               "position": "144, 272",
               "state": null,
               "customData": null

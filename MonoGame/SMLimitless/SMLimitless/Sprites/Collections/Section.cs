@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="Section.cs" company="The Limitless Development Team">
-//     Copyrighted unter the MIT Public License.
+//     Copyrighted under the MIT Public License.
 // </copyright>
 //-----------------------------------------------------------------------
 using System;
@@ -21,6 +21,8 @@ namespace SMLimitless.Sprites.Collections
     /// </summary>
     public sealed class Section : ISerializable
     {
+        private string debugText = "";
+
         /// <summary>
         /// Gets a reference to the level that contains this section.
         /// </summary>
@@ -256,87 +258,110 @@ namespace SMLimitless.Sprites.Collections
             this.sprites.ForEach(s => s.Update());
             this.QuadTree.Update();
 
+            // Remove all sprites that have requested to be removed.
+            this.RemoveSprites(this.sprites.Where(s => s.RemoveOnNextFrame).ToList());
+
             foreach (Sprite sprite in this.sprites)
             {
                 float delta = GameServices.GameTime.GetElapsedSeconds();
                 List<Tile> collidableTiles;
                 List<Tile> collidingTiles = new List<Tile>();
+				List<SlopedTile> collidableSlopes = new List<SlopedTile>();
+				bool slopeResolutionOccurred = false;
 
-                // First, move the sprite vertically.
+				/* Where you left off:
+				 * Do this. Seriously.
+				 * Instead of resolving every collision as soon as you find it, gather all the intersecting tiles into a list.
+				 * Check if any of them are slopes and if they resolve on the bottom-center point. If so, we can ignore some collisions
+				 * based on criteria you'll figure out later. DO THIS.
+				 */
+
+				// First, we'll take care of horizontal movement. Move the sprite horizontally.
+				sprite.Position = new Vector2(sprite.Position.X + (sprite.Velocity.X * delta), sprite.Position.Y);
+				this.QuadTree.PlaceSprite(sprite);
+				collidableTiles = this.QuadTree.GetCollidableTiles(sprite);
+
+				foreach (Tile tile in collidableTiles)
+				{
+					if (tile.Intersects(sprite))
+					{
+						Vector2 resolutionDistance = tile.GetCollisionResolution(sprite);
+
+						// If the resolution is not horizontal...
+						if (resolutionDistance.X == 0)
+						{
+							// ...go to the next tile.
+							continue;
+						}
+						else
+						{
+							if (this.ResolveHorizontalCollision(sprite, tile))
+							{
+								// Resolve the collision.
+								sprite.Position = new Vector2(sprite.Position.X + resolutionDistance.X, sprite.Position.Y);
+								sprite.Velocity = new Vector2(0f, sprite.Velocity.Y);
+								collidingTiles.Add(tile);
+							}
+						}
+					}
+				}
+
+                // Next,  we'll handle vertical collision. Move the sprite vertically.
                 sprite.Position = new Vector2(sprite.Position.X, sprite.Position.Y + (sprite.Velocity.Y * delta));
                 this.QuadTree.PlaceSprite(sprite);
 
-                // Get all collidable (nearby) tiles.
-                collidableTiles = this.QuadTree.GetCollidableTiles(sprite);
+                // Get all collidable (nearby) tiles and sloped tiles.
+				this.QuadTree.GetCollidableTiles(sprite, out collidableTiles, out collidableSlopes);
 
-                // Check for collisions with these tiles.
-                foreach (Tile tile in collidableTiles)
+				// Handle collisions with slopes first.
+				foreach (SlopedTile slope in collidableSlopes)
+				{
+					// If the sprite intersects the slope...
+					if (slope.Intersects(sprite))
+					{
+						// Find the collision resolution distance.
+						Vector2 collisionResolution = slope.GetCollisionResolution(sprite);
+						if (collisionResolution.Y != 0f)
+						{
+							// If it's a vertical collision, handle it, and set the proper flag if the resolution was upwards and the sprite collided with the slope and not one of the flat lines.
+							sprite.Position = new Vector2(sprite.Position.X, sprite.Position.Y + collisionResolution.Y);
+							slopeResolutionOccurred = collisionResolution.Y < 0f && (sprite.Hitbox.BottomCenter.Y > ((RightTriangle)slope.Hitbox).GetPointOnLine(sprite.Hitbox.BottomCenter.X).Y);
+							collidingTiles.Add(slope);
+						}
+					}
+				}
+
+				// Finally, handle collisions with rectangular tiles.
+				foreach (Tile tile in collidableTiles)
+				{
+					// If this tile intersects the sprite...
+					if (tile.Intersects(sprite))
+					{
+						// Get the collision resolution and check if it's either downward, or if it's upward and no slope resolutions have occured.
+						Vector2 collisionResolution = tile.GetCollisionResolution(sprite);
+						if (collisionResolution.Y > 0f || (collisionResolution.Y < 0f && !slopeResolutionOccurred))
+						{
+							// If so, resolve the collision.
+							sprite.Position = new Vector2(sprite.Position.X, sprite.Position.Y + collisionResolution.Y);
+							collidingTiles.Add(tile);
+						}
+					}
+				}
+
+                if (sprite.GetType().Name.EndsWith("SimplePlayer"))
                 {
-                    if (tile.Intersects(sprite))
-                    {
-                        Vector2 resolutionDistance = tile.GetCollisionResolution(sprite);
-
-                        // If the resolution isn't vertical...
-                        if (resolutionDistance.Y == 0)
-                        {
-                            // Go on to the next one.
-                            continue;
-                        }
-                        else
-                        {
-                            // Resolve the collision.
-                            sprite.Position = new Vector2(sprite.Position.X, sprite.Position.Y + resolutionDistance.Y);
-                            collidingTiles.Add(tile);
-
-                            // Set the ground flags properly.
-                            sprite.RestingTile = tile;
-                            if (tile is SlopedTile)
-                            {
-                                sprite.RestingSlope = (SlopedTile)tile;
-                            }
-                        }
-                    }
+                    debugText = string.Format("Sprite velocity: {0}", sprite.Velocity);
                 }
 
-                // If there were no vertical collisions...
-                if (collidingTiles.Count == 0)
+                // Temporary sprite collision handler
+                var collidableSprites = this.QuadTree.GetCollidableSprites(sprite);
+                var collidingSprites = collidableSprites.Where(s => s != sprite && sprite.Hitbox.Intersects(s.Hitbox));
+                foreach (Sprite s in collidingSprites)
                 {
-                    // ...then the sprite must be in the air.
-                    sprite.RestingTile = null;
-                    sprite.RestingSlope = null;
+                    sprite.HandleSpriteCollision(s, sprite.Hitbox.GetIntersectionDepth(s.Hitbox));
+                    s.HandleSpriteCollision(sprite, s.Hitbox.GetIntersectionDepth(sprite.Hitbox));
                 }
-
-                // Next, we'll take care of horizontal movement.
-                // First, apply horizontal velocity to the sprite.
-                sprite.Position = new Vector2(sprite.Position.X + (sprite.Velocity.X * delta), sprite.Position.Y);
-                this.QuadTree.PlaceSprite(sprite);
-                collidableTiles = this.QuadTree.GetCollidableTiles(sprite);
-
-                foreach (Tile tile in collidableTiles)
-                {
-                    if (tile.Intersects(sprite))
-                    {
-                        Vector2 resolutionDistance = tile.GetCollisionResolution(sprite);
-
-                        // If the resolution is not horizontal...
-                        if (resolutionDistance.X == 0) 
-                        {
-                            // ...go to the next tile.
-                            continue;
-                        }
-                        else
-                        {
-                            if (this.ResolveHorizontalCollision(sprite, tile))
-                            {
-                                // Resolve the collision.
-                                sprite.Position = new Vector2(sprite.Position.X + resolutionDistance.X, sprite.Position.Y);
-                                sprite.Velocity = new Vector2(0f, sprite.Velocity.Y);
-                                collidingTiles.Add(tile);
-                            }
-                        }
-                    }
-                }
-            }
+			}
 
             this.TempUpdate();
         }
@@ -380,15 +405,28 @@ namespace SMLimitless.Sprites.Collections
 
             this.tiles.ForEach(t => t.Draw());
 
-            foreach (Tile t in this.tiles)
+            this.sprites.ForEach(s => s.Draw());
+
+			//GameServices.DrawStringDefault(this.debugText);
+
+            Sprite player = this.sprites.Where(s => s.GetType().Name.EndsWith("SimplePlayer")).FirstOrDefault();
+			GameServices.DrawStringDefault(player.IsOnGround.ToString());
+            BoundingRectangle drawRect = new BoundingRectangle(player.Hitbox.Left, player.Hitbox.Center.Y, 8f, 8f);
+            Rectangle checkRect = new Rectangle((int)player.Hitbox.Center.X, (int)(player.Hitbox.Bottom + 3f), 1, 1);
+            Tile tile = this.GetTileAtPosition(new Vector2(checkRect.X, checkRect.Y), true);
+            GameServices.SpriteBatch.DrawRectangle(drawRect.ToRectangle(), Color.Red);
+            GameServices.SpriteBatch.DrawRectangle(checkRect, Color.White);
+            if (tile != null)
             {
-                if (t.GetType().Name.EndsWith("TestTile"))
-                {
-                    t.Hitbox.Bounds.DrawOutline(Color.White);
-                }
+                GameServices.SpriteBatch.DrawRectangleEdges(tile.Hitbox.Bounds.ToRectangle(), Color.Wheat);
             }
 
-            this.sprites.ForEach(s => s.Draw());
+			Vector2 mousePos = new Vector2(Input.InputManager.CurrentMouseState.X, Input.InputManager.CurrentMouseState.Y);
+			Tile mouseTile = this.GetTileAtPositionByBounds(mousePos, true);
+			if (mouseTile != null)
+			{
+				GameServices.DebugFont.DrawString(mouseTile.Position.ToString(), new Vector2(16f, 48f), 2f);
+			}
         }
 
         /// <summary>
@@ -422,6 +460,30 @@ namespace SMLimitless.Sprites.Collections
         }
 
         /// <summary>
+        /// Removes a sprite from this section.
+        /// </summary>
+        /// <param name="sprite">The sprite to remove.</param>
+        public void RemoveSprite(Sprite sprite)
+        {
+            this.sprites.Remove(sprite);
+            this.QuadTree.Remove(sprite);
+        }
+
+        /// <summary>
+        /// Removes a list of sprites from the section at once.
+        /// </summary>
+        /// <param name="spritesToRemove">A list of the sprites to remove.</param>
+        /// <remarks>This method will not throw an exception if any of the sprites to remove are not present in this section.</remarks>
+        public void RemoveSprites(List<Sprite> spritesToRemove)
+        {
+            foreach (Sprite sprite in spritesToRemove)
+            {
+                this.sprites.Remove(sprite);
+                this.QuadTree.Remove(sprite);
+            }
+        }
+
+        /// <summary>
         /// Gets the tile at the given position.
         /// </summary>
         /// <param name="position">The position from which to get the tile.</param>
@@ -446,6 +508,75 @@ namespace SMLimitless.Sprites.Collections
 
             return null;
         }
+
+        public Tile GetTileAtPositionByBounds(Vector2 position, bool adjacentPointsAreWithin)
+        {
+            var tiles = this.QuadTree.GetTilesInCell(this.QuadTree.GetCellNumberAtPosition(position));
+
+            if (tiles == null)
+            {
+                return null;
+            }
+
+            foreach (Tile tile in tiles)
+            {
+                if (tile.Hitbox.Bounds.Within(position, adjacentPointsAreWithin))
+                {
+                    return tile;
+                }
+            }
+
+            return null;
+        }
+
+		/// <summary>
+		/// Obsolete.
+		/// </summary>
+		/// <param name="sprite">A sprite.</param>
+		/// <param name="direction">A direction.</param>
+		/// <returns></returns>
+		[Obsolete]
+		public Tile GetTileByDirection(Sprite sprite, Direction direction)
+		{
+			if (sprite == null)
+			{
+				throw new ArgumentNullException("Section.GetTileByDirection(Sprite, Direction): The given sprite was null.");
+			}
+
+			Vector2 spritePoint;
+			IEnumerable<Tile> tiles;
+
+			switch (direction)
+			{
+				case Direction.None:
+					throw new ArgumentException("Section.GetTileByDirection(Sprite, Direction): The given direction was set to \"None\".");
+				case Direction.Up:
+					spritePoint = new Vector2(sprite.Hitbox.Center.X, sprite.Hitbox.Top);
+					tiles = this.QuadTree.GetTilesIntersectingVerticalLine(spritePoint, Direction.Up, 2).Where(t => spritePoint.X >= t.Hitbox.Bounds.Left && spritePoint.X <= t.Hitbox.Bounds.Right).OrderByDescending(t => t.Hitbox.Bounds.Bottom); // dear lord
+					if (tiles.Any())
+					{
+						return tiles.First();
+					}
+					return null;
+				case Direction.Down:
+					spritePoint = sprite.Hitbox.BottomCenter;
+					tiles = this.QuadTree.GetTilesIntersectingVerticalLine(spritePoint, Direction.Down, 2).Where(t => spritePoint.X >= t.Hitbox.Bounds.Left && spritePoint.X <= t.Hitbox.Bounds.Right).OrderByDescending(t => t.Hitbox.Bounds.Top);
+					if (tiles.Any())
+					{
+						return tiles.First();
+						// having an unordered list of tiles is really annoying
+					}
+					return null;
+				case Direction.Left:
+					break;
+				case Direction.Right:
+					break;
+				default:
+					break;
+			}
+
+			return null;
+		}
 
         /// <summary>
         /// Sets a given layer as the main layer.
