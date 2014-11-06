@@ -3773,24 +3773,6 @@
             <param name="rect">The rectangle to retrieve sprites from.</param>
             <returns>A collection of sprites.</returns>
         </member>
-        <member name="M:SMLimitless.Physics.QuadTree.GetTilesIntersectingHorizontalLine(Microsoft.Xna.Framework.Vector2,SMLimitless.Direction,System.Int32)">
-            <summary>
-            Returns a collection of tiles that intersects a certain horizontal line segment.
-            </summary>
-            <param name="start">The starting position of the line segment.</param>
-            <param name="direction">The direction (left or right) to search for tiles in.</param>
-            <param name="searchDistance">The distance in quadtree cells to search for tiles.</param>
-            <returns></returns>
-        </member>
-        <member name="M:SMLimitless.Physics.QuadTree.GetTilesIntersectingVerticalLine(Microsoft.Xna.Framework.Vector2,SMLimitless.Direction,System.Int32)">
-            <summary>
-            Obsolete.
-            </summary>
-            <param name="start">The start.</param>
-            <param name="direction">The direction.</param>
-            <param name="searchDistance">The search distance.</param>
-            <returns>A value.</returns>
-        </member>
         <member name="M:SMLimitless.Physics.QuadTree.Update">
             <summary>
             Updates the QuadTree, recalculating the cells for every tile.
@@ -3821,6 +3803,24 @@
             Places a tile in the proper cell(s).
             </summary>
             <param name="tile">The tile to place.</param>
+        </member>
+        <member name="M:SMLimitless.Physics.QuadTree.GetCellEnumerator(Microsoft.Xna.Framework.Vector2,SMLimitless.Direction,System.Int32)">
+            <summary>
+            Creates an enumerator that travels through cells in a certain direction, returning each one.
+            </summary>
+            <param name="startCell">The initial cell to start from.</param>
+            <param name="direction">The direction the enumerator travels.</param>
+            <param name="searchDistance">The distance in cells the enumerator should travel.</param>
+            <returns>An enumerator that yields a number of cells in a certain direction.</returns>
+        </member>
+        <member name="M:SMLimitless.Physics.QuadTree.GetTileIntersectingAARay(Microsoft.Xna.Framework.Vector2,SMLimitless.Direction,System.Int32)">
+            <summary>
+            Returns the first tile intersecting an axis-aligned ray cast from a given point and direction.
+            </summary>
+            <param name="position">The position of the beginning of the ray.</param>
+            <param name="direction">The direction that the ray travels.</param>
+            <param name="searchDistance">The distance, in quadtree cells, that this ray should travel in its search.</param>
+            <returns>The first tile intersecting this ray, or null if no tile was found.</returns>
         </member>
         <member name="P:SMLimitless.Physics.QuadTree.CellSize">
             <summary>
@@ -5624,14 +5624,6 @@
             <param name="position">The position from which to get the tile.</param>
             <param name="adjacentPointsAreWithin">If true, the method will return a tile if the point is on the edge of the tile.</param>
             <returns>The tile at the position, or null if there is no tile there.</returns>
-        </member>
-        <member name="M:SMLimitless.Sprites.Collections.Section.GetTileByDirection(SMLimitless.Sprites.Sprite,SMLimitless.Direction)">
-            <summary>
-            Obsolete.
-            </summary>
-            <param name="sprite">A sprite.</param>
-            <param name="direction">A direction.</param>
-            <returns></returns>
         </member>
         <member name="M:SMLimitless.Sprites.Collections.Section.SetMainLayer(SMLimitless.Sprites.Collections.Layer)">
             <summary>

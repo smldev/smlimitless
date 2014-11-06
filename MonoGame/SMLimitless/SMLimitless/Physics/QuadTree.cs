@@ -165,7 +165,18 @@ namespace SMLimitless.Physics
         {
             var result = new List<Tile>();
             var intersectingCells = this.GetIntersectingCells(sprite);
-            intersectingCells.ForEach(cell => this.cells[cell].Tiles.ForEach(tile => result.AddUnlessDuplicate(tile)));
+            
+			foreach (var cell in intersectingCells)
+			{
+				foreach (Tile tile in this.cells[cell].Tiles)
+				{
+					if (!tile.IsExcluded)
+					{
+						result.Add(tile);
+					}
+				}
+			}
+
             return result;
         }
 
@@ -181,7 +192,13 @@ namespace SMLimitless.Physics
 
             foreach (var cell in intersectingCells)
             {
-                result.AddRange(this.cells[cell].Tiles.Where(t => t.GetType().FullName != "SmlSample.SlopedTestTile1")); // this is hackish and will be replaced.
+				foreach (Tile tile in this.cells[cell].Tiles)
+				{
+					if (!tile.IsExcluded && tile.Hitbox is BoundingRectangle)
+					{
+						result.Add(tile);
+					}
+				}
             }
 
             return result;
@@ -199,7 +216,7 @@ namespace SMLimitless.Physics
 
             foreach (Tile tile in collidableTiles)
             {
-                if (tile is SlopedTile)
+                if (!tile.IsExcluded && tile is SlopedTile)
                 {
                     result.Add((SlopedTile)tile);
                 }
@@ -224,6 +241,8 @@ namespace SMLimitless.Physics
             {
                 foreach (Tile tile in this.cells[cell].Tiles)
                 {
+					if (tile.IsExcluded) continue;
+
                     if (tile is SlopedTile)
                     {
                         resultSloped.AddUnlessDuplicate((SlopedTile)tile);
@@ -301,58 +320,32 @@ namespace SMLimitless.Physics
         }
 
 		/// <summary>
-		/// Returns a collection of tiles that intersects a certain horizontal line segment.
+		/// Returns all the tiles in a given rectangular area.
 		/// </summary>
-		/// <param name="start">The starting position of the line segment.</param>
-		/// <param name="direction">The direction (left or right) to search for tiles in.</param>
-		/// <param name="searchDistance">The distance in quadtree cells to search for tiles.</param>
-		/// <returns></returns>
-		public List<Tile> GetTilesIntersectingHorizontalLine(Vector2 start, Direction direction, int searchDistance)
+		/// <param name="area">The area for which to return tiles.</param>
+		/// <returns>A list of tiles within the area. The list will be empty if the area is zero or has no tiles.</returns>
+		public List<Tile> GetTilesInArea(BoundingRectangle area)
 		{
-			if (direction != Direction.Up && direction != Direction.Down)
-			{
-				throw new ArgumentException(string.Format("QuadTree.GetTilesIntersectingHorizontalLine(Vector2, Direction, int): The provided direction must be Left or Right. It was {0}.", direction));
-			}
-			else if (searchDistance <= 0)
-			{
-				throw new ArgumentException(string.Format("QuadTree.GetTilesIntersectingHorizontalLine(Vector2, Direction, int): The search distance must be greater than zero. Search distance was {0}.", searchDistance));
-			}
-
-			int scan = (direction == Direction.Right) ? 1 : -1;
 			List<Tile> result = new List<Tile>();
-			Vector2 startCell = this.GetCellNumberAtPosition(start);
-			Vector2 endCell = new Vector2(startCell.X + (searchDistance * scan), startCell.Y);
 
-			this.cells.Where(c => c.Key.X.BetweenInclusive(startCell.X, endCell.X)).ForEach(c => result.AddRange(c.Value.Tiles));
+			Vector2 topLeftCell = this.GetCellNumberAtPosition(area.Position);
+			Vector2 topRightCell = this.GetCellNumberAtPosition(new Vector2(area.Right, area.Top));
+			Vector2 bottomLeftCell = this.GetCellNumberAtPosition(new Vector2(area.Left, area.Bottom));
+			Vector2 bottomRightCell = this.GetCellNumberAtPosition(new Vector2(area.Right, area.Bottom));
 
-			return result;
-		}
-
-		/// <summary>
-		/// Obsolete.
-		/// </summary>
-		/// <param name="start">The start.</param>
-		/// <param name="direction">The direction.</param>
-		/// <param name="searchDistance">The search distance.</param>
-		/// <returns>A value.</returns>
-		[Obsolete]
-		public List<Tile> GetTilesIntersectingVerticalLine(Vector2 start, Direction direction, int searchDistance)
-		{
-			if (direction != Direction.Up && direction != Direction.Down)
+			for (float x = topLeftCell.X; x <= topRightCell.X; x++)
 			{
-				throw new ArgumentException(string.Format("QuadTree.GetTilesIntersectingVerticalLine(Vector2, Direction, int): The provided direction must be Up or Down. It was {0}.", direction));
+				for (float y = topLeftCell.Y; y <= bottomLeftCell.Y; y++)
+				{
+					foreach (Tile tile in this.cells[new Vector2(x, y)].Tiles)
+					{
+						if (tile.Hitbox.Bounds.Intersects(area))
+						{
+							result.Add(tile);
+						}
+					}
+				}
 			}
-			else if (searchDistance <= 0)
-			{
-				throw new ArgumentException(string.Format("QuadTree.GetTilesIntersectingVerticalLine(Vector2, Direction, int): The search distance must be greater than zero. Search distance was {0}.", searchDistance));
-			}
-
-			int scan = (direction == Direction.Down) ? 1 : -1;
-			List<Tile> result = new List<Tile>();
-			Vector2 startCell = this.GetCellNumberAtPosition(start);
-			Vector2 endCell = new Vector2(startCell.X, startCell.Y + (searchDistance * scan));
-
-			this.cells.Where(c => c.Key.Y.BetweenInclusive(startCell.Y, endCell.Y)).ForEach(c => result.AddRange(c.Value.Tiles));
 
 			return result;
 		}
@@ -478,5 +471,117 @@ namespace SMLimitless.Physics
                 }
             }
         }
+
+		/// <summary>
+		/// Creates an enumerator that travels through cells in a certain direction, returning each one.
+		/// </summary>
+		/// <param name="startCell">The initial cell to start from.</param>
+		/// <param name="direction">The direction the enumerator travels.</param>
+		/// <param name="searchDistance">The distance in cells the enumerator should travel.</param>
+		/// <returns>An enumerator that yields a number of cells in a certain direction.</returns>
+		private IEnumerable<QuadTreeCell> GetCellEnumerator(Vector2 startCell, Direction direction, int searchDistance)
+		{
+			if (direction == Direction.None)
+			{
+				throw new ArgumentException("QuadTree.GetCellEnumerator(Vector2, Direction): The direction \"None\" is not valid.");
+			}
+
+			if (searchDistance <= 0)
+			{
+				throw new ArgumentException(String.Format("QuadTree.GetCellEnumerator(Vector2, Direction): A search distance of {0} is not valid. Please use a positive number.", searchDistance));
+			}
+
+			int distanceRemaining = searchDistance;
+			Vector2 currentCell = startCell;
+			Vector2 addend;
+			switch (direction)
+			{
+				case Direction.Up:
+					addend = new Vector2(0f, -1f);
+					break;
+				case Direction.Down:
+					addend = new Vector2(0f, 1f);
+					break;
+				case Direction.Left:
+					addend = new Vector2(-1f, 0f);
+					break;
+				case Direction.Right:
+					addend = new Vector2(1f, 0f);
+					break;
+				default:
+					throw new ArgumentException("QuadTree.GetCellEnumerator(Vector2, Direction): Invalid direction.");
+			}
+
+			while (distanceRemaining > 0)
+			{
+				QuadTreeCell result = null;
+				if (this.cells.ContainsKey(currentCell))
+				{
+					result = this.cells[currentCell];
+				}
+
+				currentCell += addend;
+				distanceRemaining--;
+				yield return result;
+			}
+
+			yield break;
+		}
+
+		/// <summary>
+		/// Returns the first tile intersecting an axis-aligned ray cast from a given point and direction.
+		/// </summary>
+		/// <param name="position">The position of the beginning of the ray.</param>
+		/// <param name="direction">The direction that the ray travels.</param>
+		/// <param name="searchDistance">The distance, in quadtree cells, that this ray should travel in its search.</param>
+		/// <returns>The first tile intersecting this ray, or null if no tile was found.</returns>
+		public Tile GetTileIntersectingAARay(Vector2 position, Direction direction, int searchDistance)
+		{
+			if (position.IsNaN())
+			{
+				throw new ArgumentException("QuadTree.GetTileIntersectingAARay(Vector2, Direction, int): One or both of the components of the starting position are the invalid value NaN.");
+			}
+
+			if (direction == Direction.None)
+			{
+				throw new ArgumentException("QuadTree.GetTileIntersectingAARay(Vector2, Direction, int): The search direction was set to the invalid direction None.");
+			}
+
+			if (searchDistance <= 0)
+			{
+				throw new ArgumentException(String.Format("QuadTree.GetTileIntersectingAARay(Vector2, Direction, int): The search distance was equal to {0}; it must be greater than zero.", searchDistance));
+			}
+
+			var cellEnumerator = this.GetCellEnumerator(this.GetCellNumberAtPosition(position), direction, searchDistance);
+
+			foreach (var cell in cellEnumerator)
+			{
+				if (!cell.Tiles.Any())
+				{
+					continue;
+				}
+
+				foreach (Tile tile in cell.Tiles)
+				{
+					BoundingRectangle tileBounds = tile.Hitbox.Bounds;
+					if (direction == Direction.Left || direction == Direction.Right)
+					{
+						if (position.Y.BetweenInclusive(tileBounds.Top, tileBounds.Bottom))
+						{
+							return tile;
+						}
+					}
+					else if (direction == Direction.Up || direction == Direction.Down)
+					{
+						if (position.X.BetweenInclusive(tileBounds.Left, tileBounds.Right))
+						{
+							return tile;
+						}
+					}
+				}
+			}
+
+			return null;
+		}
     }
 }
