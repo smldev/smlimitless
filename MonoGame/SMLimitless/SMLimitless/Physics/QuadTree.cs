@@ -322,18 +322,9 @@ namespace SMLimitless.Physics
 		/// <summary>
 		/// Returns all the tiles in a given rectangular area.
 		/// </summary>
-<<<<<<< HEAD
-		/// <param name="start">The starting position of the line segment.</param>
-		/// <param name="direction">The direction (left or right) to search for tiles in.</param>
-		/// <param name="searchDistance">The distance in quadtree cells to search for tiles.</param>
-		/// <returns></returns>
-		[Obsolete]
-		public List<Tile> GetTilesIntersectingHorizontalLine(Vector2 start, Direction direction, int searchDistance)
-=======
 		/// <param name="area">The area for which to return tiles.</param>
 		/// <returns>A list of tiles within the area. The list will be empty if the area is zero or has no tiles.</returns>
 		public List<Tile> GetTilesInArea(BoundingRectangle area)
->>>>>>> origin/master
 		{
 			List<Tile> result = new List<Tile>();
 
