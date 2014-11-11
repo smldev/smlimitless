@@ -3773,23 +3773,12 @@
             <param name="rect">The rectangle to retrieve sprites from.</param>
             <returns>A collection of sprites.</returns>
         </member>
-        <member name="M:SMLimitless.Physics.QuadTree.GetTilesIntersectingHorizontalLine(Microsoft.Xna.Framework.Vector2,SMLimitless.Direction,System.Int32)">
+        <member name="M:SMLimitless.Physics.QuadTree.GetTilesInArea(SMLimitless.Physics.BoundingRectangle)">
             <summary>
-            Returns a collection of tiles that intersects a certain horizontal line segment.
+            Returns all the tiles in a given rectangular area.
             </summary>
-            <param name="start">The starting position of the line segment.</param>
-            <param name="direction">The direction (left or right) to search for tiles in.</param>
-            <param name="searchDistance">The distance in quadtree cells to search for tiles.</param>
-            <returns></returns>
-        </member>
-        <member name="M:SMLimitless.Physics.QuadTree.GetTilesIntersectingVerticalLine(Microsoft.Xna.Framework.Vector2,SMLimitless.Direction,System.Int32)">
-            <summary>
-            Obsolete.
-            </summary>
-            <param name="start">The start.</param>
-            <param name="direction">The direction.</param>
-            <param name="searchDistance">The search distance.</param>
-            <returns>A value.</returns>
+            <param name="area">The area for which to return tiles.</param>
+            <returns>A list of tiles within the area. The list will be empty if the area is zero or has no tiles.</returns>
         </member>
         <member name="M:SMLimitless.Physics.QuadTree.Update">
             <summary>
@@ -3821,6 +3810,24 @@
             Places a tile in the proper cell(s).
             </summary>
             <param name="tile">The tile to place.</param>
+        </member>
+        <member name="M:SMLimitless.Physics.QuadTree.GetCellEnumerator(Microsoft.Xna.Framework.Vector2,SMLimitless.Direction,System.Int32)">
+            <summary>
+            Creates an enumerator that travels through cells in a certain direction, returning each one.
+            </summary>
+            <param name="startCell">The initial cell to start from.</param>
+            <param name="direction">The direction the enumerator travels.</param>
+            <param name="searchDistance">The distance in cells the enumerator should travel.</param>
+            <returns>An enumerator that yields a number of cells in a certain direction.</returns>
+        </member>
+        <member name="M:SMLimitless.Physics.QuadTree.GetTileIntersectingAARay(Microsoft.Xna.Framework.Vector2,SMLimitless.Direction,System.Int32)">
+            <summary>
+            Returns the first tile intersecting an axis-aligned ray cast from a given point and direction.
+            </summary>
+            <param name="position">The position of the beginning of the ray.</param>
+            <param name="direction">The direction that the ray travels.</param>
+            <param name="searchDistance">The distance, in quadtree cells, that this ray should travel in its search.</param>
+            <returns>The first tile intersecting this ray, or null if no tile was found.</returns>
         </member>
         <member name="P:SMLimitless.Physics.QuadTree.CellSize">
             <summary>
@@ -5625,14 +5632,6 @@
             <param name="adjacentPointsAreWithin">If true, the method will return a tile if the point is on the edge of the tile.</param>
             <returns>The tile at the position, or null if there is no tile there.</returns>
         </member>
-        <member name="M:SMLimitless.Sprites.Collections.Section.GetTileByDirection(SMLimitless.Sprites.Sprite,SMLimitless.Direction)">
-            <summary>
-            Obsolete.
-            </summary>
-            <param name="sprite">A sprite.</param>
-            <param name="direction">A direction.</param>
-            <returns></returns>
-        </member>
         <member name="M:SMLimitless.Sprites.Collections.Section.SetMainLayer(SMLimitless.Sprites.Collections.Layer)">
             <summary>
             Sets a given layer as the main layer.
@@ -5871,6 +5870,23 @@
             Gets a rectangle representing this tile's hitbox.
             </summary>
         </member>
+        <member name="P:SMLimitless.Sprites.Tile.Collision">
+            <summary>
+            Gets or sets a value that determines how sprites should collide with this tile.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Tile.IsExcluded">
+            <summary>
+            A value that indicates whether horizontal collisions with this tile should be ignored for this frame.
+            </summary>
+            <remarks>
+            When a sprite is resting on a sloped tile, it must be able to walk up the slope onto adjacent tiles.
+            However, as horizontal collision checks are ran first by necessity, and that sprites are beneath the top
+            of these adjacent tiles, they collide with the left/right edge and cannot walk onto them. This flag is set
+            when a sprite is within a slope's bounds and this tile is within an area equal to the GameServices.GameObjectSize
+            property adjacent to the left/right side of the slope, depending on which way it ascends.
+            </remarks>
+        </member>
         <member name="P:SMLimitless.Sprites.Tile.Name">
             <summary>
             Gets or sets the name of this tile to be used in event scripting.  This field is optional.
@@ -5879,11 +5895,6 @@
         <member name="P:SMLimitless.Sprites.Tile.GraphicsResourceName">
             <summary>
             Gets or sets the name of the graphics resource used by this tile.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Sprites.Tile.Collision">
-            <summary>
-            Gets or sets a value that determines how sprites should collide with this tile.
             </summary>
         </member>
         <member name="P:SMLimitless.Sprites.SlopedTile.SlopedSides">

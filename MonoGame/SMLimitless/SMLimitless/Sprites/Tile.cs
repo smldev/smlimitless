@@ -83,6 +83,24 @@ namespace SMLimitless.Sprites
         }
 
         /// <summary>
+        /// Gets or sets a value that determines how sprites should collide with this tile.
+        /// </summary>
+        [DefaultValue(0), Description("Determines how sprites should collide with this tile.")]
+        public TileCollisionType Collision { get; set; }
+
+		/// <summary>
+		/// A value that indicates whether horizontal collisions with this tile should be ignored for this frame.
+		/// </summary>
+		/// <remarks>
+		/// When a sprite is resting on a sloped tile, it must be able to walk up the slope onto adjacent tiles.
+		/// However, as horizontal collision checks are ran first by necessity, and that sprites are beneath the top
+		/// of these adjacent tiles, they collide with the left/right edge and cannot walk onto them. This flag is set
+		/// when a sprite is within a slope's bounds and this tile is within an area equal to the GameServices.GameObjectSize
+		/// property adjacent to the left/right side of the slope, depending on which way it ascends.
+		/// </remarks>
+		public bool IsExcluded { get; set; }
+
+        /// <summary>
         /// Gets or sets the name of this tile to be used in event scripting.  This field is optional.
         /// </summary>
         [DefaultValue(""), Description("The name of this tile to be used in event scripting.  This field is optional.")]
@@ -93,11 +111,6 @@ namespace SMLimitless.Sprites
         /// </summary>
         public string GraphicsResourceName { get; protected set; }
 
-        /// <summary>
-        /// Gets or sets a value that determines how sprites should collide with this tile.
-        /// </summary>
-        [DefaultValue(0), Description("Determines how sprites should collide with this tile.")]
-        public TileCollisionType Collision { get; set; }
 
         /// <summary>
         /// Initializes this tile.
