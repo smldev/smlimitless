@@ -3773,6 +3773,13 @@
             <param name="rect">The rectangle to retrieve sprites from.</param>
             <returns>A collection of sprites.</returns>
         </member>
+        <member name="M:SMLimitless.Physics.QuadTree.GetTilesInArea(SMLimitless.Physics.BoundingRectangle)">
+            <summary>
+            Returns all the tiles in a given rectangular area.
+            </summary>
+            <param name="area">The area for which to return tiles.</param>
+            <returns>A list of tiles within the area. The list will be empty if the area is zero or has no tiles.</returns>
+        </member>
         <member name="M:SMLimitless.Physics.QuadTree.Update">
             <summary>
             Updates the QuadTree, recalculating the cells for every tile.
@@ -5863,6 +5870,23 @@
             Gets a rectangle representing this tile's hitbox.
             </summary>
         </member>
+        <member name="P:SMLimitless.Sprites.Tile.Collision">
+            <summary>
+            Gets or sets a value that determines how sprites should collide with this tile.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Tile.IsExcluded">
+            <summary>
+            A value that indicates whether horizontal collisions with this tile should be ignored for this frame.
+            </summary>
+            <remarks>
+            When a sprite is resting on a sloped tile, it must be able to walk up the slope onto adjacent tiles.
+            However, as horizontal collision checks are ran first by necessity, and that sprites are beneath the top
+            of these adjacent tiles, they collide with the left/right edge and cannot walk onto them. This flag is set
+            when a sprite is within a slope's bounds and this tile is within an area equal to the GameServices.GameObjectSize
+            property adjacent to the left/right side of the slope, depending on which way it ascends.
+            </remarks>
+        </member>
         <member name="P:SMLimitless.Sprites.Tile.Name">
             <summary>
             Gets or sets the name of this tile to be used in event scripting.  This field is optional.
@@ -5871,11 +5895,6 @@
         <member name="P:SMLimitless.Sprites.Tile.GraphicsResourceName">
             <summary>
             Gets or sets the name of the graphics resource used by this tile.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Sprites.Tile.Collision">
-            <summary>
-            Gets or sets a value that determines how sprites should collide with this tile.
             </summary>
         </member>
         <member name="P:SMLimitless.Sprites.SlopedTile.SlopedSides">

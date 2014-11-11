@@ -69,7 +69,7 @@ namespace SMLimitless.Sprites.Collections
         /// <summary>
         /// The acceleration caused by gravity, measured in pixels per second per second.
         /// </summary>
-        public const float GravityAcceleration = 250f;
+        public const float GravityAcceleration = 10f;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Level"/> class.

@@ -302,7 +302,15 @@ namespace SMLimitless.Sprites.Collections
 						}
 						else
 						{
-							if (this.ResolveHorizontalCollision(sprite, tile))
+							// As a safeguard to avoid resolving horizontally against sides that are in the ground
+							// and thus unreachable, we'll check if there's a tile next to that side and ignore it
+							// if there is one.
+							Vector2 checkPoint = (resolutionDistance.X < 0) ? tile.Hitbox.Bounds.LeftCenter : tile.Hitbox.Bounds.RightCenter;
+							checkPoint.X += (resolutionDistance.X < 0) ? -1f : 1f;		// cast it out one pixel in the side's direction
+							Tile adjacentTile = this.GetTileAtPositionByBounds(checkPoint, adjacentPointsAreWithin: true);
+							// TODO: add a check that checks if the adjacent edges are actually solid
+
+							if (this.ResolveHorizontalCollision(sprite, tile) && adjacentTile == null)
 							{
 								// Resolve the collision.
 								sprite.Position = new Vector2(sprite.Position.X + resolutionDistance.X, sprite.Position.Y);
