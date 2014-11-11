@@ -307,6 +307,7 @@ namespace SMLimitless.Physics
 		/// <param name="direction">The direction (left or right) to search for tiles in.</param>
 		/// <param name="searchDistance">The distance in quadtree cells to search for tiles.</param>
 		/// <returns></returns>
+		[Obsolete]
 		public List<Tile> GetTilesIntersectingHorizontalLine(Vector2 start, Direction direction, int searchDistance)
 		{
 			if (direction != Direction.Up && direction != Direction.Down)

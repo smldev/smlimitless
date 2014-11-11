@@ -3,8 +3,6 @@
 //     Copyrighted under the MIT license.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace SMLimitless
-{
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -15,6 +13,8 @@ namespace SMLimitless
     using SMLimitless.Graphics;
     using SMLimitless.Physics;
     
+namespace SMLimitless
+{
     /// <summary>
     /// Provides global access to game services.
     /// </summary>
