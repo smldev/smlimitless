@@ -336,7 +336,26 @@ namespace SMLimitless.Sprites.Collections
 					{
 						// Find the collision resolution distance.
 						Vector2 collisionResolution = slope.GetCollisionResolution(sprite);
-						if (collisionResolution.Y != 0f)
+						if (collisionResolution.Y > 0f)
+						{
+							// In the case of a sprite walking onto a sloped tile from a normal tile,
+							// the bottom center point may not properly reach the slope line and instead
+							// be under the tile, which will cause a downward resolution and the sprite will
+							// fall through the ground. In the event of a downward resolution, we're going to check
+							// the center point of the sprite's hitbox and see if it's above the slope line; if so,
+							// we'll move the bottom-center point of the sprite upward onto the slope.
+
+							RightTriangle hitTriangle = (RightTriangle)slope.Hitbox;
+							float slopeLineY = hitTriangle.GetPointOnLine(sprite.Hitbox.Center.X).Y;
+							if (hitTriangle.SlopedSides == RtSlopedSides.TopLeft || hitTriangle.SlopedSides == RtSlopedSides.TopRight)
+							{
+								if (sprite.Hitbox.Center.Y <= slopeLineY) // center above the slope
+								{
+									sprite.Position = new Vector2(sprite.Position.X, slopeLineY - sprite.Hitbox.Height);
+								}
+							}
+						}
+						else if (collisionResolution.Y != 0f)
 						{
 							// If it's a vertical collision, handle it, and set the proper flag if the resolution was upwards and the sprite collided with the slope and not one of the flat lines.
 							sprite.Position = new Vector2(sprite.Position.X, sprite.Position.Y + collisionResolution.Y);

@@ -397,6 +397,19 @@ namespace SMLimitless.Physics
             return new Vector2(x, this.Bounds.Top);
         }
 
+		/// <summary>
+		/// Returns a value indicating whether a given point rests above or below the slope line.
+		/// </summary>
+		/// <param name="point">The point to check.</param>
+		/// <returns>-1 if the point is above the slope line, 1 if the point is below the slope line, 0 if otherwise.</returns>
+		public int AboveOrBelowSlopeLine(Vector2 point)
+		{
+			float slopeIntersect = this.GetPointOnLine(point.X).Y;
+			if (slopeIntersect < point.Y) return -1;
+			else if (slopeIntersect > point.Y) return 1;
+			else return 0;
+		}
+
         /// <summary>
         /// Resolves a collision between a rectangle and the sloped side of this triangle.
         /// </summary>
