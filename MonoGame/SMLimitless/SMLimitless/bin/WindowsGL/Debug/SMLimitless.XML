@@ -1186,21 +1186,12 @@
             Contains extension methods for the Vector2 structure.
             </summary>
         </member>
-        <member name="M:SMLimitless.Extensions.Vector2Extensions.IsNaN(Microsoft.Xna.Framework.Vector2)">
+        <member name="M:SMLimitless.Extensions.Vector2Extensions.Abs(Microsoft.Xna.Framework.Vector2)">
             <summary>
-            Checks if one or both of the components of a Vector2 are equal to Single.NaN.
+            Returns a vector with the absolute values of the components.
             </summary>
-            <param name="vector">The Vector2 to check.</param>
-            <returns>True if one or both of the components equal Single.NaN, false if neither do.</returns>
-        </member>
-        <member name="M:SMLimitless.Extensions.Vector2Extensions.ToRectangle(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2)">
-            <summary>
-            Converts this Vector2 and another Vector2 into a rectangle.
-            </summary>
-            <param name="position">The Vector2 that will become the X and Y components of the rectangle.</param>
-            <param name="size">The Vector2 that will become the Width and Height components of the rectangle.</param>
-            <returns>A rectangle constructed from the two vectors.</returns>
-            <remarks>As the Rectangle type uses integers for components, any fractional component will be lost.</remarks>
+            <param name="vector">The vector to get the absolute value of.</param>
+            <returns>A vector with the absolute values of the components.</returns>
         </member>
         <member name="M:SMLimitless.Extensions.Vector2Extensions.Floor(Microsoft.Xna.Framework.Vector2)">
             <summary>
@@ -1225,21 +1216,6 @@
             <param name="divisor">The vector by which to divide the floored vector by.</param>
             <returns>A vector with both components floored and divided by the components in the divisor.</returns>
         </member>
-        <member name="M:SMLimitless.Extensions.Vector2Extensions.Abs(Microsoft.Xna.Framework.Vector2)">
-            <summary>
-            Returns a vector with the absolute values of the components.
-            </summary>
-            <param name="vector">The vector to get the absolute value of.</param>
-            <returns>A vector with the absolute values of the components.</returns>
-        </member>
-        <member name="M:SMLimitless.Extensions.Vector2Extensions.Mod(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2)">
-            <summary>
-            Divides the components of a vector by another, and returns the remainder.
-            </summary>
-            <param name="a">The divisor vector.</param>
-            <param name="b">The dividend vector.</param>
-            <returns>The remainder of the quotient.</returns>
-        </member>
         <member name="M:SMLimitless.Extensions.Vector2Extensions.GreaterThan(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2)">
             <summary>
             Compares the components of one vector to another.
@@ -1247,14 +1223,6 @@
             <param name="left">The first vector.</param>
             <param name="right">The second vector.</param>
             <returns>True if left is greater than right, false if otherwise.</returns>
-        </member>
-        <member name="M:SMLimitless.Extensions.Vector2Extensions.LessThan(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2)">
-            <summary>
-            Compares the components of one vector to another.
-            </summary>
-            <param name="left">The first vector.</param>
-            <param name="right">The second vector.</param>
-            <returns>True if left is less than right, false if otherwise.</returns>
         </member>
         <member name="M:SMLimitless.Extensions.Vector2Extensions.GreaterThanOrEqualTo(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2)">
             <summary>
@@ -1264,6 +1232,21 @@
             <param name="right">The second vector.</param>
             <returns>True if left is greater than or equal to right, false if otherwise.</returns>
         </member>
+        <member name="M:SMLimitless.Extensions.Vector2Extensions.IsNaN(Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Checks if one or both of the components of a Vector2 are equal to Single.NaN.
+            </summary>
+            <param name="vector">The Vector2 to check.</param>
+            <returns>True if one or both of the components equal Single.NaN, false if neither do.</returns>
+        </member>
+        <member name="M:SMLimitless.Extensions.Vector2Extensions.LessThan(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Compares the components of one vector to another.
+            </summary>
+            <param name="left">The first vector.</param>
+            <param name="right">The second vector.</param>
+            <returns>True if left is less than right, false if otherwise.</returns>
+        </member>
         <member name="M:SMLimitless.Extensions.Vector2Extensions.LessThanOrEqualTo(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2)">
             <summary>
             Compares the components of one vector to another.
@@ -1272,19 +1255,21 @@
             <param name="right">The second vector.</param>
             <returns>True if left is less than or equal to right, false if otherwise.</returns>
         </member>
-        <member name="M:SMLimitless.Extensions.Vector2Extensions.Parse(System.String)">
+        <member name="M:SMLimitless.Extensions.Vector2Extensions.Mod(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2)">
             <summary>
-            Parses a string containing a vector value formatted "x,y".
+            Divides the components of a vector by another, and returns the remainder.
             </summary>
-            <param name="input">The string, containing only a vector formatted "x,y", to parse.</param>
-            <returns>The parsed vector.</returns>
+            <param name="a">The divisor vector.</param>
+            <param name="b">The dividend vector.</param>
+            <returns>The remainder of the quotient.</returns>
         </member>
-        <member name="M:SMLimitless.Extensions.Vector2Extensions.GreatestVectorByY(System.Collections.Generic.IEnumerable{Microsoft.Xna.Framework.Vector2})">
+        <member name="M:SMLimitless.Extensions.Vector2Extensions.GetAngleBetweenVectors(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2)">
             <summary>
-            Returns a vector with the largest Y component, given a collection of vectors.
+            Gets the angle between two given vectors.
             </summary>
-            <param name="vectors">A collection of vectors.</param>
-            <returns>The vector with the largest Y component.</returns>
+            <param name="a">The first vector.</param>
+            <param name="b">The second vector.</param>
+            <returns>The angle between the vectors.</returns>
         </member>
         <member name="M:SMLimitless.Extensions.Vector2Extensions.GreatestVectorByX(System.Collections.Generic.IEnumerable{Microsoft.Xna.Framework.Vector2})">
             <summary>
@@ -1293,12 +1278,12 @@
             <param name="vectors">A collection of vectors.</param>
             <returns>The vector with the largest X component.</returns>
         </member>
-        <member name="M:SMLimitless.Extensions.Vector2Extensions.LeastVectorByY(System.Collections.Generic.IEnumerable{Microsoft.Xna.Framework.Vector2})">
+        <member name="M:SMLimitless.Extensions.Vector2Extensions.GreatestVectorByY(System.Collections.Generic.IEnumerable{Microsoft.Xna.Framework.Vector2})">
             <summary>
-            Returns the vector with the lowest Y component, given a collection of vectors.
+            Returns a vector with the largest Y component, given a collection of vectors.
             </summary>
-            <param name="vectors">The collection of vectors.</param>
-            <returns>The vector with the lowest Y component.</returns>
+            <param name="vectors">A collection of vectors.</param>
+            <returns>The vector with the largest Y component.</returns>
         </member>
         <member name="M:SMLimitless.Extensions.Vector2Extensions.LeastVectorByX(System.Collections.Generic.IEnumerable{Microsoft.Xna.Framework.Vector2})">
             <summary>
@@ -1307,19 +1292,19 @@
             <param name="vectors">A collection of vectors.</param>
             <returns>The vector with the lowest X component.</returns>
         </member>
-        <member name="M:SMLimitless.Extensions.Vector2Extensions.ToVector2(Newtonsoft.Json.Linq.JToken)">
+        <member name="M:SMLimitless.Extensions.Vector2Extensions.LeastVectorByY(System.Collections.Generic.IEnumerable{Microsoft.Xna.Framework.Vector2})">
             <summary>
-            Converts a JToken value into a Vector2.
+            Returns the vector with the lowest Y component, given a collection of vectors.
             </summary>
-            <param name="jsonEntry">A JSON token containing two comma-delimited numbers.</param>
-            <returns>A Vector2 converted from the token.</returns>
+            <param name="vectors">The collection of vectors.</param>
+            <returns>The vector with the lowest Y component.</returns>
         </member>
-        <member name="M:SMLimitless.Extensions.Vector2Extensions.FromString(System.String)">
+        <member name="M:SMLimitless.Extensions.Vector2Extensions.Parse(System.String)">
             <summary>
-            Converts a string, formatted as "x,y", into a Vector2.
+            Parses a string containing a vector value formatted "x,y".
             </summary>
-            <param name="value">The string from which to convert.</param>
-            <returns>A Vector2 containing the values of the string.</returns>
+            <param name="input">The string, containing only a vector formatted "x,y", to parse.</param>
+            <returns>The parsed vector.</returns>
         </member>
         <member name="M:SMLimitless.Extensions.Vector2Extensions.Serialize(Microsoft.Xna.Framework.Vector2)">
             <summary>
@@ -1335,20 +1320,35 @@
             <param name="value">The vectors to serialize.</param>
             <returns>A list of strings in the format of "X, Y".</returns>
         </member>
-        <member name="M:SMLimitless.Extensions.Vector2Extensions.GetAngleBetweenVectors(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2)">
-            <summary>
-            Gets the angle between two given vectors.
-            </summary>
-            <param name="a">The first vector.</param>
-            <param name="b">The second vector.</param>
-            <returns>The angle between the vectors.</returns>
-        </member>
         <member name="M:SMLimitless.Extensions.Vector2Extensions.Serialize(Microsoft.Xna.Framework.Point)">
             <summary>
             Returns a string representation of a point suitable for JSON serialization.
             </summary>
             <param name="value">The point to serialize.</param>
             <returns>A string in the format "{x}, {y}".</returns>
+        </member>
+        <member name="M:SMLimitless.Extensions.Vector2Extensions.FromString(System.String)">
+            <summary>
+            Converts a string, formatted as "x,y", into a Vector2.
+            </summary>
+            <param name="value">The string from which to convert.</param>
+            <returns>A Vector2 containing the values of the string.</returns>
+        </member>
+        <member name="M:SMLimitless.Extensions.Vector2Extensions.ToRectangle(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Converts this Vector2 and another Vector2 into a rectangle.
+            </summary>
+            <param name="position">The Vector2 that will become the X and Y components of the rectangle.</param>
+            <param name="size">The Vector2 that will become the Width and Height components of the rectangle.</param>
+            <returns>A rectangle constructed from the two vectors.</returns>
+            <remarks>As the Rectangle type uses integers for components, any fractional component will be lost.</remarks>
+        </member>
+        <member name="M:SMLimitless.Extensions.Vector2Extensions.ToVector2(Newtonsoft.Json.Linq.JToken)">
+            <summary>
+            Converts a JToken value into a Vector2.
+            </summary>
+            <param name="jsonEntry">A JSON token containing two comma-delimited numbers.</param>
+            <returns>A Vector2 converted from the token.</returns>
         </member>
         <member name="T:SMLimitless.GameServices">
             <summary>
@@ -4048,6 +4048,13 @@
             <param name="x">The X-coordinate to check.</param>
             <returns>The position of the top of this triangle.</returns>
         </member>
+        <member name="M:SMLimitless.Physics.RightTriangle.AboveOrBelowSlopeLine(Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Returns a value indicating whether a given point rests above or below the slope line.
+            </summary>
+            <param name="point">The point to check.</param>
+            <returns>-1 if the point is above the slope line, 1 if the point is below the slope line, 0 if otherwise.</returns>
+        </member>
         <member name="M:SMLimitless.Physics.RightTriangle.ResolveSlopeCollision(SMLimitless.Physics.BoundingRectangle,Microsoft.Xna.Framework.Vector2)">
             <summary>
             Resolves a collision between a rectangle and the sloped side of this triangle.
@@ -5957,23 +5964,17 @@
             Performs an action for when this sprite takes damage.
             </summary>
         </member>
-        <member name="M:SMLimitless.Sprites.Sprite.GetCustomSerializableObjects">
-            <summary>
-            Gets any objects that custom sprites wish to be saved to the level file.
-            </summary>
-            <returns>An anonymous object containing objects to be saved to the level file.</returns>
-        </member>
-        <member name="M:SMLimitless.Sprites.Sprite.DeserializeCustomObjects(SMLimitless.Sprites.Assemblies.JsonHelper)">
-            <summary>
-            Deserializes any objects that custom sprites have written to the level file.
-            </summary>
-            <param name="customObjects">An object containing the objects of the custom sprites.</param>
-        </member>
         <member name="M:SMLimitless.Sprites.Sprite.GetSerializableObjects">
             <summary>
             Gets an anonymous object containing objects of the sprite to be saved to the level file.
             </summary>
             <returns>An anonymous object.</returns>
+        </member>
+        <member name="M:SMLimitless.Sprites.Sprite.GetCustomSerializableObjects">
+            <summary>
+            Gets any objects that custom sprites wish to be saved to the level file.
+            </summary>
+            <returns>An anonymous object containing objects to be saved to the level file.</returns>
         </member>
         <member name="M:SMLimitless.Sprites.Sprite.Serialize">
             <summary>
@@ -5987,14 +5988,31 @@
             </summary>
             <param name="json">A JSON string containing key objects of this sprite.</param>
         </member>
+        <member name="M:SMLimitless.Sprites.Sprite.DeserializeCustomObjects(SMLimitless.Sprites.Assemblies.JsonHelper)">
+            <summary>
+            Deserializes any objects that custom sprites have written to the level file.
+            </summary>
+            <param name="customObjects">An object containing the objects of the custom sprites.</param>
+        </member>
+        <member name="P:SMLimitless.Sprites.Sprite.ID">
+            <summary>
+            Gets or sets an identification number that identifies all sprites of this kind.
+            </summary>
+        </member>
         <member name="P:SMLimitless.Sprites.Sprite.Components">
             <summary>
             Gets a list of all the components used by this sprite instance.
             </summary>
         </member>
-        <member name="P:SMLimitless.Sprites.Sprite.ID">
+        <member name="P:SMLimitless.Sprites.Sprite.InitialState">
             <summary>
-            Gets or sets an identification number that identifies all sprites of this kind.
+            Gets the state of this sprite when it was first loaded into the level.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Sprite.State">
+            <summary>
+            Gets or sets a string representing the state of this sprite. Please see
+            http://smlimitless.wikia.com/wiki/Sprite_State for more information.
             </summary>
         </member>
         <member name="P:SMLimitless.Sprites.Sprite.Owner">
@@ -6007,27 +6025,29 @@
             Gets or sets a value indicating whether this sprite is actively updating or not.
             </summary>
         </member>
+        <member name="P:SMLimitless.Sprites.Sprite.IsEmbedded">
+            <summary>
+            Gets or sets a value indicating whether this sprite is embedded inside of a tile.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Sprite.IsOnGround">
+            <summary>
+            Gets a value indicating whether this sprite is on the ground.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Sprite.IsOnSlope">
+            <summary>
+            Gets a value indicating whether this sprite is sitting on a slope.
+            </summary>
+        </member>
         <member name="P:SMLimitless.Sprites.Sprite.RemoveOnNextFrame">
             <summary>
-            Gets or sets a value indicating whether this sprite
-            should be removed from its owner section on the next frame.
+            Gets or sets a value indicating whether this sprite should be removed from its owner section on the next frame.
             </summary>
         </member>
-        <member name="P:SMLimitless.Sprites.Sprite.InitialState">
+        <member name="P:SMLimitless.Sprites.Sprite.Size">
             <summary>
-            Gets the state of this sprite when it was first loaded into the level.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Sprites.Sprite.State">
-            <summary>
-            Gets or sets a string representing the state of this sprite.
-            Please see http://smlimitless.wikia.com/wiki/Sprite_State for more information.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Sprites.Sprite.CollisionMode">
-            <summary>
-            Gets or sets the current collision mode of this sprite.
-            Please see the SpriteCollisionMode documentation for more information.
+            Gets or sets the size in pixels of this sprite.
             </summary>
         </member>
         <member name="P:SMLimitless.Sprites.Sprite.InitialPosition">
@@ -6045,44 +6065,25 @@
             Gets or sets the current position of this sprite.
             </summary>
         </member>
-        <member name="P:SMLimitless.Sprites.Sprite.Size">
+        <member name="P:SMLimitless.Sprites.Sprite.Velocity">
             <summary>
-            Gets or sets the size in pixels of this sprite.
+            Gets or sets the velocity of this sprite, measured in pixels per second.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Sprite.Acceleration">
+            <summary>
+            Gets or sets the acceleration of this sprite, measured in pixels per second per second.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Sprite.CollisionMode">
+            <summary>
+            Gets or sets the current collision mode of this sprite. Please see the SpriteCollisionMode documentation for
+            more information.
             </summary>
         </member>
         <member name="P:SMLimitless.Sprites.Sprite.Hitbox">
             <summary>
             Gets a rectangle representing this sprite's hitbox.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Sprites.Sprite.Acceleration">
-            <summary>
-            Gets or sets the acceleration of this sprite,
-            measured in pixels per second per second.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Sprites.Sprite.Velocity">
-            <summary>
-            Gets or sets the velocity of this sprite,
-            measured in pixels per second.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Sprites.Sprite.IsEmbedded">
-            <summary>
-            Gets or sets a value indicating whether this 
-            sprite is embedded inside of a tile.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Sprites.Sprite.IsOnGround">
-            <summary>
-            Gets a value indicating whether this
-            sprite is on the ground.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Sprites.Sprite.IsOnSlope">
-            <summary>
-            Gets a value indicating whether this
-            sprite is sitting on a slope.
             </summary>
         </member>
         <member name="P:SMLimitless.Sprites.Sprite.RestingTile">
@@ -6097,8 +6098,7 @@
         </member>
         <member name="P:SMLimitless.Sprites.Sprite.EditorCategory">
             <summary>
-            Gets the name of the category that this sprite is
-            categorized within in the level editor.
+            Gets the name of the category that this sprite is categorized within in the level editor.
             </summary>
         </member>
         <member name="P:SMLimitless.Sprites.Sprite.EditorLabel">
@@ -6108,21 +6108,19 @@
         </member>
         <member name="P:SMLimitless.Sprites.Sprite.Name">
             <summary>
-            Gets or sets an editor property representing an optional
-            name for this sprite, used by event scripting to reference this object.
+            Gets or sets an editor property representing an optional name for this sprite, used by event scripting to
+            reference this object.
             </summary>
         </member>
         <member name="P:SMLimitless.Sprites.Sprite.Message">
             <summary>
-            Gets or sets an editor property representing an optional
-            message for this sprite that is displayed if the player
-            presses Up while near the sprite.
+            Gets or sets an editor property representing an optional message for this sprite that is displayed if the
+            player presses Up while near the sprite.
             </summary>
         </member>
         <member name="P:SMLimitless.Sprites.Sprite.IsHostile">
             <summary>
-            Gets or sets a value indicating whether this
-            sprite will injure the player if the player hits it.
+            Gets or sets a value indicating whether this sprite will injure the player if the player hits it.
             </summary>
         </member>
         <member name="P:SMLimitless.Sprites.Sprite.IsMoving">
@@ -6132,8 +6130,7 @@
         </member>
         <member name="P:SMLimitless.Sprites.Sprite.Direction">
             <summary>
-            Gets or sets an editor property representing which
-            direction this sprite is facing.
+            Gets or sets an editor property representing which direction this sprite is facing.
             </summary>
         </member>
         <member name="T:SMLimitless.Sprites.SpriteComponent">

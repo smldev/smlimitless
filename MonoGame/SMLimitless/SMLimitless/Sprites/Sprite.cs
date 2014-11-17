@@ -28,80 +28,127 @@ namespace SMLimitless.Sprites
 
         private Vector2 velocity;
 
-        /// <summary>
+		/// <summary>
+		/// Gets or sets an identification number that identifies all sprites of this kind.
+		/// </summary>
+		public uint ID { get; set; }
+
+		#region State Properties (components, state, owner)
+		/// <summary>
         /// Gets a list of all the components used by this sprite instance.
         /// </summary>
         protected List<SpriteComponent> Components { get; private set; }
 
-        /// <summary>
-        /// Gets or sets an identification number that identifies all sprites of this kind.
-        /// </summary>
-        public uint ID { get; set; }
+		/// <summary>
+		/// Gets the state of this sprite when it was first loaded into the level.
+		/// </summary>
+		public SpriteState InitialState { get; private set; }
 
-        /// <summary>
+		/// <summary>
+		/// Gets or sets a string representing the state of this sprite. Please see
+		/// http://smlimitless.wikia.com/wiki/Sprite_State for more information.
+		/// </summary>
+		public SpriteState State { get; protected set; }
+
+		/// <summary>
         /// Gets or sets the section that owns this sprite.
         /// </summary>
         public Section Owner { get; set; }
+		#endregion
 
+		#region Flags (active, embedded, ground, slope, remove)
         /// <summary>
         /// Gets or sets a value indicating whether this sprite is actively updating or not.
         /// </summary>
         public bool IsActive { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether this sprite
-        /// should be removed from its owner section on the next frame.
-        /// </summary>
-        public bool RemoveOnNextFrame { get; set; }
+		/// <summary>
+		/// Gets or sets a value indicating whether this sprite is embedded inside of a tile.
+		/// </summary>
+		public bool IsEmbedded { get; set; }
 
-        /// <summary>
-        /// Gets the state of this sprite when it was first loaded into the level.
-        /// </summary>
-        public SpriteState InitialState { get; private set; }
+		/// <summary>
+		/// Gets a value indicating whether this sprite is on the ground.
+		/// </summary>
+		public bool IsOnGround { get; set; }
 
-        /// <summary>
-        /// Gets or sets a string representing the state of this sprite.
-        /// Please see http://smlimitless.wikia.com/wiki/Sprite_State for more information.
-        /// </summary>
-        public SpriteState State { get; protected set; }
+		/// <summary>
+		/// Gets a value indicating whether this sprite is sitting on a slope.
+		/// </summary>
+		public bool IsOnSlope
+		{
+			get
+			{
+				return this.RestingSlope != null && this.Velocity.Y >= 0;
+			}
+		}
 
+		/// <summary>
+		/// Gets or sets a value indicating whether this sprite should be removed from its owner section on the next frame.
+		/// </summary>
+		public bool RemoveOnNextFrame { get; set; }
+		#endregion
+
+		#region Physics Properties (size, position, velocity, acceleration)
+		/// <summary>
+		/// Gets or sets the size in pixels of this sprite.
+		/// </summary>
+		public Vector2 Size { get; protected set; }
+
+		/// <summary>
+		/// Gets or sets the position of this sprite when it was first loaded into the level.
+		/// </summary>
+		public Vector2 InitialPosition { get; protected set; }
+
+		/// <summary>
+		/// Gets or sets the last position of this sprite.
+		/// </summary>
+		public Vector2 PreviousPosition { get; protected set; }
+
+		/// <summary>
+		/// Gets or sets the current position of this sprite.
+		/// </summary>
+		public Vector2 Position
+		{
+			get
+			{
+				return this.position;
+			}
+
+			set
+			{
+				// Round values to nearest integer in case of really small precision errors.
+				this.position = new Vector2(value.X.CorrectPrecision(), value.Y.CorrectPrecision());
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the velocity of this sprite, measured in pixels per second.
+		/// </summary>
+		public Vector2 Velocity
+		{
+			get
+			{
+				return this.velocity;
+			}
+			set
+			{
+				this.velocity = value;
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the acceleration of this sprite, measured in pixels per second per second.
+		/// </summary>
+		public Vector2 Acceleration { get; set; }
+		#endregion
+
+		#region Collision Properties (mode, hitbox, resting tile/slope)
         /// <summary>
-        /// Gets or sets the current collision mode of this sprite.
-        /// Please see the SpriteCollisionMode documentation for more information.
+        /// Gets or sets the current collision mode of this sprite. Please see the SpriteCollisionMode documentation for
+        /// more information.
         /// </summary>
         public SpriteCollisionMode CollisionMode { get; protected set; }
-
-        /// <summary>
-        /// Gets or sets the position of this sprite when it was first loaded into the level.
-        /// </summary>
-        public Vector2 InitialPosition { get; protected set; }
-
-        /// <summary>
-        /// Gets or sets the last position of this sprite.
-        /// </summary>
-        public Vector2 PreviousPosition { get; protected set; }
-
-        /// <summary>
-        /// Gets or sets the current position of this sprite.
-        /// </summary>
-        public Vector2 Position
-        {
-            get
-            {
-               return this.position;
-            }
-
-            set
-            {
-                // Round values to nearest integer in case of really small precision errors.
-                this.position = new Vector2(value.X.CorrectPrecision(), value.Y.CorrectPrecision());
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the size in pixels of this sprite.
-        /// </summary>
-        public Vector2 Size { get; protected set; }
 
         /// <summary>
         /// Gets a rectangle representing this sprite's hitbox.
@@ -111,52 +158,6 @@ namespace SMLimitless.Sprites
             get
             {
                 return new BoundingRectangle(this.Position, this.Size + this.Position);
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the acceleration of this sprite,
-        /// measured in pixels per second per second.
-        /// </summary>
-        public Vector2 Acceleration { get; set; }
-
-        /// <summary>
-        /// Gets or sets the velocity of this sprite,
-        /// measured in pixels per second.
-        /// </summary>
-        public Vector2 Velocity
-        {
-            get
-            {
-                return this.velocity;
-            }
-            set
-            {
-                this.velocity = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether this 
-        /// sprite is embedded inside of a tile.
-        /// </summary>
-        public bool IsEmbedded { get; set; }
-
-        /// <summary>
-        /// Gets a value indicating whether this
-        /// sprite is on the ground.
-        /// </summary>
-		public bool IsOnGround { get; set; }
-
-        /// <summary>
-        /// Gets a value indicating whether this
-        /// sprite is sitting on a slope.
-        /// </summary>
-        public bool IsOnSlope
-        {
-            get
-            {
-                return this.RestingSlope != null && this.Velocity.Y >= 0;
             }
         }
 
@@ -197,10 +198,11 @@ namespace SMLimitless.Sprites
                 return null;
             }
         }
+		#endregion
 
+		#region Editor Properties (category, label, name, message, hostility, moving, direction)
         /// <summary>
-        /// Gets the name of the category that this sprite is
-        /// categorized within in the level editor.
+        /// Gets the name of the category that this sprite is categorized within in the level editor.
         /// </summary>
         public abstract string EditorCategory { get; }
 
@@ -210,23 +212,21 @@ namespace SMLimitless.Sprites
         public string EditorLabel { get; protected set; }
 
         /// <summary>
-        /// Gets or sets an editor property representing an optional
-        /// name for this sprite, used by event scripting to reference this object.
+        /// Gets or sets an editor property representing an optional name for this sprite, used by event scripting to
+        /// reference this object.
         /// </summary>
         [DefaultValue(""), Description("The name of this sprite to be used in event scripting.  This field is optional.")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets an editor property representing an optional
-        /// message for this sprite that is displayed if the player
-        /// presses Up while near the sprite.
+        /// Gets or sets an editor property representing an optional message for this sprite that is displayed if the
+        /// player presses Up while near the sprite.
         /// </summary>
         [DefaultValue(""), Description("An optional message that will be displayed if the user presses Up while near the sprite.")]
         public string Message { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this
-        /// sprite will injure the player if the player hits it.
+        /// Gets or sets a value indicating whether this sprite will injure the player if the player hits it.
         /// </summary>
         [DefaultValue(true), Description("Determines if the sprite will injure the player if the player hits it.")]
         public bool IsHostile { get; set; }
@@ -238,12 +238,13 @@ namespace SMLimitless.Sprites
         public bool IsMoving { get; set; }
 
         /// <summary>
-        /// Gets or sets an editor property representing which
-        /// direction this sprite is facing.
+        /// Gets or sets an editor property representing which direction this sprite is facing.
         /// </summary>
         [DefaultValue(SpriteDirection.FacePlayer), Description("The direction that this sprite faces when it loads.")]
         public SpriteDirection Direction { get; set; }
+		#endregion
 
+		#region Core Gameobject Methods
         /// <summary>
         /// Initializes this sprite.
         /// </summary>
@@ -278,9 +279,8 @@ namespace SMLimitless.Sprites
 
             if (this.IsEmbedded)
             {
-                // We are embedded if collision checks tell us we need to resolve
-                // both left and right or both up and down.  We should move left until
-                // we're out of being embedded.
+                // We are embedded if collision checks tell us we need to resolve both left and right or both up and
+                // down. We should move left until we're out of being embedded.
                 this.Acceleration = Vector2.Zero;
                 this.Velocity = new Vector2(-25f, 0f);
             }
@@ -321,7 +321,9 @@ namespace SMLimitless.Sprites
         /// Draws this sprite.
         /// </summary>
         public abstract void Draw();
+		#endregion
 
+		#region Collision Handlers
         /// <summary>
         /// Handles a collision between this sprite and a tile.
         /// </summary>
@@ -341,6 +343,7 @@ namespace SMLimitless.Sprites
         {
             this.Components.ForEach(f => f.HandleSpriteCollision(sprite));
         }
+		#endregion
 
         /// <summary>
         /// Performs an action for when this sprite takes damage.
@@ -349,39 +352,34 @@ namespace SMLimitless.Sprites
         {
         }
 
-        /// <summary>
+		#region Serialization Methods
+		/// <summary>
+		/// Gets an anonymous object containing objects of the sprite to be saved to the level file.
+		/// </summary>
+		/// <returns>An anonymous object.</returns>
+		public object GetSerializableObjects()
+		{
+			return new
+			{
+				typeName = this.GetType().FullName,
+				position = this.InitialPosition.Serialize(),
+				isActive = this.IsActive,
+				state = (int)this.InitialState,
+				collision = (int)this.CollisionMode,
+				name = this.Name,
+				message = this.Message,
+				isHostile = this.IsHostile,
+				isMoving = this.IsMoving,
+				direction = (int)this.Direction,
+				customObjects = this.GetCustomSerializableObjects()
+			};
+		}
+
+		/// <summary>
         /// Gets any objects that custom sprites wish to be saved to the level file.
         /// </summary>
         /// <returns>An anonymous object containing objects to be saved to the level file.</returns>
         public abstract object GetCustomSerializableObjects();
-
-        /// <summary>
-        /// Deserializes any objects that custom sprites have written to the level file.
-        /// </summary>
-        /// <param name="customObjects">An object containing the objects of the custom sprites.</param>
-        public abstract void DeserializeCustomObjects(JsonHelper customObjects);
-
-        /// <summary>
-        /// Gets an anonymous object containing objects of the sprite to be saved to the level file.
-        /// </summary>
-        /// <returns>An anonymous object.</returns>
-        public object GetSerializableObjects()
-        {
-            return new
-            {
-                typeName = this.GetType().FullName,
-                position = this.InitialPosition.Serialize(),
-                isActive = this.IsActive,
-                state = (int)this.InitialState,
-                collision = (int)this.CollisionMode,
-                name = this.Name,
-                message = this.Message,
-                isHostile = this.IsHostile,
-                isMoving = this.IsMoving,
-                direction = (int)this.Direction,
-                customObjects = this.GetCustomSerializableObjects()
-            };
-        }
 
         /// <summary>
         /// Returns a JSON string containing key objects of this sprite.
@@ -412,5 +410,12 @@ namespace SMLimitless.Sprites
             this.Direction = (SpriteDirection)(int)obj["direction"];
             this.DeserializeCustomObjects(new JsonHelper(obj["customObject"]));
         }
+
+		/// <summary>
+        /// Deserializes any objects that custom sprites have written to the level file.
+        /// </summary>
+        /// <param name="customObjects">An object containing the objects of the custom sprites.</param>
+        public abstract void DeserializeCustomObjects(JsonHelper customObjects);
+		#endregion
     }
 }

@@ -357,7 +357,7 @@ namespace SMLimitless.Physics
         {
             this.ClearAll();
             this.sprites.ForEach(s => this.PlaceSprite(s));
-            this.tiles.ForEach(t => this.PlaceTile(t));
+            this.tiles.ForEach(t => this.PlaceTile(t)); // PERF: welp, found my bottleneck. Perhaps replacing 1000-odd mostly static tiles every frame isn't a good idea
         }
 
         /// <summary>
@@ -456,6 +456,8 @@ namespace SMLimitless.Physics
         /// <param name="tile">The tile to place.</param>
         private void PlaceTile(Tile tile)
         {
+			// PERF: For some odd reason, this method takes about 33.72% of ALL CPU time. External code (???) accounts
+			// for about half that time, and the rest is in GetIntersectingCells.
             var intersectingCells = this.GetIntersectingCells(tile);
 
             foreach (var cell in intersectingCells)

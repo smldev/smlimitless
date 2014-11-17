@@ -58,7 +58,7 @@ namespace SMLimitless.Graphics
 
             if (!File.Exists(filePath)) 
             { 
-                throw new FileNotFoundException(string.Format("The file at {0} does not exist.")); 
+                throw new FileNotFoundException(string.Format("The file at {0} does not exist."), filePath); 
             }
 
             if (!loadedTextures.ContainsKey(filePath))

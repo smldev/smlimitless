@@ -45,7 +45,7 @@ namespace SMLimitless.Sprites.Assemblies
         {
             if (!File.Exists(assemblyPath))
             {
-                throw new FileNotFoundException(string.Format("AssemblyManager.LoadAssembly(string): The file at {0} doesn't exist."), assemblyPath);
+                throw new FileNotFoundException(string.Format("AssemblyManager.LoadAssembly(string): The file at {0} doesn't exist.", assemblyPath), assemblyPath);
             }
 
             // Load the assembly.
