@@ -337,7 +337,7 @@ namespace SMLimitless.Sprites.Collections
 							float slopeLineY = hitTriangle.GetPointOnLine(sprite.Hitbox.Center.X).Y;
 							if (hitTriangle.SlopedSides == RtSlopedSides.TopLeft || hitTriangle.SlopedSides == RtSlopedSides.TopRight)
 							{
-								if (sprite.Hitbox.Center.Y <= slopeLineY) // center above the slope
+								if (sprite.Hitbox.TopCenter.Y <= slopeLineY) // top-center above the slope
 								{
 									sprite.Position = new Vector2(sprite.Position.X, slopeLineY - sprite.Hitbox.Height);
 								}
@@ -363,6 +363,20 @@ namespace SMLimitless.Sprites.Collections
 						Vector2 collisionResolution = tile.GetCollisionResolution(sprite);
 						if (collisionResolution.Y > 0f || (collisionResolution.Y < 0f && !slopeResolutionOccurred))
 						{
+							Vector2 checkpoint = tile.Hitbox.Bounds.TopCenter;
+							checkpoint.Y -= 1;
+							Tile tileAbove = this.GetTileAtPositionByBounds(checkpoint, adjacentPointsAreWithin: true);
+							if (tileAbove != null && tileAbove is SlopedTile)
+							{
+								SlopedTile slope = tileAbove as SlopedTile;
+								RightTriangle hitTriangle = tileAbove.Hitbox as RightTriangle;
+								float slopeLineY = hitTriangle.GetPointOnLine(sprite.Hitbox.Center.X).Y;
+								if (hitTriangle.SlopedSides == RtSlopedSides.TopLeft || hitTriangle.SlopedSides == RtSlopedSides.TopRight)
+								{
+									sprite.Position = new Vector2(sprite.Position.X, slopeLineY - sprite.Hitbox.Height);
+								}
+							}
+
 							// If so, resolve the collision.
 							sprite.Position = new Vector2(sprite.Position.X, sprite.Position.Y + collisionResolution.Y);
 							collidingTiles.Add(tile);
