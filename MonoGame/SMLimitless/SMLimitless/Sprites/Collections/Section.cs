@@ -271,18 +271,6 @@ namespace SMLimitless.Sprites.Collections
 				List<SlopedTile> collidableSlopes = new List<SlopedTile>();
 				bool slopeResolutionOccurred = false;
 
-				/* Where you left off:
-				 * Do this. Seriously.
-				 * Instead of resolving every collision as soon as you find it, gather all the intersecting tiles into a list.
-				 * Check if any of them are slopes and if they resolve on the bottom-center point. If so, we can ignore some collisions
-				 * based on criteria you'll figure out later. DO THIS.
-				 */
-
-				/* Dear past self:
-				 * Thanks for not including the criteria. My best guess is that tiles that anywhere within the perfect 16x16 spaces beside the high side of
-				 * a slope should have their collisions ignored if there are slope collisions.
-				 */
-
 				// First, we'll take care of horizontal movement. Move the sprite horizontally.
 				sprite.Position = new Vector2(sprite.Position.X + (sprite.Velocity.X * delta), sprite.Position.Y);
 				this.QuadTree.PlaceSprite(sprite);
