@@ -1,0 +1,6 @@
+SMLimitless JSON Level Format
+for Serializer Version 0.02
+
+Created 2014-11-22 by Celarix
+
+- The content of this file is TO BE DETERMINED. -

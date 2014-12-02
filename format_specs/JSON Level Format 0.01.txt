@@ -1,4 +1,5 @@
 SMLimitless JSON Level Format
+for Serializer Version 0.01
 
 Level Header
 	Serializer Version
