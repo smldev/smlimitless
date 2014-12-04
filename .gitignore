@@ -49,5 +49,11 @@ Thumbs.db
 *.ncb
 *.log 
 *.DS_Store
+*.vspx
+*.vsp
+*.diagsession
+*.vsps
+*.psess
+*.etl
 [Tt]humbs.db
 Ankh.NoLoad
