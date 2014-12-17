@@ -32,7 +32,7 @@ namespace SMLimitless.Sprites.Collections
         /// <summary>
         /// The resource name of the background texture.
         /// </summary>
-        private string backgroundTextureResourceName;
+        internal string BackgroundTextureResourceName;
 
         /// <summary>
         /// The background texture of this layer.
@@ -270,7 +270,7 @@ namespace SMLimitless.Sprites.Collections
         {
             return new
             {
-                resourceName = this.backgroundTextureResourceName,
+                resourceName = this.BackgroundTextureResourceName,
                 scrollDirection = (int)this.ScrollDirection,
                 scrollRate = this.ScrollRate
             };
@@ -297,8 +297,8 @@ namespace SMLimitless.Sprites.Collections
             BackgroundScrollDirection direction = (BackgroundScrollDirection)(int)obj["scrollDirection"];
             float scrollRate = (float)obj["scrollRate"];
 
-            this.backgroundTextureResourceName = resourceName;
-            this.backgroundTexture = ContentPackageManager.GetGraphicsResource(this.backgroundTextureResourceName);
+            this.BackgroundTextureResourceName = resourceName;
+            this.backgroundTexture = ContentPackageManager.GetGraphicsResource(this.BackgroundTextureResourceName);
             this.ScrollDirection = direction;
             this.ScrollRate = scrollRate;
         }

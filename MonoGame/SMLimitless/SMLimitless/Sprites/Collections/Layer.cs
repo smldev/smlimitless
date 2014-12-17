@@ -25,7 +25,7 @@ namespace SMLimitless.Sprites.Collections
         /// <summary>
         /// A value indicating whether this is the main layer for the level.
         /// </summary>
-        private bool isMainLayer;
+		internal bool IsMainLayer { get; set; }
 
         /// <summary>
         /// A value indicating whether this layer is actively drawn and updated.
@@ -40,7 +40,7 @@ namespace SMLimitless.Sprites.Collections
         /// <summary>
         /// The collection of tiles in this layer.
         /// </summary>
-        private List<Tile> tiles;
+        internal List<Tile> Tiles;
 
         /// <summary>
         /// The collection of sprites in this layer.
@@ -55,7 +55,7 @@ namespace SMLimitless.Sprites.Collections
         /// <summary>
         /// The position of the layer's anchor point.
         /// </summary>
-        private LayerAnchorPosition anchorPosition;
+		internal LayerAnchorPosition AnchorPosition { get; set; }
         
         /// <summary>
         /// The backing field for the AnchorPoint property.
@@ -66,7 +66,7 @@ namespace SMLimitless.Sprites.Collections
         /// Gets or sets the anchor point of the layer.
         /// The anchor point is used to move the layer.
         /// </summary>
-        private Vector2 AnchorPoint
+        internal Vector2 AnchorPoint
         {
             get
             {
@@ -75,7 +75,7 @@ namespace SMLimitless.Sprites.Collections
 
             set
             {
-                if (!this.isMainLayer)
+                if (!this.IsMainLayer)
                 {
                     this.anchorPointBackingField = value;
                 }            
@@ -100,7 +100,7 @@ namespace SMLimitless.Sprites.Collections
             set
             {
                 this.boundsBackingField = value;
-                if (!this.isMainLayer)
+                if (!this.IsMainLayer)
                 {
                     this.SetAnchorPoint();
                 }
@@ -126,10 +126,10 @@ namespace SMLimitless.Sprites.Collections
         public Layer(Section owner, LayerAnchorPosition position = LayerAnchorPosition.TopLeft)
         {
             this.owner = owner;
-            this.anchorPosition = position;
+            this.AnchorPosition = position;
             this.AnchorPoint = new Vector2(float.NaN);
             this.velocity = Vector2.Zero;
-            this.tiles = new List<Tile>();
+            this.Tiles = new List<Tile>();
             this.sprites = new List<Sprite>();
             this.Bounds = new BoundingRectangle(new Vector2(float.NaN), new Vector2(float.NaN));
         }
@@ -146,7 +146,7 @@ namespace SMLimitless.Sprites.Collections
         /// </summary>
         public void LoadContent()
         {
-            this.tiles.ForEach(t => t.LoadContent());
+            this.Tiles.ForEach(t => t.LoadContent());
         }
 
         /// <summary>
@@ -155,7 +155,7 @@ namespace SMLimitless.Sprites.Collections
         public void Update()
         {
             // TODO: change this method to account for active/inactive layers, tiles and sprites
-            if (!this.isMainLayer)
+            if (!this.IsMainLayer)
             {
                 // Determine if any sprites are no longer within the bounds of the layer.
                 this.sprites.RemoveAll(s => !s.Hitbox.Intersects(this.Bounds));
@@ -195,7 +195,7 @@ namespace SMLimitless.Sprites.Collections
                 throw new InvalidOperationException("Layer.SetMainLayer(float, float): This section already has a main layer.");
             }
 
-            this.isMainLayer = true;
+            this.IsMainLayer = true;
             this.Bounds = new BoundingRectangle(0, 0, width, height);
             this.AnchorPoint = new Vector2(float.NaN);
         }
@@ -207,9 +207,9 @@ namespace SMLimitless.Sprites.Collections
         /// <param name="tile">The tile to add.</param>
         public void AddTile(Tile tile)
         {
-            this.tiles.Add(tile);
+            this.Tiles.Add(tile);
 
-            if (!this.isMainLayer)
+            if (!this.IsMainLayer)
             {
                 if (this.Bounds.IsNaN())
                 {
@@ -261,23 +261,23 @@ namespace SMLimitless.Sprites.Collections
         /// <param name="tile">The tile to remove.</param>
         public void RemoveTile(Tile tile)
         {
-            if (!this.tiles.Contains(tile))
+            if (!this.Tiles.Contains(tile))
             {
                 throw new ArgumentException("Layer.RemoveTile(tile): Tried to remove a tile that wasn't in the layer.");
             }
 
-            this.tiles.Remove(tile);
+            this.Tiles.Remove(tile);
 
-            if (!this.isMainLayer)
+            if (!this.IsMainLayer)
             {
-                if (this.tiles.Count == 0)
+                if (this.Tiles.Count == 0)
                 {
                     this.Bounds = new BoundingRectangle(new Vector2(float.NaN), new Vector2(float.NaN));
                 }
                 else
                 {
-                    this.Bounds = this.tiles[0].Hitbox.Bounds;
-                    foreach (Tile t in this.tiles)
+                    this.Bounds = this.Tiles[0].Hitbox.Bounds;
+                    foreach (Tile t in this.Tiles)
                     {
                         this.AdjustBounds(t);
                     }
@@ -291,7 +291,7 @@ namespace SMLimitless.Sprites.Collections
         /// <param name="position">The position to move the layer to.</param>
         public void Translate(Vector2 position)
         {
-            if (!this.isMainLayer)
+            if (!this.IsMainLayer)
             {
                 Vector2 distance = position - this.AnchorPoint;
                 this.TranslateRelative(distance);
@@ -308,12 +308,12 @@ namespace SMLimitless.Sprites.Collections
         /// <param name="distance">The distance to move the layer by.</param>
         public void TranslateRelative(Vector2 distance)
         {
-            if (!this.isMainLayer)
+            if (!this.IsMainLayer)
             {
                 this.AnchorPoint += distance;
                 this.Bounds = new BoundingRectangle(this.Bounds.X + distance.X, this.Bounds.Y + distance.Y, this.Bounds.Width, this.Bounds.Height);
 
-                foreach (Tile tile in this.tiles)
+                foreach (Tile tile in this.Tiles)
                 {
                     tile.Position += distance;
                 }
@@ -339,7 +339,7 @@ namespace SMLimitless.Sprites.Collections
                 this.AnchorPoint = new Vector2(float.NaN);
             }
 
-            switch (this.anchorPosition)
+            switch (this.AnchorPosition)
             {
                 case LayerAnchorPosition.Invalid:
                     break;
@@ -381,16 +381,16 @@ namespace SMLimitless.Sprites.Collections
         /// <returns>An anonymous object containing key objects of this layer.</returns>
         public object GetSerializableObjects()
         {
-            List<object> tileObjects = new List<object>(this.tiles.Count);
-            this.tiles.ForEach(t => tileObjects.Add(t.GetSerializableObjects())); // there's probably a better way to do this but I have very little LINQ-fu
+            List<object> tileObjects = new List<object>(this.Tiles.Count);
+            this.Tiles.ForEach(t => tileObjects.Add(t.GetSerializableObjects())); // there's probably a better way to do this but I have very little LINQ-fu
 
             return new
             {
                 index = this.Index,
                 name = this.Name,
-                isMainLayer = this.isMainLayer,
-                anchorPoint = (this.anchorPosition != LayerAnchorPosition.Invalid) ? this.AnchorPoint.Serialize() : new Vector2(float.NaN, float.NaN).Serialize(),
-                anchorPosition = (int)this.anchorPosition,
+                isMainLayer = this.IsMainLayer,
+                anchorPoint = (this.AnchorPosition != LayerAnchorPosition.Invalid) ? this.AnchorPoint.Serialize() : new Vector2(float.NaN, float.NaN).Serialize(),
+                anchorPosition = (int)this.AnchorPosition,
                 tiles = tileObjects,
             };
         }
@@ -415,11 +415,11 @@ namespace SMLimitless.Sprites.Collections
             // Deserialize the root level items first.
             this.Index = (int)obj["index"];
             this.Name = (string)obj["name"];
-            this.isMainLayer = (bool)obj["isMainLayer"];
-            this.anchorPosition = (LayerAnchorPosition)(int)obj["anchorPosition"];
+            this.IsMainLayer = (bool)obj["isMainLayer"];
+            this.AnchorPosition = (LayerAnchorPosition)(int)obj["anchorPosition"];
 
             // If this is a main layer, set this as the section's main layer.
-            if (this.isMainLayer)
+            if (this.IsMainLayer)
             {
                 this.owner.SetMainLayer(this);
             }
@@ -435,9 +435,9 @@ namespace SMLimitless.Sprites.Collections
                 tile.Initialize(this.owner);
                 this.owner.AddTile(tile);
 
-                if (!this.isMainLayer)
+                if (!this.IsMainLayer)
                 {
-                    this.tiles.Add(tile);
+                    this.Tiles.Add(tile);
                 }
             }
         }

@@ -133,7 +133,7 @@ namespace SMLimitless.Sprites.Collections
         /// <summary>
         /// A collection of all the layers in this section.
         /// </summary>
-        private List<Layer> layers;
+        internal List<Layer> Layers;
 
         /// <summary>
         /// A list of all tiles in this section.
@@ -144,12 +144,12 @@ namespace SMLimitless.Sprites.Collections
         /// <summary>
         /// A collection of all the sprites in this section.
         /// </summary>
-        private List<Sprite> sprites;
+        internal List<Sprite> Sprites;
 
         /// <summary>
         /// A collection of all the paths in this section.
         /// </summary>
-        private List<Path> paths;
+        internal List<Path> Paths;
 
         /// <summary>
         /// A field that stores whether the section has been initialized.
@@ -175,10 +175,10 @@ namespace SMLimitless.Sprites.Collections
             this.Camera = new Camera2D();
             this.Owner = owner;
             this.QuadTree = new QuadTree(GameServices.QuadTreeCellSize);
-            this.layers = new List<Layer>();
+            this.Layers = new List<Layer>();
             this.tiles = new List<Tile>();
-            this.sprites = new List<Sprite>();
-            this.paths = new List<Path>();
+            this.Sprites = new List<Sprite>();
+            this.Paths = new List<Path>();
             this.Background = new Background(this);
 
             GameServices.Camera = this.Camera;
@@ -243,7 +243,7 @@ namespace SMLimitless.Sprites.Collections
             {
                 this.Background.LoadContent();
                 this.tiles.ForEach(t => t.LoadContent());
-                this.sprites.ForEach(s => s.LoadContent());
+                this.Sprites.ForEach(s => s.LoadContent());
                 this.isContentLoaded = true;
             }
         }
@@ -257,13 +257,13 @@ namespace SMLimitless.Sprites.Collections
 
             this.Background.Update();
             this.tiles.ForEach(t => t.Update());
-            this.sprites.ForEach(s => s.Update());
+            this.Sprites.ForEach(s => s.Update());
             this.QuadTree.Update();
 
             // Remove all sprites that have requested to be removed.
-            this.RemoveSprites(this.sprites.Where(s => s.RemoveOnNextFrame).ToList());
+            this.RemoveSprites(this.Sprites.Where(s => s.RemoveOnNextFrame).ToList());
 
-            foreach (Sprite sprite in this.sprites)
+            foreach (Sprite sprite in this.Sprites)
             {
                 float delta = GameServices.GameTime.GetElapsedSeconds();
                 List<Tile> collidableTiles;
@@ -406,7 +406,7 @@ namespace SMLimitless.Sprites.Collections
         private void TempUpdate()
         {
             // Update the camera's position (temp).
-            Sprite player = this.sprites.Where(s => s.GetType().Name.Contains("SimplePlayer")).FirstOrDefault();
+            Sprite player = this.Sprites.Where(s => s.GetType().Name.Contains("SimplePlayer")).FirstOrDefault();
             if (player != null)
             {
                 float cameraX = MathHelper.Clamp(player.Hitbox.Center.X - 400f, this.Bounds.X, this.Bounds.Width);
@@ -439,11 +439,11 @@ namespace SMLimitless.Sprites.Collections
 
             this.tiles.ForEach(t => t.Draw());
 
-            this.sprites.ForEach(s => s.Draw());
+            this.Sprites.ForEach(s => s.Draw());
 
 			GameServices.DrawStringDefault(this.debugText);
 
-            Sprite player = this.sprites.Where(s => s.GetType().Name.EndsWith("SimplePlayer")).FirstOrDefault();
+            Sprite player = this.Sprites.Where(s => s.GetType().Name.EndsWith("SimplePlayer")).FirstOrDefault();
             BoundingRectangle drawRect = new BoundingRectangle(player.Hitbox.Left, player.Hitbox.Center.Y, 8f, 8f);
             Rectangle checkRect = new Rectangle((int)player.Hitbox.Center.X, (int)(player.Hitbox.Bottom + 3f), 1, 1);
             Tile tile = this.GetTileAtPosition(new Vector2(checkRect.X, checkRect.Y), true);
@@ -484,7 +484,7 @@ namespace SMLimitless.Sprites.Collections
             {
                 this.tiles.Remove(tile);
                 this.QuadTree.Remove(tile);
-                this.layers.ForEach(l => l.RemoveTile(tile));
+                this.Layers.ForEach(l => l.RemoveTile(tile));
             }
         }
 
@@ -494,7 +494,7 @@ namespace SMLimitless.Sprites.Collections
         /// <param name="sprite">The sprite to remove.</param>
         public void RemoveSprite(Sprite sprite)
         {
-            this.sprites.Remove(sprite);
+            this.Sprites.Remove(sprite);
             this.QuadTree.Remove(sprite);
         }
 
@@ -507,7 +507,7 @@ namespace SMLimitless.Sprites.Collections
         {
             foreach (Sprite sprite in spritesToRemove)
             {
-                this.sprites.Remove(sprite);
+                this.Sprites.Remove(sprite);
                 this.QuadTree.Remove(sprite);
             }
         }
@@ -640,12 +640,12 @@ namespace SMLimitless.Sprites.Collections
         /// <returns>An anonymous object.</returns>
         public object GetSerializableObjects()
         {
-            List<object> layerObjects = new List<object>(this.layers.Count);
-            List<object> spriteObjects = new List<object>(this.sprites.Count);
-            List<object> pathObjects = new List<object>(this.paths.Count);
-            this.layers.ForEach(l => layerObjects.Add(l.GetSerializableObjects()));
-            this.sprites.ForEach(s => spriteObjects.Add(s.GetSerializableObjects()));
-            this.paths.ForEach(p => pathObjects.Add(p.GetSerializableObjects()));
+            List<object> layerObjects = new List<object>(this.Layers.Count);
+            List<object> spriteObjects = new List<object>(this.Sprites.Count);
+            List<object> pathObjects = new List<object>(this.Paths.Count);
+            this.Layers.ForEach(l => layerObjects.Add(l.GetSerializableObjects()));
+            this.Sprites.ForEach(s => spriteObjects.Add(s.GetSerializableObjects()));
+            this.Paths.ForEach(p => pathObjects.Add(p.GetSerializableObjects()));
 
             return new
             {
@@ -700,7 +700,7 @@ namespace SMLimitless.Sprites.Collections
                     Layer layer = new Layer(this);
                     layer.Deserialize(layerData.ToString());
                     layer.Initialize();
-                    this.layers.Add(layer);
+                    this.Layers.Add(layer);
                 }
 
                 foreach (var spriteData in spritesData)
@@ -709,7 +709,7 @@ namespace SMLimitless.Sprites.Collections
                     Sprite sprite = AssemblyManager.GetSpriteByFullName(typeName);
                     sprite.Deserialize(spriteData.ToString());
                     sprite.Initialize(this);
-                    this.sprites.Add(sprite);
+                    this.Sprites.Add(sprite);
                     this.QuadTree.Add(sprite);
                 }
 
@@ -717,7 +717,7 @@ namespace SMLimitless.Sprites.Collections
                 {
                     Path path = new Path(null);
                     path.Deserialize(pathData.ToString());
-                    this.paths.Add(path);
+                    this.Paths.Add(path);
                 }
 
                 this.isSectionLoaded = true;

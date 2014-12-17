@@ -24,7 +24,7 @@ namespace SMLimitless.Physics
         /// <summary>
         /// A collection of the points representing this path.
         /// </summary>
-        private List<Vector2> points;
+        private List<Vector2> Points;
 
         /// <summary>
         /// The object currently attached to this path.
@@ -45,7 +45,7 @@ namespace SMLimitless.Physics
         /// <param name="pathingObject">An object to attach to this path.</param>
         public Path(IPositionable pathingObject)
         {
-            this.points = new List<Vector2>();
+            this.Points = new List<Vector2>();
             this.pathingObject = pathingObject;
         }
 
@@ -124,7 +124,7 @@ namespace SMLimitless.Physics
         /// <returns>A list of points in this path.</returns>
         public List<Vector2> GetPoints()
         {
-            return new List<Vector2>(this.points.OrderBy(p => p.X));
+            return new List<Vector2>(this.Points.OrderBy(p => p.X));
         }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace SMLimitless.Physics
         public void Draw(Color color)
         {
             // Draw lines between the points, from the leftmost to the rightmost.
-            var sortedPoints = this.points.OrderBy(p => p.X).ToList();
+            var sortedPoints = this.Points.OrderBy(p => p.X).ToList();
 
             for (int i = 0; i < sortedPoints.Count - 1; i++)
             {
@@ -155,7 +155,7 @@ namespace SMLimitless.Physics
         {
             return new
             {
-                points = this.points.Serialize(),
+                points = this.Points.Serialize(),
             };
         }
 
@@ -179,7 +179,7 @@ namespace SMLimitless.Physics
 
             foreach (var point in points)
             {
-                this.points.Add(point.ToVector2());
+                this.Points.Add(point.ToVector2());
             }
         }
     }

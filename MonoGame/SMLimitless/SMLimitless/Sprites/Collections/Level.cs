@@ -23,6 +23,7 @@ namespace SMLimitless.Sprites.Collections
         /// Gets a string placed in all level files indicating
         /// the version of the serializer used to create it.
         /// </summary>
+		[Obsolete]
         public static string SerializerVersion
         {
             get
@@ -34,12 +35,12 @@ namespace SMLimitless.Sprites.Collections
         /// <summary>
         /// A collection of all the level exits in this level.
         /// </summary>
-        private List<LevelExit> levelExits;
+        internal List<LevelExit> LevelExits;
 
         /// <summary>
         /// A collection of all the sections in this level.
         /// </summary>
-        private List<Section> sections;
+        internal List<Section> Sections;
 
         /// <summary>
         /// The section that the player is currently in.
@@ -49,12 +50,12 @@ namespace SMLimitless.Sprites.Collections
         /// <summary>
         /// A collection of all the paths to the content package folders used in this level.
         /// </summary>
-        private List<string> contentFolderPaths;
+        internal List<string> ContentFolderPaths;
 
         /// <summary>
         /// The event script of this level.
         /// </summary>
-        private EventScript eventScript;
+        internal EventScript EventScript;
 
         /// <summary>
         /// Gets the name of the level, which is presented on menu screens.
@@ -76,9 +77,9 @@ namespace SMLimitless.Sprites.Collections
         /// </summary>
         public Level()
         {
-            this.levelExits = new List<LevelExit>();
-            this.sections = new List<Section>();
-            this.eventScript = new EventScript();
+            this.LevelExits = new List<LevelExit>();
+            this.Sections = new List<Section>();
+            this.EventScript = new EventScript();
         }
 
         /// <summary>
@@ -91,7 +92,7 @@ namespace SMLimitless.Sprites.Collections
         /// </summary>
         public void LoadContent() 
         {
-            this.sections.ForEach(s => s.LoadContent());
+            this.Sections.ForEach(s => s.LoadContent());
         }
 
         /// <summary>
@@ -127,10 +128,10 @@ namespace SMLimitless.Sprites.Collections
         /// <returns>An anonymous object containing key objects of this level.</returns>
         public object GetSerializableObjects()
         {
-            List<object> levelExitObjects = new List<object>(this.levelExits.Count);
-            List<object> sectionObjects = new List<object>(this.sections.Count);
-            this.levelExits.ForEach(l => levelExitObjects.Add(l.GetSerializableObjects()));
-            this.sections.ForEach(s => sectionObjects.Add(s.GetSerializableObjects()));
+            List<object> levelExitObjects = new List<object>(this.LevelExits.Count);
+            List<object> sectionObjects = new List<object>(this.Sections.Count);
+            this.LevelExits.ForEach(l => levelExitObjects.Add(l.GetSerializableObjects()));
+            this.Sections.ForEach(s => sectionObjects.Add(s.GetSerializableObjects()));
 
             return new
             {
@@ -140,10 +141,10 @@ namespace SMLimitless.Sprites.Collections
                     name = this.Name,
                     author = this.Author,
                 },
-                contentPackages = this.contentFolderPaths,
+                contentPackages = this.ContentFolderPaths,
                 levelExits = levelExitObjects,
                 sections = sectionObjects,
-                script = this.eventScript.Script
+                script = this.EventScript.Script
             };
         }
 
@@ -173,32 +174,32 @@ namespace SMLimitless.Sprites.Collections
             // Deserialize the root objects first.
             this.Name = (string)obj["header"]["name"];
             this.Author = (string)obj["header"]["author"];
-            this.eventScript.Script = (string)obj["script"];
+            this.EventScript.Script = (string)obj["script"];
 
             // Then deserialize the nested objects.
             JArray contentObjects = (JArray)obj["contentPackages"];
             JArray sectionObjects = (JArray)obj["sections"];
             JArray levelExitObjects = (JArray)obj["levelExits"];
 
-            this.contentFolderPaths = contentObjects.ToObject<List<string>>();
-            Content.ContentPackageManager.AddPackageFromFolder(System.IO.Directory.GetCurrentDirectory() + @"\" + this.contentFolderPaths[0]); // TODO: temporary
+            this.ContentFolderPaths = contentObjects.ToObject<List<string>>();
+            Content.ContentPackageManager.AddPackageFromFolder(System.IO.Directory.GetCurrentDirectory() + @"\" + this.ContentFolderPaths[0]); // TODO: temporary
 
             foreach (var sectionObject in sectionObjects)
             {
                 Section section = new Section(this);
                 section.Initialize();
                 section.Deserialize(sectionObject.ToString());
-                this.sections.Add(section);
+                this.Sections.Add(section);
             }
 
             foreach (var levelExitObject in levelExitObjects)
             {
                 LevelExit levelExit = new LevelExit();
                 levelExit.Deserialize(levelExitObject.ToString());
-                this.levelExits.Add(levelExit);
+                this.LevelExits.Add(levelExit);
             }
 
-            this.activeSection = this.sections.First(s => s.Index == 0);
+            this.activeSection = this.Sections.First(s => s.Index == 0);
         }
     }
 }
