@@ -188,12 +188,14 @@ namespace SMLimitless.IO.LevelSerializers
 
 		public string Serialize(Level level)
 		{
-			return null;
+			return JObject.FromObject(this.GetSerializableObjects(level)).ToString();
 		}
 
 		public Level Deserialize(string json)
 		{
 			return null;
+			// WYLO: Port the deserializer code from the old serializer here.
+			// Also, make sure that you turn those newly-internal fields into properties.
 		}
 	}
 }

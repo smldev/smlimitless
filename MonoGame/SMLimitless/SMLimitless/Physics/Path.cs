@@ -24,7 +24,7 @@ namespace SMLimitless.Physics
         /// <summary>
         /// A collection of the points representing this path.
         /// </summary>
-        private List<Vector2> Points;
+        internal List<Vector2> Points;
 
         /// <summary>
         /// The object currently attached to this path.
