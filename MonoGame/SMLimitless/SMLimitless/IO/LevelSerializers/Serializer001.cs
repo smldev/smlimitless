@@ -7,6 +7,8 @@ using Newtonsoft.Json.Linq;
 using SMLimitless.Extensions;
 using SMLimitless.Interfaces;
 using SMLimitless.Physics;
+using SMLimitless.Sprites;
+using SMLimitless.Sprites.Assemblies;
 using SMLimitless.Sprites.Collections;
 
 namespace SMLimitless.IO.LevelSerializers
@@ -73,6 +75,31 @@ namespace SMLimitless.IO.LevelSerializers
 					layers = this.GetLayerObjects(section),
 					sprites = this.GetSpriteObjects(section),
 					paths = this.GetPathObjects(section)
+				});
+			}
+
+			return result;
+		}
+
+		private object GetSpriteObjects(Section section)
+		{
+			List<object> result = new List<object>(section.Sprites.Count);
+
+			foreach (var sprite in section.Sprites)
+			{
+				result.Add(new
+				{
+					typeName = sprite.GetType().FullName,
+					position = sprite.InitialPosition.Serialize(),
+					isActive = sprite.IsActive,
+					state = (int)sprite.InitialState,
+					collision = (int)sprite.CollisionMode,
+					name = sprite.Name,
+					message = sprite.Message,
+					isHostile = sprite.IsHostile,
+					isMoving = sprite.IsMoving,
+					direction = (int)sprite.Direction,
+					customObjects = sprite.GetCustomSerializableObjects()
 				});
 			}
 
@@ -146,31 +173,6 @@ namespace SMLimitless.IO.LevelSerializers
 			return result;
 		}
 
-		private object GetSpriteObjects(Section section)
-		{
-			List<object> result = new List<object>(section.Sprites.Count);
-
-			foreach (var sprite in section.Sprites)
-			{
-				result.Add(new
-				{
-					typeName = sprite.GetType().FullName,
-					position = sprite.InitialPosition.Serialize(),
-					isActive = sprite.IsActive,
-					state = (int)sprite.InitialState,
-					collision = (int)sprite.CollisionMode,
-					name = sprite.Name,
-					message = sprite.Message,
-					isHostile = sprite.IsHostile,
-					isMoving = sprite.IsMoving,
-					direction = (int)sprite.Direction,
-					customObjects = sprite.GetCustomSerializableObjects()
-				});
-			}
-
-			return result;
-		}
-
 		private object GetPathObjects(Section section)
 		{
 			List<object> result = new List<object>(section.Paths.Count);
@@ -196,6 +198,184 @@ namespace SMLimitless.IO.LevelSerializers
 			return null;
 			// WYLO: Port the deserializer code from the old serializer here.
 			// Also, make sure that you turn those newly-internal fields into properties.
+		}
+
+		private List<LevelExit> DeserializeLevelExits(JArray levelExitObjects)
+		{
+			List<LevelExit> result = new List<LevelExit>();
+
+			foreach (var entry in levelExitObjects)
+			{
+				LevelExit levelExit = new LevelExit();
+				
+				levelExit.ExitIndex = (int)entry["exitIndex"];
+				levelExit.ExitDirection = (Direction)(int)entry["exitDirection"];
+				levelExit.ObjectName = (string)entry["objectName"];
+
+				result.Add(levelExit);
+			}
+
+			return result;
+		}
+
+		private List<Section> DeserializeSections(JArray sectionObjects, Level ownerLevel)
+		{
+			List<Section> result = new List<Section>();
+
+			foreach (var entry in sectionObjects)
+			{
+				Section section = new Section(ownerLevel);
+				section.Initialize();
+
+				section.Index = (int)entry["index"];
+				section.Name = (string)entry["name"];
+				section.Bounds = BoundingRectangle.FromSimpleString((string)entry["bounds"]);
+				section.ScrollType = (CameraScrollType)(int)entry["scrollType"];
+				section.AutoscrollSpeed = entry["autoscrollSpeed"].ToVector2();
+				section.AutoscrollPathName = (string)entry["autoscrollPathName"];
+				section.Background = this.DeserializeBackground((JObject)entry["background"], section);
+			}
+		}
+
+		private Background DeserializeBackground(JObject backgroundObject, Section section)
+		{
+			Background result = new Background(section);
+
+			result.TopColor = backgroundObject["topColor"].ToColor();
+			result.BottomColor = backgroundObject["bottomColor"].ToColor();
+
+			JArray layersData = (JArray)backgroundObject["layers"];
+			result.Layers = this.DeserializeBackgroundLayers(layersData, section.Camera, section.Bounds);
+
+			return result;
+		}
+
+		private List<BackgroundLayer> DeserializeBackgroundLayers(JArray layers, Camera2D camera, BoundingRectangle bounds)
+		{
+			List<BackgroundLayer> result = new List<BackgroundLayer>(layers.Count);
+
+			foreach (var layerData in layers)
+			{
+				BackgroundLayer layer = new BackgroundLayer(camera, bounds);
+
+				string resourceName = (string)layerData["resourceName"];
+				BackgroundScrollDirection direction = (BackgroundScrollDirection)(int)layerData["scrollDirection"];
+				float scrollRate = (float)layerData["scrollRate"];
+
+				layer.BackgroundTextureResourceName = resourceName;
+				layer.ScrollDirection = direction;
+				layer.ScrollRate = scrollRate;
+
+				result.Add(layer);
+			}
+
+			return result;
+		}
+
+		private List<Layer> DeserializeLayers(JArray layerObjects, Section ownerSection)
+		{
+			List<Layer> result = new List<Layer>();
+
+			foreach(var entry in layerObjects)
+			{
+				Layer layer = new Layer(ownerSection);
+
+				layer.Index = (int)entry["index"];
+				layer.Name = (string)entry["name"];
+				layer.IsMainLayer = (bool)entry["isMainLayer"];
+				layer.AnchorPosition = (LayerAnchorPosition)(int)entry["anchorPosition"];
+
+				if (layer.IsMainLayer)
+				{
+					ownerSection.SetMainLayer(layer);
+				}
+
+				JArray tileArray = (JArray)entry["tiles"];
+				var tiles = this.DeserializeTiles(tileArray);
+				foreach (Tile tile in tiles)
+				{
+					tile.Initialize(ownerSection);
+					ownerSection.AddTile(tile);
+
+					if (!layer.IsMainLayer) { layer.Tiles.Add(tile); }
+				}
+
+				result.Add(layer);
+			}
+
+			return result;
+		}
+
+		private List<Tile> DeserializeTiles(JArray tileObjects)
+		{
+			List<Tile> result = new List<Tile>();
+
+			foreach (var entry in tileObjects)
+			{
+				string typeName = (string)entry["typeName"];
+				Tile tile = AssemblyManager.GetTileByFullName(typeName);
+
+				tile.Collision = (TileCollisionType)(int)entry["collision"];
+				tile.Name = (string)entry["name"];
+				tile.GraphicsResourceName = (string)entry["graphicsResourceName"];
+				tile.InitialPosition = entry["position"].ToVector2();
+				tile.Position = tile.InitialPosition;
+				tile.InitialState = (string)entry["state"];
+				tile.State = tile.InitialState;
+				tile.DeserializeCustomObjects(new JsonHelper(entry["customData"]));
+
+				result.Add(tile);
+			}
+
+			return result;
+		}
+
+		private List<Sprite> DeserializeSprites(JArray spriteObjects)
+		{
+			List<Sprite> result = new List<Sprite>();
+
+			foreach (var entry in spriteObjects)
+			{
+				string typeName = (string)entry["typeName"];
+				Sprite sprite = AssemblyManager.GetSpriteByFullName(typeName);
+
+				sprite.InitialPosition = entry["position"].ToVector2();
+				sprite.Position = sprite.InitialPosition;
+				sprite.IsActive = (bool)entry["isActive"];
+				sprite.InitialState = (SpriteState)(int)entry["state"];
+				sprite.State = sprite.InitialState;
+				sprite.CollisionMode = (SpriteCollisionMode)(int)entry["collision"];
+				sprite.Name = (string)entry["name"];
+				sprite.Message = (string)entry["message"];
+				sprite.IsHostile = (bool)entry["isHostile"];
+				sprite.IsMoving = (bool)entry["isMoving"];
+				sprite.Direction = (SpriteDirection)(int)entry["direction"];
+				sprite.DeserializeCustomObjects(new JsonHelper(entry["customObject"]));
+
+				result.Add(sprite);
+			}
+			
+			return result;
+		}
+
+		private List<Path> DeserializePaths(JArray pathObjects)
+		{
+			List<Path> result = new List<Path>();
+
+			foreach (var entry in pathObjects)
+			{
+				Path path = new Path(null);
+
+				JArray points = (JArray)entry["points"];
+				foreach (var point in points)
+				{
+					path.Points.Add(point.ToVector2());
+				}
+
+				result.Add(path);
+			}
+
+			return result;
 		}
 	}
 }

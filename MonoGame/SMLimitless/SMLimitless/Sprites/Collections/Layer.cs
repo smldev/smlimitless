@@ -110,7 +110,7 @@ namespace SMLimitless.Sprites.Collections
         /// <summary>
         /// Gets a number that uniquely identifies this layer.
         /// </summary>
-        public int Index { get; private set; }
+        public int Index { get; internal set; }
 
         /// <summary>
         /// Gets or sets the name of this layer.

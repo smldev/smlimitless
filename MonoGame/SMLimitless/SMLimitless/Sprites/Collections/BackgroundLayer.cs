@@ -57,14 +57,14 @@ namespace SMLimitless.Sprites.Collections
         /// <summary>
         /// Gets the direction that this background layer scrolls.
         /// </summary>
-        public BackgroundScrollDirection ScrollDirection { get; private set; }
+        public BackgroundScrollDirection ScrollDirection { get; internal set; }
 
         /// <summary>
         /// Gets the rate that this background scrolls.
         /// A value of 1 will scroll as fast as the camera.
         /// Values greater or lesser than 1 will scroll faster or slower than the camera, respectively.
         /// </summary>
-        public float ScrollRate { get; private set; }
+        public float ScrollRate { get; internal set; }
 
         /// <summary>
         /// Gets the overall displacement of this layer.
@@ -108,6 +108,7 @@ namespace SMLimitless.Sprites.Collections
         /// </summary>
         public void Initialize()
         {
+			this.backgroundTexture = ContentPackageManager.GetGraphicsResource(this.BackgroundTextureResourceName);
         }
 
         /// <summary>

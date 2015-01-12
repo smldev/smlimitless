@@ -41,7 +41,7 @@ namespace SMLimitless.Sprites.Collections
         /// <summary>
         /// Gets a rectangle representing the bounds of this section.
         /// </summary>
-        public BoundingRectangle Bounds { get; private set; }
+        public BoundingRectangle Bounds { get; internal set; }
 
         /// <summary>
         /// Gets the camera that is used to display a part of the section.
@@ -51,7 +51,7 @@ namespace SMLimitless.Sprites.Collections
         /// <summary>
         /// Gets the method the camera uses to scroll across the section.
         /// </summary>
-        public CameraScrollType ScrollType { get; private set; }
+        public CameraScrollType ScrollType { get; internal set; }
 
         /// <summary>
         /// The backing field for the AutoscrollSpeed property.
@@ -73,7 +73,7 @@ namespace SMLimitless.Sprites.Collections
                 return this.autoscrollSpeed;
             }
 
-            private set
+            internal set
             {
                 if (this.ScrollType != CameraScrollType.AutoScroll)
                 {

@@ -25,12 +25,12 @@ namespace SMLimitless.Sprites.Collections
         /// <summary>
         /// Gets the color at the top of the screen.
         /// </summary>
-        public Color TopColor { get; private set; }
+        public Color TopColor { get; internal set; }
 
         /// <summary>
         /// Gets the color at the bottom of the screen.
         /// </summary>
-        public Color BottomColor { get; private set; }
+        public Color BottomColor { get; internal set; }
 
         /// <summary>
         /// A collection of all the background Layers composing this background.

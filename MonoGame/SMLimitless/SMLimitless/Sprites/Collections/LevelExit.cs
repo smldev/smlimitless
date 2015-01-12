@@ -21,20 +21,20 @@ namespace SMLimitless.Sprites.Collections
         /// Gets the index of the exit.
         /// This starts at 0 for the first exit and increments for each exit after.
         /// </summary>
-        public int ExitIndex { get; private set; }
+        public int ExitIndex { get; internal set; }
 
         /// <summary>
         /// Gets the direction of this exit.
         /// When this exit is cleared, hidden tiles on the world map
         /// will be revealed in this direction.
         /// </summary>
-        public Direction ExitDirection { get; private set; }
+        public Direction ExitDirection { get; internal set; }
 
         /// <summary>
         /// Gets the name of the sprite serving as the exit.
         /// If the sprite has no name, a name will be provided for it.
         /// </summary>
-        public string ObjectName { get; private set; }
+        public string ObjectName { get; internal set; }
 
         /// <summary>
         /// Gets an anonymous object containing key objects of this exit.

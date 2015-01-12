@@ -42,13 +42,13 @@ namespace SMLimitless.Sprites
 		/// <summary>
 		/// Gets the state of this sprite when it was first loaded into the level.
 		/// </summary>
-		public SpriteState InitialState { get; private set; }
+		public SpriteState InitialState { get; internal set; }
 
 		/// <summary>
 		/// Gets or sets a string representing the state of this sprite. Please see
 		/// http://smlimitless.wikia.com/wiki/Sprite_State for more information.
 		/// </summary>
-		public SpriteState State { get; protected set; }
+		public SpriteState State { get; protected internal set; }
 
 		/// <summary>
         /// Gets or sets the section that owns this sprite.
@@ -98,7 +98,7 @@ namespace SMLimitless.Sprites
 		/// <summary>
 		/// Gets or sets the position of this sprite when it was first loaded into the level.
 		/// </summary>
-		public Vector2 InitialPosition { get; protected set; }
+		public Vector2 InitialPosition { get; protected internal set; }
 
 		/// <summary>
 		/// Gets or sets the last position of this sprite.
@@ -148,7 +148,7 @@ namespace SMLimitless.Sprites
         /// Gets or sets the current collision mode of this sprite. Please see the SpriteCollisionMode documentation for
         /// more information.
         /// </summary>
-        public SpriteCollisionMode CollisionMode { get; protected set; }
+        public SpriteCollisionMode CollisionMode { get; protected internal set; }
 
         /// <summary>
         /// Gets a rectangle representing this sprite's hitbox.
