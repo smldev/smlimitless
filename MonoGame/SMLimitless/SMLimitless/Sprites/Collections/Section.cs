@@ -430,6 +430,11 @@ namespace SMLimitless.Sprites.Collections
                 string file = this.Owner.Serialize();
                 System.IO.File.WriteAllText(System.IO.Directory.GetCurrentDirectory() + @"\level.txt", file);
             }
+			else if (Input.InputManager.IsNewKeyPress(Microsoft.Xna.Framework.Input.Keys.N))
+			{
+				string file = new IO.LevelSerializers.Serializer001().Serialize(this.Owner);
+				System.IO.File.WriteAllText(System.IO.Directory.GetCurrentDirectory() + @"\level_new.txt", file);
+			}
         }
 
         /// <summary>

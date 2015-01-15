@@ -146,6 +146,7 @@ namespace SMLimitless.IO.LevelSerializers
 					name = layer.Name,
 					isMainLayer = layer.IsMainLayer,
 					anchorPoint = (layer.AnchorPosition != LayerAnchorPosition.Invalid) ? layer.AnchorPoint.Serialize() : new Vector2(float.NaN, float.NaN).Serialize(),
+					anchorPosition = (int)layer.AnchorPosition,
 					tiles = this.GetTileObjects(layer)
 				});
 			}
@@ -326,7 +327,7 @@ namespace SMLimitless.IO.LevelSerializers
 		{
 			List<Layer> result = new List<Layer>();
 
-			foreach(var entry in layerObjects)
+			foreach (var entry in layerObjects)
 			{
 				Layer layer = new Layer(ownerSection);
 
@@ -367,7 +368,7 @@ namespace SMLimitless.IO.LevelSerializers
 
 				tile.Collision = (TileCollisionType)(int)entry["collisionType"];
 				tile.Name = (string)entry["name"];
-				tile.GraphicsResourceName = (string)entry["graphicsResourceName"];
+				tile.GraphicsResourceName = (string)entry["graphicsResource"];
 				tile.InitialPosition = entry["position"].ToVector2();
 				tile.Position = tile.InitialPosition;
 				tile.InitialState = (string)entry["state"];
