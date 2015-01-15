@@ -75,7 +75,7 @@ namespace SMLimitless.Sprites.Collections
 
             internal set
             {
-                if (this.ScrollType != CameraScrollType.AutoScroll)
+                if (this.ScrollType != CameraScrollType.AutoScroll && !value.IsNaN())
                 {
                     throw new InvalidOperationException("Section.AutoscrollSpeed.set: Section scroll type is not autoscrolling.");
                 }
@@ -104,9 +104,9 @@ namespace SMLimitless.Sprites.Collections
                 return this.autoscrollPathName;
             }
 
-            private set
+            internal set
             {
-                if (this.ScrollType != CameraScrollType.AutoScrollAlongPath)
+                if (this.ScrollType != CameraScrollType.AutoScrollAlongPath && value != null)
                 {
                     throw new InvalidOperationException("Section.AutoscrollPathName.set: Section scroll type is not autoscrolling.");
                 }
@@ -118,7 +118,7 @@ namespace SMLimitless.Sprites.Collections
         /// <summary>
         /// Gets the background of this section.
         /// </summary>
-        public Background Background { get; private set; }
+        public Background Background { get; internal set; }
 
         /// <summary>
         /// Gets the lazy QuadTree for this section.
@@ -164,7 +164,7 @@ namespace SMLimitless.Sprites.Collections
         /// <summary>
         /// A fielded that stores whether the section has loaded from the file.
         /// </summary>
-        private bool isSectionLoaded;
+		internal bool IsSectionLoaded { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Section"/> class.
@@ -190,7 +190,7 @@ namespace SMLimitless.Sprites.Collections
         /// <param name="offset">The distance to move the camera by.</param>
         public void MoveCamera(Vector2 offset)
         {
-            if (!this.isSectionLoaded)
+            if (!this.IsSectionLoaded)
             {
                 throw new InvalidOperationException("Section.MoveCamera(Vector2): The section isn't loaded - the section needs to be loaded before anything can happen.");
             }
@@ -230,6 +230,8 @@ namespace SMLimitless.Sprites.Collections
             if (!this.isInitialized)
             {
                 this.Background.Initialize();
+				this.Layers.ForEach(l => l.Initialize());
+				this.Sprites.ForEach(s => s.Initialize(this));
                 this.isInitialized = true;
             }
         }
@@ -677,7 +679,7 @@ namespace SMLimitless.Sprites.Collections
         /// <param name="json">A valid JSON string.</param>
         public void Deserialize(string json)
         {
-            if (!this.isSectionLoaded)
+            if (!this.IsSectionLoaded)
             {
                 JObject obj = JObject.Parse(json);
 
@@ -720,7 +722,7 @@ namespace SMLimitless.Sprites.Collections
                     this.Paths.Add(path);
                 }
 
-                this.isSectionLoaded = true;
+                this.IsSectionLoaded = true;
             }
         }
     }

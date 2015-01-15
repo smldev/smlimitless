@@ -59,7 +59,7 @@ namespace SMLimitless.Sprites
         /// <summary>
         /// Gets or sets the position of the tile when it was first loaded into the level.
         /// </summary>
-        public Vector2 InitialPosition { get; internal set; }
+        public Vector2 InitialPosition { get; protected internal set; }
 
         /// <summary>
         /// Gets or sets the position of this tile.
@@ -109,7 +109,7 @@ namespace SMLimitless.Sprites
         /// <summary>
         /// Gets or sets the name of the graphics resource used by this tile.
         /// </summary>
-        public string GraphicsResourceName { get; internal set; }
+        public string GraphicsResourceName { get; protected internal set; }
 
 
         /// <summary>

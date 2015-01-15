@@ -67,6 +67,7 @@ namespace SMLimitless.Sprites.Collections
         /// </summary>
         public void Initialize()
         {
+			this.Layers.ForEach(l => l.Initialize());
         }
 
         /// <summary>

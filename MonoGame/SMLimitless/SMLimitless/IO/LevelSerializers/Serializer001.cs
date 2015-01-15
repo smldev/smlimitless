@@ -23,6 +23,7 @@ namespace SMLimitless.IO.LevelSerializers
 			}
 		}
 
+		#region Object Serializers
 		private object GetSerializableObjects(Level level)
 		{
 			return new
@@ -192,12 +193,48 @@ namespace SMLimitless.IO.LevelSerializers
 		{
 			return JObject.FromObject(this.GetSerializableObjects(level)).ToString();
 		}
+		#endregion
 
+		#region Object Deserializers
 		public Level Deserialize(string json)
 		{
-			return null;
-			// WYLO: Port the deserializer code from the old serializer here.
-			// Also, make sure that you turn those newly-internal fields into properties.
+			JObject obj = null;
+			Level result = new Level();
+
+			try
+			{
+				obj = JObject.Parse(json);
+			}
+			catch (Exception ex)
+			{
+				throw new ArgumentException("Serializer001.Deserialize(string): The deserialization process encountered an error.", ex);
+			}
+
+			// Check if the versions match.
+			if ((string)obj["header"]["version"] != this.SerializerVersion)
+			{
+				throw new ArgumentException(string.Format("Level.Deserialize(string): This level was created with a different version of the serializer. Expected {0}, got {1}.", Level.SerializerVersion, (string)obj["header"]["version"]));
+			}
+
+			// Deserialize the root objects first.
+			result.Name = (string)obj["header"]["name"];
+			result.Author = (string)obj["header"]["author"];
+			result.EventScript.Script = (string)obj["script"];
+
+			// Then deserialize the nested objects.
+			JArray contentObjects = (JArray)obj["contentPackages"];
+			JArray sectionObjects = (JArray)obj["sections"];
+			JArray levelExitObjects = (JArray)obj["levelExits"];
+
+			result.ContentFolderPaths = contentObjects.ToObject<List<string>>();
+			Content.ContentPackageManager.AddPackageFromFolder(System.IO.Directory.GetCurrentDirectory() + @"\" + result.ContentFolderPaths[0]); // oh, hardcoded to local dir
+
+			result.Sections = this.DeserializeSections(sectionObjects, result);
+			result.LevelExits = this.DeserializeLevelExits(levelExitObjects);
+			
+			result.ActiveSection = result.Sections.First(s => s.Index == 0);
+
+			return result;
 		}
 
 		private List<LevelExit> DeserializeLevelExits(JArray levelExitObjects)
@@ -225,7 +262,6 @@ namespace SMLimitless.IO.LevelSerializers
 			foreach (var entry in sectionObjects)
 			{
 				Section section = new Section(ownerLevel);
-				section.Initialize();
 
 				section.Index = (int)entry["index"];
 				section.Name = (string)entry["name"];
@@ -234,7 +270,21 @@ namespace SMLimitless.IO.LevelSerializers
 				section.AutoscrollSpeed = entry["autoscrollSpeed"].ToVector2();
 				section.AutoscrollPathName = (string)entry["autoscrollPathName"];
 				section.Background = this.DeserializeBackground((JObject)entry["background"], section);
+
+				JArray layersData = (JArray)entry["layers"];
+				JArray spritesData = (JArray)entry["sprites"];
+				JArray pathsData = (JArray)entry["paths"];
+
+				section.Layers = this.DeserializeLayers(layersData, section);
+				section.Sprites = this.DeserializeSprites(spritesData);
+				section.Paths = this.DeserializePaths(pathsData);
+
+				section.IsSectionLoaded = true;
+
+				result.Add(section);
 			}
+
+			return result;
 		}
 
 		private Background DeserializeBackground(JObject backgroundObject, Section section)
@@ -315,7 +365,7 @@ namespace SMLimitless.IO.LevelSerializers
 				string typeName = (string)entry["typeName"];
 				Tile tile = AssemblyManager.GetTileByFullName(typeName);
 
-				tile.Collision = (TileCollisionType)(int)entry["collision"];
+				tile.Collision = (TileCollisionType)(int)entry["collisionType"];
 				tile.Name = (string)entry["name"];
 				tile.GraphicsResourceName = (string)entry["graphicsResourceName"];
 				tile.InitialPosition = entry["position"].ToVector2();
@@ -377,5 +427,6 @@ namespace SMLimitless.IO.LevelSerializers
 
 			return result;
 		}
+		#endregion
 	}
 }

@@ -45,7 +45,7 @@ namespace SMLimitless.Sprites.Collections
         /// <summary>
         /// The section that the player is currently in.
         /// </summary>
-        private Section activeSection;
+        internal Section ActiveSection { get; set; }
 
         /// <summary>
         /// A collection of all the paths to the content package folders used in this level.
@@ -60,12 +60,12 @@ namespace SMLimitless.Sprites.Collections
         /// <summary>
         /// Gets the name of the level, which is presented on menu screens.
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; internal set; }
 
         /// <summary>
         /// Gets the name of the author who created this level.
         /// </summary>
-        public string Author { get; private set; }
+        public string Author { get; internal set; }
 
         /// <summary>
         /// The acceleration caused by gravity, measured in pixels per second per second.
@@ -85,7 +85,10 @@ namespace SMLimitless.Sprites.Collections
         /// <summary>
         /// Initializes this level.
         /// </summary>
-        public void Initialize() { }
+        public void Initialize() 
+		{ 
+			this.Sections.ForEach(s => s.Initialize());
+		}
 
         /// <summary>
         /// Loads the content of this level.
@@ -100,7 +103,7 @@ namespace SMLimitless.Sprites.Collections
         /// </summary>
         public void Update() 
         {
-            this.activeSection.Update();
+            this.ActiveSection.Update();
         }
 
         /// <summary>
@@ -108,7 +111,7 @@ namespace SMLimitless.Sprites.Collections
         /// </summary>
         public void Draw() 
         {
-            this.activeSection.Draw();
+            this.ActiveSection.Draw();
         }
 
         /// <summary>
@@ -182,7 +185,7 @@ namespace SMLimitless.Sprites.Collections
             JArray levelExitObjects = (JArray)obj["levelExits"];
 
             this.ContentFolderPaths = contentObjects.ToObject<List<string>>();
-            Content.ContentPackageManager.AddPackageFromFolder(System.IO.Directory.GetCurrentDirectory() + @"\" + this.ContentFolderPaths[0]); // TODO: temporary
+            Content.ContentPackageManager.AddPackageFromFolder(System.IO.Directory.GetCurrentDirectory() + @"\" + this.ContentFolderPaths[0]); // TODO: temporary -- how did you want me to change it, past self?
 
             foreach (var sectionObject in sectionObjects)
             {
@@ -199,7 +202,7 @@ namespace SMLimitless.Sprites.Collections
                 this.LevelExits.Add(levelExit);
             }
 
-            this.activeSection = this.Sections.First(s => s.Index == 0);
+            this.ActiveSection = this.Sections.First(s => s.Index == 0);
         }
     }
 }

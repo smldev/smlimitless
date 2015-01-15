@@ -139,6 +139,7 @@ namespace SMLimitless.Sprites.Collections
         /// </summary>
         public void Initialize()
         {
+			this.Tiles.ForEach(t => t.Initialize(this.owner));
         }
 
         /// <summary>
