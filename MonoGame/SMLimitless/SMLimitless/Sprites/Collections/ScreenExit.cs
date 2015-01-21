@@ -19,35 +19,35 @@ namespace SMLimitless.Sprites.Collections
     /// </summary>
     public class ScreenExit : ISerializable
     {
-        /// <summary>
-        /// Gets the index of this exit.
-        /// </summary>
-        public int SectionIndex { get; private set; }
+		/// <summary>
+		/// Gets the position of the destination.
+		/// </summary>
+		public Vector2 DestinationPosition { get; private set; }
 
-        /// <summary>
-        /// Gets the position of this exit in the section.
-        /// </summary>
-        public Vector2 Position { get; private set; }
-        
-        /// <summary>
-        /// Gets the behavior of this exit when the player enters it.
-        /// </summary>
-        public ScreenExitBehavior EntranceBehavior { get; private set; }
+		/// <summary>
+		/// Gets the index of the destination section.
+		/// </summary>
+		public int DestinationSectionIndex { get; private set; }
 
-        /// <summary>
-        /// Gets the index of the destination section.
-        /// </summary>
-        public int DestinationSectionIndex { get; private set; }
+		/// <summary>
+		/// Gets the behavior of this exit when the player enters it.
+		/// </summary>
+		public ScreenExitBehavior EntranceBehavior { get; private set; }
 
-        /// <summary>
-        /// Gets the position of the destination.
-        /// </summary>
-        public Vector2 DestinationPosition { get; private set; }
-
-        /// <summary>
+		/// <summary>
         /// Gets the behavior of the exit when the player leaves it.
         /// </summary>
         public ScreenExitBehavior ExitBehavior { get; private set; }
+
+		/// <summary>
+        /// Gets the position of this exit in the section.
+        /// </summary>
+        public Vector2 Position { get; private set; }
+
+		/// <summary>
+        /// Gets the index of this exit.
+        /// </summary>
+        public int SectionIndex { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ScreenExit"/> class.
@@ -61,20 +61,12 @@ namespace SMLimitless.Sprites.Collections
         {
         }
 
-        /// <summary>
-        /// Returns a JSON string containing key objects of this screen exit.
-        /// </summary>
-        /// <returns>A valid JSON string.</returns>
-        public string Serialize()
-        {
-            return JObject.FromObject(this.GetSerializableObjects()).ToString();
-        }
-
-        /// <summary>
+		/// <summary>
         /// Gets an anonymous object containing key objects of this screen exit.
         /// </summary>
         /// <returns>An anonymous object.</returns>
-        public Object GetSerializableObjects()
+		[Obsolete]
+        public object GetSerializableObjects()
         {
             return new
             {
@@ -88,9 +80,20 @@ namespace SMLimitless.Sprites.Collections
         }
 
         /// <summary>
+        /// Returns a JSON string containing key objects of this screen exit.
+        /// </summary>
+        /// <returns>A valid JSON string.</returns>
+		[Obsolete]
+        public string Serialize()
+        {
+            return JObject.FromObject(this.GetSerializableObjects()).ToString();
+        }
+
+        /// <summary>
         /// Loads a screen exit given a JSON string containing key objects of the exit.
         /// </summary>
         /// <param name="json">A valid JSON string.</param>
+		[Obsolete]
         public void Deserialize(string json)
         {
             JObject obj = JObject.Parse(json);

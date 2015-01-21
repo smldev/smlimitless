@@ -241,7 +241,7 @@ namespace SMLimitless.Physics
             {
                 foreach (Tile tile in this.cells[cell].Tiles)
                 {
-					if (tile.IsExcluded) continue;
+					if (tile.IsExcluded) { continue; }
 
                     if (tile is SlopedTile)
                     {
@@ -490,7 +490,7 @@ namespace SMLimitless.Physics
 
 			if (searchDistance <= 0)
 			{
-				throw new ArgumentException(String.Format("QuadTree.GetCellEnumerator(Vector2, Direction): A search distance of {0} is not valid. Please use a positive number.", searchDistance));
+				throw new ArgumentException(string.Format("QuadTree.GetCellEnumerator(Vector2, Direction): A search distance of {0} is not valid. Please use a positive number.", searchDistance));
 			}
 
 			int distanceRemaining = searchDistance;
@@ -551,7 +551,7 @@ namespace SMLimitless.Physics
 
 			if (searchDistance <= 0)
 			{
-				throw new ArgumentException(String.Format("QuadTree.GetTileIntersectingAARay(Vector2, Direction, int): The search distance was equal to {0}; it must be greater than zero.", searchDistance));
+				throw new ArgumentException(string.Format("QuadTree.GetTileIntersectingAARay(Vector2, Direction, int): The search distance was equal to {0}; it must be greater than zero.", searchDistance));
 			}
 
 			var cellEnumerator = this.GetCellEnumerator(this.GetCellNumberAtPosition(position), direction, searchDistance);

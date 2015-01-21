@@ -25,16 +25,6 @@ namespace SMLimitless.Sprites.Collections
     public sealed class BackgroundLayer : ISerializable
     {
         /// <summary>
-        /// Determines whether the content for this background layer has been loaded.
-        /// </summary>
-        private bool isContentLoaded;
-
-        /// <summary>
-        /// The resource name of the background texture.
-        /// </summary>
-        internal string BackgroundTextureResourceName;
-
-        /// <summary>
         /// The background texture of this layer.
         /// </summary>
         private IGraphicsObject backgroundTexture;
@@ -44,17 +34,37 @@ namespace SMLimitless.Sprites.Collections
         /// </summary>
         private Camera2D camera;
 
-        /// <summary>
-        /// The bounds of the section that this layer is contained within.
+		/// <summary>
+        /// The overall displacement of this layer.
         /// </summary>
-        private BoundingRectangle sectionBounds;
+        private Vector2 delta;
 
-        /// <summary>
+		/// <summary>
         /// The camera's position in the last frame.
         /// </summary>
         private Vector2 oldCameraPosition;
 
         /// <summary>
+        /// The bounds of the section that this layer is contained within.
+        /// </summary>
+        private BoundingRectangle sectionBounds;
+
+		/// <summary>
+        /// The size of the texture in pixels.
+        /// </summary>
+        private Vector2 textureSize;
+
+		/// <summary>
+		/// Determines whether the content for this background layer has been loaded.
+		/// </summary>
+		private bool isContentLoaded;
+
+		/// <summary>
+		/// Gets or sets the resource name of the background texture.
+		/// </summary>
+		internal string BackgroundTextureResourceName { get; set; }
+
+		/// <summary>
         /// Gets the direction that this background layer scrolls.
         /// </summary>
         public BackgroundScrollDirection ScrollDirection { get; internal set; }
@@ -81,16 +91,6 @@ namespace SMLimitless.Sprites.Collections
                 this.delta = value.Mod(this.textureSize);
             }
         }
-
-        /// <summary>
-        /// The size of the texture in pixels.
-        /// </summary>
-        private Vector2 textureSize;
-
-        /// <summary>
-        /// The overall displacement of this layer.
-        /// </summary>
-        private Vector2 delta;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BackgroundLayer"/> class.
@@ -267,6 +267,7 @@ namespace SMLimitless.Sprites.Collections
         /// Returns the serializable objects for this layer.
         /// </summary>
         /// <returns>An anonymous object containing the background texture's resource name, and the layer's scroll direction and rate.</returns>
+		[Obsolete]
         public object GetSerializableObjects()
         {
             return new
@@ -281,6 +282,7 @@ namespace SMLimitless.Sprites.Collections
         /// Returns a JSON string containing this layer.
         /// </summary>
         /// <returns>A JSON string containing this layer.</returns>
+		[Obsolete]
         public string Serialize()
         {
             return JObject.FromObject(this.GetSerializableObjects()).ToString();
@@ -290,6 +292,7 @@ namespace SMLimitless.Sprites.Collections
         /// Loads a background layer, given a JSON string containing a background layer.
         /// </summary>
         /// <param name="json">A valid JSON string.</param>
+		[Obsolete]
         public void Deserialize(string json)
         {
             JObject obj = JObject.Parse(json);

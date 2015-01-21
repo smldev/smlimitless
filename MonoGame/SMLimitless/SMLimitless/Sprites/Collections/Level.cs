@@ -19,7 +19,42 @@ namespace SMLimitless.Sprites.Collections
     /// </summary>
     public sealed class Level
     {
-        /// <summary>
+		/// <summary>
+		/// Gets or sets the section that the player is currently in.
+		/// </summary>
+		internal Section ActiveSection { get; set; }
+
+		/// <summary>
+		/// Gets the name of the author who created this level.
+		/// </summary>
+		public string Author { get; internal set; }
+
+		/// <summary>
+		/// Gets or sets a collection of all the paths to the content package folders used in this level.
+		/// </summary>
+		internal List<string> ContentFolderPaths { get; set; }
+
+		/// <summary>
+		/// Gets or sets the event script of this level.
+		/// </summary>
+		internal EventScript EventScript { get; set; }
+
+		/// <summary>
+		/// Gets or sets a collection of all the level exits in this level.
+        /// </summary>
+		internal List<LevelExit> LevelExits { get; set; }
+
+		/// <summary>
+		/// Gets the name of the level, which is presented on menu screens.
+		/// </summary>
+		public string Name { get; internal set; }
+
+		/// <summary>
+		/// Gets or sets a collection of all the sections in this level.
+        /// </summary>
+		internal List<Section> Sections { get; set; }
+
+		/// <summary>
         /// Gets a string placed in all level files indicating
         /// the version of the serializer used to create it.
         /// </summary>
@@ -31,41 +66,6 @@ namespace SMLimitless.Sprites.Collections
                 return "Version 0.01";
             }
         }
-
-        /// <summary>
-        /// A collection of all the level exits in this level.
-        /// </summary>
-        internal List<LevelExit> LevelExits;
-
-        /// <summary>
-        /// A collection of all the sections in this level.
-        /// </summary>
-        internal List<Section> Sections;
-
-        /// <summary>
-        /// The section that the player is currently in.
-        /// </summary>
-        internal Section ActiveSection { get; set; }
-
-        /// <summary>
-        /// A collection of all the paths to the content package folders used in this level.
-        /// </summary>
-        internal List<string> ContentFolderPaths;
-
-        /// <summary>
-        /// The event script of this level.
-        /// </summary>
-        internal EventScript EventScript;
-
-        /// <summary>
-        /// Gets the name of the level, which is presented on menu screens.
-        /// </summary>
-        public string Name { get; internal set; }
-
-        /// <summary>
-        /// Gets the name of the author who created this level.
-        /// </summary>
-        public string Author { get; internal set; }
 
         /// <summary>
         /// The acceleration caused by gravity, measured in pixels per second per second.
@@ -129,6 +129,7 @@ namespace SMLimitless.Sprites.Collections
         /// Gets an anonymous object containing key objects of this level.
         /// </summary>
         /// <returns>An anonymous object containing key objects of this level.</returns>
+		[Obsolete]
         public object GetSerializableObjects()
         {
             List<object> levelExitObjects = new List<object>(this.LevelExits.Count);
@@ -155,6 +156,7 @@ namespace SMLimitless.Sprites.Collections
         /// Serializes the key objects of this level into a JSON string.
         /// </summary>
         /// <returns>A JSON string containing key objects of this level.</returns>
+		[Obsolete]
         public string Serialize()
         {
             return JObject.FromObject(this.GetSerializableObjects()).ToString();
@@ -164,6 +166,7 @@ namespace SMLimitless.Sprites.Collections
         /// Loads a level given a JSON string containing its key objects.
         /// </summary>
         /// <param name="json">A valid JSON string.</param>
+		[Obsolete]
         public void Deserialize(string json)
         {
             JObject obj = JObject.Parse(json);

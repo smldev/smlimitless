@@ -1,4 +1,9 @@
-﻿using System;
+﻿//-----------------------------------------------------------------------
+// <copyright file="Serializer001.cs" company="The Limitless Development Team">
+//     Copyrighted under the MIT license.
+// </copyright>
+//-----------------------------------------------------------------------
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,8 +18,14 @@ using SMLimitless.Sprites.Collections;
 
 namespace SMLimitless.IO.LevelSerializers
 {
+	/// <summary>
+	/// Serializes and deserializes levels and their objects according to the Version 0.01 specification.
+	/// </summary>
 	internal class Serializer001 : ILevelSerializer
 	{
+		/// <summary>
+		/// Gets the version of level file that this serializer can load and save
+		/// </summary>
 		public string SerializerVersion
 		{
 			get
@@ -24,6 +35,11 @@ namespace SMLimitless.IO.LevelSerializers
 		}
 
 		#region Object Serializers
+		/// <summary>
+		/// Creates an anonymous object that contains all the key serialization objects of a given level.
+		/// </summary>
+		/// <param name="level">The level from which to get the objects.</param>
+		/// <returns>A collection of anonymous objects containing key objects of the level.</returns>
 		private object GetSerializableObjects(Level level)
 		{
 			return new
@@ -41,6 +57,11 @@ namespace SMLimitless.IO.LevelSerializers
 			};
 		}
 
+		/// <summary>
+		/// Creates a collection of anonymous objects that contain all the key serialization objects of the level exits of a given level.
+		/// </summary>
+		/// <param name="level">The level from which to get the level exit objects.</param>
+		/// <returns>A collection of anonymous objects containing key objects of the level exits.</returns>
 		private object GetLevelExitObjects(Level level)
 		{
 			List<object> result = new List<object>(level.LevelExits.Count);
@@ -58,6 +79,11 @@ namespace SMLimitless.IO.LevelSerializers
 			return result;
 		}
 
+		/// <summary>
+		/// Creates a collection of anonymous objects that contains all the key serialization objects of all the sections of a given level.
+		/// </summary>
+		/// <param name="level">The level from which to get the section objects.</param>
+		/// <returns>A collection of anonymous objects containing key objects of the level's sections.</returns>
 		private object GetSectionObjects(Level level)
 		{
 			List<object> result = new List<object>(level.Sections.Count);
@@ -82,6 +108,11 @@ namespace SMLimitless.IO.LevelSerializers
 			return result;
 		}
 
+		/// <summary>
+		/// Creates a collection of anonymous objects that contain all the key serialization objects of all the sprites in a given section.
+		/// </summary>
+		/// <param name="section">The section from which to get the sprite objects.</param>
+		/// <returns>A collection of anonymous objects containing key objects of the sprites.</returns>
 		private object GetSpriteObjects(Section section)
 		{
 			List<object> result = new List<object>(section.Sprites.Count);
@@ -107,6 +138,11 @@ namespace SMLimitless.IO.LevelSerializers
 			return result;
 		}
 
+		/// <summary>
+		/// Creates an anonymous object containing the key serialization objects of a section's background.
+		/// </summary>
+		/// <param name="section">The section from which to get the key objects.</param>
+		/// <returns>An anonymous object containing the background objects.</returns>
 		private object GetBackgroundObject(Section section)
 		{
 			return new
@@ -117,6 +153,11 @@ namespace SMLimitless.IO.LevelSerializers
 			};
 		}
 
+		/// <summary>
+		/// Creates a collection of anonymous objects containing key serialization objects of a given background's layers.
+		/// </summary>
+		/// <param name="background">The background from which to get the layer objects.</param>
+		/// <returns>A collection of anonymous objects containing background layer objects.</returns>
 		private object GetBackgroundLayerObjects(Background background)
 		{
 			List<object> result = new List<object>(background.Layers.Count);
@@ -134,6 +175,11 @@ namespace SMLimitless.IO.LevelSerializers
 			return result;
 		}
 
+		/// <summary>
+		/// Creates a collection of anonymous objects that contain all the key serialization objects of a given section's layers.
+		/// </summary>
+		/// <param name="section">The section from which to get the layer objects.</param>
+		/// <returns>A collection of anonymous objects containing key layer objects.</returns>
 		private object GetLayerObjects(Section section)
 		{
 			List<object> result = new List<object>(section.Layers.Count);
@@ -154,6 +200,11 @@ namespace SMLimitless.IO.LevelSerializers
 			return result;
 		}
 
+		/// <summary>
+		/// Creates a collection of anonymous objects that contain key serialization objects of the tiles of a given layer.
+		/// </summary>
+		/// <param name="layer">The layer from which to get the tile objects.</param>
+		/// <returns>A collection of anonymous objects that contain tile objects.</returns>
 		private object GetTileObjects(Layer layer)
 		{
 			List<object> result = new List<object>(layer.Tiles.Count);
@@ -175,6 +226,11 @@ namespace SMLimitless.IO.LevelSerializers
 			return result;
 		}
 
+		/// <summary>
+		/// Creates a collection of anonymous objects that contain key serialization objects of a section's paths.
+		/// </summary>
+		/// <param name="section">The section from which to get the path objects.</param>
+		/// <returns>A collection of anonymous objects that contains key path objects.</returns>
 		private object GetPathObjects(Section section)
 		{
 			List<object> result = new List<object>(section.Paths.Count);
@@ -190,6 +246,11 @@ namespace SMLimitless.IO.LevelSerializers
 			return result;
 		}
 
+		/// <summary>
+		/// Creates a JSON string containing a given level.
+		/// </summary>
+		/// <param name="level">The level to serialize.</param>
+		/// <returns>A JSON string containing a given level.</returns>
 		public string Serialize(Level level)
 		{
 			return JObject.FromObject(this.GetSerializableObjects(level)).ToString();
@@ -197,6 +258,11 @@ namespace SMLimitless.IO.LevelSerializers
 		#endregion
 
 		#region Object Deserializers
+		/// <summary>
+		/// Creates a level from a JSON string.
+		/// </summary>
+		/// <param name="json">A JSON string containing a level.</param>
+		/// <returns>A level created from the JSON string.</returns>
 		public Level Deserialize(string json)
 		{
 			JObject obj = null;
@@ -238,6 +304,11 @@ namespace SMLimitless.IO.LevelSerializers
 			return result;
 		}
 
+		/// <summary>
+		/// Deserializes level exits for a level.
+		/// </summary>
+		/// <param name="levelExitObjects">An JSON array of level exit objects.</param>
+		/// <returns>A collection of level exits.</returns>
 		private List<LevelExit> DeserializeLevelExits(JArray levelExitObjects)
 		{
 			List<LevelExit> result = new List<LevelExit>();
@@ -256,6 +327,12 @@ namespace SMLimitless.IO.LevelSerializers
 			return result;
 		}
 
+		/// <summary>
+		/// Deserializes sections for a level.
+		/// </summary>
+		/// <param name="sectionObjects">A JSON array of section objects.</param>
+		/// <param name="ownerLevel">The level that owns the sections being deserialized.</param>
+		/// <returns>A collection of sections.</returns>
 		private List<Section> DeserializeSections(JArray sectionObjects, Level ownerLevel)
 		{
 			List<Section> result = new List<Section>();
@@ -288,26 +365,39 @@ namespace SMLimitless.IO.LevelSerializers
 			return result;
 		}
 
-		private Background DeserializeBackground(JObject backgroundObject, Section section)
+		/// <summary>
+		/// Deserializes the background for a section.
+		/// </summary>
+		/// <param name="backgroundObject">A JSON object containing the background objects.</param>
+		/// <param name="ownerSection">The section that owns the background being deserialized.</param>
+		/// <returns>A background.</returns>
+		private Background DeserializeBackground(JObject backgroundObject, Section ownerSection)
 		{
-			Background result = new Background(section);
+			Background result = new Background(ownerSection);
 
 			result.TopColor = backgroundObject["topColor"].ToColor();
 			result.BottomColor = backgroundObject["bottomColor"].ToColor();
 
 			JArray layersData = (JArray)backgroundObject["layers"];
-			result.Layers = this.DeserializeBackgroundLayers(layersData, section.Camera, section.Bounds);
+			result.Layers = this.DeserializeBackgroundLayers(layersData, ownerSection.Camera, ownerSection.Bounds);
 
 			return result;
 		}
 
-		private List<BackgroundLayer> DeserializeBackgroundLayers(JArray layers, Camera2D camera, BoundingRectangle bounds)
+		/// <summary>
+		/// Deserialized the background layers for a background.
+		/// </summary>
+		/// <param name="layers">A JSON array of the background layer objects.</param>
+		/// <param name="ownerCamera">The camera being used in the section.</param>
+		/// <param name="ownerBounds">The size of the bounds of the section.</param>
+		/// <returns>A collection of background layers.</returns>
+		private List<BackgroundLayer> DeserializeBackgroundLayers(JArray layers, Camera2D ownerCamera, BoundingRectangle ownerBounds)
 		{
 			List<BackgroundLayer> result = new List<BackgroundLayer>(layers.Count);
 
 			foreach (var layerData in layers)
 			{
-				BackgroundLayer layer = new BackgroundLayer(camera, bounds);
+				BackgroundLayer layer = new BackgroundLayer(ownerCamera, ownerBounds);
 
 				string resourceName = (string)layerData["resourceName"];
 				BackgroundScrollDirection direction = (BackgroundScrollDirection)(int)layerData["scrollDirection"];
@@ -323,6 +413,12 @@ namespace SMLimitless.IO.LevelSerializers
 			return result;
 		}
 
+		/// <summary>
+		/// Deserializes the layers for a section.
+		/// </summary>
+		/// <param name="layerObjects">A JSON array of layer objects.</param>
+		/// <param name="ownerSection">The section that owns the layers being deserialized.</param>
+		/// <returns>A collection of layers.</returns>
 		private List<Layer> DeserializeLayers(JArray layerObjects, Section ownerSection)
 		{
 			List<Layer> result = new List<Layer>();
@@ -357,6 +453,11 @@ namespace SMLimitless.IO.LevelSerializers
 			return result;
 		}
 
+		/// <summary>
+		/// Deserializes the tiles for a layer.
+		/// </summary>
+		/// <param name="tileObjects">A JSON array of the tile objects.</param>
+		/// <returns>A collection of tiles.</returns>
 		private List<Tile> DeserializeTiles(JArray tileObjects)
 		{
 			List<Tile> result = new List<Tile>();
@@ -381,6 +482,11 @@ namespace SMLimitless.IO.LevelSerializers
 			return result;
 		}
 
+		/// <summary>
+		/// Deserializes the sprites for a section.
+		/// </summary>
+		/// <param name="spriteObjects">A JSON array of the sprite objects.</param>
+		/// <returns>A collection of sprite objects.</returns>
 		private List<Sprite> DeserializeSprites(JArray spriteObjects)
 		{
 			List<Sprite> result = new List<Sprite>();
@@ -409,6 +515,11 @@ namespace SMLimitless.IO.LevelSerializers
 			return result;
 		}
 
+		/// <summary>
+		/// Deserializes the paths for a section.
+		/// </summary>
+		/// <param name="pathObjects">A JSON array of the path objects.</param>
+		/// <returns>A collection of paths.</returns>
 		private List<Path> DeserializePaths(JArray pathObjects)
 		{
 			List<Path> result = new List<Path>();

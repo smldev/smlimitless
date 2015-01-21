@@ -173,6 +173,7 @@ namespace SMLimitless.Extensions
 
 			return (largestSoFar.Y != float.MinValue) ? largestSoFar : Vector2.Zero;
 		}
+
 		/// <summary>
 		/// Returns the vector with the lowest X component, given a collection of vectors.
 		/// </summary>
@@ -212,6 +213,7 @@ namespace SMLimitless.Extensions
 
 			return (smallestSoFar != new Vector2(float.MaxValue)) ? smallestSoFar : Vector2.Zero;
 		}
+
 		/// <summary>
 		/// Parses a string containing a vector value formatted "x,y".
 		/// </summary>
@@ -298,6 +300,7 @@ namespace SMLimitless.Extensions
         {
             return new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y);
         }
+
         /// <summary>
         /// Converts a JToken value into a Vector2.
         /// </summary>
@@ -325,6 +328,7 @@ namespace SMLimitless.Extensions
 
             return new Vector2(x, y);
         }
+
         ////public static bool EqualityWithinEpsilon(this Vector2 a, Vector2 b, float epsilon)
         ////{
         // we have a lot of learning to do before this can work

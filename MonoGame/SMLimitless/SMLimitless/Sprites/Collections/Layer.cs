@@ -22,12 +22,17 @@ namespace SMLimitless.Sprites.Collections
     /// </summary>
     public sealed class Layer : ISerializable
     {
-        /// <summary>
-        /// A value indicating whether this is the main layer for the level.
-        /// </summary>
-		internal bool IsMainLayer { get; set; }
+		/// <summary>
+		/// The backing field for the AnchorPoint property.
+		/// </summary>
+		private Vector2 anchorPointBackingField;
 
-        /// <summary>
+		/// <summary>
+		/// A backing field for the Bounds property.
+		/// </summary>
+		private BoundingRectangle boundsBackingField;
+
+		/// <summary>
         /// A value indicating whether this layer is actively drawn and updated.
         /// </summary>
         private bool isActive;
@@ -36,11 +41,6 @@ namespace SMLimitless.Sprites.Collections
         /// The level that created this layer.
         /// </summary>
         private Section owner;
-
-        /// <summary>
-        /// The collection of tiles in this layer.
-        /// </summary>
-        internal List<Tile> Tiles;
 
         /// <summary>
         /// The collection of sprites in this layer.
@@ -52,60 +52,55 @@ namespace SMLimitless.Sprites.Collections
         /// </summary>
         private Vector2 velocity;
 
-        /// <summary>
-        /// The position of the layer's anchor point.
+		/// <summary>
+		/// Gets or sets the anchor point of the layer.
+		/// The anchor point is used to move the layer.
+		/// </summary>
+		internal Vector2 AnchorPoint
+		{
+			get
+			{
+				return this.anchorPointBackingField;
+			}
+
+			set
+			{
+				if (!this.IsMainLayer)
+				{
+					this.anchorPointBackingField = value;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the position of the layer's anchor point.
         /// </summary>
 		internal LayerAnchorPosition AnchorPosition { get; set; }
-        
-        /// <summary>
-        /// The backing field for the AnchorPoint property.
+
+		/// <summary>
+		/// Gets or sets the bounds of this layer.
+		/// </summary>
+		public BoundingRectangle Bounds
+		{
+			get
+			{
+				return this.boundsBackingField;
+			}
+
+			set
+			{
+				this.boundsBackingField = value;
+				if (!this.IsMainLayer)
+				{
+					this.SetAnchorPoint();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this is the main layer for the level.
         /// </summary>
-        private Vector2 anchorPointBackingField;
-
-        /// <summary>
-        /// Gets or sets the anchor point of the layer.
-        /// The anchor point is used to move the layer.
-        /// </summary>
-        internal Vector2 AnchorPoint
-        {
-            get
-            {
-                return this.anchorPointBackingField;
-            }
-
-            set
-            {
-                if (!this.IsMainLayer)
-                {
-                    this.anchorPointBackingField = value;
-                }            
-            }
-        }
-
-        /// <summary>
-        /// A backing field for the Bounds property.
-        /// </summary>
-        private BoundingRectangle boundsBackingField;
-
-        /// <summary>
-        /// Gets or sets the bounds of this layer.
-        /// </summary>
-        public BoundingRectangle Bounds
-        {
-            get
-            {
-                return this.boundsBackingField;
-            }
-
-            set
-            {
-                this.boundsBackingField = value;
-                if (!this.IsMainLayer)
-                {
-                    this.SetAnchorPoint();
-                }
-            }
-        }
+		internal bool IsMainLayer { get; set; }
 
         /// <summary>
         /// Gets a number that uniquely identifies this layer.
@@ -117,8 +112,13 @@ namespace SMLimitless.Sprites.Collections
         /// </summary>
         [DefaultValue(""), Description("The name of this layer to be used in event scripting. This field is optional.")]
         public string Name { get; set; }
-        
-        /// <summary>
+
+		/// <summary>
+		/// Gets or sets the collection of tiles in this layer.
+		/// </summary>
+		internal List<Tile> Tiles { get; set; }
+
+		/// <summary>
         /// Initializes a new instance of the <see cref="Layer"/> class.
         /// </summary>
         /// <param name="owner">The level that is creating this layer.</param>
@@ -182,78 +182,59 @@ namespace SMLimitless.Sprites.Collections
             this.Bounds.DrawOutline(color);
         }
 
-        /// <summary>
-        /// Sets this layer as the main layer for a level.
-        /// The main layer spans the entire level and has fixed bounds.
-        /// Main layers cannot be moved or translated, and levels may only have one main layer.
-        /// </summary>
-        /// <param name="width">The width of the layer.</param>
-        /// <param name="height">The height of the layer.</param>
-        internal void SetMainLayer(float width, float height)
-        {
-            if (this.owner.MainLayer != null)
-            {
-                throw new InvalidOperationException("Layer.SetMainLayer(float, float): This section already has a main layer.");
-            }
+		/// <summary>
+		/// Adds a tile to this layer.
+		/// This also adjusts the bounds according to the tile's position.
+		/// </summary>
+		/// <param name="tile">The tile to add.</param>
+		public void AddTile(Tile tile)
+		{
+			this.Tiles.Add(tile);
 
-            this.IsMainLayer = true;
-            this.Bounds = new BoundingRectangle(0, 0, width, height);
-            this.AnchorPoint = new Vector2(float.NaN);
-        }
+			if (!this.IsMainLayer)
+			{
+				if (this.Bounds.IsNaN())
+				{
+					// The layer's empty, and has no position.
+					// Let's give it one.
+					this.Bounds = tile.Hitbox.Bounds;
+				}
+				else
+				{
+					this.AdjustBounds(tile);
+				}
+			}
+		}
 
-        /// <summary>
-        /// Adds a tile to this layer.
-        /// This also adjusts the bounds according to the tile's position.
-        /// </summary>
-        /// <param name="tile">The tile to add.</param>
-        public void AddTile(Tile tile)
-        {
-            this.Tiles.Add(tile);
+		/// <summary>
+		/// Adjusts the bounds of this layer to include a given tile.
+		/// </summary>
+		/// <param name="tile">The tile to expand the bounds around.</param>
+		private void AdjustBounds(Tile tile)
+		{
+			float tileLeft = tile.Hitbox.Bounds.Left;
+			float tileRight = tile.Hitbox.Bounds.Right;
+			float tileTop = tile.Hitbox.Bounds.Top;
+			float tileBottom = tile.Hitbox.Bounds.Bottom;
 
-            if (!this.IsMainLayer)
-            {
-                if (this.Bounds.IsNaN())
-                {
-                    // The layer's empty, and has no position.
-                    // Let's give it one.
-                    this.Bounds = tile.Hitbox.Bounds;
-                }
-                else
-                {
-                    this.AdjustBounds(tile);
-                }
-            }
-        }
-        
-        /// <summary>
-        /// Adjusts the bounds of this layer to include a given tile.
-        /// </summary>
-        /// <param name="tile">The tile to expand the bounds around.</param>
-        private void AdjustBounds(Tile tile)
-        {
-            float tileLeft = tile.Hitbox.Bounds.Left;
-            float tileRight = tile.Hitbox.Bounds.Right;
-            float tileTop = tile.Hitbox.Bounds.Top;
-            float tileBottom = tile.Hitbox.Bounds.Bottom;
+			if (tileLeft < this.Bounds.Left)
+			{
+				this.Bounds = new BoundingRectangle(tileLeft, this.Bounds.Y, this.Bounds.Right - tileLeft, this.Bounds.Height);
+			}
+			else if (tileRight > this.Bounds.Right)
+			{
+				this.Bounds = new BoundingRectangle(this.Bounds.X, this.Bounds.Y, tileRight - this.Bounds.Left, this.Bounds.Height);
+			}
 
-            if (tileLeft < this.Bounds.Left)
-            {
-                this.Bounds = new BoundingRectangle(tileLeft, this.Bounds.Y, this.Bounds.Right - tileLeft, this.Bounds.Height);
-            }
-            else if (tileRight > this.Bounds.Right)
-            {
-                this.Bounds = new BoundingRectangle(this.Bounds.X, this.Bounds.Y, tileRight - this.Bounds.Left, this.Bounds.Height);
-            }
-
-            if (tileTop < this.Bounds.Top)
-            {
-                this.Bounds = new BoundingRectangle(this.Bounds.X, tileTop, this.Bounds.Width, this.Bounds.Bottom - tileTop);
-            }
-            else if (tileBottom > this.Bounds.Bottom)
-            {
-                this.Bounds = new BoundingRectangle(this.Bounds.X, this.Bounds.Y, this.Bounds.Width, tileBottom - this.Bounds.Top);
-            }
-        }
+			if (tileTop < this.Bounds.Top)
+			{
+				this.Bounds = new BoundingRectangle(this.Bounds.X, tileTop, this.Bounds.Width, this.Bounds.Bottom - tileTop);
+			}
+			else if (tileBottom > this.Bounds.Bottom)
+			{
+				this.Bounds = new BoundingRectangle(this.Bounds.X, this.Bounds.Y, this.Bounds.Width, tileBottom - this.Bounds.Top);
+			}
+		}
 
         /// <summary>
         /// Removes a tile from this level.
@@ -284,6 +265,71 @@ namespace SMLimitless.Sprites.Collections
                     }
                 }
             }
+        }
+
+		/// <summary>
+		/// Sets the anchor point.
+		/// </summary>
+		private void SetAnchorPoint()
+		{
+			if (this.Bounds.IsNaN())
+			{
+				this.AnchorPoint = new Vector2(float.NaN);
+			}
+
+			switch (this.AnchorPosition)
+			{
+				case LayerAnchorPosition.Invalid:
+					break;
+				case LayerAnchorPosition.TopLeft:
+					this.AnchorPoint = new Vector2(this.Bounds.Left, this.Bounds.Top);
+					break;
+				case LayerAnchorPosition.TopRight:
+					this.AnchorPoint = new Vector2(this.Bounds.Right, this.Bounds.Top);
+					break;
+				case LayerAnchorPosition.BottomLeft:
+					this.AnchorPoint = new Vector2(this.Bounds.Left, this.Bounds.Bottom);
+					break;
+				case LayerAnchorPosition.BottomRight:
+					this.AnchorPoint = new Vector2(this.Bounds.Right, this.Bounds.Bottom);
+					break;
+				case LayerAnchorPosition.TopCenter:
+					this.AnchorPoint = this.Bounds.TopCenter;
+					break;
+				case LayerAnchorPosition.BottomCenter:
+					this.AnchorPoint = this.Bounds.BottomCenter;
+					break;
+				case LayerAnchorPosition.LeftCenter:
+					this.AnchorPoint = this.Bounds.LeftCenter;
+					break;
+				case LayerAnchorPosition.RightCenter:
+					this.AnchorPoint = this.Bounds.RightCenter;
+					break;
+				case LayerAnchorPosition.Center:
+					this.AnchorPoint = this.Bounds.Center;
+					break;
+				default:
+					break;
+			}
+		}
+
+		/// <summary>
+        /// Sets this layer as the main layer for a level.
+        /// The main layer spans the entire level and has fixed bounds.
+        /// Main layers cannot be moved or translated, and levels may only have one main layer.
+        /// </summary>
+        /// <param name="width">The width of the layer.</param>
+        /// <param name="height">The height of the layer.</param>
+        internal void SetMainLayer(float width, float height)
+        {
+            if (this.owner.MainLayer != null)
+            {
+                throw new InvalidOperationException("Layer.SetMainLayer(float, float): This section already has a main layer.");
+            }
+
+            this.IsMainLayer = true;
+            this.Bounds = new BoundingRectangle(0, 0, width, height);
+            this.AnchorPoint = new Vector2(float.NaN);
         }
 
         /// <summary>
@@ -331,55 +377,10 @@ namespace SMLimitless.Sprites.Collections
         }
 
         /// <summary>
-        /// Sets the anchor point.
-        /// </summary>
-        private void SetAnchorPoint()
-        {
-            if (this.Bounds.IsNaN())
-            {
-                this.AnchorPoint = new Vector2(float.NaN);
-            }
-
-            switch (this.AnchorPosition)
-            {
-                case LayerAnchorPosition.Invalid:
-                    break;
-                case LayerAnchorPosition.TopLeft:
-                    this.AnchorPoint = new Vector2(this.Bounds.Left, this.Bounds.Top);
-                    break;
-                case LayerAnchorPosition.TopRight:
-                    this.AnchorPoint = new Vector2(this.Bounds.Right, this.Bounds.Top);
-                    break;
-                case LayerAnchorPosition.BottomLeft:
-                    this.AnchorPoint = new Vector2(this.Bounds.Left, this.Bounds.Bottom);
-                    break;
-                case LayerAnchorPosition.BottomRight:
-                    this.AnchorPoint = new Vector2(this.Bounds.Right, this.Bounds.Bottom);
-                    break;
-                case LayerAnchorPosition.TopCenter:
-                    this.AnchorPoint = this.Bounds.TopCenter;
-                    break;
-                case LayerAnchorPosition.BottomCenter:
-                    this.AnchorPoint = this.Bounds.BottomCenter;
-                    break;
-                case LayerAnchorPosition.LeftCenter:
-                    this.AnchorPoint = this.Bounds.LeftCenter;
-                    break;
-                case LayerAnchorPosition.RightCenter:
-                    this.AnchorPoint = this.Bounds.RightCenter;
-                    break;
-                case LayerAnchorPosition.Center:
-                    this.AnchorPoint = this.Bounds.Center;
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        /// <summary>
         /// Gets an anonymous object containing key objects of this layer.
         /// </summary>
         /// <returns>An anonymous object containing key objects of this layer.</returns>
+		[Obsolete]
         public object GetSerializableObjects()
         {
             List<object> tileObjects = new List<object>(this.Tiles.Count);
@@ -400,6 +401,7 @@ namespace SMLimitless.Sprites.Collections
         /// Serializes the objects of this layer into a JSON string.
         /// </summary>
         /// <returns>A JSON string containing the key objects of this layer.</returns>
+		[Obsolete]
         public string Serialize()
         {
             return JObject.FromObject(this.GetSerializableObjects()).ToString();
@@ -409,6 +411,7 @@ namespace SMLimitless.Sprites.Collections
         /// Loads a layer from a JSON object containing key objects of a layer.
         /// </summary>
         /// <param name="json">A valid JSON string.</param>
+		[Obsolete]
         public void Deserialize(string json)
         {
             JObject obj = JObject.Parse(json);

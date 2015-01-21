@@ -33,6 +33,7 @@ namespace SMLimitless.Sprites.Collections
         /// Returns an anonymous object containing key objects of this script.
         /// </summary>
         /// <returns>An anonymous object containing the script.</returns>
+		[Obsolete]
         public object GetSerializableObjects()
         {
             return new
@@ -45,6 +46,7 @@ namespace SMLimitless.Sprites.Collections
         /// Returns a JSON string from the key objects of this script.
         /// </summary>
         /// <returns>A JSON string containing this script.</returns>
+		[Obsolete]
         public string Serialize()
         {
             return JObject.FromObject(this.GetSerializableObjects()).ToString();
@@ -54,6 +56,7 @@ namespace SMLimitless.Sprites.Collections
         /// Loads a script, given a JSON string containing a script.
         /// </summary>
         /// <param name="json">A valid JSON string.</param>
+		[Obsolete]
         public void Deserialize(string json)
         {
             JObject obj = JObject.Parse(json);

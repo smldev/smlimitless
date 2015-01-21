@@ -26,6 +26,9 @@ namespace SMLimitless.Sprites
         /// </summary>
         private Vector2 position;
 
+		/// <summary>
+		/// A backing field for the Velocity property.
+		/// </summary>
         private Vector2 velocity;
 
 		/// <summary>
@@ -68,7 +71,7 @@ namespace SMLimitless.Sprites
 		public bool IsEmbedded { get; set; }
 
 		/// <summary>
-		/// Gets a value indicating whether this sprite is on the ground.
+		/// Gets or sets a value indicating whether this sprite is on the ground.
 		/// </summary>
 		public bool IsOnGround { get; set; }
 
@@ -185,7 +188,7 @@ namespace SMLimitless.Sprites
         }
 
         /// <summary>
-        /// Gets or sets the sloped tile that this sprite is resting on top of.
+        /// Gets the sloped tile that this sprite is resting on top of.
         /// </summary>
         public SlopedTile RestingSlope
         {

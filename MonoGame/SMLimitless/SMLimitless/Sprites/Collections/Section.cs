@@ -21,148 +21,151 @@ namespace SMLimitless.Sprites.Collections
     /// </summary>
     public sealed class Section : ISerializable
     {
-        private string debugText = "";
+		/// <summary>
+		/// The backing field for the AutoscrollSpeed property.
+		/// </summary>
+		private Vector2 autoscrollSpeed;
 
-        /// <summary>
-        /// Gets a reference to the level that contains this section.
-        /// </summary>
-        public Level Owner { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the index number of this section.
-        /// </summary>
-        public int Index { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name of this section, or the empty string if there is no name.
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Gets a rectangle representing the bounds of this section.
-        /// </summary>
-        public BoundingRectangle Bounds { get; internal set; }
-
-        /// <summary>
-        /// Gets the camera that is used to display a part of the section.
-        /// </summary>
-        public Camera2D Camera { get; private set; }
-
-        /// <summary>
-        /// Gets the method the camera uses to scroll across the section.
-        /// </summary>
-        public CameraScrollType ScrollType { get; internal set; }
-
-        /// <summary>
-        /// The backing field for the AutoscrollSpeed property.
-        /// </summary>
-        private Vector2 autoscrollSpeed;
-
-        /// <summary>
-        /// Gets the speed at which the camera is autoscrolling through the level.
-        /// </summary>
-        public Vector2 AutoscrollSpeed
-        {
-            get
-            {
-                if (this.ScrollType != CameraScrollType.AutoScroll)
-                {
-                    throw new InvalidOperationException("Section.AutoscrollSpeed.get: Section scroll type is not autoscrolling.");
-                }
-
-                return this.autoscrollSpeed;
-            }
-
-            internal set
-            {
-                if (this.ScrollType != CameraScrollType.AutoScroll && !value.IsNaN())
-                {
-                    throw new InvalidOperationException("Section.AutoscrollSpeed.set: Section scroll type is not autoscrolling.");
-                }
-
-                this.autoscrollSpeed = value;
-            }
-        }
-
-        /// <summary>
+		/// <summary>
         /// The backing field for the AutoscrollPathName property.
         /// </summary>
         private string autoscrollPathName;
 
-        /// <summary>
-        /// Gets the name of the path that the camera is following.
-        /// </summary>
-        public string AutoscrollPathName
-        {
-            get
-            {
-                if (this.ScrollType != CameraScrollType.AutoScrollAlongPath)
-                {
-                    throw new InvalidOperationException("Section.AutoscrollPathName.get: Section scroll type is not autoscrolling.");
-                }
+		/// <summary>
+		/// Text to draw onscreen. Use to diagnose/debug stuff.
+		/// </summary>
+		private string debugText = "";
 
-                return this.autoscrollPathName;
-            }
-
-            internal set
-            {
-                if (this.ScrollType != CameraScrollType.AutoScrollAlongPath && value != null)
-                {
-                    throw new InvalidOperationException("Section.AutoscrollPathName.set: Section scroll type is not autoscrolling.");
-                }
-
-                this.autoscrollPathName = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets the background of this section.
-        /// </summary>
-        public Background Background { get; internal set; }
-
-        /// <summary>
-        /// Gets the lazy QuadTree for this section.
-        /// </summary>
-        public QuadTree QuadTree { get; private set; }
-
-        /// <summary>
-        /// Gets the main layer of this section.
-        /// </summary>
-        internal Layer MainLayer { get; private set; }
-
-        /// <summary>
-        /// A collection of all the layers in this section.
-        /// </summary>
-        internal List<Layer> Layers;
-
-        /// <summary>
+		/// <summary>
         /// A list of all tiles in this section.
         /// </summary>
         /// <remarks>This list is a reflection of all the layers' tile lists.</remarks>
         private List<Tile> tiles;
 
-        /// <summary>
-        /// A collection of all the sprites in this section.
-        /// </summary>
-        internal List<Sprite> Sprites;
-
-        /// <summary>
-        /// A collection of all the paths in this section.
-        /// </summary>
-        internal List<Path> Paths;
-
-        /// <summary>
+		/// <summary>
         /// A field that stores whether the section has been initialized.
         /// </summary>
         private bool isInitialized;
 
-        /// <summary>
-        /// A field that stores whether the content for this section has been loaded.
+		/// <summary>
+		/// A field that stores whether the content for this section has been loaded.
+		/// </summary>
+		private bool isContentLoaded;
+
+		/// <summary>
+		/// Gets the name of the path that the camera is following.
+		/// </summary>
+		public string AutoscrollPathName
+		{
+			get
+			{
+				if (this.ScrollType != CameraScrollType.AutoScrollAlongPath)
+				{
+					throw new InvalidOperationException("Section.AutoscrollPathName.get: Section scroll type is not autoscrolling.");
+				}
+
+				return this.autoscrollPathName;
+			}
+
+			internal set
+			{
+				if (this.ScrollType != CameraScrollType.AutoScrollAlongPath && value != null)
+				{
+					throw new InvalidOperationException("Section.AutoscrollPathName.set: Section scroll type is not autoscrolling.");
+				}
+
+				this.autoscrollPathName = value;
+			}
+		}
+
+		/// <summary>
+		/// Gets the speed at which the camera is autoscrolling through the level.
+		/// </summary>
+		public Vector2 AutoscrollSpeed
+		{
+			get
+			{
+				if (this.ScrollType != CameraScrollType.AutoScroll)
+				{
+					throw new InvalidOperationException("Section.AutoscrollSpeed.get: Section scroll type is not autoscrolling.");
+				}
+
+				return this.autoscrollSpeed;
+			}
+
+			internal set
+			{
+				if (this.ScrollType != CameraScrollType.AutoScroll && !value.IsNaN())
+				{
+					throw new InvalidOperationException("Section.AutoscrollSpeed.set: Section scroll type is not autoscrolling.");
+				}
+
+				this.autoscrollSpeed = value;
+			}
+		}
+
+		/// <summary>
+		/// Gets the background of this section.
+		/// </summary>
+		public Background Background { get; internal set; }
+
+		/// <summary>
+        /// Gets a rectangle representing the bounds of this section.
         /// </summary>
-        private bool isContentLoaded;
+        public BoundingRectangle Bounds { get; internal set; }
+
+		/// <summary>
+		/// Gets the camera that is used to display a part of the section.
+		/// </summary>
+		public Camera2D Camera { get; private set; }
+
+		/// <summary>
+        /// Gets or sets the index number of this section.
+        /// </summary>
+        public int Index { get; set; }
+
+		/// <summary>
+		/// Gets or sets a collection of all the layers in this section.
+		/// </summary>
+		internal List<Layer> Layers { get; set; }
+
+		/// <summary>
+		/// Gets the main layer of this section.
+		/// </summary>
+		internal Layer MainLayer { get; private set; }
+
+		/// <summary>
+        /// Gets a reference to the level that contains this section.
+        /// </summary>
+        public Level Owner { get; private set; }
+
+		/// <summary>
+		/// Gets or sets a collection of all the paths in this section.
+		/// </summary>
+		internal List<Path> Paths { get; set; }
+
+		/// <summary>
+        /// Gets or sets the name of this section, or the empty string if there is no name.
+        /// </summary>
+        public string Name { get; set; }
+
+		/// <summary>
+		/// Gets the lazy QuadTree for this section.
+		/// </summary>
+		public QuadTree QuadTree { get; private set; }
+
+		/// <summary>
+        /// Gets the method the camera uses to scroll across the section.
+        /// </summary>
+        public CameraScrollType ScrollType { get; internal set; }
 
         /// <summary>
-        /// A fielded that stores whether the section has loaded from the file.
+		/// Gets or sets a collection of all the sprites in this section.
+        /// </summary>
+		internal List<Sprite> Sprites { get; set; }
+
+        /// <summary>
+		/// Gets or sets a value indicating whether the section has loaded from the file.
         /// </summary>
 		internal bool IsSectionLoaded { get; set; }
 
@@ -182,44 +185,6 @@ namespace SMLimitless.Sprites.Collections
             this.Background = new Background(this);
 
             GameServices.Camera = this.Camera;
-        }
-
-        /// <summary>
-        /// Moves the camera by a given distance.
-        /// </summary>
-        /// <param name="offset">The distance to move the camera by.</param>
-        public void MoveCamera(Vector2 offset)
-        {
-            if (!this.IsSectionLoaded)
-            {
-                throw new InvalidOperationException("Section.MoveCamera(Vector2): The section isn't loaded - the section needs to be loaded before anything can happen.");
-            }
-
-            // Ensure the camera falls within bounds.
-            Vector2 newPosition = this.Camera.Position + offset;
-
-            if (newPosition.X < 0f)
-            {
-                newPosition.X = 0f;
-            }
-
-            if (newPosition.Y < 0f)
-            {
-                newPosition.Y = 0f;
-            }
-
-            Vector2 viewportBottomRight = new Vector2(newPosition.X + this.Camera.ViewportSize.X, newPosition.Y + this.Camera.ViewportSize.Y);
-            if (viewportBottomRight.X > this.Bounds.Right)
-            {
-                newPosition.X -= viewportBottomRight.X - this.Bounds.Right;
-            }
-
-            if (viewportBottomRight.Y > this.Bounds.Bottom)
-            {
-                newPosition.Y -= viewportBottomRight.Y - this.Bounds.Bottom;
-            }
-
-            this.Camera.Position = newPosition;
         }
 
         /// <summary>
@@ -298,6 +263,7 @@ namespace SMLimitless.Sprites.Collections
 							Vector2 checkPoint = (resolutionDistance.X < 0) ? tile.Hitbox.Bounds.LeftCenter : tile.Hitbox.Bounds.RightCenter;
 							checkPoint.X += (resolutionDistance.X < 0) ? -1f : 1f;		// cast it out one pixel in the side's direction
 							Tile adjacentTile = this.GetTileAtPositionByBounds(checkPoint, adjacentPointsAreWithin: true);
+
 							// TODO: add a check that checks if the adjacent edges are actually solid
 
 							if (this.ResolveHorizontalCollision(sprite, tile) && adjacentTile == null)
@@ -519,7 +485,7 @@ namespace SMLimitless.Sprites.Collections
             }
         }
 
-        /// <summary>
+		/// <summary>
         /// Gets the tile at the given position.
         /// </summary>
         /// <param name="position">The position from which to get the tile.</param>
@@ -545,6 +511,12 @@ namespace SMLimitless.Sprites.Collections
             return null;
         }
 
+		/// <summary>
+		/// Gets a tile at a given position by the tile's bounds.
+		/// </summary>
+		/// <param name="position">The position for which to get the tile.</param>
+		/// <param name="adjacentPointsAreWithin">A field that indicates whether positions that lie directly on the tile's edges count as within the tile.</param>
+		/// <returns>The first tile at the position, or null if there is no tile.</returns>
         public Tile GetTileAtPositionByBounds(Vector2 position, bool adjacentPointsAreWithin)
         {
             var tiles = this.QuadTree.GetTilesInCell(this.QuadTree.GetCellNumberAtPosition(position));
@@ -565,19 +537,43 @@ namespace SMLimitless.Sprites.Collections
             return null;
         }
 
-        /// <summary>
-        /// Sets a given layer as the main layer.
-        /// </summary>
-        /// <param name="layer">The layer to set.</param>
-        public void SetMainLayer(Layer layer)
-        {
-            if (this.MainLayer != null)
-            {
-                throw new InvalidOperationException("Section.SetMainLayer(Layer): A layer tried to set itself as this section's main layer, but this section already has a main layer.");
-            }
+		/// <summary>
+		/// Moves the camera by a given distance.
+		/// </summary>
+		/// <param name="offset">The distance to move the camera by.</param>
+		public void MoveCamera(Vector2 offset)
+		{
+			if (!this.IsSectionLoaded)
+			{
+				throw new InvalidOperationException("Section.MoveCamera(Vector2): The section isn't loaded - the section needs to be loaded before anything can happen.");
+			}
 
-            this.MainLayer = layer;
-        }
+			// Ensure the camera falls within bounds.
+			Vector2 newPosition = this.Camera.Position + offset;
+
+			if (newPosition.X < 0f)
+			{
+				newPosition.X = 0f;
+			}
+
+			if (newPosition.Y < 0f)
+			{
+				newPosition.Y = 0f;
+			}
+
+			Vector2 viewportBottomRight = new Vector2(newPosition.X + this.Camera.ViewportSize.X, newPosition.Y + this.Camera.ViewportSize.Y);
+			if (viewportBottomRight.X > this.Bounds.Right)
+			{
+				newPosition.X -= viewportBottomRight.X - this.Bounds.Right;
+			}
+
+			if (viewportBottomRight.Y > this.Bounds.Bottom)
+			{
+				newPosition.Y -= viewportBottomRight.Y - this.Bounds.Bottom;
+			}
+
+			this.Camera.Position = newPosition;
+		}
 
         /// <summary>
         /// Determines if a sprite should follow the terrain or resolve vertical collisions.
@@ -641,10 +637,25 @@ namespace SMLimitless.Sprites.Collections
             return false;
         }
 
+		/// <summary>
+        /// Sets a given layer as the main layer.
+        /// </summary>
+        /// <param name="layer">The layer to set.</param>
+        public void SetMainLayer(Layer layer)
+        {
+            if (this.MainLayer != null)
+            {
+                throw new InvalidOperationException("Section.SetMainLayer(Layer): A layer tried to set itself as this section's main layer, but this section already has a main layer.");
+            }
+
+            this.MainLayer = layer;
+        }
+
         /// <summary>
         /// Gets an anonymous object containing key objects of this section.
         /// </summary>
         /// <returns>An anonymous object.</returns>
+		[Obsolete]
         public object GetSerializableObjects()
         {
             List<object> layerObjects = new List<object>(this.Layers.Count);
@@ -673,6 +684,7 @@ namespace SMLimitless.Sprites.Collections
         /// Returns a JSON string containing key objects of this section.
         /// </summary>
         /// <returns>A valid JSON string.</returns>
+		[Obsolete]
         public string Serialize()
         {
             return JObject.FromObject(this.GetSerializableObjects()).ToString();
@@ -682,6 +694,7 @@ namespace SMLimitless.Sprites.Collections
         /// Loads a section from a JSON string containing a section.
         /// </summary>
         /// <param name="json">A valid JSON string.</param>
+		[Obsolete]
         public void Deserialize(string json)
         {
             if (!this.IsSectionLoaded)

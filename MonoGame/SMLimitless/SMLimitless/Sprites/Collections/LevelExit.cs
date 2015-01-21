@@ -18,20 +18,20 @@ namespace SMLimitless.Sprites.Collections
     internal sealed class LevelExit : ISerializable
     {
         /// <summary>
-        /// Gets the index of the exit.
+        /// Gets or sets the index of the exit.
         /// This starts at 0 for the first exit and increments for each exit after.
         /// </summary>
         public int ExitIndex { get; internal set; }
 
         /// <summary>
-        /// Gets the direction of this exit.
+        /// Gets or sets the direction of this exit.
         /// When this exit is cleared, hidden tiles on the world map
         /// will be revealed in this direction.
         /// </summary>
         public Direction ExitDirection { get; internal set; }
 
         /// <summary>
-        /// Gets the name of the sprite serving as the exit.
+        /// Gets or sets the name of the sprite serving as the exit.
         /// If the sprite has no name, a name will be provided for it.
         /// </summary>
         public string ObjectName { get; internal set; }
@@ -40,6 +40,7 @@ namespace SMLimitless.Sprites.Collections
         /// Gets an anonymous object containing key objects of this exit.
         /// </summary>
         /// <returns>An anonymous object containing key objects of this exit.</returns>
+		[Obsolete]
         public object GetSerializableObjects()
         {
             return new
@@ -54,6 +55,7 @@ namespace SMLimitless.Sprites.Collections
         /// Creates a JSON string from the key objects of this exit.
         /// </summary>
         /// <returns>A valid JSON string.</returns>
+		[Obsolete]
         public string Serialize()
         {
             return JObject.FromObject(this.GetSerializableObjects()).ToString();
@@ -63,6 +65,7 @@ namespace SMLimitless.Sprites.Collections
         /// Loads a level exit, given a JSON string containing key objects of the exit.
         /// </summary>
         /// <param name="json">A valid JSON string.</param>
+		[Obsolete]
         public void Deserialize(string json)
         {
             JObject obj = JObject.Parse(json);

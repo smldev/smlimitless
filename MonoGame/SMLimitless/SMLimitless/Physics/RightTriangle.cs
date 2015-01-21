@@ -405,9 +405,9 @@ namespace SMLimitless.Physics
 		public int AboveOrBelowSlopeLine(Vector2 point)
 		{
 			float slopeIntersect = this.GetPointOnLine(point.X).Y;
-			if (slopeIntersect < point.Y) return -1;
-			else if (slopeIntersect > point.Y) return 1;
-			else return 0;
+			if (slopeIntersect < point.Y) { return -1; }
+			else if (slopeIntersect > point.Y) { return 1; }
+			else { return 0; }
 		}
 
         /// <summary>

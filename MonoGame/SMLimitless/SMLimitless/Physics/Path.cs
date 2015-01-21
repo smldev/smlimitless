@@ -22,17 +22,17 @@ namespace SMLimitless.Physics
     public sealed class Path : ISerializable
     {
         /// <summary>
-        /// A collection of the points representing this path.
-        /// </summary>
-        internal List<Vector2> Points;
-
-        /// <summary>
         /// The object currently attached to this path.
         /// This contains a null reference if no object is attached.
         /// </summary>
         private IPositionable pathingObject;
 
-        /// <summary>
+		/// <summary>
+		/// Gets or sets a collection of the points representing this path.
+		/// </summary>
+		internal List<Vector2> Points { get; set; }
+
+		/// <summary>
         /// An event notifying an attached object that it has reached
         /// one of the points and should change its velocity to continue
         /// along the path.
