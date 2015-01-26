@@ -377,7 +377,7 @@ namespace SMLimitless.IO
         {
             if (!(sectionName.StartsWith("[") && sectionName.EndsWith("]")))
             {
-                string.Concat("[", sectionName, "]");
+                sectionName = string.Concat("[", sectionName, "]");
             }
 
             return sectionName;

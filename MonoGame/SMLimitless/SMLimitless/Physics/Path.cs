@@ -65,7 +65,7 @@ namespace SMLimitless.Physics
             // Between any two points there is an angle. This angle can be used to derive the translated velocity of the object.
             // Given two points, a and b, the first step is to determine where b is in relation to a.
             // If b is to the right of a, the translated velocity's X component will be positive; if b is to the left of a, it'll be negative.
-            // Likewise for the Y component - if b is above a, the component is negative, if b is below a, the component is positive.
+            // Likewise for the Y component - if b is above a, the component is negative; if b is below a, the component is positive.
             // The translated velocity is made from multiplying the base velocity with a number between 0 and 1 for each component.
             // This number is called the multiplier, and it's calculated based on the angle between the two points along the path.
             // If, for example, b is directly above a (the X coordinates are equal), then all the velocity will be straight up.
