@@ -16,12 +16,6 @@ namespace SMLimitless.Interfaces
 	/// </summary>
 	internal interface ILevelSerializer
 	{
-		// Notes: Any serializers will call Level.GetSerializableObjects() to actually get the objects.
-		// We might need to move GetSerializableObjects() here someday, but we need to make sure we won't
-		// need access to any inaccessible members of Level first, which we might.
-
-		// Never mind, we need to move GetSerializeObjects() in here after all.
-
 		/// <summary>
 		/// Gets a string that contains the serializer version that this type implements.
 		/// </summary>
