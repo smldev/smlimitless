@@ -876,6 +876,17 @@
             <param name="items">The enumerable containing the items.</param>
             <param name="action">The action to perform on the items.</param>
         </member>
+        <member name="M:SMLimitless.Extensions.EnumerableExtensions.EagerSeparate``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``1})">
+            <summary>
+            Eagerly separates an enumerable into lists of sublists when given a selector function.
+            Each sublist contains all the items that have the same selector value.
+            </summary>
+            <typeparam name="T">The type of the items.</typeparam>
+            <typeparam name="TSelector">The type of the selector function.</typeparam>
+            <param name="items">A collection of items.</param>
+            <param name="value">A selector function that is used to separate the enumerable.</param>
+            <returns>A list of lists, each list containing all the items for which the selector function returned the same value.</returns>
+        </member>
         <member name="T:SMLimitless.Extensions.GameTimeExtensions">
             <summary>
             Contains extension methods for the GameTime class.
@@ -2868,6 +2879,11 @@
             <param name="index">The index of the line in the file to return.</param>
             <returns>The line in the file at the given index.</returns>
         </member>
+        <member name="T:SMLimitless.IO.LevelSerializers.Serializer002.LayerTileSaveData">
+            <summary>
+            Contains a collection of unique tiles and all the positions they appear in a Layer.
+            </summary>
+        </member>
         <member name="T:SMLimitless.IO.LevelSerializers.Serializer001">
             <summary>
             Serializes and deserializes levels and their objects according to the Version 0.01 specification.
@@ -3014,6 +3030,11 @@
         <member name="P:SMLimitless.IO.LevelSerializers.Serializer001.SerializerVersion">
             <summary>
             Gets the version of level file that this serializer can load and save
+            </summary>
+        </member>
+        <member name="T:SMLimitless.IO.LevelSerializers.Serializer002.TileSaveData">
+            <summary>
+            Represents the save data for a single unique tile.
             </summary>
         </member>
         <member name="T:SMLimitless.Physics.BoundingRectangle">

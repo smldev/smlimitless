@@ -80,7 +80,10 @@
     <Compile Include="Interfaces\IPositionable.cs" />
     <Compile Include="Interfaces\ISerializable.cs" />
     <Compile Include="IO\DataReader.cs" />
+    <Compile Include="IO\LevelSerializers\Serializer002\LayerTileSaveData.cs" />
     <Compile Include="IO\LevelSerializers\Serializer001.cs" />
+    <Compile Include="IO\LevelSerializers\Serializer002\TileSaveData.cs" />
+    <Compile Include="IO\LevelSerializers\Serializer002\TilePositionCloud.cs" />
     <Compile Include="Physics\BoundingRectangle.cs" />
     <Compile Include="Physics\Camera2D.cs" />
     <Compile Include="Physics\Interpolator.cs" />

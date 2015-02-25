@@ -28,5 +28,39 @@ namespace SMLimitless.Extensions
                 action(item);
             }
         }
+
+		/// <summary>
+		/// Eagerly separates an enumerable into lists of sublists when given a selector function.
+		/// Each sublist contains all the items that have the same selector value.
+		/// </summary>
+		/// <typeparam name="T">The type of the items.</typeparam>
+		/// <typeparam name="TSelector">The type of the selector function.</typeparam>
+		/// <param name="items">A collection of items.</param>
+		/// <param name="value">A selector function that is used to separate the enumerable.</param>
+		/// <returns>A list of lists, each list containing all the items for which the selector function returned the same value.</returns>
+		public static List<List<T>> EagerSeparate<T, TSelector>(this IEnumerable<T> items, Func<T, TSelector> value)
+		{
+			List<List<T>> result = new List<List<T>>();
+			List<T> current = new List<T>();
+			TSelector lastValue = default(TSelector);
+
+			items = items.OrderBy(i => value(i));
+
+			foreach (T item in items)
+			{
+				TSelector currentValue = value(item);
+
+				if (!currentValue.Equals(lastValue))
+				{
+					// Finish the list and start another
+					result.Add(current);
+					current = new List<T>();
+				}
+				current.Add(item);
+				lastValue = currentValue;
+			}
+
+			return result;
+		}
     }
 }
