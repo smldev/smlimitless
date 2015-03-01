@@ -1146,6 +1146,13 @@
             </summary>
             <param name="value">The string to draw.</param>
         </member>
+        <member name="M:SMLimitless.Extensions.StringExtensions.SafeCopy(System.String)">
+            <summary>
+            Creates a deep copy of a given string or null if the string is null.
+            </summary>
+            <param name="value">The string to copy.</param>
+            <returns>A deep copy of the string, or null if the string is null.</returns>
+        </member>
         <member name="T:SMLimitless.Extensions.Texture2DExtensions">
             <summary>
             Extends the Texture2D class.

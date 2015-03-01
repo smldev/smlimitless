@@ -253,7 +253,7 @@ namespace SMLimitless.IO.LevelSerializers
 				saveData.TypeName = (string)entry["typeName"];
 				saveData.CollisionType = (TileCollisionType)(int)entry["collisionType"];
 				saveData.Name = (string)entry["name"];
-				saveData.GraphicsResource = (string)entry["graphicsResouce"];
+				saveData.GraphicsResource = (string)entry["graphicsResource"];
 				saveData.State = (string)entry["state"];
 				saveData.CustomData = entry["customData"];
 

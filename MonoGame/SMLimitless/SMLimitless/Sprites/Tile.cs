@@ -255,15 +255,15 @@ namespace SMLimitless.Sprites
 		{
 			Tile clone = AssemblyManager.GetTileByFullName(this.GetType().FullName);
 
-			clone.EditorLabel = string.Copy(this.EditorLabel);
+			clone.EditorLabel = this.EditorLabel.SafeCopy();
 			clone.Owner = this.Owner;
 			clone.IsActive = this.IsActive;
-			clone.InitialState = string.Copy(this.InitialState);
-			clone.State = string.Copy(this.State);
+			clone.InitialState = this.InitialState.SafeCopy();
+			clone.State = this.State.SafeCopy();
 			clone.Position = this.Position;
 			clone.Size = this.Size;
 			clone.Collision = this.Collision;
-			clone.Name = string.Copy(this.Name);
+			clone.Name = this.Name.SafeCopy();
 
 			return clone;
 		}

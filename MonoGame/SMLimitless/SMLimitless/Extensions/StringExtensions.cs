@@ -107,5 +107,20 @@ namespace SMLimitless.Extensions
         {
             GameServices.DrawStringDefault(value);
         }
+
+		/// <summary>
+		/// Creates a deep copy of a given string or null if the string is null.
+		/// </summary>
+		/// <param name="value">The string to copy.</param>
+		/// <returns>A deep copy of the string, or null if the string is null.</returns>
+		public static string SafeCopy(this string value)
+		{
+			if (value == null)
+			{
+				return null;
+			}
+
+			return string.Copy(value);
+		}
     }
 }
