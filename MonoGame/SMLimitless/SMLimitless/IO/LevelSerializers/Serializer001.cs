@@ -280,7 +280,7 @@ namespace SMLimitless.IO.LevelSerializers
 			// Check if the versions match.
 			if ((string)obj["header"]["version"] != this.SerializerVersion)
 			{
-				throw new ArgumentException(string.Format("Level.Deserialize(string): This level was created with a different version of the serializer. Expected {0}, got {1}.", Level.SerializerVersion, (string)obj["header"]["version"]));
+				throw new ArgumentException(string.Format("Serializer001.Deserialize(string): This level was created with a different version of the serializer. Expected {0}, got {1}.", Level.SerializerVersion, (string)obj["header"]["version"]));
 			}
 
 			// Deserialize the root objects first.

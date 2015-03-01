@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 
-namespace SMLimitless.IO.LevelSerializers.Serializer002
+namespace SMLimitless.IO.LevelSerializers.Serializer002Types
 {
 	internal class TilePositionCloud
 	{

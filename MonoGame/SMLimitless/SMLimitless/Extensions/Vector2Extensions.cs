@@ -261,6 +261,27 @@ namespace SMLimitless.Extensions
 			return value.Select(v => v.Serialize()).ToList(); // yay LINQ
 		}
 
+		public static string SerializeCompact(this List<Vector2> values)
+		{
+			StringBuilder result = new StringBuilder();
+			values.ForEach(v => result.Append(string.Format("{0},{1};", v.X, v.Y)));
+			return result.ToString();
+		}
+
+		public static List<Vector2> DeserializeCompact(this string value)
+		{
+			var result = new List<Vector2>();
+			var values = value.Split(new char[] {';'}, StringSplitOptions.RemoveEmptyEntries);
+
+			if (values.Length == 0)
+			{
+				throw new ArgumentException("Vector2Extensions.DeserializeCompact(this string): Input string was in an invalid format.");
+			}
+
+			values.ForEach(v => result.Add(Parse(v)));
+			return result;
+		}
+
 		/// <summary>
 		/// Returns a string representation of a point suitable for JSON serialization.
 		/// </summary>

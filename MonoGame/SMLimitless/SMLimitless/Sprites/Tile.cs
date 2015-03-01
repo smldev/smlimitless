@@ -251,6 +251,23 @@ namespace SMLimitless.Sprites
         /// <param name="intersect">The depth of the intersection.</param>
         public abstract void HandleCollision(Sprite sprite, Vector2 intersect);
 
+		public Tile Clone()
+		{
+			Tile clone = AssemblyManager.GetTileByFullName(this.GetType().FullName);
+
+			clone.EditorLabel = string.Copy(this.EditorLabel);
+			clone.Owner = this.Owner;
+			clone.IsActive = this.IsActive;
+			clone.InitialState = string.Copy(this.InitialState);
+			clone.State = string.Copy(this.State);
+			clone.Position = this.Position;
+			clone.Size = this.Size;
+			clone.Collision = this.Collision;
+			clone.Name = string.Copy(this.Name);
+
+			return clone;
+		}
+
         /// <summary>
         /// Gets an anonymous object containing key custom objects to save to the level file.
         /// </summary>

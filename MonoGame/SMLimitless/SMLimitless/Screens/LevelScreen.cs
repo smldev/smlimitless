@@ -31,7 +31,7 @@ namespace SMLimitless.Screens
         /// <param name="parameters">Parameters to specify how the screen should be initialized. Contains a path to the level file to load.</param>
         public override void Initialize(Screen owner, string parameters)
         {
-            Serializer001 serializer = new Serializer001();
+            Serializer002 serializer = new Serializer002();
 			this.level = serializer.Deserialize(System.IO.File.ReadAllText(parameters));
 			this.level.Initialize();
         }

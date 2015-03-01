@@ -401,9 +401,14 @@ namespace SMLimitless.Sprites.Collections
 				string file = new IO.LevelSerializers.Serializer001().Serialize(this.Owner);
 				System.IO.File.WriteAllText(System.IO.Directory.GetCurrentDirectory() + @"\level_new.txt", file);
 			}
+			else if (Input.InputManager.IsNewKeyPress(Microsoft.Xna.Framework.Input.Keys.M))
+			{
+				string file = new IO.LevelSerializers.Serializer002().Serialize(this.Owner);
+				System.IO.File.WriteAllText(System.IO.Directory.GetCurrentDirectory() + @"\level_serializer002.txt", file);
+			}
 			else if (Input.InputManager.IsNewKeyPress(Microsoft.Xna.Framework.Input.Keys.J))
 			{
-				IO.LevelSerializers.Serializer002.LayerTileSaveData tileSaves = new IO.LevelSerializers.Serializer002.LayerTileSaveData(this.MainLayer);
+				IO.LevelSerializers.Serializer002Types.LayerTileSaveData tileSaves = new IO.LevelSerializers.Serializer002Types.LayerTileSaveData(this.MainLayer);
 			}
         }
 

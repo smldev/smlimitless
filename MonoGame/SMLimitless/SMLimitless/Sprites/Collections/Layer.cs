@@ -40,7 +40,7 @@ namespace SMLimitless.Sprites.Collections
         /// <summary>
         /// The level that created this layer.
         /// </summary>
-        private Section owner;
+		internal Section Owner { get; private set; }
 
         /// <summary>
         /// The collection of sprites in this layer.
@@ -125,7 +125,7 @@ namespace SMLimitless.Sprites.Collections
         /// <param name="position">The position of the anchor point in relation to the layer.</param>
         public Layer(Section owner, LayerAnchorPosition position = LayerAnchorPosition.TopLeft)
         {
-            this.owner = owner;
+            this.Owner = owner;
             this.AnchorPosition = position;
             this.AnchorPoint = new Vector2(float.NaN);
             this.velocity = Vector2.Zero;
@@ -139,7 +139,7 @@ namespace SMLimitless.Sprites.Collections
         /// </summary>
         public void Initialize()
         {
-			this.Tiles.ForEach(t => t.Initialize(this.owner));
+			this.Tiles.ForEach(t => t.Initialize(this.Owner));
         }
 
         /// <summary>
@@ -162,7 +162,7 @@ namespace SMLimitless.Sprites.Collections
                 this.sprites.RemoveAll(s => !s.Hitbox.Intersects(this.Bounds));
 
                 // Then, determine if any other sprites in the level are within the bounds of the layer.
-                List<Sprite> nearbySprites = this.owner.QuadTree.GetNearbySprites(this.Bounds);
+                List<Sprite> nearbySprites = this.Owner.QuadTree.GetNearbySprites(this.Bounds);
                 foreach (Sprite sprite in nearbySprites)
                 {
                     if (sprite.Hitbox.Intersects(this.Bounds))
@@ -322,7 +322,7 @@ namespace SMLimitless.Sprites.Collections
         /// <param name="height">The height of the layer.</param>
         internal void SetMainLayer(float width, float height)
         {
-            if (this.owner.MainLayer != null)
+            if (this.Owner.MainLayer != null)
             {
                 throw new InvalidOperationException("Layer.SetMainLayer(float, float): This section already has a main layer.");
             }
@@ -425,7 +425,7 @@ namespace SMLimitless.Sprites.Collections
             // If this is a main layer, set this as the section's main layer.
             if (this.IsMainLayer)
             {
-                this.owner.SetMainLayer(this);
+                this.Owner.SetMainLayer(this);
             }
 
             // Now, deserialize the nested tiles.
@@ -436,8 +436,8 @@ namespace SMLimitless.Sprites.Collections
                 string typeName = (string)tileData["typeName"];
                 Tile tile = AssemblyManager.GetTileByFullName(typeName);
                 tile.Deserialize(tileData.ToString());
-                tile.Initialize(this.owner);
-                this.owner.AddTile(tile);
+                tile.Initialize(this.Owner);
+                this.Owner.AddTile(tile);
 
                 if (!this.IsMainLayer)
                 {

@@ -2879,7 +2879,7 @@
             <param name="index">The index of the line in the file to return.</param>
             <returns>The line in the file at the given index.</returns>
         </member>
-        <member name="T:SMLimitless.IO.LevelSerializers.Serializer002.LayerTileSaveData">
+        <member name="T:SMLimitless.IO.LevelSerializers.Serializer002Types.LayerTileSaveData">
             <summary>
             Contains a collection of unique tiles and all the positions they appear in a Layer.
             </summary>
@@ -3032,7 +3032,7 @@
             Gets the version of level file that this serializer can load and save
             </summary>
         </member>
-        <member name="T:SMLimitless.IO.LevelSerializers.Serializer002.TileSaveData">
+        <member name="T:SMLimitless.IO.LevelSerializers.Serializer002Types.TileSaveData">
             <summary>
             Represents the save data for a single unique tile.
             </summary>
@@ -5309,11 +5309,6 @@
             A value indicating whether this layer is actively drawn and updated.
             </summary>
         </member>
-        <member name="F:SMLimitless.Sprites.Collections.Layer.owner">
-            <summary>
-            The level that created this layer.
-            </summary>
-        </member>
         <member name="F:SMLimitless.Sprites.Collections.Layer.sprites">
             <summary>
             The collection of sprites in this layer.
@@ -5415,6 +5410,11 @@
             Loads a layer from a JSON object containing key objects of a layer.
             </summary>
             <param name="json">A valid JSON string.</param>
+        </member>
+        <member name="P:SMLimitless.Sprites.Collections.Layer.Owner">
+            <summary>
+            The level that created this layer.
+            </summary>
         </member>
         <member name="P:SMLimitless.Sprites.Collections.Layer.AnchorPoint">
             <summary>
