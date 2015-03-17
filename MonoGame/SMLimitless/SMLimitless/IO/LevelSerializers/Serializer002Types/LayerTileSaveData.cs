@@ -52,7 +52,7 @@ namespace SMLimitless.IO.LevelSerializers.Serializer002Types
 
 			for (int i = 0; i < tileData.Count; i++)
 			{
-				result.Tiles.Add(tileData[i], tilePositions[i]); // WYLO: I don't think the deserializer is getting graphics resources correctly. Debug here and find out what exactly we're reading.
+				result.Tiles.Add(tileData[i], tilePositions[i]);
 			}
 
 			return result;

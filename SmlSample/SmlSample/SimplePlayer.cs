@@ -78,7 +78,8 @@ namespace SmlSample
 
             bool isLeftDown = InputManager.IsCurrentActionPress(InputAction.Left);
             bool isRightDown = InputManager.IsCurrentActionPress(InputAction.Right);
-
+			
+			// Apply friction to player
             if (this.Velocity.X != 0f && (!isLeftDown && !isRightDown))
             {
                 if (this.Velocity.X > 0.5f)
@@ -91,6 +92,7 @@ namespace SmlSample
                 }
             }
 
+			// Move the player if we're walking
             if (isLeftDown)
             {
                 this.Direction = SpriteDirection.Left;
@@ -101,7 +103,8 @@ namespace SmlSample
                 this.Direction = SpriteDirection.Right;
                 this.AdjustVelocity(AccelerationImpulse);
             }
-
+			
+			// Jump
             if (InputManager.IsCurrentActionPress(InputAction.Jump) && this.jumpTimeout > 0)
             {
                 this.Velocity = new Vector2(this.Velocity.X, (this.Velocity.Y <= MaxJumpVelocity) ? MaxJumpVelocity : this.Velocity.Y - JumpImpulse);

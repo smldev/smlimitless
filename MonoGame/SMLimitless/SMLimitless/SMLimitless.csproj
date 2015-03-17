@@ -60,6 +60,12 @@
     <Compile Include="Extensions\Texture2DExtensions.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="Extensions\Vector2Extensions.cs" />
+    <Compile Include="Forms\PhysicsSettingsEditorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PhysicsSettingsEditorForm.Designer.cs">
+      <DependentUpon>PhysicsSettingsEditorForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="GameServices.cs" />
     <Compile Include="GameSettings.cs" />
     <Compile Include="Graphics\AnimatedGraphicsObject.cs" />
@@ -91,6 +97,7 @@
     <Compile Include="Physics\InterpolatorScales.cs" />
     <Compile Include="Physics\IntVector2.cs" />
     <Compile Include="Physics\Path.cs" />
+    <Compile Include="Physics\PhysicsSetting.cs" />
     <Compile Include="Physics\QuadTree.cs" />
     <Compile Include="Physics\QuadTreeCell.cs" />
     <Compile Include="Physics\Resolution.cs" />
@@ -138,6 +145,7 @@
     <Reference Include="Lidgren.Network">
       <HintPath>$(MSBuildExtensionsPath)\..\MonoGame\v3.0\Assemblies\WindowsGL\Lidgren.Network.dll</HintPath>
     </Reference>
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="Tao.Sdl">
@@ -173,7 +181,11 @@
     <Content Include="Icon.ico" />
     <Content Include="SML Icon.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Forms\PhysicsSettingsEditorForm.resx">
+      <DependentUpon>PhysicsSettingsEditorForm.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="Properties\app.manifest" />
