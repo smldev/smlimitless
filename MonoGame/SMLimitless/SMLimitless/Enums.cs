@@ -42,6 +42,16 @@ namespace SMLimitless
     }
 }
 
+namespace SMLimitless.Debug
+{
+	public enum LogLevel
+	{
+		Information,
+		Warning,
+		Error
+	}
+}
+
 namespace SMLimitless.Input
 {
     /// <summary>

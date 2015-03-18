@@ -47,6 +47,13 @@
     <Compile Include="Content\ContentPackageManager.cs" />
     <Compile Include="Content\ContentPackageResourceSearcher.cs" />
     <Compile Include="Content\ResourceNotFoundException.cs" />
+    <Compile Include="Debug\DebugForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Debug\DebugForm.Designer.cs">
+      <DependentUpon>DebugForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Debug\Logger.cs" />
     <Compile Include="Editor\EditorButton.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Extensions\ColorExtensions.cs" />
@@ -182,6 +189,9 @@
     <Content Include="SML Icon.ico" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Debug\DebugForm.resx">
+      <DependentUpon>DebugForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\PhysicsSettingsEditorForm.resx">
       <DependentUpon>PhysicsSettingsEditorForm.cs</DependentUpon>
     </EmbeddedResource>

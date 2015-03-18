@@ -21,6 +21,8 @@ namespace SMLimitless.Sprites.Collections
     /// </summary>
     public sealed class Section : ISerializable
     {
+		private Debug.DebugForm form = new Debug.DebugForm();
+
 		/// <summary>
 		/// The backing field for the AutoscrollSpeed property.
 		/// </summary>
@@ -410,6 +412,11 @@ namespace SMLimitless.Sprites.Collections
 			{
 				IO.LevelSerializers.Serializer002Types.LayerTileSaveData tileSaves = new IO.LevelSerializers.Serializer002Types.LayerTileSaveData(this.MainLayer);
 			}
+			else if (Input.InputManager.IsNewKeyPress(Microsoft.Xna.Framework.Input.Keys.OemTilde))
+			{
+				this.form.Show();
+			}
+			System.Windows.Forms.Application.DoEvents();
         }
 
         /// <summary>

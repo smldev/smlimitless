@@ -380,6 +380,23 @@
             loaded in ContentPackageManager.
             </summary>
         </member>
+        <member name="F:SMLimitless.Debug.DebugForm.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Debug.DebugForm.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:SMLimitless.Debug.DebugForm.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
         <member name="T:SMLimitless.Editor.EditorButton">
             <summary>
             Represents the location and image of
@@ -1367,6 +1384,23 @@
             </summary>
             <param name="jsonEntry">A JSON token containing two comma-delimited numbers.</param>
             <returns>A Vector2 converted from the token.</returns>
+        </member>
+        <member name="F:SMLimitless.Forms.PhysicsSettingsEditorForm.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Forms.PhysicsSettingsEditorForm.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:SMLimitless.Forms.PhysicsSettingsEditorForm.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
         </member>
         <member name="T:SMLimitless.GameServices">
             <summary>
