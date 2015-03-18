@@ -9,7 +9,6 @@ namespace SMLimitless.Debug
 	public static class Logger
 	{
 		private static List<string> loggedLines;
-		// private static DebugForm debugForm;
 
 		public static bool LoggingEnabled { get; set; }
 		public static bool DisplayLogsInDebugForm { get; set; }
@@ -19,6 +18,7 @@ namespace SMLimitless.Debug
 			loggedLines = new List<string>();
 
 			LoggingEnabled = true;
+			DisplayLogsInDebugForm = true;
 
 			string logFolder = Path.Combine(Directory.GetCurrentDirectory(), "logs");
 
@@ -34,8 +34,14 @@ namespace SMLimitless.Debug
 			{
 				string now = DateTime.Now.ToString("HH:mm:ss");
 				string prepend = (level == LogLevel.Information) ? "[INFO]" : (level == LogLevel.Warning) ? "[WARN]" : "[ERROR]";
+				string completeMessage = string.Concat("[", now, "]", prepend, " ", message);
 
-				loggedLines.Add(string.Concat("[", now, "] ", prepend, " ", message));
+				loggedLines.Add(completeMessage);
+
+				if (DisplayLogsInDebugForm)
+				{
+					GameServices.DebugForm.AddToLogText(completeMessage);
+				}
 			}
 		}
 

@@ -414,9 +414,19 @@ namespace SMLimitless.Sprites.Collections
 			}
 			else if (Input.InputManager.IsNewKeyPress(Microsoft.Xna.Framework.Input.Keys.OemTilde))
 			{
-				this.form.Show();
+				if (!GameServices.DebugForm.Visible)
+				{
+					GameServices.DebugForm.Show();
+				}
+				else
+				{
+					GameServices.DebugForm.Hide();
+				}
 			}
-			System.Windows.Forms.Application.DoEvents();
+			else if (Input.InputManager.IsNewKeyPress(Microsoft.Xna.Framework.Input.Keys.I))
+			{
+				Debug.Logger.LogInfo("I key pressed.");
+			}
         }
 
         /// <summary>

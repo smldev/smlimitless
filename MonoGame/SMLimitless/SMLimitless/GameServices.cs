@@ -3,15 +3,16 @@
 //     Copyrighted under the MIT license.
 // </copyright>
 //-----------------------------------------------------------------------
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using Microsoft.Xna.Framework;
-    using Microsoft.Xna.Framework.Content;
-    using Microsoft.Xna.Framework.Graphics;
-    using SMLimitless.Graphics;
-    using SMLimitless.Physics;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
+using SMLimitless.Debug;
+using SMLimitless.Graphics;
+using SMLimitless.Physics;
     
 namespace SMLimitless
 {
@@ -80,6 +81,8 @@ namespace SMLimitless
         /// </summary>
         public static BitmapFont DebugFont { get; private set; }
 
+		public static DebugForm DebugForm { get; private set; }
+
         /// <summary>
         /// Gets the size, in pixels, of a QuadTree cell.
         /// </summary>
@@ -113,6 +116,8 @@ namespace SMLimitless
             AddService<GraphicsDevice>(graphicsDevice);
             AddService<SpriteBatch>(spriteBatch);
             AddService<ContentManager>(content);
+
+			DebugForm = new DebugForm();
         }
 
         /// <summary>

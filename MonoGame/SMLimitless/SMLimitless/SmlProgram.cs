@@ -13,6 +13,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using SMLimitless.Debug;
 using SMLimitless.Graphics;
 using SMLimitless.Input;
 using SMLimitless.Screens;
@@ -51,6 +52,8 @@ namespace SMLimitless
         /// </summary>
         protected override void Initialize()
         {
+			System.Diagnostics.Stopwatch stopwatch = System.Diagnostics.Stopwatch.StartNew();
+
             GameSettings.Initialize();
             InputManager.Initialize();
             ScreenManager.Initialize();
@@ -60,6 +63,9 @@ namespace SMLimitless
             ////GameServices.Camera = new Physics.Camera2D(); // NOTE: comment out this line and the above if loading a LevelScreen.
             ScreenManager.SetRootScreen(new LevelScreen(), System.IO.Directory.GetCurrentDirectory() + @"\level_serializer002.txt");
             base.Initialize();
+
+			stopwatch.Stop();
+			Logger.LogInfo(string.Format("Game initialization completed (took {0} ms)", stopwatch.ElapsedMilliseconds));
         }
 
         /// <summary>
@@ -101,6 +107,8 @@ namespace SMLimitless
             {
                 GameServices.AddService<GameTime>(gameTime);
             }
+
+			System.Windows.Forms.Application.DoEvents();
 
             InputManager.Update();
             ScreenManager.Update();
