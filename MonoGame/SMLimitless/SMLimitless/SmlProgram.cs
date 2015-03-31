@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -52,7 +53,7 @@ namespace SMLimitless
         /// </summary>
         protected override void Initialize()
         {
-			System.Diagnostics.Stopwatch stopwatch = System.Diagnostics.Stopwatch.StartNew();
+			Stopwatch stopwatch = Stopwatch.StartNew();
 
             GameSettings.Initialize();
             InputManager.Initialize();
@@ -73,12 +74,16 @@ namespace SMLimitless
         /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
             this.spriteBatch = new SpriteBatch(GraphicsDevice);
             GameServices.InitializeServices(this.GraphicsDevice, this.spriteBatch, this.Content);
             GameServices.InitializeFont("font");
 
             ScreenManager.LoadContent();
+		
+			stopwatch.Stop();
+			Logger.LogInfo(string.Format("Load content completed (took {0} ms)", stopwatch.ElapsedMilliseconds));
         }
 
         /// <summary>

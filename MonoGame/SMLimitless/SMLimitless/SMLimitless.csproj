@@ -47,6 +47,7 @@
     <Compile Include="Content\ContentPackageManager.cs" />
     <Compile Include="Content\ContentPackageResourceSearcher.cs" />
     <Compile Include="Content\ResourceNotFoundException.cs" />
+    <Compile Include="Debug\DebugAttribute.cs" />
     <Compile Include="Debug\DebugForm.cs">
       <SubType>Form</SubType>
     </Compile>

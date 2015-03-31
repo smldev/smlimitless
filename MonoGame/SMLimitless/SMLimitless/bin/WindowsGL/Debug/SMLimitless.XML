@@ -380,6 +380,11 @@
             loaded in ContentPackageManager.
             </summary>
         </member>
+        <member name="T:SMLimitless.Debug.DebugAttribute">
+            <summary>
+            Signifies that a member is used for debugging purposes.
+            </summary>
+        </member>
         <member name="F:SMLimitless.Debug.DebugForm.components">
             <summary>
             Required designer variable.

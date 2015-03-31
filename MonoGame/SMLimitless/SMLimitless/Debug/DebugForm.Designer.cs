@@ -57,6 +57,7 @@
 			this.TextCommand.Name = "TextCommand";
 			this.TextCommand.Size = new System.Drawing.Size(278, 25);
 			this.TextCommand.TabIndex = 0;
+			this.TextCommand.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextCommand_KeyDown);
 			// 
 			// ButtonSubmit
 			// 
