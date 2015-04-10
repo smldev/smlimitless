@@ -11,6 +11,18 @@ namespace SMLimitless.Forms
 {
 	public partial class PhysicsSettingsEditorForm : Form
 	{
+		public object SelectedObject
+		{
+			get
+			{
+				return this.PhysicsProperties.SelectedObject;
+			}
+			set
+			{
+				this.PhysicsProperties.SelectedObject = value;
+			}
+		}
+		
 		public PhysicsSettingsEditorForm()
 		{
 			InitializeComponent();

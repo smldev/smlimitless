@@ -96,6 +96,11 @@ namespace SMLimitless.Debug
 					string message = (Logger.LoggingEnabled) ? "Logging enabled." : "Logging disabled.";
 					this.AddToLogText(message);
 					break;
+				case "physedit":
+					Forms.PhysicsSettingsEditorForm physicsForm = new Forms.PhysicsSettingsEditorForm();
+					physicsForm.SelectedObject = GameServices.SpriteBatch;
+					physicsForm.Show();
+					break;
 				default:
 					this.AddToLogText(string.Format("The command \"{0}\" does not exist.", command));
 					break;
