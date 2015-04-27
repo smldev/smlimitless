@@ -1,0 +1,29 @@
+SML Player Graphics Core:
+	- Each graphic is named
+	- All players must have a core set of named graphics
+	- Powerups add their own graphics as necessary, but powerup graphics must also include core graphics
+
+Core Graphics:
+	- Stand (idle)
+		- stand
+		- duck
+	- Walk Cycle
+		- stand
+		- walk
+	- Run Cycle
+		- run1
+		- run2
+	- Standing/Walking Jump
+		- walk_jump
+		- fall
+	- Running Jump
+		- run_jump
+	- Spin Jump
+		- face_front
+		- stand (mirrored left)
+		- face_back
+		- stand
+	- Swimming
+		- swim1
+		- swim2
+		- swim3
