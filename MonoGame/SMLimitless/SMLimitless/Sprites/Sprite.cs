@@ -73,7 +73,27 @@ namespace SMLimitless.Sprites
 		/// <summary>
 		/// Gets or sets a value indicating whether this sprite is on the ground.
 		/// </summary>
-		public bool IsOnGround { get; set; }
+		public bool IsOnGround
+		{
+			get
+			{
+				Vector2 checkPoint = new Vector2(this.Hitbox.BottomCenter.X, this.Hitbox.BottomCenter.Y + 1f);
+				Tile tileBeneath = this.Owner.GetTileAtPositionByBounds(checkPoint, true);
+				if (tileBeneath == null)
+				{
+					return false;
+				}
+				else if (tileBeneath is SlopedTile)
+				{
+					// There's probably a better way to do this.
+					return this.Owner.GetTileAtPosition(checkPoint, true) != null;
+				}
+				else
+				{
+					return tileBeneath.Collision == TileCollisionType.Solid || tileBeneath.Collision == TileCollisionType.TopSolid;
+				}
+			}
+		}
 
 		/// <summary>
 		/// Gets a value indicating whether this sprite is sitting on a slope.
@@ -294,15 +314,7 @@ namespace SMLimitless.Sprites
 					this.Velocity = new Vector2(this.Velocity.X, 0);
 					this.Acceleration = new Vector2(this.Acceleration.X, 0f);
 				}
-				if (this.Velocity.Y <= 0f)
-				{
-					this.IsOnGround = false;
-					this.Acceleration -= this.Acceleration * 0.01f;
-				}
-				else
-				{
-					this.Acceleration -= this.Acceleration * 0.01f;
-				}
+				this.Acceleration = new Vector2(this.Acceleration.X, this.Acceleration.Y - (this.Acceleration.Y * 0.01f));
 			}
             else
             {

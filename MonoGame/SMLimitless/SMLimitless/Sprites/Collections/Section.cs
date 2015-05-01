@@ -365,7 +365,8 @@ namespace SMLimitless.Sprites.Collections
 			}
 
 			stopwatch.Stop();
-			this.debugText = stopwatch.Elapsed.ToString();
+			this.debugText = this.Sprites.Where(s => s.GetType().FullName.Contains("SimplePlayer")).First().Acceleration.ToString();
+			// WYLO: SimplePlayer is probably not worth the effort to fix it. It's time to throw it out and start on the actual Player class.
 
             this.TempUpdate();
         }

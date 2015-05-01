@@ -72,7 +72,6 @@ namespace SmlSample
         /// </summary>
         public override void Update()
         {
-            const float Friction = 0.08f;
             const float AccelerationImpulse = 5f;
             const float JumpImpulse = 50f;
             const float MaxJumpVelocity = -150f;
@@ -80,18 +79,6 @@ namespace SmlSample
 
             bool isLeftDown = InputManager.IsCurrentActionPress(InputAction.Left);
             bool isRightDown = InputManager.IsCurrentActionPress(InputAction.Right);
-
-            if (this.Velocity.X != 0f && (!isLeftDown && !isRightDown))
-            {
-                if (this.Velocity.X > 0.5f)
-                {
-                    this.Velocity = new Vector2((float)(this.Velocity.X - (this.Velocity.X * Friction)), this.Velocity.Y);
-                }
-                else
-                {
-                    this.Velocity = new Vector2(0f, this.Velocity.Y);
-                }
-            }
 
             if (isLeftDown)
             {
@@ -165,11 +152,12 @@ namespace SmlSample
             const float MaxVelocity = 150f;
             if (Math.Abs(this.Velocity.X + amount) > MaxVelocity)
             {
-                this.Velocity = new Vector2((this.Velocity.X >= 0) ? MaxVelocity : -MaxVelocity, this.Velocity.Y);
+                this.Acceleration = new Vector2(amount, this.Acceleration.Y);
+				this.Velocity = new Vector2((this.Velocity.X > 0f) ? MaxVelocity : -MaxVelocity, this.Velocity.Y);
             }
             else
             {
-                this.Velocity = new Vector2(this.Velocity.X + amount, this.Velocity.Y);
+                this.Acceleration = new Vector2(amount, this.Acceleration.Y);
             }
         }
 

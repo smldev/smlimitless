@@ -24,6 +24,11 @@ namespace SMLimitless.Sprites
     /// </summary>
     public abstract class Tile : IName, IEditorObject, IPositionable, ISerializable
     {
+		/// <summary>
+		/// Gets or sets the default surface friction for all tiles that do not set the value themselves.
+		/// </summary>
+		public float DefaultSurfaceFriction { get; set; }
+		
         /// <summary>
         /// Gets the name of the category that this tile is
         /// categorized within in the level editor.
@@ -44,6 +49,12 @@ namespace SMLimitless.Sprites
         /// Gets or sets a value indicating whether this tile is active or not.
         /// </summary>
         public bool IsActive { get; set; }
+
+		/// <summary>
+		/// Gets the surface friction of the tile expressed in pixels per second squared.
+		/// </summary>
+		/// <remarks>This value should always be positive; before being applied to a sprite's velocity, it will be negated.</remarks>
+		public float SurfaceFriction { get; private set; }
 
         /// <summary>
         /// Gets the state of the tile when it was first loaded into the level.
@@ -121,6 +132,8 @@ namespace SMLimitless.Sprites
             this.Owner = owner;
             this.IsActive = true;
             this.Name = "";
+			this.DefaultSurfaceFriction = 1f;
+			this.SurfaceFriction = this.DefaultSurfaceFriction;
         }
 
         /// <summary>

@@ -98,7 +98,6 @@ namespace SMLimitless.Debug
 					break;
 				case "physedit":
 					Forms.PhysicsSettingsEditorForm physicsForm = new Forms.PhysicsSettingsEditorForm();
-					physicsForm.SelectedObject = GameServices.SpriteBatch;
 					physicsForm.Show();
 					break;
 				default:
