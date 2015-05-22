@@ -30,6 +30,14 @@ namespace SmlSample
             get { return "Testing"; }
         }
 
+		public override bool IsCompelledToMove
+		{
+			get
+			{
+				return true;
+			}
+		}
+
         /// <summary>
         /// The graphics for this object.
         /// </summary>

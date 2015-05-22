@@ -71,6 +71,11 @@ namespace SMLimitless.Sprites
 		public bool IsEmbedded { get; set; }
 
 		/// <summary>
+		/// Gets a value indicating whether this sprite is being compelled to move by the game or user.
+		/// </summary>
+		public abstract bool IsCompelledToMove { get; }
+
+		/// <summary>
 		/// Gets or sets a value indicating whether this sprite is on the ground.
 		/// </summary>
 		public bool IsOnGround

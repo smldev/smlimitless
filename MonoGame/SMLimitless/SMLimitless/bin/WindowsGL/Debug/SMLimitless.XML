@@ -6299,6 +6299,11 @@
             Gets or sets a value indicating whether this sprite is embedded inside of a tile.
             </summary>
         </member>
+        <member name="P:SMLimitless.Sprites.Sprite.IsCompelledToMove">
+            <summary>
+            Gets a value indicating whether this sprite is being compelled to move by the game or user.
+            </summary>
+        </member>
         <member name="P:SMLimitless.Sprites.Sprite.IsOnGround">
             <summary>
             Gets or sets a value indicating whether this sprite is on the ground.

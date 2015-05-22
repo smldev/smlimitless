@@ -27,6 +27,11 @@ namespace SmlSample
             get { return "Testing"; }
         }
 
+		public override bool IsCompelledToMove
+		{
+			get { return false; }
+		}
+
         public PainterSprite()
         {
             this.tileGraphics = new List<StaticGraphicsObject>();

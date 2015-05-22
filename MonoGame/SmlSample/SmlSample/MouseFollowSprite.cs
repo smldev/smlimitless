@@ -36,6 +36,11 @@ namespace SmlSample
         {
             this.Size = new Vector2(16f, 16f);
         }
+
+		public override bool IsCompelledToMove
+		{
+			get { return false; }
+		}
         
         /// <summary>
         /// Updates this sprite.
