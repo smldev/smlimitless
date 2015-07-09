@@ -6078,6 +6078,11 @@
             </summary>
             <param name="json">A valid JSON string.</param>
         </member>
+        <member name="P:SMLimitless.Sprites.Tile.DefaultSurfaceFriction">
+            <summary>
+            Gets or sets the default surface friction for all tiles that do not set the value themselves.
+            </summary>
+        </member>
         <member name="P:SMLimitless.Sprites.Tile.EditorCategory">
             <summary>
             Gets the name of the category that this tile is
@@ -6098,6 +6103,12 @@
             <summary>
             Gets or sets a value indicating whether this tile is active or not.
             </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Tile.SurfaceFriction">
+            <summary>
+            Gets the surface friction of the tile expressed in pixels per second squared.
+            </summary>
+            <remarks>This value should always be positive; before being applied to a sprite's velocity, it will be negated.</remarks>
         </member>
         <member name="P:SMLimitless.Sprites.Tile.InitialState">
             <summary>
@@ -6286,6 +6297,11 @@
         <member name="P:SMLimitless.Sprites.Sprite.IsEmbedded">
             <summary>
             Gets or sets a value indicating whether this sprite is embedded inside of a tile.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Sprite.IsCompelledToMove">
+            <summary>
+            Gets a value indicating whether this sprite is being compelled to move by the game or user.
             </summary>
         </member>
         <member name="P:SMLimitless.Sprites.Sprite.IsOnGround">
