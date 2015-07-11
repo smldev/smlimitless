@@ -138,7 +138,7 @@ namespace SMLimitless.Collections
                 throw new ArgumentException(string.Format("SizedGrid<T>.Add(IPositionable): The item's size is not a multiple of the grid's cell size. Each grid cell has a size of {0}, {1}, and the item has a size of {2}, {3}.", this.CellWidth, this.CellHeight, item.Position.X, item.Position.Y));
             }
 
-            var startingCell = new IntVector2((int)item.Position.X / this.CellWidth, (int)item.Position.Y / this.CellHeight);
+            var startingCell = new Point((int)item.Position.X / this.CellWidth, (int)item.Position.Y / this.CellHeight);
             int widthInCells = (int)item.Size.X / this.CellWidth;
             int heightInCells = (int)item.Size.Y / this.CellHeight;
 
@@ -171,7 +171,7 @@ namespace SMLimitless.Collections
                 throw new ArgumentOutOfRangeException(string.Format("SizedGrid<T>.Remove(IPositionable): Cannot remove an item that does not fall within the grid. X:{0}, Y:{1}", item.Position.X, item.Position.Y));
             }
 
-            var startingCell = new IntVector2((int)item.Position.X / this.CellWidth, (int)item.Position.Y / this.CellHeight);
+            var startingCell = new Point((int)item.Position.X / this.CellWidth, (int)item.Position.Y / this.CellHeight);
             int widthInCells = (int)item.Size.X / this.CellWidth;
             int heightInCells = (int)item.Size.Y / this.CellHeight;
 

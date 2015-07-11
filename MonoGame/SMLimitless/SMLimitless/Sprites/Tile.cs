@@ -22,13 +22,8 @@ namespace SMLimitless.Sprites
     /// <summary>
     /// The base type of all tiles.
     /// </summary>
-    public abstract class Tile : IName, IEditorObject, IPositionable, ISerializable
+    public abstract class Tile : IName, IEditorObject, IPositionable
     {
-		/// <summary>
-		/// Gets or sets the default surface friction for all tiles that do not set the value themselves.
-		/// </summary>
-		public float DefaultSurfaceFriction { get; set; }
-		
         /// <summary>
         /// Gets the name of the category that this tile is
         /// categorized within in the level editor.
@@ -49,12 +44,6 @@ namespace SMLimitless.Sprites
         /// Gets or sets a value indicating whether this tile is active or not.
         /// </summary>
         public bool IsActive { get; set; }
-
-		/// <summary>
-		/// Gets the surface friction of the tile expressed in pixels per second squared.
-		/// </summary>
-		/// <remarks>This value should always be positive; before being applied to a sprite's velocity, it will be negated.</remarks>
-		public float SurfaceFriction { get; private set; }
 
         /// <summary>
         /// Gets the state of the tile when it was first loaded into the level.
@@ -99,19 +88,6 @@ namespace SMLimitless.Sprites
         [DefaultValue(0), Description("Determines how sprites should collide with this tile.")]
         public TileCollisionType Collision { get; set; }
 
-		/// <summary>
-		/// Gets or sets a value indicating whether horizontal collisions with this tile should be ignored for this frame.
-		/// </summary>
-		/// <remarks>
-		/// When a sprite is resting on a sloped tile, it must be able to walk up the slope onto adjacent tiles.
-		/// However, as horizontal collision checks are ran first by necessity, and that sprites are beneath the top
-		/// of these adjacent tiles, they collide with the left/right edge and cannot walk onto them. This flag is set
-		/// when a sprite is within a slope's bounds and this tile is within an area equal to the GameServices.GameObjectSize
-		/// property adjacent to the left/right side of the slope, depending on which way it ascends.
-		/// </remarks>
-		[Obsolete] // I think
-		public bool IsExcluded { get; set; }
-
         /// <summary>
         /// Gets or sets the name of this tile to be used in event scripting.  This field is optional.
         /// </summary>
@@ -132,8 +108,6 @@ namespace SMLimitless.Sprites
             this.Owner = owner;
             this.IsActive = true;
             this.Name = "";
-			this.DefaultSurfaceFriction = 1f;
-			this.SurfaceFriction = this.DefaultSurfaceFriction;
         }
 
         /// <summary>
@@ -159,45 +133,7 @@ namespace SMLimitless.Sprites
         /// <remarks>This method accounts for the different tile collision types.</remarks>
         public virtual bool Intersects(Sprite sprite)
         {
-            bool intersects = this.Hitbox.Intersects(sprite.Hitbox);
-
-            switch (this.Collision)
-            {
-                case TileCollisionType.Solid:
-                    return intersects;
-                case TileCollisionType.TopSolid:
-                    if (sprite.Velocity.Y > 0f && sprite.PreviousPosition.Y + sprite.Size.Y <= this.Hitbox.Bounds.Top)
-                    {
-                        return intersects;
-                    }
-
-                    return false;
-                case TileCollisionType.BottomSolid:
-                    if (sprite.Velocity.Y < 0f && sprite.PreviousPosition.Y >= this.Hitbox.Bounds.Bottom)
-                    {
-                        return intersects;
-                    }
-
-                    return false;
-                case TileCollisionType.LeftSolid:
-                    if (sprite.Velocity.X > 0f && sprite.PreviousPosition.X + sprite.Size.X <= this.Hitbox.Bounds.Left)
-                    {
-                        return intersects;
-                    }
-
-                    return false;
-                case TileCollisionType.RightSolid:
-                    if (sprite.Velocity.X < 0f && sprite.PreviousPosition.X >= this.Hitbox.Bounds.Right)
-                    {
-                        return intersects;
-                    }
-
-                    return false;
-                default:
-                    break;
-            }
-
-            return false;
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -209,43 +145,7 @@ namespace SMLimitless.Sprites
         /// <remarks>This method accounts for the different tile collision types.</remarks>
         internal virtual Vector2 GetCollisionResolution(Sprite sprite)
         {
-            Vector2 resolution = this.Hitbox.GetCollisionResolution(sprite.Hitbox);
-
-            switch (this.Collision)
-            {
-                case TileCollisionType.Solid:
-                    return resolution;
-                case TileCollisionType.TopSolid:
-                    if (sprite.PreviousPosition.Y + this.Size.Y <= this.Hitbox.Bounds.Top)
-                    {
-                        return resolution;
-                    }
-
-                    return Vector2.Zero;
-                case TileCollisionType.BottomSolid:
-                    if (sprite.PreviousPosition.Y >= this.Hitbox.Bounds.Bottom)
-                    {
-                        return resolution;
-                    }
-
-                    return Vector2.Zero;
-                case TileCollisionType.LeftSolid:
-                    if (sprite.PreviousPosition.X + sprite.Size.X <= this.Hitbox.Bounds.Left)
-                    {
-                        return resolution;
-                    }
-
-                    return Vector2.Zero;
-                case TileCollisionType.RightSolid:
-                    if (sprite.PreviousPosition.X >= this.Hitbox.Bounds.Right)
-                    {
-                        return resolution;
-                    }
-
-                    return Vector2.Zero;
-                default:
-                    return Vector2.Zero;
-            }
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -282,59 +182,9 @@ namespace SMLimitless.Sprites
 		}
 
         /// <summary>
-        /// Gets an anonymous object containing key custom objects to save to the level file.
-        /// </summary>
-        /// <returns>An anonymous object.</returns>
-        public abstract object GetCustomSerializableObjects();
-
-        /// <summary>
         /// Loads key custom objects from the level file.
         /// </summary>
         /// <param name="customObjects">An object containing key custom objects.</param>
         public abstract void DeserializeCustomObjects(JsonHelper customObjects);
-
-        /// <summary>
-        /// Gets an anonymous object containing key object to save to the level file.
-        /// </summary>
-        /// <returns>An anonymous object.</returns>
-        public object GetSerializableObjects()
-        {
-            return new
-            {
-                typeName = this.GetType().FullName,
-                collisionType = (int)this.Collision,
-                name = this.Name,
-                graphicsResource = this.GraphicsResourceName,
-                position = this.InitialPosition.Serialize(),
-                state = this.InitialState,
-                customData = this.GetCustomSerializableObjects()
-            };
-        }
-
-        /// <summary>
-        /// Returns a JSON string containing key objects of this tile.
-        /// </summary>
-        /// <returns>A valid JSON string.</returns>
-        public string Serialize()
-        {
-            return JObject.FromObject(this.GetSerializableObjects()).ToString();
-        }
-
-        /// <summary>
-        /// Loads this tile from a valid JSON string containing key objects of this tile.
-        /// </summary>
-        /// <param name="json">A valid JSON string.</param>
-        public void Deserialize(string json)
-        {
-            JObject obj = JObject.Parse(json);
-            this.Collision = (TileCollisionType)(int)obj["collisionType"];
-            this.Name = (string)obj["name"];
-            this.GraphicsResourceName = (string)obj["graphicsResource"];
-            this.InitialPosition = obj["position"].ToVector2();
-            this.Position = this.InitialPosition;
-            this.InitialState = (string)obj["state"];
-            this.State = this.InitialState;
-            this.DeserializeCustomObjects(new JsonHelper(obj["customData"]));
-        }
     }
 }

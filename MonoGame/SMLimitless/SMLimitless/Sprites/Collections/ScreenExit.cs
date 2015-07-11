@@ -17,7 +17,7 @@ namespace SMLimitless.Sprites.Collections
     /// <summary>
     /// An exit that allows players to move between sections.
     /// </summary>
-    public class ScreenExit : ISerializable
+    public class ScreenExit
     {
 		/// <summary>
 		/// Gets the position of the destination.

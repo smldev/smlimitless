@@ -15,7 +15,7 @@ namespace SMLimitless.Sprites.Collections
     /// <summary>
     /// A C# script that is used to manipulate levels and the objects within them.
     /// </summary>
-    public class EventScript : ISerializable
+    public class EventScript
     {
         /// <summary>
         /// Gets or sets the text of the C# script.

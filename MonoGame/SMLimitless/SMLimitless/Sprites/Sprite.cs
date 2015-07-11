@@ -19,7 +19,7 @@ namespace SMLimitless.Sprites
     /// <summary>
     /// The base type for all sprites.
     /// </summary>
-    public abstract class Sprite : IName, IEditorObject, IPositionable, ISerializable
+    public abstract class Sprite : IName, IEditorObject, IPositionable
     {
         /// <summary>
         /// A backing field for the Position property.
@@ -71,32 +71,13 @@ namespace SMLimitless.Sprites
 		public bool IsEmbedded { get; set; }
 
 		/// <summary>
-		/// Gets a value indicating whether this sprite is being compelled to move by the game or user.
-		/// </summary>
-		public abstract bool IsCompelledToMove { get; }
-
-		/// <summary>
 		/// Gets or sets a value indicating whether this sprite is on the ground.
 		/// </summary>
 		public bool IsOnGround
 		{
 			get
 			{
-				Vector2 checkPoint = new Vector2(this.Hitbox.BottomCenter.X, this.Hitbox.BottomCenter.Y + 1f);
-				Tile tileBeneath = this.Owner.GetTileAtPositionByBounds(checkPoint, true);
-				if (tileBeneath == null)
-				{
-					return false;
-				}
-				else if (tileBeneath is SlopedTile)
-				{
-					// There's probably a better way to do this.
-					return this.Owner.GetTileAtPosition(checkPoint, true) != null;
-				}
-				else
-				{
-					return tileBeneath.Collision == TileCollisionType.Solid || tileBeneath.Collision == TileCollisionType.TopSolid;
-				}
+				throw new NotImplementedException();
 			}
 		}
 
@@ -107,7 +88,7 @@ namespace SMLimitless.Sprites
 		{
 			get
 			{
-				return this.RestingSlope != null && this.Velocity.Y >= 0;
+				throw new NotImplementedException();
 			}
 		}
 
@@ -196,34 +177,18 @@ namespace SMLimitless.Sprites
         {
             get
             {
-				/*
-				 * Where you left off (oh, god):
-				 * Sprites do not follow terrain quite well. When moving downwards from a square tile to a slope,
-				 * the sprite does not follow the terrain. The IsOnGround flag returns false, so the normal handler
-				 * is running and resolving the sprite normally, preventing it from falling onto the slope properly.
-				 * Probably the best course of action is to a) turn IsOnGround into a standard flag, b) disable gravity
-				 * on upwards collisions until the sprite jumps or the resting tile is removed, and c) create a flag for
-				 * sprites to follow terrain (IsFollowingTerrain) or something, where the sprite's Y position is always
-				 * determined by the top point of the tile beneath it, and the vertical collision handler doesn't run.
-				 * We might even need raycasting.
-				 */
-                Vector2 checkPoint = new Vector2((int)this.Hitbox.Center.X, (int)(this.Hitbox.Bottom + 1f));
-				return this.Owner.GetTileAtPositionByBounds(checkPoint, adjacentPointsAreWithin: true);
+				throw new NotImplementedException();
             }
         }
 
         /// <summary>
         /// Gets the sloped tile that this sprite is resting on top of.
         /// </summary>
-        public SlopedTile RestingSlope
+        public Tile RestingSlope
         {
             get
             {
-                if (this.RestingTile is SlopedTile)
-                {
-                    return (SlopedTile)this.RestingTile;
-                }
-                return null;
+                throw new NotImplementedException();
             }
         }
 		#endregion
@@ -298,43 +263,7 @@ namespace SMLimitless.Sprites
         /// </summary>
         public virtual void Update()
         {
-            const float MaximumGravitationalVelocity = 350f;
-            float delta = GameServices.GameTime.GetElapsedSeconds();
-
-            this.Components.ForEach(c => c.Update());
-
-            this.PreviousPosition = this.Position;
-
-            if (this.IsEmbedded)
-            {
-                // We are embedded if collision checks tell us we need to resolve both left and right or both up and
-                // down. We should move left until we're out of being embedded.
-                this.Acceleration = Vector2.Zero;
-                this.Velocity = new Vector2(-25f, 0f);
-            }
-			else if (this.IsOnGround)
-			{
-				if (this.Velocity.Y >= 0f)
-				{
-					this.Velocity = new Vector2(this.Velocity.X, 0);
-					this.Acceleration = new Vector2(this.Acceleration.X, 0f);
-				}
-				this.Acceleration = new Vector2(this.Acceleration.X, this.Acceleration.Y - (this.Acceleration.Y * 0.01f));
-			}
-            else
-            {
-                if (this.Velocity.Y < MaximumGravitationalVelocity)
-                {
-                    this.Acceleration = new Vector2(this.Acceleration.X, Level.GravityAcceleration);
-                }
-                else if (this.Velocity.Y > MaximumGravitationalVelocity)
-                {
-                    this.Acceleration = new Vector2(this.Acceleration.X, 0f);
-                    this.Velocity = new Vector2(this.Velocity.X, MaximumGravitationalVelocity);
-                }
-            }
-
-            this.Velocity += this.Acceleration * delta;
+			throw new NotImplementedException();
         }
 
         /// <summary>
@@ -373,64 +302,6 @@ namespace SMLimitless.Sprites
         }
 
 		#region Serialization Methods
-		/// <summary>
-		/// Gets an anonymous object containing objects of the sprite to be saved to the level file.
-		/// </summary>
-		/// <returns>An anonymous object.</returns>
-		public object GetSerializableObjects()
-		{
-			return new
-			{
-				typeName = this.GetType().FullName,
-				position = this.InitialPosition.Serialize(),
-				isActive = this.IsActive,
-				state = (int)this.InitialState,
-				collision = (int)this.CollisionMode,
-				name = this.Name,
-				message = this.Message,
-				isHostile = this.IsHostile,
-				isMoving = this.IsMoving,
-				direction = (int)this.Direction,
-				customObjects = this.GetCustomSerializableObjects()
-			};
-		}
-
-		/// <summary>
-        /// Gets any objects that custom sprites wish to be saved to the level file.
-        /// </summary>
-        /// <returns>An anonymous object containing objects to be saved to the level file.</returns>
-        public abstract object GetCustomSerializableObjects();
-
-        /// <summary>
-        /// Returns a JSON string containing key objects of this sprite.
-        /// </summary>
-        /// <returns>A JSON string.</returns>
-        public string Serialize()
-        {
-            return JObject.FromObject(this.GetSerializableObjects()).ToString();
-        }
-
-        /// <summary>
-        /// Loads this sprite using a valid JSON string.
-        /// </summary>
-        /// <param name="json">A JSON string containing key objects of this sprite.</param>
-        public void Deserialize(string json)
-        {
-            JObject obj = JObject.Parse(json);
-            this.InitialPosition = obj["position"].ToVector2();
-            this.Position = this.InitialPosition;
-            this.IsActive = (bool)obj["isActive"];
-            this.InitialState = (SpriteState)(int)obj["state"];
-            this.State = this.InitialState;
-            this.CollisionMode = (SpriteCollisionMode)(int)obj["collision"];
-            this.Name = (string)obj["name"];
-            this.Message = (string)obj["message"];
-            this.IsHostile = (bool)obj["isHostile"];
-            this.IsMoving = (bool)obj["isMoving"];
-            this.Direction = (SpriteDirection)(int)obj["direction"];
-            this.DeserializeCustomObjects(new JsonHelper(obj["customObject"]));
-        }
-
 		/// <summary>
         /// Deserializes any objects that custom sprites have written to the level file.
         /// </summary>

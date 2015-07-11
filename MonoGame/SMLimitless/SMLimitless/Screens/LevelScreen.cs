@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
-using SMLimitless.IO.LevelSerializers;
 using SMLimitless.Sprites;
 using SMLimitless.Sprites.Collections;
 
@@ -31,9 +30,7 @@ namespace SMLimitless.Screens
         /// <param name="parameters">Parameters to specify how the screen should be initialized. Contains a path to the level file to load.</param>
         public override void Initialize(Screen owner, string parameters)
         {
-            Serializer002 serializer = new Serializer002();
-			this.level = serializer.Deserialize(System.IO.File.ReadAllText(parameters));
-			this.level.Initialize();
+			throw new NotImplementedException();
         }
 
         /// <summary>

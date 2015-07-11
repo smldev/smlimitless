@@ -15,7 +15,7 @@ namespace SMLimitless.Sprites.Collections
     /// <summary>
     /// Represents an exit. This class is used in saving levels to file.
     /// </summary>
-    internal sealed class LevelExit : ISerializable
+    internal sealed class LevelExit
     {
         /// <summary>
         /// Gets or sets the index of the exit.

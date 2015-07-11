@@ -92,23 +92,13 @@
     <Compile Include="Interfaces\ILevelSerializer.cs" />
     <Compile Include="Interfaces\IName.cs" />
     <Compile Include="Interfaces\IPositionable.cs" />
-    <Compile Include="Interfaces\ISerializable.cs" />
     <Compile Include="IO\DataReader.cs" />
-    <Compile Include="IO\LevelSerializers\Serializer002.cs" />
-    <Compile Include="IO\LevelSerializers\Serializer002Types\LayerTileSaveData.cs" />
-    <Compile Include="IO\LevelSerializers\Serializer001.cs" />
-    <Compile Include="IO\LevelSerializers\Serializer002Types\TileSaveData.cs" />
-    <Compile Include="IO\LevelSerializers\Serializer002Types\TilePositionCloud.cs" />
     <Compile Include="Physics\BoundingRectangle.cs" />
     <Compile Include="Physics\Camera2D.cs" />
     <Compile Include="Physics\Interpolator.cs" />
     <Compile Include="Physics\InterpolatorScales.cs" />
-    <Compile Include="Physics\IntVector2.cs" />
     <Compile Include="Physics\Path.cs" />
     <Compile Include="Physics\PhysicsSetting.cs" />
-    <Compile Include="Physics\QuadTree.cs" />
-    <Compile Include="Physics\QuadTreeCell.cs" />
-    <Compile Include="Physics\Resolution.cs" />
     <Compile Include="Physics\RightTriangle.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -126,12 +116,10 @@
     <Compile Include="Sprites\Collections\Background.cs" />
     <Compile Include="Sprites\Collections\BackgroundLayer.cs" />
     <Compile Include="Sprites\Collections\EventScript.cs" />
-    <Compile Include="Sprites\Collections\Layer.cs" />
     <Compile Include="Sprites\Collections\Level.cs" />
     <Compile Include="Sprites\Collections\LevelExit.cs" />
     <Compile Include="Sprites\Collections\ScreenExit.cs" />
     <Compile Include="Sprites\Collections\Section.cs" />
-    <Compile Include="Sprites\SlopedTile.cs" />
     <Compile Include="Sprites\Sprite.cs" />
     <Compile Include="Sprites\SpriteComponent.cs" />
     <Compile Include="Sprites\Tile.cs" />
@@ -200,6 +188,9 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="Properties\app.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="IO\LevelSerializers\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(ProgramFiles)\MSBuild\StyleCop\v4.7\StyleCop.Targets" />

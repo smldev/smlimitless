@@ -22,7 +22,7 @@ namespace SMLimitless.Sprites.Collections
     /// A single layer of a section background.
     /// Contains one image that scrolls at a given rate.
     /// </summary>
-    public sealed class BackgroundLayer : ISerializable
+    public sealed class BackgroundLayer
     {
         /// <summary>
         /// The background texture of this layer.

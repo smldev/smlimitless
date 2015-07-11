@@ -19,7 +19,7 @@ namespace SMLimitless.Physics
     /// A collection of points that creates
     /// a set of lines that objects can follow.
     /// </summary>
-    public sealed class Path : ISerializable
+    public sealed class Path
     {
         /// <summary>
         /// The object currently attached to this path.

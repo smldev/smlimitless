@@ -20,7 +20,7 @@ namespace SMLimitless.Sprites.Collections
     /// A tileable, moving, optionally parallax background image
     /// used in sections.
     /// </summary>
-    public sealed class Background : ISerializable
+    public sealed class Background
     {
 		/// <summary>
 		/// The gradient texture, composed from the top and bottom colors.
