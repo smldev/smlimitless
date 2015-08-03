@@ -110,10 +110,11 @@ namespace SMLimitless.Sprites
         Right
     }
 
-    /// <summary>
-    /// Enumerates which sides of a tile can be collided with.
-    /// </summary>
-    public enum TileCollisionType
+	/// <summary>
+	/// Enumerates which sides of a tile can be collided with.
+	/// </summary>
+	[Obsolete]
+	public enum TileCollisionType
     {
         /// <summary>
         /// This tile is completely solid on all sides.
@@ -151,6 +152,25 @@ namespace SMLimitless.Sprites
         /// </summary>
         Passive
     }
+
+	[Flags]
+	public enum TileRectSolidSides
+	{
+		Passive = 0x00,
+		Top = 0x01,
+		Bottom = 0x02,
+		Left = 0x04,
+		Right = 0x08,
+	}
+
+	[Flags]
+	public enum TileTriSolidSides
+	{
+		Passive = 0x00,
+		Slope = 0x01,
+		VerticalLeg = 0x02,
+		HorizontalLeg = 0x04
+	}
 
     /// <summary>
     /// Enumerates different modes of collision handling

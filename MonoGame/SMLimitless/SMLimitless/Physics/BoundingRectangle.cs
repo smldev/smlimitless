@@ -58,8 +58,8 @@ namespace SMLimitless.Physics
         /// <param name="height">The height.</param>
         public BoundingRectangle(float x, float y, float width, float height)
         {
-            this.min = new Vector2(x, y);
-            this.max = new Vector2(width, height);
+			min = new Vector2(x, y);
+			max = new Vector2(width, height);
         }
 
         /// <summary>
@@ -67,8 +67,8 @@ namespace SMLimitless.Physics
         /// </summary>
         public float X
         {
-            get { return this.min.X; }
-            set { this.min.X = value; }
+            get { return min.X; }
+            set { min.X = value; }
         }
 
         /// <summary>
@@ -76,8 +76,8 @@ namespace SMLimitless.Physics
         /// </summary>
         public float Y
         {
-            get { return this.min.Y; }
-            set { this.min.Y = value; }
+            get { return min.Y; }
+            set { min.Y = value; }
         }
 
         /// <summary>
@@ -85,8 +85,8 @@ namespace SMLimitless.Physics
         /// </summary>
         public float Width
         {
-            get { return this.max.X; }
-            set { this.max.X = value; }
+            get { return max.X; }
+            set { max.X = value; }
         }
 
         /// <summary>
@@ -94,8 +94,8 @@ namespace SMLimitless.Physics
         /// </summary>
         public float Height
         {
-            get { return this.max.Y; }
-            set { this.max.Y = value; }
+            get { return max.Y; }
+            set { max.Y = value; }
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace SMLimitless.Physics
         /// </summary>
         public float Left
         {
-            get { return this.X; }
+            get { return X; }
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace SMLimitless.Physics
         /// </summary>
         public float Top
         {
-            get { return this.Y; }
+            get { return Y; }
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace SMLimitless.Physics
         /// </summary>
         public float Right
         {
-            get { return this.X + this.Width; }
+            get { return X + Width; }
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace SMLimitless.Physics
         /// </summary>
         public float Bottom
         {
-            get { return this.Y + this.Height; }
+            get { return Y + Height; }
         }
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace SMLimitless.Physics
         {
             get
             {
-                return new Vector2(this.Center.X, this.Top);
+                return new Vector2(Center.X, Top);
             }
         }
 
@@ -148,7 +148,7 @@ namespace SMLimitless.Physics
         {
             get
             {
-                return new Vector2(this.Center.X, this.Bottom);
+                return new Vector2(Center.X, Bottom);
             }
         }
 
@@ -159,7 +159,7 @@ namespace SMLimitless.Physics
         {
             get
             {
-                return new Vector2(this.Left, this.Center.Y);
+                return new Vector2(Left, Center.Y);
             }
         }
 
@@ -170,7 +170,7 @@ namespace SMLimitless.Physics
         {
             get
             {
-                return new Vector2(this.Right, this.Center.Y);
+                return new Vector2(Right, Center.Y);
             }
         }
 
@@ -179,8 +179,8 @@ namespace SMLimitless.Physics
         /// </summary>
         public Vector2 Position
         {
-            get { return this.min; }
-            set { this.min = value; }
+            get { return min; }
+            set { min = value; }
         }
 
         /// <summary>
@@ -188,8 +188,8 @@ namespace SMLimitless.Physics
         /// </summary>
         public Vector2 Size
         {
-            get { return this.max; }
-            set { this.max = value; }
+            get { return max; }
+            set { max = value; }
         }
 
         /// <summary>
@@ -197,7 +197,7 @@ namespace SMLimitless.Physics
         /// </summary>
         public Vector2 Center
         {
-            get { return new Vector2(this.X + (this.Width / 2f), this.Y + (this.Height / 2f)); }
+            get { return new Vector2(X + (Width / 2f), Y + (Height / 2f)); }
         }
 
         /// <summary>
@@ -258,7 +258,7 @@ namespace SMLimitless.Physics
         /// <returns>A string in the format "X, Y, Width, Height".</returns>
         public string Serialize()
         {
-            return string.Format("{0}, {1}, {2}, {3}", this.X, this.Y, this.Width, this.Height);
+            return string.Format("{0}, {1}, {2}, {3}", X, Y, Width, Height);
         }
 
         /// <summary>
@@ -267,7 +267,7 @@ namespace SMLimitless.Physics
         /// <returns>True if any component is equal to float.NaN, false if otherwise.</returns>
         public bool IsNaN()
         {
-            return this.min.IsNaN() || this.max.IsNaN();
+            return min.IsNaN() || max.IsNaN();
         }
 
         /// <summary>
@@ -277,7 +277,7 @@ namespace SMLimitless.Physics
         /// <returns>True if the point is within this rectangle, false if otherwise.</returns>
         public bool Intersects(Vector2 point)
         {
-            return (point.X > this.Left && point.X < this.Right) && (point.Y > this.Top && point.Y < this.Bottom);
+            return (point.X > Left && point.X < Right) && (point.Y > Top && point.Y < Bottom);
         }
 
         /// <summary>
@@ -287,7 +287,7 @@ namespace SMLimitless.Physics
         /// <returns>True if the point is within or tangent to this rectangle, false if otherwise.</returns>
         public bool IntersectsIncludingEdges(Vector2 point)
         {
-            return (point.X >= this.Left && point.X <= this.Right) && (point.Y >= this.Top && point.Y <= this.Bottom);
+            return (point.X >= Left && point.X <= Right) && (point.Y >= Top && point.Y <= Bottom);
         }
 
         /// <summary>
@@ -297,17 +297,31 @@ namespace SMLimitless.Physics
         /// <returns>True if any part of the other rectangle is intersecting this rectangle, false if otherwise.</returns>
         public bool Intersects(BoundingRectangle that)
         {
-            if (that.Right <= this.Left || that.Left >= this.Right)
+            if (that.Right <= Left || that.Left >= Right)
             {
                 return false;
             }
-            else if (that.Bottom <= this.Top || that.Top >= this.Bottom)
+            else if (that.Bottom <= Top || that.Top >= Bottom)
             {
                 return false;
             }
 
             return true;
         }
+
+		public bool IntersectsIncludingEdges(BoundingRectangle that)
+		{
+			if (that.Right < Left || that.Left > Right)
+			{
+				return false;
+			}
+			else if (that.Bottom < Top || that.Top > Bottom)
+			{
+				return false;
+			}
+
+			return true;
+		}
 
         /// <summary>
         /// Determines if a given right triangle is intersecting this rectangle.
@@ -316,10 +330,10 @@ namespace SMLimitless.Physics
         /// <returns>True if any part of the right triangle is intersecting this rectangle, false if otherwise.</returns>
         public bool Intersects(RightTriangle triangle)
         {
-            Vector2 pointOnSlope = triangle.GetPointOnSlope(this.Center.X);
-            Vector2 rectCenterPoint = (triangle.SlopedSides == RtSlopedSides.TopLeft || triangle.SlopedSides == RtSlopedSides.TopRight) ? this.BottomCenter : this.TopCenter;
+            Vector2 pointOnSlope = triangle.GetPointOnSlope(Center.X);
+            Vector2 rectCenterPoint = (triangle.SlopedSides == RtSlopedSides.TopLeft || triangle.SlopedSides == RtSlopedSides.TopRight) ? BottomCenter : TopCenter;
 
-            if (!this.Intersects(triangle.Bounds))
+            if (!Intersects(triangle.Bounds))
             {
                 return false;
             }
@@ -358,11 +372,11 @@ namespace SMLimitless.Physics
         {
             if (adjacentPointsAreWithin)
             {
-                return this.IntersectsIncludingEdges(point);
+                return IntersectsIncludingEdges(point);
             }
             else
             {
-                return this.Intersects(point);
+                return Intersects(point);
             }
         }
 
@@ -383,36 +397,36 @@ namespace SMLimitless.Physics
             Vector2 result = Vector2.Zero;
 
             // X-axis checks
-            if (that.Right <= this.Left || that.Left >= this.Right)
+            if (that.Right <= Left || that.Left >= Right)
             {
                 result.X = float.NaN;
             }
             else
             {
-                if (that.Center.X <= this.Center.X)
+                if (that.Center.X <= Center.X)
                 {
-                    result.X = -(that.Right - this.Left);
+                    result.X = -(that.Right - Left);
                 }
-                else if (that.Center.X > this.Center.X)
+                else if (that.Center.X > Center.X)
                 {
-                    result.X = this.Right - that.Left;
+                    result.X = Right - that.Left;
                 }
             }
             
             // Y-axis checks
-            if (that.Bottom <= this.Top || that.Top >= this.Bottom)
+            if (that.Bottom <= Top || that.Top >= Bottom)
             {
                 result.Y = float.NaN;
             }
             else
             {
-                if (that.Center.Y <= this.Center.Y)
+                if (that.Center.Y <= Center.Y)
                 {
-                    result.Y = -(that.Bottom - this.Top);
+                    result.Y = -(that.Bottom - Top);
                 }
-                else if (that.Center.Y > this.Center.Y)
+                else if (that.Center.Y > Center.Y)
                 {
-                    result.Y = this.Bottom - that.Top;
+                    result.Y = Bottom - that.Top;
                 }
             }
 
@@ -432,7 +446,7 @@ namespace SMLimitless.Physics
         /// method, and it allows quick determination of which axis to resolve along.</remarks>
         public Vector2 GetCollisionResolution(BoundingRectangle that)
         {
-            Vector2 intersection = this.GetIntersectionDepth(that);
+            Vector2 intersection = GetIntersectionDepth(that);
 
             if (intersection.IsNaN())
             {
@@ -455,7 +469,7 @@ namespace SMLimitless.Physics
         /// <returns>The Y-coordinate of the top of this rectangle.</returns>
         public Vector2 GetTopPoint(float x)
         {
-            return new Vector2(x, this.Top);
+            return new Vector2(x, Top);
         }
 
         /// <summary>
@@ -464,7 +478,7 @@ namespace SMLimitless.Physics
         /// <returns>The standard Rectangle.</returns>
         public Rectangle ToRectangle()
         {
-            return new Rectangle((int)this.min.X, (int)this.min.Y, (int)this.max.X, (int)this.max.Y);
+            return new Rectangle((int)min.X, (int)min.Y, (int)max.X, (int)max.Y);
         }
 
         /////// <summary>
@@ -566,7 +580,7 @@ namespace SMLimitless.Physics
         /// <param name="color">The color of the rectangle.</param>
         public void Draw(Color color)
         {
-            GameServices.SpriteBatch.DrawRectangle(this.ToRectangle(), color);
+            GameServices.SpriteBatch.DrawRectangle(ToRectangle(), color);
         }
 
         /// <summary>
@@ -575,7 +589,7 @@ namespace SMLimitless.Physics
         /// <param name="color">The color of the outline.</param>
         public void DrawOutline(Color color)
         {
-            GameServices.SpriteBatch.DrawRectangleEdges(this.ToRectangle(), color);
+            GameServices.SpriteBatch.DrawRectangleEdges(ToRectangle(), color);
         }
 
         /// <summary>
@@ -584,10 +598,10 @@ namespace SMLimitless.Physics
         /// <returns>A string representing key values of this rectangle.</returns>
         public override string ToString()
         {
-            return "{X:" + this.X.ToString() +
-                   " Y:" + this.Y.ToString() +
-                   " Width:" + this.Width.ToString() +
-                   " Height:" + this.Height.ToString() + "}";
+            return "{X:" + X.ToString() +
+                   " Y:" + Y.ToString() +
+                   " Width:" + Width.ToString() +
+                   " Height:" + Height.ToString() + "}";
         }       
     }
 }

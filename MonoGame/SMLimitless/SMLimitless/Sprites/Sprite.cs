@@ -71,28 +71,6 @@ namespace SMLimitless.Sprites
 		public bool IsEmbedded { get; set; }
 
 		/// <summary>
-		/// Gets or sets a value indicating whether this sprite is on the ground.
-		/// </summary>
-		public bool IsOnGround
-		{
-			get
-			{
-				throw new NotImplementedException();
-			}
-		}
-
-		/// <summary>
-		/// Gets a value indicating whether this sprite is sitting on a slope.
-		/// </summary>
-		public bool IsOnSlope
-		{
-			get
-			{
-				throw new NotImplementedException();
-			}
-		}
-
-		/// <summary>
 		/// Gets or sets a value indicating whether this sprite should be removed from its owner section on the next frame.
 		/// </summary>
 		public bool RemoveOnNextFrame { get; set; }
@@ -105,51 +83,44 @@ namespace SMLimitless.Sprites
 		public Vector2 Size { get; protected set; }
 
 		/// <summary>
-		/// Gets or sets the position of this sprite when it was first loaded into the level.
+		/// Gets or sets the position of this sprite when it was first loaded into the level, measured in pixels.
 		/// </summary>
 		public Vector2 InitialPosition { get; protected internal set; }
 
 		/// <summary>
-		/// Gets or sets the last position of this sprite.
+		/// Gets or sets the last position of this sprite, measured in pixels.
 		/// </summary>
 		public Vector2 PreviousPosition { get; protected set; }
 
 		/// <summary>
-		/// Gets or sets the current position of this sprite.
+		/// Gets or sets the current position of this sprite, measured in pixels.
 		/// </summary>
 		public Vector2 Position
 		{
 			get
 			{
-				return this.position;
+				return position;
 			}
-
 			set
 			{
+				HasMoved = true;
+
 				// Round values to nearest integer in case of really small precision errors.
-				this.position = new Vector2(value.X.CorrectPrecision(), value.Y.CorrectPrecision());
+				position = new Vector2(value.X.CorrectPrecision(), value.Y.CorrectPrecision());
 			}
 		}
 
 		/// <summary>
 		/// Gets or sets the velocity of this sprite, measured in pixels per second.
 		/// </summary>
-		public Vector2 Velocity
-		{
-			get
-			{
-				return this.velocity;
-			}
-			set
-			{
-				this.velocity = value;
-			}
-		}
+		public Vector2 Velocity { get; set; }
 
 		/// <summary>
 		/// Gets or sets the acceleration of this sprite, measured in pixels per second per second.
 		/// </summary>
 		public Vector2 Acceleration { get; set; }
+
+		public bool HasMoved { get; set; }
 		#endregion
 
 		#region Collision Properties (mode, hitbox, resting tile/slope)
@@ -166,29 +137,7 @@ namespace SMLimitless.Sprites
         {
             get
             {
-                return new BoundingRectangle(this.Position, this.Size + this.Position);
-            }
-        }
-
-        /// <summary>
-        /// Gets the tile that this sprite is resting on the top of.
-        /// </summary>
-        public Tile RestingTile
-        {
-            get
-            {
-				throw new NotImplementedException();
-            }
-        }
-
-        /// <summary>
-        /// Gets the sloped tile that this sprite is resting on top of.
-        /// </summary>
-        public Tile RestingSlope
-        {
-            get
-            {
-                throw new NotImplementedException();
+                return new BoundingRectangle(Position, Size + Position);
             }
         }
 		#endregion
@@ -244,13 +193,13 @@ namespace SMLimitless.Sprites
         /// <param name="owner">The level that owns this sprites.</param>
         public virtual void Initialize(Section owner)
         {
-            this.Owner = owner;
-            this.Components = new List<SpriteComponent>();
-            //// Initialize all the properties
-            ////this.IsActive = true;
-            ////this.IsHostile = true;
-            ////this.IsMoving = true;
-            this.Direction = SpriteDirection.FacePlayer;
+			Owner = owner;
+			Components = new List<SpriteComponent>();
+			//// Initialize all the properties
+			////this.IsActive = true;
+			////this.IsHostile = true;
+			////this.IsMoving = true;
+			Direction = SpriteDirection.FacePlayer;
         }
 
         /// <summary>
@@ -273,14 +222,35 @@ namespace SMLimitless.Sprites
 		#endregion
 
 		#region Collision Handlers
-        /// <summary>
+        public BoundingRectangle GetSlopeHitbox(RtSlopedSides slopedSides)
+		{
+			Vector2 hitboxSize = new Vector2(Size.X / 2f, Size.Y);
+
+			switch (slopedSides)
+			{
+				case RtSlopedSides.Default:
+					throw new ArgumentException("A sloped sides value of Default is not valid.", nameof(slopedSides));
+				case RtSlopedSides.TopLeft:
+				case RtSlopedSides.BottomLeft:
+					return new BoundingRectangle(Position, hitboxSize);
+				case RtSlopedSides.TopRight:
+				case RtSlopedSides.BottomRight:
+					return new BoundingRectangle(new Vector2(Position.X + (Size.X / 2f), Position.Y), hitboxSize);
+				default:
+					throw new ArgumentOutOfRangeException(nameof(slopedSides), $"Invalid sloped sides value {slopedSides}. The expected range is from 0 to 4.");
+			}
+
+			// WYLO: Add intersection depth calculators and resolution distance methods.
+		}
+		
+		/// <summary>
         /// Handles a collision between this sprite and a tile.
         /// </summary>
         /// <param name="tile">The tile that this sprite has collided with.</param>
         /// <param name="intersect">The depth of the intersection.</param>
         public virtual void HandleTileCollision(Tile tile, Vector2 intersect)
         {
-            this.Components.ForEach(f => f.HandleTileCollision(tile));
+			Components.ForEach(f => f.HandleTileCollision(tile));
         }
 
         /// <summary>
@@ -290,7 +260,7 @@ namespace SMLimitless.Sprites
         /// <param name="intersect">The depth of the intersection.</param>
         public virtual void HandleSpriteCollision(Sprite sprite, Vector2 intersect)
         {
-            this.Components.ForEach(f => f.HandleSpriteCollision(sprite));
+			Components.ForEach(f => f.HandleSpriteCollision(sprite));
         }
 		#endregion
 

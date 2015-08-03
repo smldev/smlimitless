@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using Microsoft.Xna.Framework;
 using SMLimitless.Extensions;
@@ -14,12 +15,13 @@ using SMLimitless.Interfaces;
 
 namespace SMLimitless.Physics
 {
-    // why is this a class? make it a struct
+	// why is this a class? make it a struct
 
-    /// <summary>
-    /// Represents a right triangle, used for sloped tiles.
-    /// </summary>
-    public class RightTriangle : ICollidableShape
+	/// <summary>
+	/// Represents a right triangle, used for sloped tiles.
+	/// </summary>
+	[StructLayout(LayoutKind.Auto)]
+	public struct RightTriangle : ICollidableShape
     {
         /// <summary>
         /// Gets or sets the rectangle that completely contains the triangle.
@@ -497,6 +499,8 @@ namespace SMLimitless.Physics
     /// </summary>
     public enum RtSlopedSides
     {
+		Default,
+
         /// <summary>
         /// The top and left sides of the right triangle are sloped.
         /// </summary>

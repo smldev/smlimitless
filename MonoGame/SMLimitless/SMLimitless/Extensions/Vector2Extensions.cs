@@ -27,6 +27,25 @@ namespace SMLimitless.Extensions
 			return new Vector2((float)Math.Abs(vector.X), (float)Math.Abs(vector.Y));
 		}
 
+		public static Vector2 Move(this Vector2 vector, Direction direction, float distance)
+		{
+			switch (direction)
+			{
+				case Direction.None:
+					throw new ArgumentException("The value of None is not a valid direction.", nameof(direction));
+				case Direction.Up:
+					return new Vector2(vector.X, vector.Y - distance);
+				case Direction.Down:
+					return new Vector2(vector.X, vector.Y + distance);
+				case Direction.Left:
+					return new Vector2(vector.X - distance, vector.Y);
+				case Direction.Right:
+					return new Vector2(vector.X + distance, vector.Y);
+				default:
+					throw new ArgumentOutOfRangeException(nameof(direction), $"An invalid Direction value was passed. Expected between 1 and 4, got {direction}.");
+			}
+		}
+
 		/// <summary>
 		/// Floors both components of a Vector2.
 		/// </summary>

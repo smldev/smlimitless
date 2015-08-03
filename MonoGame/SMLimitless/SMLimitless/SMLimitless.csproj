@@ -42,7 +42,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Collections\Grid.cs" />
+    <Compile Include="Collections\ReadOnlyDictionary.cs" />
     <Compile Include="Collections\SizedGrid.cs" />
+    <Compile Include="Collections\SparseCell.cs" />
+    <Compile Include="Collections\SparseCellGrid.cs" />
+    <Compile Include="Collections\SparseCellRange.cs" />
     <Compile Include="Content\ContentPackage.cs" />
     <Compile Include="Content\ContentPackageManager.cs" />
     <Compile Include="Content\ContentPackageResourceSearcher.cs" />
@@ -58,6 +62,7 @@
     <Compile Include="Editor\EditorButton.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Extensions\ColorExtensions.cs" />
+    <Compile Include="Extensions\DictionaryExtensions.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Extensions\GameTimeExtensions.cs" />
     <Compile Include="Extensions\ListExtensions.cs" />
@@ -92,6 +97,7 @@
     <Compile Include="Interfaces\ILevelSerializer.cs" />
     <Compile Include="Interfaces\IName.cs" />
     <Compile Include="Interfaces\IPositionable.cs" />
+    <Compile Include="Interfaces\IPositionable2.cs" />
     <Compile Include="IO\DataReader.cs" />
     <Compile Include="Physics\BoundingRectangle.cs" />
     <Compile Include="Physics\Camera2D.cs" />

@@ -66,20 +66,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyMetadata.cs" />
-    <Compile Include="Class1.cs" />
     <Compile Include="Components\BasicWalkerComponent.cs" />
-    <Compile Include="MouseFollowSprite.cs" />
-    <Compile Include="PainterSprite.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SimplePlayer.cs" />
-    <Compile Include="SlopedTestTile1.cs" />
-    <Compile Include="SlopedTestTile2.cs" />
-    <Compile Include="TestSprite.cs" />
-    <Compile Include="TestTile.cs" />
-    <Compile Include="TestTile2.cs" />
-    <Compile Include="TestTile3.cs" />
-    <Compile Include="TestTile4.cs" />
-    <Compile Include="TestTile5.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -11,7 +11,7 @@ using System.Text;
 namespace SMLimitless.Interfaces
 {
     /// <summary>
-    /// Defines an object used in the level or world editor.
+    /// Defines an object used in the level or world editor. Incomplete.
     /// </summary>
     public interface IEditorObject
     {
