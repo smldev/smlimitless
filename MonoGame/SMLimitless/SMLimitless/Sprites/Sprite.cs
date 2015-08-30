@@ -239,8 +239,6 @@ namespace SMLimitless.Sprites
 				default:
 					throw new ArgumentOutOfRangeException(nameof(slopedSides), $"Invalid sloped sides value {slopedSides}. The expected range is from 0 to 4.");
 			}
-
-			// WYLO: Add intersection depth calculators and resolution distance methods.
 		}
 		
 		/// <summary>

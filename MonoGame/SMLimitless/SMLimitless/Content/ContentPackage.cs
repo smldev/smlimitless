@@ -62,7 +62,7 @@ namespace SMLimitless.Content
         /// </summary>
         internal ContentPackage()
         {
-            this.searcher = new ContentPackageResourceSearcher(this);
+			searcher = new ContentPackageResourceSearcher(this);
         }
 
         /// <summary>
@@ -71,31 +71,31 @@ namespace SMLimitless.Content
         /// <param name="settingsPath">The path to the settings file for this package.</param>
         internal void Load(string settingsPath)
         {
-            if (!this.isLoaded)
+            if (!isLoaded)
             {
                 if (!File.Exists(settingsPath))
                 {
-                    throw new FileNotFoundException(string.Format("ContentPackage.Load(string): The settings file at {0} does not exist.", settingsPath));
+                    throw new FileNotFoundException(string.Format("The settings file at {0} does not exist.", settingsPath));
                 }
 
-                this.settingsFilePath = settingsPath;
+				settingsFilePath = settingsPath;
                 Dictionary<string, string> settings = new DataReader(settingsPath).ReadFullSection("[ContentPackage]");
 
-                this.Name = settings["Name"];
-                this.Author = settings["Author"];
-                this.BaseFolderPath = string.Concat(new FileInfo(settingsPath).DirectoryName, @"\");
-                this.AssemblyPath = string.Concat(this.BaseFolderPath, settings["AssemblyPath"]);
+				Name = settings["Name"];
+				Author = settings["Author"];
+				BaseFolderPath = string.Concat(new FileInfo(settingsPath).DirectoryName, @"\");
+				AssemblyPath = string.Concat(BaseFolderPath, settings["AssemblyPath"]);
 
                 // Sanity check - let's make sure the assembly path is right.
-                if (!File.Exists(this.AssemblyPath) || !this.AssemblyPath.EndsWith(".dll"))
+                if (!File.Exists(AssemblyPath) || !AssemblyPath.EndsWith(".dll"))
                 {
-                    throw new FileNotFoundException(string.Format("ContentPackage.ctor(string): The assembly file at {0} does not exist. Please check the settings file at {1}.", this.AssemblyPath, settingsPath));
+                    throw new FileNotFoundException(string.Format("The assembly file at {0} does not exist. Please check the settings file at {1}.", AssemblyPath, settingsPath));
                 }
 
                 // Now load the assembly.
-                AssemblyManager.LoadAssembly(this.AssemblyPath);
+                AssemblyManager.LoadAssembly(AssemblyPath);
 
-                this.isLoaded = true;
+				isLoaded = true;
             }
         }
 
@@ -106,7 +106,7 @@ namespace SMLimitless.Content
         internal void LoadFromFolder(string settingsFolder)
         {
             string fullPath = string.Concat(settingsFolder, @"\settings.txt");
-            this.Load(fullPath);
+			Load(fullPath);
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace SMLimitless.Content
         /// <returns>A path to the resource.</returns>
         internal string GetResourcePath(string resourceName)
         {
-            return this.searcher.GetResourcePath(resourceName);
+            return searcher.GetResourcePath(resourceName);
         }
 
         /// <summary>
@@ -125,10 +125,10 @@ namespace SMLimitless.Content
         /// <returns>A representation of the key values.</returns>
         public override string ToString()
         {
-            string nameString = string.Format("Name: {0}", this.Name);
-            string authorString = string.Format("Author: {0}", this.Author);
-            string assemblyPathString = string.Format("Assembly Path: {0}", this.AssemblyPath);
-            string baseFolderPathString = string.Format("Base Folder Path: {0}", this.BaseFolderPath);
+            string nameString = string.Format("Name: {0}", Name);
+            string authorString = string.Format("Author: {0}", Author);
+            string assemblyPathString = string.Format("Assembly Path: {0}", AssemblyPath);
+            string baseFolderPathString = string.Format("Base Folder Path: {0}", BaseFolderPath);
             return string.Format("{0}, {1}, {2}, {3}", nameString, authorString, assemblyPathString, baseFolderPathString);
         }
     }

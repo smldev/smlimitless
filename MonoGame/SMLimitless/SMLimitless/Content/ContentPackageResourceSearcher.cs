@@ -36,7 +36,7 @@ namespace SMLimitless.Content
         internal ContentPackageResourceSearcher(ContentPackage owner)
         {
             this.owner = owner;
-            this.filePaths = new Dictionary<string, string>();
+			filePaths = new Dictionary<string, string>();
         }
 
         /// <summary>
@@ -46,24 +46,24 @@ namespace SMLimitless.Content
         /// <returns>A path to the resource.</returns>
         internal string GetResourcePath(string resourceName)
         {
-            if (!this.filePaths.ContainsKey(resourceName))
+            if (!filePaths.ContainsKey(resourceName))
             {
-                string packagePath = this.owner.BaseFolderPath;
+                string packagePath = owner.BaseFolderPath;
                 string[] matchingFilePaths = Directory.GetFiles(packagePath, string.Concat(resourceName, ".*"), SearchOption.AllDirectories).Where(s => !s.EndsWith(".txt")).ToArray(); // we need to exclude TXT configuration files
 
                 if (matchingFilePaths.Length > 1)
                 {
-                    throw new ArgumentException(string.Format("ContentPackageResourceSearcher.GetPathToResource(string): Multiple files with resource name {0}.", resourceName));
+                    throw new ArgumentException(string.Format("Multiple files with resource name {0}.", resourceName));
                 }
                 else if (matchingFilePaths.Length == 0)
                 {
                     return "";
                 }
 
-                this.filePaths.Add(resourceName, matchingFilePaths[0]);
+				filePaths.Add(resourceName, matchingFilePaths[0]);
             }
 
-            return this.filePaths[resourceName];
+            return filePaths[resourceName];
         }
     }
 }

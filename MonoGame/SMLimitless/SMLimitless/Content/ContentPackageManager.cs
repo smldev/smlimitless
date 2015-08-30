@@ -72,13 +72,13 @@ namespace SMLimitless.Content
                 if (i == loadedPackages.Count && resourcePath == "")
                 {
                     // If we've gone over every package and we still haven't found the right file...
-                    throw new ResourceNotFoundException(string.Format("ContentPackageManager.GetGraphicsResource(string): No resource named {0} exists in any loaded package.", resourceName), ContentPackageManager.loadedPackages);
+                    throw new ResourceNotFoundException(string.Format("No resource named {0} exists in any loaded package.", resourceName), ContentPackageManager.loadedPackages);
                 }
             }
 
             if (!resourcePath.EndsWith(".png"))
             {
-                throw new ArgumentException(string.Format("ContentPackageManager.GetGraphicsResource(string): File at {0} is not a PNG image file.", resourcePath));
+                throw new ArgumentException(string.Format("File at {0} is not a PNG image file.", resourcePath));
             }
 
             return GraphicsManager.LoadGraphicsObject(resourcePath);
@@ -100,13 +100,13 @@ namespace SMLimitless.Content
                 i++;
                 if (i == loadedPackages.Count && resourceName == "")
                 {
-                    throw new ResourceNotFoundException(string.Format("ContentPackageManager.GetSoundResource(string): No resource named {0} exists in any loaded package.", resourceName), ContentPackageManager.loadedPackages);
+                    throw new ResourceNotFoundException(string.Format("No resource named {0} exists in any loaded package.", resourceName), ContentPackageManager.loadedPackages);
                 }
             }
 
             if (!resourcePath.EndsWith(".mp3"))
             {
-                throw new ArgumentException(string.Format("ContentPackageManager.GetSoundResource(string): File at {0} is not an MP3 sound file.", resourcePath));
+                throw new ArgumentException(string.Format("File at {0} is not an MP3 sound file.", resourcePath));
             }
 
             SoundManager.AddSound(resourceName, resourcePath);
@@ -129,7 +129,7 @@ namespace SMLimitless.Content
                 i++;
                 if (i == loadedPackages.Count && resourcePath == "")
                 {
-                    throw new ResourceNotFoundException(string.Format("ContentPackageManager.GetAbsoluteFilePath(string): No resource named {0} exists in any loaded package.", resourceName), ContentPackageManager.loadedPackages);
+                    throw new ResourceNotFoundException(string.Format("No resource named {0} exists in any loaded package.", resourceName), ContentPackageManager.loadedPackages);
                 }
             }
 

@@ -11,13 +11,31 @@ using SMLimitless.Physics;
 
 namespace SMLimitless.Collections
 {
+	/// <summary>
+	/// Represents a grid composed of sized cells that can contain items.
+	/// The grid is "sparse" - cells only exist if they contains items.
+	/// </summary>
+	/// <typeparam name="T">A type implementing the <see cref="IPositionable2"/> interface.</typeparam>
 	public sealed class SparseCellGrid<T> where T : IPositionable2
 	{
+		/// <summary>
+		/// The default size, in pixels, of a sparse cell.
+		/// </summary>
 		private static readonly Vector2 DefaultCellSize = new Vector2(64f);
 
+		/// <summary>
+		/// A dictionary of all the cell indices as keys and the corresponding cells as values.
+		/// </summary>
 		private Dictionary<Point, SparseCell<T>> cells = new Dictionary<Point, SparseCell<T>>();
+
+		/// <summary>
+		/// A collection of all items within any of the cells in the grid.
+		/// </summary>
 		private List<T> items = new List<T>();
 
+		/// <summary>
+		/// Gets a read-only dictionary of the cells in this grid.
+		/// </summary>
 		public ReadOnlyDictionary<Point, SparseCell<T>> Cells
 		{
 			get
@@ -26,6 +44,9 @@ namespace SMLimitless.Collections
 			}
 		}
 
+		/// <summary>
+		/// Gets a read-only collection of the items in this grid.
+		/// </summary>
 		public ReadOnlyCollection<T> Items
 		{
 			get
@@ -34,13 +55,23 @@ namespace SMLimitless.Collections
 			}
 		}
 
+		/// <summary>
+		/// Gets the size of all cells.
+		/// </summary>
 		public Vector2 CellSize { get; }
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SparseCellGrid{T}"/> class.
+		/// </summary>
 		public SparseCellGrid()
 		{
 			CellSize = DefaultCellSize;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SparseCellGrid{T}"/> class.
+		/// </summary>
+		/// <param name="cellSize">The size of all cells.</param>
 		public SparseCellGrid(Vector2 cellSize)
 		{
 			if (cellSize.IsNaN() || cellSize.X <= 0f || cellSize.Y <= 0f) { throw new ArgumentException("The sparse cell grid constructor received a cell size that is not a number or has zero or negative area.", nameof(cellSize)); }
@@ -48,6 +79,11 @@ namespace SMLimitless.Collections
 			CellSize = cellSize;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SparseCellGrid{T}"/> class.
+		/// </summary>
+		/// <param name="cellSize">The size of all cells.</param>
+		/// <param name="items">A collection of all items to be contained within this grid.</param>
 		public SparseCellGrid(Vector2 cellSize, IEnumerable<T> items)
 		{
 			if (cellSize.IsNaN() || cellSize.X <= 0f || cellSize.Y <= 0f) { throw new ArgumentException("The sparse cell grid constructor received a cell size that is not a number or has zero or negative area.", nameof(cellSize)); }
@@ -56,6 +92,10 @@ namespace SMLimitless.Collections
 			CellSize = cellSize;
 		}
 
+		/// <summary>
+		/// Adds an item to this grid.
+		/// </summary>
+		/// <param name="item">The item to add.</param>
 		public void Add(T item)
 		{
 			if (item == null) throw new ArgumentNullException(nameof(item), "When trying to add an item to the sparse cell grid, the item to be added was null.");
@@ -67,6 +107,10 @@ namespace SMLimitless.Collections
 			LocalAdd(item);
 		}
 
+		/// <summary>
+		/// Removes an item from this grid.
+		/// </summary>
+		/// <param name="item">The item to remove.</param>
 		public void Remove(T item)
 		{
 			if (item == null) throw new ArgumentNullException(nameof(item), "The item to remove from the sparse cell grid was null.");
@@ -93,16 +137,12 @@ namespace SMLimitless.Collections
 					AddItemToCell(item, new Point(x, y));
 				}
 			}
-
-			////foreach (var cell in cells.Values)
-			////{
-			////	if (cell.CellItems.Contains(item))
-			////	{
-			////		cell.Add(item);
-			////	}
-			////}
 		}
 
+		/// <summary>
+		/// Removes an item from the cell grid without removing it from the Items collection.
+		/// </summary>
+		/// <param name="item">The item to remove.</param>
 		private void LocalRemove(T item)
 		{
 			foreach (var cell in cells)
@@ -111,6 +151,10 @@ namespace SMLimitless.Collections
 			}
 		}
 
+		/// <summary>
+		/// Checks and updates the containing cells of all items that have moved since the last update.
+		/// Removes any empty cells.
+		/// </summary>
 		public void Update()
 		{
 			// To update the sparse cell grid, we need to remove and re-add any items that have moved since the last update.
@@ -127,6 +171,9 @@ namespace SMLimitless.Collections
 			cells.RemoveAll(c => c.IsEmpty);
 		}
 
+		/// <summary>
+		/// Draws each cell as white rectangular edges with their cell number printed in the corner.
+		/// </summary>
 		public void Draw()
 		{
 			foreach (KeyValuePair<Point, SparseCell<T>> cellPair in cells)
@@ -145,6 +192,11 @@ namespace SMLimitless.Collections
 			}
 		}
 
+		/// <summary>
+		/// Adds an item to a given cell.
+		/// </summary>
+		/// <param name="item">The item to add.</param>
+		/// <param name="cellNumber">The two-dimensional, zero-based index of the cell to which to add the item.</param>
 		private void AddItemToCell(T item, Point cellNumber)
 		{
 			if (!cells.ContainsKey(cellNumber))
@@ -155,11 +207,21 @@ namespace SMLimitless.Collections
 			cells[cellNumber].Add(item);
 		}
 
+		/// <summary>
+		/// Gets the cell number at a given position.
+		/// </summary>
+		/// <param name="position">The position to get the cell number for.</param>
+		/// <returns>A two-dimensional, zero-based index of the cell that the given position is within.</returns>
 		private Point GetCellNumberAtPosition(Vector2 position)
 		{
 			return new Point((int)Math.Floor(position.X / CellSize.X), (int)Math.Floor(position.Y / CellSize.Y));
 		}
 
+		/// <summary>
+		/// Gets a range containing the two-dimensional, zero-based indices of every cell a given item is in.
+		/// </summary>
+		/// <param name="item">The item to get the cells for.</param>
+		/// <returns>The range of cells the item is in.</returns>
 		private SparseCellRange GetCellsItemIsIn(T item)
 		{
 			Point cellTopLeft = GetCellNumberAtPosition(new Vector2(item.Position.X, item.Position.Y));

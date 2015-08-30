@@ -9,32 +9,58 @@ using System.Windows.Forms;
 
 namespace SMLimitless.Debug
 {
+	/// <summary>
+	/// A form that exposes debugging logs and commands to the user.
+	/// </summary>
 	[Debug]
 	public partial class DebugForm : Form
 	{
+		/// <summary>
+		/// The maximum number of lines that will be displayed in the log textbox before it begins to remove old lines.
+		/// </summary>
 		private const int MaximumDisplayedLines = 200;
 
+		/// <summary>
+		/// The number of lines in the log textbox.
+		/// </summary>
 		private int displayedLines = 0;
+
+		/// <summary>
+		/// A collection of previously submitted commands.
+		/// </summary>
 		private List<string> previousCommands = new List<string>();
+
+		/// <summary>
+		/// The index of the command number that is currently being displayed
+		/// (changed when the user uses KeyUp/KeyDown to change the command).
+		/// </summary>
 		private int displayedCommandNumber = -1;
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DebugForm"/> class.
+		/// </summary>
 		public DebugForm()
 		{
 			InitializeComponent();
 		}
 
+		/// <summary>
+		/// This method is called when the Submit button is clicked.
+		/// </summary>
+		/// <param name="sender">The sender of the event.</param>
+		/// <param name="e">Arguments for this event.</param>
 		private void ButtonSubmit_Click(object sender, EventArgs e)
 		{
-			string fullCommand = this.TextCommand.Text;
+			string fullCommand = TextCommand.Text;
 			string[] commandWords = fullCommand.Split(' ');
 			string command = commandWords[0];
 			var arguments = commandWords.Skip(1);
-			this.TextCommand.Text = "";
+			TextCommand.Text = "";
 
 			if (!string.IsNullOrEmpty(command))
 			{
-				this.AddToLogText(command);
-				this.ProcessCommand(command, arguments);
+				AddToLogText(command);
+				ProcessCommand(command, arguments);
 			}
 		}
 
@@ -42,16 +68,16 @@ namespace SMLimitless.Debug
 		{
 			if (e.KeyCode == Keys.Up)
 			{
-				this.SeekCommand(Direction.Up);
+				SeekCommand(Direction.Up);
 			}
 			else if (e.KeyCode == Keys.Down)
 			{
-				this.SeekCommand(Direction.Down);
+				SeekCommand(Direction.Down);
 			}
 			else
 			{
 				// Reset the currently displayed command number in case the user edits whatever's in the box
-				this.displayedCommandNumber = -1;
+				displayedCommandNumber = -1;
 			}
 		}
 
@@ -61,19 +87,19 @@ namespace SMLimitless.Debug
 			if (displayedLines >= MaximumDisplayedLines)
 			{
 				// http://stackoverflow.com/a/16167194/2709212
-				this.TextLog.Text = this.TextLog.Text.Substring(this.TextLog.Text.IndexOf(Environment.NewLine) + 1);
+				TextLog.Text = TextLog.Text.Substring(TextLog.Text.IndexOf(Environment.NewLine) + 1);
 			}
 			else
 			{
 				displayedLines++;
 			}
 
-			this.TextLog.Text = string.Concat(this.TextLog.Text, text);
+			TextLog.Text = string.Concat(TextLog.Text, text);
 		}
 
 		private void ProcessCommand(string command, IEnumerable<string> arguments)
 		{
-			this.previousCommands.Add(command);
+			previousCommands.Add(command);
 
 			switch (command.ToLowerInvariant())
 			{
@@ -94,21 +120,21 @@ namespace SMLimitless.Debug
 						Logger.LoggingEnabled = !Logger.LoggingEnabled;
 					}
 					string message = (Logger.LoggingEnabled) ? "Logging enabled." : "Logging disabled.";
-					this.AddToLogText(message);
+					AddToLogText(message);
 					break;
 				case "physedit":
 					Forms.PhysicsSettingsEditorForm physicsForm = new Forms.PhysicsSettingsEditorForm();
 					physicsForm.Show();
 					break;
 				default:
-					this.AddToLogText(string.Format("The command \"{0}\" does not exist.", command));
+					AddToLogText(string.Format("The command \"{0}\" does not exist.", command));
 					break;
 			}
 		}
 
 		private void SeekCommand(Direction direction)
 		{
-			if (this.previousCommands.Count == 0)
+			if (previousCommands.Count == 0)
 			{
 				// There are no submitted commands.
 				return;
@@ -116,7 +142,7 @@ namespace SMLimitless.Debug
 			
 			if (direction == Direction.Down)
 			{
-				if (this.displayedCommandNumber == this.previousCommands.Count - 1)
+				if (displayedCommandNumber == previousCommands.Count - 1)
 				{
 					// We're already at the bottom of the submitted commands.
 					return;
@@ -124,31 +150,31 @@ namespace SMLimitless.Debug
 				else
 				{
 					// Seek to the next command.
-					this.displayedCommandNumber++;
-					this.TextCommand.Text = this.previousCommands[this.displayedCommandNumber];
-					this.TextCommand.SelectionStart = 0;
+					displayedCommandNumber++;
+					TextCommand.Text = previousCommands[displayedCommandNumber];
+					TextCommand.SelectionStart = 0;
 				}
 			}
 			else if (direction == Direction.Up)
 			{
-				if (this.displayedCommandNumber == 0)
+				if (displayedCommandNumber == 0)
 				{
 					// We're already the the top of the submitted commands.
 					return;
 				}
-				else if (this.displayedCommandNumber == -1)
+				else if (displayedCommandNumber == -1)
 				{
 					// In the default case, we want to seek to whatever the last command was.
-					this.displayedCommandNumber = this.previousCommands.Count - 1;
-					this.TextCommand.Text = this.previousCommands[this.displayedCommandNumber];
-					this.TextCommand.SelectionStart = 0;
+					displayedCommandNumber = previousCommands.Count - 1;
+					TextCommand.Text = previousCommands[displayedCommandNumber];
+					TextCommand.SelectionStart = 0;
 				}
 				else
 				{
 					// Seek to the previous command.
-					this.displayedCommandNumber--;
-					this.TextCommand.Text = this.previousCommands[this.displayedCommandNumber];
-					this.TextCommand.SelectionStart = 0;
+					displayedCommandNumber--;
+					TextCommand.Text = previousCommands[displayedCommandNumber];
+					TextCommand.SelectionStart = 0;
 				}
 			}
 			else
