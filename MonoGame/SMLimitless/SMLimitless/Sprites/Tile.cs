@@ -177,7 +177,10 @@ namespace SMLimitless.Sprites
 		/// <remarks>This method accounts for the different tile collision types.</remarks>
 		internal virtual Vector2 GetCollisionResolution(Sprite sprite)
 		{
-			throw new NotImplementedException();
+			if (sprite == null) { throw new ArgumentNullException(nameof(sprite), "The provided sprite was null."); }
+
+			BoundingRectangle spriteHitbox = (TileShape == CollidableShape.Rectangle) ? sprite.Hitbox : sprite.GetSlopeHitbox(slopedSides);
+			return Hitbox.GetCollisionResolution(spriteHitbox);
 		}
 
 		/// <summary>

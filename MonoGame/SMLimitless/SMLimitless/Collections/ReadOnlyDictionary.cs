@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace SMLimitless.Collections
 {
-	public class ReadOnlyDictionary<TKey, TValue> : IDictionary<TKey, TValue>
+	public sealed class ReadOnlyDictionary<TKey, TValue> : IDictionary<TKey, TValue>
 	{
 		// Credit to Thomas Levesque (http://stackoverflow.com/a/1269311/2709212)
 		private readonly IDictionary<TKey, TValue> _dictionary;
