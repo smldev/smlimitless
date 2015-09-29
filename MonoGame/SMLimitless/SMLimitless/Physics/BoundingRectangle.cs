@@ -30,6 +30,22 @@ namespace SMLimitless.Physics
         /// </summary>
         private Vector2 max;
 
+		public static BoundingRectangle Zero
+		{
+			get
+			{
+				return new BoundingRectangle(0f, 0f, 0f, 0f);
+			}
+		}
+
+		public static BoundingRectangle NaN
+		{
+			get
+			{
+				return new BoundingRectangle(float.NaN, float.NaN, float.NaN, float.NaN);
+			}
+		}
+
         /// <summary>
         /// Initializes a new instance of the <see cref="BoundingRectangle"/> struct.
         /// </summary>

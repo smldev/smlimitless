@@ -384,5 +384,3 @@ namespace SMLimitless.Sprites.Collections
 		}
     }
 }
-
-// WYLO: It's time for Level Serializer v0.03!

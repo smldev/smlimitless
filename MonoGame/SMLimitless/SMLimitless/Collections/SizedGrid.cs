@@ -18,7 +18,7 @@ namespace SMLimitless.Collections
     /// Represents a grid made of cells of a specified size.
     /// </summary>
     /// <typeparam name="T">A type that derives from the <see cref="IPositionable"/> interface.</typeparam>
-    public sealed class SizedGrid<T> where T : IPositionable
+    public sealed class SizedGrid<T> where T : IPositionable2
     {
         /*
          * The sized grid is a generic collection composed of cells.
@@ -121,13 +121,18 @@ namespace SMLimitless.Collections
             }
         }
 
+		public bool DoesRangeAlignToGrid(IEnumerable<T> items)
+		{
+			return items.All(i => (i.Position.X % CellWidth == 0) && (i.Position.Y % CellHeight == 0));
+		}
+
         /// <summary>
         /// Adds an item to the grid.
         /// WARNING: This will overwrite any items that are
         /// already present where the item will be placed.
         /// </summary>
         /// <param name="item">The item to add to the grid.</param>
-        public void Add(IPositionable item)
+        public void Add(IPositionable2 item)
         {
             if (item.Position.X % CellWidth != 0 || item.Position.Y % CellHeight != 0)
             {
@@ -160,7 +165,7 @@ namespace SMLimitless.Collections
         /// Removes an item from the grid.
         /// </summary>
         /// <param name="item">The item to be removed from the grid.</param>
-        public void Remove(IPositionable item)
+        public void Remove(IPositionable2 item)
         {
             if (item == null)
             {
