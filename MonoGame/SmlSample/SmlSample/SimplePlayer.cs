@@ -33,6 +33,11 @@ namespace SmlSample
             get { return "Testing"; }
         }
 
+		public override bool IsCompelledToMove
+		{
+			get { return false; } // we don't need this to work right now
+		}
+
         /// <summary>
         /// The graphics for this sprite.
         /// </summary>
