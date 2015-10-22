@@ -179,7 +179,7 @@ namespace SMLimitless.Debug
 			}
 			else
 			{
-				throw new ArgumentException(String.Format("DebugForm.SeekCommand(Direction): You can only seek up or seek down through commands, not {0}.", direction));
+				throw new ArgumentException(string.Format("DebugForm.SeekCommand(Direction): You can only seek up or seek down through commands, not {0}.", direction));
 			}
 		}
 	}
