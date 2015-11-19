@@ -36,6 +36,8 @@ namespace SMLimitless.Collections
         /// </summary>
         private Grid<T> grid;
 
+		public Vector2 Position { get; }
+
         /// <summary>
         /// Gets the width of a grid cell, usually in pixels.
         /// </summary>
@@ -68,14 +70,23 @@ namespace SMLimitless.Collections
             }
         }
 
+		public BoundingRectangle Bounds
+		{
+			get
+			{
+				return new BoundingRectangle(Position.X, Position.Y, (CellWidth * Width), (CellHeight * Height));
+			}
+		}
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SizedGrid{T}"/> class.
         /// </summary>
+		/// <param name="position">The position of the top-left corner of the grid.</param>
         /// <param name="cellWidth">The width of the grid cells.</param>
         /// <param name="cellHeight">The height of the grid cells.</param>
         /// <param name="gridWidth">The width of the grid in cells.</param>
         /// <param name="gridHeight">The height of the grid in cells.</param>
-        public SizedGrid(int cellWidth, int cellHeight, int gridWidth, int gridHeight)
+        public SizedGrid(Vector2 position, int cellWidth, int cellHeight, int gridWidth, int gridHeight)
         {
             if (cellWidth <= 0 || cellHeight <= 0)
             {
@@ -87,6 +98,7 @@ namespace SMLimitless.Collections
             }
 
 			grid = new Grid<T>(gridWidth, gridHeight);
+			Position = position;
 			CellWidth = cellWidth;
 			CellHeight = cellHeight;
         }
@@ -123,7 +135,11 @@ namespace SMLimitless.Collections
 
 		public bool DoesRangeAlignToGrid(IEnumerable<T> items)
 		{
-			return items.All(i => (i.Position.X % CellWidth == 0) && (i.Position.Y % CellHeight == 0));
+			return items.All(i =>
+			{
+				var offset = OffsetPosition(i);
+				return offset.X % CellWidth == 0 && offset.Y % CellHeight == 0;
+			});
 		}
 
         /// <summary>
@@ -142,8 +158,12 @@ namespace SMLimitless.Collections
             {
                 throw new ArgumentException(string.Format("SizedGrid<T>.Add(IPositionable): The item's size is not a multiple of the grid's cell size. Each grid cell has a size of {0}, {1}, and the item has a size of {2}, {3}.", CellWidth, CellHeight, item.Position.X, item.Position.Y));
             }
+			else if (!Bounds.IntersectsIncludingEdges(item.Position))
+			{
+				throw new ArgumentException("Attempted to add an item that was outside the bounds of the grid. To add such an item, call AddWithResize instead.");
+			}
 
-            var startingCell = new Point((int)item.Position.X / CellWidth, (int)item.Position.Y / CellHeight);
+			var startingCell = GetCellAtPosition(item.Position);
             int widthInCells = (int)item.Size.X / CellWidth;
             int heightInCells = (int)item.Size.Y / CellHeight;
 
@@ -161,6 +181,11 @@ namespace SMLimitless.Collections
             }
         }
 
+		public void AddWithResize(T item)
+		{
+			throw new NotImplementedException();
+		}
+
         /// <summary>
         /// Removes an item from the grid.
         /// </summary>
@@ -171,12 +196,8 @@ namespace SMLimitless.Collections
             {
                 throw new ArgumentNullException("item", "SizedGrid<T>.Remove(IPositionable): Cannot remove a null reference from the grid.");
             }
-            else if (!IndexWithinBounds((int)item.Position.X, (int)item.Position.Y))
-            {
-                throw new ArgumentOutOfRangeException(string.Format("SizedGrid<T>.Remove(IPositionable): Cannot remove an item that does not fall within the grid. X:{0}, Y:{1}", item.Position.X, item.Position.Y));
-            }
 
-            var startingCell = new Point((int)item.Position.X / CellWidth, (int)item.Position.Y / CellHeight);
+			var startingCell = GetCellAtPosition(item.Position);
             int widthInCells = (int)item.Size.X / CellWidth;
             int heightInCells = (int)item.Size.Y / CellHeight;
 
@@ -209,7 +230,8 @@ namespace SMLimitless.Collections
                 throw new ArgumentException(string.Format("SizedGrid.GetSubgrid(int, int, int, int): The ending position {0}, {1} is not within the grid.", x + width, y + height));
             }
 
-            SizedGrid<T> result = new SizedGrid<T>(CellWidth, CellWidth, width, height);
+			Vector2 subgridPosition = Position + new Vector2(x * CellWidth, y * CellWidth);
+            SizedGrid<T> result = new SizedGrid<T>(subgridPosition, CellWidth, CellWidth, width, height);
             int resultX = 0, resultY = 0;
 
             for (int yPos = y; yPos < y + height; yPos++)
@@ -234,6 +256,8 @@ namespace SMLimitless.Collections
         /// <returns>The cell number for the given position.</returns>
         public Point GetCellAtPosition(Vector2 position)
         {
+			position = OffsetPosition(position);
+
             int x = (int)(position.X / CellWidth);
             int y = (int)(position.Y / CellHeight);
 
@@ -256,15 +280,15 @@ namespace SMLimitless.Collections
         /// </summary>
         /// <param name="position">The position to start drawing the grid at.</param>
         /// <param name="lineColor">The color of the cell lines.</param>
-        public void Draw(Vector2 position, Color lineColor)
+        public void Draw(Color lineColor)
         {
             // The total number of vertical lines to draw is (height + 1).
             // The total number of horizontal lines to draw is (width + 1).
             float gridWidth = CellWidth * grid.Width;
             float gridHeight = CellHeight * grid.Height;
 
-            float xPosition = position.X;
-            float yPosition = position.Y;
+            float xPosition = Position.X;
+            float yPosition = Position.Y;
 
             for (int y = 0; y <= grid.Height; y++)
             {
@@ -272,7 +296,7 @@ namespace SMLimitless.Collections
                 yPosition += CellHeight;
             }
 
-            yPosition = position.Y;
+            yPosition = Position.Y;
 
             for (int x = 0; x <= grid.Width; x++)
             {
@@ -299,10 +323,17 @@ namespace SMLimitless.Collections
         /// <returns>True if the point falls within the grid, false if otherwise.</returns>
         public bool PointWithinBounds(Vector2 point)
         {
-            int rightEdge = grid.Width * CellWidth;
-            int bottomEdge = grid.Height * CellHeight;
-
-            return (point.X >= 0f && point.X <= rightEdge) && (point.Y >= 0f && point.Y <= bottomEdge);
+			return Bounds.IntersectsIncludingEdges(point);
         }
+
+		private Vector2 OffsetPosition(T item)
+		{
+			return item.Position - Position;
+		}
+
+		private Vector2 OffsetPosition(Vector2 point)
+		{
+			return Position - point;
+		}
     }
 }
