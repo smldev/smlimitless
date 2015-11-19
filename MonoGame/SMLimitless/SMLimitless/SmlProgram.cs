@@ -46,6 +46,8 @@ namespace SMLimitless
             Content.RootDirectory = "Content";
 
             this.IsMouseVisible = true;
+
+			
         }
 
         /// <summary>

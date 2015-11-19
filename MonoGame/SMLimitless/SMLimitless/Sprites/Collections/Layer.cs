@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using SMLimitless.Collections;
+using SMLimitless.Extensions;
 using SMLimitless.Physics;
 
 namespace SMLimitless.Sprites.Collections
@@ -38,8 +39,25 @@ namespace SMLimitless.Sprites.Collections
 
 			if (!tiles.Any()) return;
 			if (!this.tiles.DoesRangeAlignToGrid(tiles)) { throw new ArgumentException("Tried to add tiles to a grid that weren't grid aligned."); }
+
+			BoundingRectangle allTilesBound = tiles.GetBoundsOfPositionables();
+
+			// so, here's probably a good point to talk about cell coordinate agnosticity
+			// Tiles will have cell coordinates since they're in a grid where each cell has coordinates,
+			// but you can't rely on them, and here's why:
+			int allTilesBoundWidthInCells = (int)(allTilesBound.Width / this.tiles.CellWidth);
+			int allTilesBoundHeightInCells = (int)(allTilesBound.Height / this.tiles.CellHeight);
+
+			// ...adding tiles that are to the left and/or above the old grid...
+			Vector2 newGridOrigin = new Vector2(allTilesBound.X, allTilesBound.Y);
+			SizedGrid<Tile> newGrid = new SizedGrid<Tile>(this.tiles.CellWidth, this.tiles.CellHeight, 
+														  allTilesBoundWidthInCells, allTilesBoundHeightInCells);
+
+			// ...forces a change of the cell coordinates of every tile already in the grid.
 			
-			var tileList = tiles.ToList();
+			// ...
+			// so apparently a SizedGrid has no position of its own...
+			// brb
 		}
 	}
 }
