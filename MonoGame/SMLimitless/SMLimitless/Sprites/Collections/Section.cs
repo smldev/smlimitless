@@ -61,22 +61,22 @@ namespace SMLimitless.Sprites.Collections
 		{
 			get
 			{
-				if (this.ScrollType != CameraScrollType.AutoScrollAlongPath)
+				if (ScrollType != CameraScrollType.AutoScrollAlongPath)
 				{
 					throw new InvalidOperationException("Section.AutoscrollPathName.get: Section scroll type is not autoscrolling.");
 				}
 
-				return this.autoscrollPathName;
+				return autoscrollPathName;
 			}
 
 			internal set
 			{
-				if (this.ScrollType != CameraScrollType.AutoScrollAlongPath && value != null)
+				if (ScrollType != CameraScrollType.AutoScrollAlongPath && value != null)
 				{
 					throw new InvalidOperationException("Section.AutoscrollPathName.set: Section scroll type is not autoscrolling.");
 				}
 
-				this.autoscrollPathName = value;
+				autoscrollPathName = value;
 			}
 		}
 
@@ -87,22 +87,22 @@ namespace SMLimitless.Sprites.Collections
 		{
 			get
 			{
-				if (this.ScrollType != CameraScrollType.AutoScroll)
+				if (ScrollType != CameraScrollType.AutoScroll)
 				{
 					throw new InvalidOperationException("Section.AutoscrollSpeed.get: Section scroll type is not autoscrolling.");
 				}
 
-				return this.autoscrollSpeed;
+				return autoscrollSpeed;
 			}
 
 			internal set
 			{
-				if (this.ScrollType != CameraScrollType.AutoScroll && !value.IsNaN())
+				if (ScrollType != CameraScrollType.AutoScroll && !value.IsNaN())
 				{
 					throw new InvalidOperationException("Section.AutoscrollSpeed.set: Section scroll type is not autoscrolling.");
 				}
 
-				this.autoscrollSpeed = value;
+				autoscrollSpeed = value;
 			}
 		}
 
@@ -156,20 +156,23 @@ namespace SMLimitless.Sprites.Collections
         /// </summary>
 		internal bool IsSectionLoaded { get; set; }
 
+		// temporary
+		public Layer MainLayer { get; set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Section"/> class.
         /// </summary>
         /// <param name="owner">The level that owns this section.</param>
         public Section(Level owner)
         {
-            this.Camera = new Camera2D();
-            this.Owner = owner;
-            this.tiles = new List<Tile>();
-            this.Sprites = new List<Sprite>();
-            this.Paths = new List<Path>();
-            this.Background = new Background(this);
+			Camera = new Camera2D();
+			Owner = owner;
+			tiles = new List<Tile>();
+			Sprites = new List<Sprite>();
+			Paths = new List<Path>();
+			Background = new Background(this);
 
-            GameServices.Camera = this.Camera;
+            GameServices.Camera = Camera;
         }
 
         /// <summary>
@@ -177,11 +180,11 @@ namespace SMLimitless.Sprites.Collections
         /// </summary>
         public void Initialize()
         {
-            if (!this.isInitialized)
+            if (!isInitialized)
             {
-                this.Background.Initialize();
-				this.Sprites.ForEach(s => s.Initialize(this));
-                this.isInitialized = true;
+				Background.Initialize();
+				Sprites.ForEach(s => s.Initialize(this));
+				isInitialized = true;
             }
         }
 
@@ -190,12 +193,12 @@ namespace SMLimitless.Sprites.Collections
         /// </summary>
         public void LoadContent()
         {
-            if (!this.isContentLoaded)
+            if (!isContentLoaded)
             {
-                this.Background.LoadContent();
-                this.tiles.ForEach(t => t.LoadContent());
-                this.Sprites.ForEach(s => s.LoadContent());
-                this.isContentLoaded = true;
+				Background.LoadContent();
+				tiles.ForEach(t => t.LoadContent());
+				Sprites.ForEach(s => s.LoadContent());
+				isContentLoaded = true;
             }
         }
 
@@ -208,7 +211,7 @@ namespace SMLimitless.Sprites.Collections
 
 			stopwatch.Stop();
 
-            this.TempUpdate();
+			TempUpdate();
         }
 
         /// <summary>
@@ -217,22 +220,22 @@ namespace SMLimitless.Sprites.Collections
         private void TempUpdate()
         {
             // Update the camera's position (temp).
-            Sprite player = this.Sprites.Where(s => s.GetType().Name.Contains("SimplePlayer")).FirstOrDefault();
+            Sprite player = Sprites.Where(s => s.GetType().Name.Contains("SimplePlayer")).FirstOrDefault();
             if (player != null)
             {
-                float cameraX = MathHelper.Clamp(player.Hitbox.Center.X - 400f, this.Bounds.X, this.Bounds.Width);
-                float cameraY = MathHelper.Clamp(player.Hitbox.Center.Y - 240f, this.Bounds.Y, this.Bounds.Height);
-                Vector2 offset = new Vector2(cameraX - this.Camera.Position.X, cameraY - this.Camera.Position.Y);
-                this.MoveCamera(offset);
+                float cameraX = MathHelper.Clamp(player.Hitbox.Center.X - 400f, Bounds.X, Bounds.Width);
+                float cameraY = MathHelper.Clamp(player.Hitbox.Center.Y - 240f, Bounds.Y, Bounds.Height);
+                Vector2 offset = new Vector2(cameraX - Camera.Position.X, cameraY - Camera.Position.Y);
+				MoveCamera(offset);
             }
 
             if (Input.InputManager.IsCurrentKeyPress(Microsoft.Xna.Framework.Input.Keys.K))
             {
-                this.Camera.Zoom += 0.01f;
+				Camera.Zoom += 0.01f;
             }
             else if (Input.InputManager.IsCurrentKeyPress(Microsoft.Xna.Framework.Input.Keys.M))
             {
-                this.Camera.Zoom -= 0.01f;
+				Camera.Zoom -= 0.01f;
 			}
 			else if (Input.InputManager.IsNewKeyPress(Microsoft.Xna.Framework.Input.Keys.OemTilde))
 			{
@@ -252,18 +255,18 @@ namespace SMLimitless.Sprites.Collections
         /// </summary>
         public void Draw()
         {
-            this.Background.Draw();
+			Background.Draw();
 
-            this.tiles.ForEach(t => t.Draw());
+			tiles.ForEach(t => t.Draw());
 
-            this.Sprites.ForEach(s => s.Draw());
+			Sprites.ForEach(s => s.Draw());
 
-			GameServices.DrawStringDefault(this.debugText);
+			GameServices.DrawStringDefault(debugText);
 
-            Sprite player = this.Sprites.Where(s => s.GetType().Name.EndsWith("SimplePlayer")).FirstOrDefault();
+            Sprite player = Sprites.Where(s => s.GetType().Name.EndsWith("SimplePlayer")).FirstOrDefault();
             BoundingRectangle drawRect = new BoundingRectangle(player.Hitbox.Left, player.Hitbox.Center.Y, 8f, 8f);
             Rectangle checkRect = new Rectangle((int)player.Hitbox.Center.X, (int)(player.Hitbox.Bottom + 3f), 1, 1);
-            Tile tile = this.GetTileAtPosition(new Vector2(checkRect.X, checkRect.Y), true);
+            Tile tile = GetTileAtPosition(new Vector2(checkRect.X, checkRect.Y), true);
             GameServices.SpriteBatch.DrawRectangle(drawRect.ToRectangle(), Color.Red);
             GameServices.SpriteBatch.DrawRectangle(checkRect, Color.White);
             if (tile != null)
@@ -272,7 +275,7 @@ namespace SMLimitless.Sprites.Collections
             }
 
 			Vector2 mousePos = new Vector2(Input.InputManager.CurrentMouseState.X, Input.InputManager.CurrentMouseState.Y);
-			Tile mouseTile = this.GetTileAtPositionByBounds(mousePos, true);
+			Tile mouseTile = GetTileAtPositionByBounds(mousePos, true);
         }
 
         /// <summary>
@@ -286,7 +289,7 @@ namespace SMLimitless.Sprites.Collections
                 throw new ArgumentNullException("Section.AddTile(Tile): Tile cannot be null.");
             }
 
-            this.tiles.Add(tile);
+			tiles.Add(tile);
         }
 
         /// <summary>
@@ -295,9 +298,9 @@ namespace SMLimitless.Sprites.Collections
         /// <param name="tile">The tile to remove.</param>
         public void RemoveTile(Tile tile)
         {
-            if (this.tiles.Contains(tile))
+            if (tiles.Contains(tile))
             {
-                this.tiles.Remove(tile);
+				tiles.Remove(tile);
             }
         }
 
@@ -307,7 +310,7 @@ namespace SMLimitless.Sprites.Collections
         /// <param name="sprite">The sprite to remove.</param>
         public void RemoveSprite(Sprite sprite)
         {
-            this.Sprites.Remove(sprite);
+			Sprites.Remove(sprite);
         }
 
         /// <summary>
@@ -319,7 +322,7 @@ namespace SMLimitless.Sprites.Collections
         {
             foreach (Sprite sprite in spritesToRemove)
             {
-                this.Sprites.Remove(sprite);
+				Sprites.Remove(sprite);
             }
         }
 
@@ -351,13 +354,13 @@ namespace SMLimitless.Sprites.Collections
 		/// <param name="offset">The distance to move the camera by.</param>
 		public void MoveCamera(Vector2 offset)
 		{
-			if (!this.IsSectionLoaded)
+			if (!IsSectionLoaded)
 			{
 				throw new InvalidOperationException("Section.MoveCamera(Vector2): The section isn't loaded - the section needs to be loaded before anything can happen.");
 			}
 
 			// Ensure the camera falls within bounds.
-			Vector2 newPosition = this.Camera.Position + offset;
+			Vector2 newPosition = Camera.Position + offset;
 
 			if (newPosition.X < 0f)
 			{
@@ -369,18 +372,18 @@ namespace SMLimitless.Sprites.Collections
 				newPosition.Y = 0f;
 			}
 
-			Vector2 viewportBottomRight = new Vector2(newPosition.X + this.Camera.ViewportSize.X, newPosition.Y + this.Camera.ViewportSize.Y);
-			if (viewportBottomRight.X > this.Bounds.Right)
+			Vector2 viewportBottomRight = new Vector2(newPosition.X + Camera.ViewportSize.X, newPosition.Y + Camera.ViewportSize.Y);
+			if (viewportBottomRight.X > Bounds.Right)
 			{
-				newPosition.X -= viewportBottomRight.X - this.Bounds.Right;
+				newPosition.X -= viewportBottomRight.X - Bounds.Right;
 			}
 
-			if (viewportBottomRight.Y > this.Bounds.Bottom)
+			if (viewportBottomRight.Y > Bounds.Bottom)
 			{
-				newPosition.Y -= viewportBottomRight.Y - this.Bounds.Bottom;
+				newPosition.Y -= viewportBottomRight.Y - Bounds.Bottom;
 			}
 
-			this.Camera.Position = newPosition;
+			Camera.Position = newPosition;
 		}
     }
 }

@@ -407,6 +407,11 @@ namespace SMLimitless.Physics
             }
         }
 
+		public bool Within(BoundingRectangle that)
+		{
+			return (that.Left >= Left) && (that.Right <= Right) && (that.Top >= Top) && (that.Bottom <= Bottom);
+		}
+
         /// <summary>
         /// Returns the intersection depth between a given rectangle and this one.
         /// </summary>

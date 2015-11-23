@@ -136,5 +136,16 @@ namespace SMLimitless.Collections
         {
             return (x >= 0 && x < Width) && (y >= 0 && y < Height);
         }
+
+		public IEnumerator<T> GetEnumerator()
+		{
+			for (int y = 0; y < Height; y++)
+			{
+				for (int x = 0; x < Width; x++)
+				{
+					yield return this[x, y];
+				}
+			}
+		}
     }
 }

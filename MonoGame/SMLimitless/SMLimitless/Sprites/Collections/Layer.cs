@@ -1,34 +1,73 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using SMLimitless.Collections;
 using SMLimitless.Extensions;
+using SMLimitless.Interfaces;
 using SMLimitless.Physics;
 
 namespace SMLimitless.Sprites.Collections
 {
-	public sealed class Layer
+	public sealed class Layer : IName
 	{
-		public bool IsMainLayer { get; }
+		public bool IsMainLayer { get; private set; }
 		private bool isInitialized;
 		private bool isContentLoaded;
 		private bool isActive;
 
 		private Section owner;
 
-		private SizedGrid<Tile> tiles;
+		private SizedGrid<Tile> tiles;	// TODO: this should be set on deserialize
 		private List<Sprite> sprites = new List<Sprite>();  // bit a philosophy change here. In master, sections owned sprites, layers, and the BG. Here, sections own layers own tiles/sprites, and the BG.
 
 		private BoundingRectangle bounds = BoundingRectangle.NaN;
 		private Vector2 position = new Vector2(float.NaN);
 		private Vector2 velocity = Vector2.Zero;
 
+		[DefaultValue(""), Description("The name of this layer to be used in event scripting. This field is optional.")]
+		public string Name { get; set; }
+
 		public Layer(Section cOwner, bool isMainLayer = false)
 		{
 			owner = cOwner;
 			IsMainLayer = isMainLayer;
+		}
+
+		public void Initialize()
+		{
+			if (!isInitialized)
+			{
+				tiles.ForEach(t => t.Initialize(owner));
+				sprites.ForEach(s => s.Initialize(owner));
+
+				isInitialized = true;
+			}
+		}
+
+		public void LoadContent()
+		{
+			if (!isContentLoaded)
+			{
+				tiles.ForEach(t => t.LoadContent());
+				sprites.ForEach(s => s.LoadContent());
+
+				isContentLoaded = true;
+			}
+		}
+
+		public void Update()
+		{
+			// TODO: change this method to account for active/inactive layers, tiles and sprites
+			tiles.ForEach(t => t.Update());
+			sprites.ForEach(s => s.Update());
+		}
+
+		public void Draw(Color color)
+		{
+			bounds.DrawOutline(color);
 		}
 
 		internal void AddTiles(IEnumerable<Tile> tiles)
@@ -50,14 +89,66 @@ namespace SMLimitless.Sprites.Collections
 
 			// ...adding tiles that are to the left and/or above the old grid...
 			Vector2 newGridOrigin = new Vector2(allTilesBound.X, allTilesBound.Y);
-			SizedGrid<Tile> newGrid = new SizedGrid<Tile>(this.tiles.CellWidth, this.tiles.CellHeight, 
+			SizedGrid<Tile> newGrid = new SizedGrid<Tile>(newGridOrigin, this.tiles.CellWidth, this.tiles.CellHeight, 
 														  allTilesBoundWidthInCells, allTilesBoundHeightInCells);
 
 			// ...forces a change of the cell coordinates of every tile already in the grid.
-			
-			// ...
-			// so apparently a SizedGrid has no position of its own...
-			// brb
+			// We also have to move the layer's position accordingly.
+			position = newGridOrigin;
+
+			this.tiles.ForEach(t => newGrid.Add(t));
+			tiles.ForEach(t => newGrid.Add(t));
+
+			this.tiles = newGrid;
+		}
+
+		internal void AddTile(Tile tile)
+		{
+			AddTiles(new[] { tile });
+		}
+
+		public void RemoveTile(Tile tile)
+		{
+			// Unlike when adding tiles, removing a tile doesn't shrink the grid even if the grid could shrink
+			// also holy cow the RemoveTile(Tile) implementation on master is *horrible*
+			tiles.Remove(tile);
+		}
+
+		internal void SetMainLayer()
+		{
+			if (owner.MainLayer != null)
+			{
+				throw new InvalidOperationException("Tried to set a section's main layer, but the section already has a main layer.");
+			}
+
+			IsMainLayer = true;
+			Vector2 objectSize = GameServices.GameObjectSize;
+			SizedGrid<Tile> newGrid = new SizedGrid<Tile>(Vector2.Zero, (int)objectSize.X, (int)objectSize.Y,
+														  (int)(owner.Bounds.Width / objectSize.X), (int)(owner.Bounds.Height / objectSize.Y));
+			tiles.ForEach(t => newGrid.Add(t));
+			tiles = newGrid;
+		}
+
+		public void Move(Vector2 position)
+		{
+			if (IsMainLayer) { throw new InvalidOperationException("Cannot move the main layer."); }
+
+			Vector2 distance = position - this.position;
+			Translate(distance);
+		}
+
+		public void Translate(Vector2 distance)
+		{
+			if (IsMainLayer) { throw new InvalidOperationException("Cannot translate the main layer."); }
+
+			position += distance;
+
+			// Move every tile and sprite first.
+			tiles.ForEach(t => t.Position += distance);
+			sprites.ForEach(s => s.Position += distance);
+
+			// Finally, move the grid.
+			tiles.Position += distance;
 		}
 	}
 }

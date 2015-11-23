@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,7 +19,7 @@ namespace SMLimitless.Collections
     /// Represents a grid made of cells of a specified size.
     /// </summary>
     /// <typeparam name="T">A type that derives from the <see cref="IPositionable"/> interface.</typeparam>
-    public sealed class SizedGrid<T> where T : IPositionable2
+    public sealed class SizedGrid<T> : IEnumerable<T> where T : IPositionable2
     {
         /*
          * The sized grid is a generic collection composed of cells.
@@ -36,7 +37,7 @@ namespace SMLimitless.Collections
         /// </summary>
         private Grid<T> grid;
 
-		public Vector2 Position { get; }
+		public Vector2 Position { get; internal set; }
 
         /// <summary>
         /// Gets the width of a grid cell, usually in pixels.
@@ -188,6 +189,7 @@ namespace SMLimitless.Collections
 
 		public void AddWithResize(T item)
 		{
+			// we don't need this right now
 			throw new NotImplementedException();
 		}
 
@@ -339,6 +341,16 @@ namespace SMLimitless.Collections
 		private Vector2 OffsetPosition(Vector2 point)
 		{
 			return Position - point;
+		}
+
+		public IEnumerator<T> GetEnumerator()
+		{
+			return grid.GetEnumerator();
+		}
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return grid.GetEnumerator();
 		}
     }
 }
