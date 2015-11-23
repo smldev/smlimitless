@@ -44,10 +44,28 @@ namespace SMLimitless
 
 namespace SMLimitless.Debug
 {
+	/// <summary>
+	/// Enumerates the different levels of log messages.
+	/// </summary>
 	public enum LogLevel
 	{
+		/// <summary>
+		/// Represents a message that is merely informational in nature;
+		/// messages of this variety provide useful information for debugging,
+		/// but are not particularly dire.
+		/// </summary>
 		Information,
+
+		/// <summary>
+		/// Represents a message that conveys a warning about the state of the
+		/// game or other components.
+		/// </summary>
 		Warning,
+
+		/// <summary>
+		/// Represnts a message that notifies about an error that occurred in
+		/// the game.
+		/// </summary>
 		Error
 	}
 }
@@ -153,22 +171,62 @@ namespace SMLimitless.Sprites
         Passive
     }
 
+	/// <summary>
+	/// Enumerates the solid sides of a rectangular tile.
+	/// </summary>
 	[Flags]
 	public enum TileRectSolidSides
 	{
+		/// <summary>
+		/// No side is solid.
+		/// </summary>
 		Passive = 0x00,
+
+		/// <summary>
+		/// The top side is solid.
+		/// </summary>
 		Top = 0x01,
+
+		/// <summary>
+		/// The bottom side is solid.
+		/// </summary>
 		Bottom = 0x02,
+
+		/// <summary>
+		/// The left side is solid.
+		/// </summary>
 		Left = 0x04,
+		
+		/// <summary>
+		/// The right side is solid.
+		/// </summary>
 		Right = 0x08,
 	}
 
+	/// <summary>
+	/// Enumerates the solid sides of a sloped tile.
+	/// </summary>
 	[Flags]
 	public enum TileTriSolidSides
 	{
+		/// <summary>
+		/// No side is solid.
+		/// </summary>
 		Passive = 0x00,
+
+		/// <summary>
+		/// The sloped side is solid.
+		/// </summary>
 		Slope = 0x01,
+
+		/// <summary>
+		/// The vertical side is solid.
+		/// </summary>
 		VerticalLeg = 0x02,
+
+		/// <summary>
+		/// The horizontal side is solid.
+		/// </summary>
 		HorizontalLeg = 0x04
 	}
 

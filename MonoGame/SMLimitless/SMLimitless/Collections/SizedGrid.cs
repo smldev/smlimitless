@@ -133,6 +133,11 @@ namespace SMLimitless.Collections
             }
         }
 
+		/// <summary>
+		/// Returns a value indicating whether all items in an enumerable align to the grid.
+		/// </summary>
+		/// <param name="items">The items to check for alignment.</param>
+		/// <returns>True if all items align to the grid, false if they don't.</returns>
 		public bool DoesRangeAlignToGrid(IEnumerable<T> items)
 		{
 			return items.All(i =>

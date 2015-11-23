@@ -28,6 +28,13 @@ namespace SMLimitless.Extensions
 			return new Vector2((float)Math.Abs(vector.X), (float)Math.Abs(vector.Y));
 		}
 
+		/// <summary>
+		/// Returns a vector from a given vector moved by a given distance in a given cardinal direction.
+		/// </summary>
+		/// <param name="vector">The original vector.</param>
+		/// <param name="direction">The direction in which the return vector is moved.</param>
+		/// <param name="distance">The distance by which to move the return vector.</param>
+		/// <returns>A vector moved by the given distance in the given direction.</returns>
 		public static Vector2 Move(this Vector2 vector, Direction direction, float distance)
 		{
 			switch (direction)
@@ -281,6 +288,11 @@ namespace SMLimitless.Extensions
 			return value.Select(v => v.Serialize()).ToList(); // yay LINQ
 		}
 
+		/// <summary>
+		/// Converts a list of vectors into a string in which values are compact.
+		/// </summary>
+		/// <param name="values">The values to convert.</param>
+		/// <returns>A string containing all values of the list expressed in "x,y" form.</returns>
 		public static string SerializeCompact(this List<Vector2> values)
 		{
 			StringBuilder result = new StringBuilder();
@@ -288,6 +300,11 @@ namespace SMLimitless.Extensions
 			return result.ToString();
 		}
 
+		/// <summary>
+		/// Converts a string containing compact vectors into a list vectors.
+		/// </summary>
+		/// <param name="value">The string containing the compact vectors.</param>
+		/// <returns>A list of vectors.</returns>
 		public static List<Vector2> DeserializeCompact(this string value)
 		{
 			var result = new List<Vector2>();

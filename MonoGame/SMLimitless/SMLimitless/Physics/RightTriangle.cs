@@ -499,6 +499,9 @@ namespace SMLimitless.Physics
     /// </summary>
     public enum RtSlopedSides
     {
+		/// <summary>
+		/// A default value. Do not use.
+		/// </summary>
 		Default,
 
         /// <summary>

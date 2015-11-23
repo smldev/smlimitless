@@ -30,6 +30,9 @@ namespace SMLimitless.Physics
         /// </summary>
         private Vector2 max;
 
+		/// <summary>
+		/// Gets a bounding rectangle at the origin of the world with zero width and height.
+		/// </summary>
 		public static BoundingRectangle Zero
 		{
 			get
@@ -38,6 +41,9 @@ namespace SMLimitless.Physics
 			}
 		}
 
+		/// <summary>
+		/// Gets a bounding rectangle with all coordinates set to NaN.
+		/// </summary>
 		public static BoundingRectangle NaN
 		{
 			get
@@ -325,6 +331,11 @@ namespace SMLimitless.Physics
             return true;
         }
 
+		/// <summary>
+		/// Returns a value indicating whether another rectangle intersects or is tangent to this one.
+		/// </summary>
+		/// <param name="that">The other rectangle.</param>
+		/// <returns>True if the other rectangle intersects or is tangent to this one, false if otherwise.</returns>
 		public bool IntersectsIncludingEdges(BoundingRectangle that)
 		{
 			if (that.Right < Left || that.Left > Right)

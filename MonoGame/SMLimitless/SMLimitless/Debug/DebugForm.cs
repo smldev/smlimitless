@@ -81,6 +81,10 @@ namespace SMLimitless.Debug
 			}
 		}
 
+		/// <summary>
+		/// Adds a string to the debug log text.
+		/// </summary>
+		/// <param name="text">The text to add.</param>
 		public void AddToLogText(string text)
 		{
 			text = string.Concat("> ", text, Environment.NewLine);

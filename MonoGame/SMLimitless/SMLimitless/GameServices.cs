@@ -81,6 +81,9 @@ namespace SMLimitless
         /// </summary>
         public static BitmapFont DebugFont { get; private set; }
 
+		/// <summary>
+		/// Gets a debug form used for printing log messages and receiving debug commands.
+		/// </summary>
 		public static DebugForm DebugForm { get; private set; }
 
         /// <summary>
