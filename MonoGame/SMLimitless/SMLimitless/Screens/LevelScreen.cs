@@ -30,7 +30,9 @@ namespace SMLimitless.Screens
         /// <param name="parameters">Parameters to specify how the screen should be initialized. Contains a path to the level file to load.</param>
         public override void Initialize(Screen owner, string parameters)
         {
-			throw new NotImplementedException();
+			level = new Level();
+			level.Sections.Add(new Section(level));
+			level.ActiveSection = level.Sections.First();
         }
 
         /// <summary>
@@ -38,7 +40,7 @@ namespace SMLimitless.Screens
         /// </summary>
         public override void LoadContent()
         {
-            this.level.LoadContent();
+			level.LoadContent();
         }
 
         /// <summary>
@@ -46,7 +48,7 @@ namespace SMLimitless.Screens
         /// </summary>
         public override void Update()
         {
-            this.level.Update();
+			level.Update();
         }
 
         /// <summary>
@@ -54,7 +56,7 @@ namespace SMLimitless.Screens
         /// </summary>
         public override void Draw()
         {
-            this.level.Draw();
+			level.Draw();
         }
     }
 }

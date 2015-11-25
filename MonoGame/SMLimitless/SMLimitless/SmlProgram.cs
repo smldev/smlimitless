@@ -42,10 +42,10 @@ namespace SMLimitless
         /// </summary>
         public SmlProgram()
         {
-            this.graphics = new GraphicsDeviceManager(this);
+			graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
-            this.IsMouseVisible = true;
+			IsMouseVisible = true;
 
 			
         }
@@ -64,7 +64,7 @@ namespace SMLimitless
             string contentPackageSettingsPath = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), @"TestPackage\settings.txt");
             SMLimitless.Content.ContentPackageManager.AddPackage(contentPackageSettingsPath);
             GameServices.Camera = new Physics.Camera2D(); // NOTE: comment out this line and the above if loading a LevelScreen.
-            ScreenManager.SetRootScreen(new TestScreen(), System.IO.Directory.GetCurrentDirectory() + @"\level_serializer002.txt");
+            ScreenManager.SetRootScreen(new LevelScreen(), System.IO.Directory.GetCurrentDirectory() + @"\level_serializer002.txt");
             base.Initialize();
 
 			stopwatch.Stop();
@@ -78,8 +78,8 @@ namespace SMLimitless
         {
             Stopwatch stopwatch = Stopwatch.StartNew();
 
-            this.spriteBatch = new SpriteBatch(GraphicsDevice);
-            GameServices.InitializeServices(this.GraphicsDevice, this.spriteBatch, this.Content);
+			spriteBatch = new SpriteBatch(GraphicsDevice);
+            GameServices.InitializeServices(GraphicsDevice, spriteBatch, Content);
             GameServices.InitializeFont("font");
 
             ScreenManager.LoadContent();
@@ -107,7 +107,7 @@ namespace SMLimitless
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
             {
-                this.Exit();
+				Exit();
             }
 
             if (GameServices.GetService<GameTime>() == null)
@@ -132,9 +132,9 @@ namespace SMLimitless
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            this.spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, GameServices.Camera.GetTransformation());
+			spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, GameServices.Camera.GetTransformation());
             ScreenManager.Draw();
-            this.spriteBatch.End();
+			spriteBatch.End();
 
             base.Draw(gameTime);
         }

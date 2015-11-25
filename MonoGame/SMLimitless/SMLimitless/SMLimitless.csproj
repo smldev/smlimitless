@@ -123,6 +123,7 @@
     <Compile Include="Physics\Path.cs" />
     <Compile Include="Physics\PhysicsSetting.cs" />
     <Compile Include="Physics\RightTriangle.cs" />
+    <Compile Include="Physics\SectionAutoscrollSettings.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Screens\BlankScreen.cs" />

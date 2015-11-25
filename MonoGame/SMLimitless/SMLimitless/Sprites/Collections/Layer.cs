@@ -20,8 +20,8 @@ namespace SMLimitless.Sprites.Collections
 
 		private Section owner;
 
-		private SizedGrid<Tile> tiles;	// TODO: this should be set on deserialize
-		private List<Sprite> sprites = new List<Sprite>();  // bit a philosophy change here. In master, sections owned sprites, layers, and the BG. Here, sections own layers own tiles/sprites, and the BG.
+		private SizedGrid<Tile> tiles;  // TODO: this should be set on deserialize
+		private List<Sprite> sprites = new List<Sprite>();
 
 		private BoundingRectangle bounds = BoundingRectangle.NaN;
 		private Vector2 position = new Vector2(float.NaN);

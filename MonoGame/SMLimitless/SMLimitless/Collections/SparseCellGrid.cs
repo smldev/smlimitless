@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace SMLimitless.Collections
 	/// The grid is "sparse" - cells only exist if they contains items.
 	/// </summary>
 	/// <typeparam name="T">A type implementing the <see cref="IPositionable2"/> interface.</typeparam>
-	public sealed class SparseCellGrid<T> where T : IPositionable2
+	public sealed class SparseCellGrid<T> : IEnumerable<T>, IEnumerable where T : IPositionable2
 	{
 		/// <summary>
 		/// The default size, in pixels, of a sparse cell.
@@ -228,6 +229,22 @@ namespace SMLimitless.Collections
 			Point cellBottomRight = GetCellNumberAtPosition(new Vector2(item.Position.X + item.Size.X, item.Position.Y + item.Size.Y));
 
 			return new SparseCellRange(cellTopLeft, cellBottomRight);
+		}
+
+		public IEnumerator<T> GetEnumerator()
+		{
+			foreach (var cell in cells)
+			{
+				foreach (T item in cell.Value.Items)
+				{
+					yield return item;
+				}
+			}
+		}
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return GetEnumerator();
 		}
 	}
 }

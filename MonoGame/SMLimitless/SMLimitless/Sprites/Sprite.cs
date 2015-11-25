@@ -19,7 +19,7 @@ namespace SMLimitless.Sprites
     /// <summary>
     /// The base type for all sprites.
     /// </summary>
-    public abstract class Sprite : IName, IEditorObject, IPositionable
+    public abstract class Sprite : IName, IEditorObject, IPositionable, IPositionable2
     {
         /// <summary>
         /// A backing field for the Position property.
