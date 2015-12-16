@@ -1,0 +1,5 @@
+Super Mario Limitless
+Wave 0 Sprite Study
+
+- Goomba:
+	A goomba is an enemy that walks horizontally. The goomba does not turn on cliffs. 

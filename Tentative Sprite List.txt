@@ -1,0 +1,272 @@
+Super Mario Limitless
+Tentative Sprite List
+
+- Super Mario Bros.
+	Player forms: Small, Super, Fire + Invincible
+	- Enemies
+		- Blooper
+		- Bullet Bill
+		- Buzzy Beetle
+		- Cheep Cheep
+		- Fire Bar
+		- Goomba
+		- Hammer Brother
+		- Koopa Paratroopa
+		- Koopa Troopa
+		- Lakitu
+		- Podoboo
+		- Pirahna Plant
+		- Spiny
+		- Spiny Egg
+	- Bosses
+		- Bowser
+	- Items
+		- Coin
+		- Super Mushroom
+		- Fire Flower
+		- Starman
+		- 1-Up Mushroom
+- Super Mario Bros. 2
+	Player forms: Small, Large + Invincible
+	- Enemies
+		- Albatoss (flying bird that drops Bob-ombs on player)
+		- Autobomb (wheeled cannonball launcher that rolls around; has Shy Guy atop)
+		- Beezo (flying masked birds with spears; fly down toward player)
+		- Bob-omb
+		- Cobrat (snake that walks around, hide in vases, jump, shoots small cannonballs at player)
+		- Flurry (slippery, fast-walking blobs; best in ice levels)
+		- Hoopster (vine-crawling ladybugs that can be used as platforms)
+		- Ninji
+		- Ostro (Shy Guy's mount; Shy Guy pilots it; without a Shy Guy, it justs runs around. Can be used as platform and picked up (?))
+		- Panser (demon flower of hatred; Red ones are stationary and shoot three fireballs; green/gray ones move a bit and shoot one fireball)
+		- Phanto (demon mask that moves when the player is holding a key)
+		- Pidgit (carpet-riding dive-bombing birds. Can be landed on, picked up, and thrown. Empty carpets can be ridden like empty Lakitu clouds for a short while)
+		- Pokey
+		- Porcupo (knock-off Spiny)
+		- Shy Guy
+		- Snifit (Shy Guy that launches cannonballs from mask)
+		- Spark (moves around perimeter of whereever it is)
+		- Trouter (jumps up and down. Sides are harmful, but top is platform)
+		- Tweeter (masked weird bird things, like platform paragoombas)
+		- Whale (giant platform not-an-enemy that launches platform waterspouts which are harmful on the side)
+	- Bosses
+		- Birdo (Pink: shoots eggs; Red: eggs/fireballs, Green: fireballs only)
+		- Mouser (throws bombs)
+		- Tryclyde (spits fireballs)
+		- Fryguy (drops fireballs; splits into four smaller fireballs upon death)
+		- Clawgrip (throws rocks at players; 5 HP)
+		- Mask Gate (can be aggressive, if it is, it's like Phanto; can be stunned to enter but not killed conventionally)
+		- Wart (spits bubbles)
+	- Items
+		- 1-Up Mushroom
+		- Egg (platform enemy)
+		- Bomb
+		- Cherry
+		- Coin
+		- Crystal Ball
+		- Key
+		- Magic Carpet
+		- Magic Potion (creates door to Subspace)
+		- Mushroom (gives HP, if player is small, turns them to large)
+		- Mushroom Block (inert anti-enemy projectile)
+		- POW Block
+		- Rocket (transports player to next area)
+		- Small Heart (floating Mushroom in cardiac form)
+		- Starman
+		- Stopwatch
+		- Turtle Shell (Koopa shell)
+		- Vegetable
+- Super Mario Bros. 3
+	Player Forms: Small, Super, Fire, Raccoon, P-Wing, Tanooki, Hammer, Frog + Invincible
+	- Enemies
+		- "Boo" Diddly
+		- Angry Sun
+		- Baby Cheep
+		- Big Bertha
+		- Big Koopa Troopa
+		- Blooper
+		- Blooper Baby
+		- Blooper Nanny
+		- Bob-omb
+		- Boomerang Brother
+		- Boss Bass
+		- Bullet Bill
+		- Buster Beetle (bipedal, throws Ice Blocks)
+		- Buzzy Beetle
+		- Cannonball
+		- Chain Chomp
+		- Cheep Cheep
+		- Colossal Koopa Paratroopa
+		- Dry Bones
+		- Fighter Fly
+		- Fireball
+		- Fire Brother
+		- Fire Chomp
+		- Fire Nipper Plant
+		- Fire Snake
+		- Giant Cannonball
+		- Goomba
+		- Grand Goomba
+		- Gray Bowser Statue
+		- Hammer Brother
+		- Hot Foot (walking candle flame)
+		- Koopa Paratroopa
+		- Koopa Troopa (green/red)
+		- Kuribo's Goomba
+		- Lakitu
+		- Lava Lotus
+		- Microgoomba
+		- Missile Bill
+		- Nipper Plant
+		- Para-Beetle
+		- Paragoomba
+		- Pile-Driver Microgoomba (w/ Brick Block, think stompable Thwimps)
+		- Pirahna Plant
+		- Piranhacus Giganticus
+		- Podoboo
+		- Ptooie
+		- Red Paragoomba
+		- Rocket Engine
+		- Rocky Wrench
+		- Roto-Disc (nuclear waffle)
+		- Sidestepper
+		- Sledge Brother
+		- Spike (?????)
+		- Spiny
+		- Spiny Cheep Cheep
+		- Spiny Egg
+		- Stretch
+		- Thwomp
+		- Tweester
+		- Venus Fire Trap
+	- Bosses
+		- Boom Boom
+		- Bowser
+		- Larry Koopa
+		- Morton Koopa Jr.
+		- Wendy O. Koopa
+		- Iggy Koopa
+		- Roy Koopa
+		- Lemmy Koopa
+		- Ludwig von Koopa
+	- Items
+		- Super Mushroom
+		- Fire Flower
+		- Super Leaf
+		- Starman
+		- Tanooki Suit
+		- Frog Suit
+		- Hammer Suit
+		- Kuribo's Shoe
+		- Coin
+		- Blue Coin
+		- 1-Up Mushroom
+		- P-Switch
+		- Question Ball
+- Super Mario World
+	Player Forms: Small, Super, Fire, Cape + Invincible; Yoshi
+	- Enemies
+		- Amazing Flyin' Hammer Brother
+		- Ball 'n' Chain
+		- Banzai Bill
+		- Beach Koopa (shell-less Koopa)
+		- Big Boo
+		- Big Bubble
+		- Big Steely (Bowser's giant steel ball)
+		- Blargg
+		- Blurp
+		- Bob-omb
+		- Bony Beetle
+		- Boo
+		- Boo Buddy Block (Boo Block)
+		- Boo Buddy Snake (series of Boos bouncing off walls)
+		- Boo Buddy Swarm
+		- Bouncing Lava Bubble (Podoboos that bounce off walls)
+		- Bullet Bill
+		- Buzzy Beetle
+		- Chainsaw
+		- Chargin' Chuck
+		- Cheep Cheep
+		- Circling Boo Buddies
+		- Climbing Koopa
+		- Column (immense log)
+		- Dino Rhino
+		- Dino Torch
+		- Disappearing Boo Buddies (
+		- Dry Bones
+		- Eerie
+		- Falling Spike
+		- Fire Jumping Pirahna
+		- Fire Snake
+		- Fish Bone
+		- Fishin' Boo
+		- Fishin Lakitu
+		- Floating Mine
+		- Fuzzy
+		- Galoomba (SMW Goomba variant; probably just want to call them Goombas)
+		- Gold Bowser Statue
+		- Gray Bowser Statue
+		- Grinder (saw blade)
+		- Hothead
+		- Jumping Pirahna Plant
+		- Kamikaze Koopa (disco shell)
+		- Koopa Paratroopa
+		- Koopa Troopa
+		- Lakitu
+		- Pipe Lakitu
+		- Podoboo
+		- Li'l Sparky
+		- Magikoopa
+		- Mechakoopa
+		- Mega Mole
+		- Monty Mole
+		- Ninji
+		- Para-bomb (Bob-ombs with parachutes)
+		- Paragoomba
+		- Pirahna Plant
+		- Pokey
+		- Porcupuffer
+		- Rex
+		- Rip Van Fish
+		- Skewer
+		- Spike
+		- Spike Top
+		- Spiny
+		- Spiny Egg
+		- Sumo Brother
+		- Super Koopa
+		- Swooper
+		- Thwimp
+		- Thwomp
+		- Torpedo Ted
+		- Urchin
+		- Volcano Lotus
+		- Wiggler
+	- Bosses
+		- Reznor
+		- Big Boo Boss
+		- Iggy Koopa
+		- Morton Koopa Jr.
+		- Lemmy Koopa
+		- Ludwig von Koopa
+		- Roy Koopa
+		- Wendy O. Koopa
+		- Larry Koopa
+		- Bowser
+	- Items
+		- 1-Up Mushroom
+		- 3-Up Moon
+		- Coin
+		- Berry
+		- Dragon Coin
+		- Key
+		- Keyhole
+		- P-Switch
+		- Magic Ball
+		- Baby Yoshi
+		- Super Mushroom
+		- Fire Flower
+		- Cape Feather
+		- Power Balloon
+		- Star
+		- Yoshi Wings
