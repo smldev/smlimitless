@@ -345,7 +345,17 @@ namespace SMLimitless.Collections
 
 		public IEnumerator<T> GetEnumerator()
 		{
-			return grid.GetEnumerator();
+			var gridEnumerator = grid.GetEnumerator();
+
+			while (gridEnumerator.MoveNext())
+			{
+				if (gridEnumerator.Current != null)
+				{
+					yield return gridEnumerator.Current;
+				}
+			}
+
+			yield break;
 		}
 
 		IEnumerator IEnumerable.GetEnumerator()

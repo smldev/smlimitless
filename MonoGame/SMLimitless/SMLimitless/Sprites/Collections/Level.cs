@@ -88,6 +88,7 @@ namespace SMLimitless.Sprites.Collections
         public void Initialize() 
 		{ 
 			this.Sections.ForEach(s => s.Initialize());
+			ContentFolderPaths.ForEach(f => Content.ContentPackageManager.AddPackageFromFolder(f));
 		}
 
         /// <summary>

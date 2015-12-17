@@ -38,7 +38,7 @@ namespace SMLimitless.Sprites.Collections
 		{
 			Camera = new Camera2D();
 			Owner = owner;
-			Sprites = new SparseCellGrid<Sprite>(GameServices.GameObjectSize);
+			Sprites = new SparseCellGrid<Sprite>(GameServices.GameObjectSize * new Vector2(4f));
 			Layers = new List<Layer>();
 			Tiles = new List<Tile>();
 			Paths = new List<Path>();
@@ -74,7 +74,7 @@ namespace SMLimitless.Sprites.Collections
 			System.Diagnostics.Stopwatch stopwatch = System.Diagnostics.Stopwatch.StartNew();
 
 			stopwatch.Stop();
-			debugText = $"Update took {stopwatch.ElapsedMilliseconds} ms";
+			debugText = $"{1d / stopwatch.ElapsedMilliseconds:F2} FPS";
 		}
 
 		public void Draw()
@@ -87,5 +87,27 @@ namespace SMLimitless.Sprites.Collections
 		}
 
 		private void TempUpdate() { }
+
+		public void AddTile(Tile tile)
+		{
+			if (tile == null)
+			{
+				throw new ArgumentNullException(nameof(tile), "The tile to add to the section was null.");
+			}
+
+			Tiles.Add(tile);
+			MainLayer.AddTile(tile);
+		}
+
+		public void AddSprite(Sprite sprite)
+		{
+			if (sprite == null)
+			{
+				throw new ArgumentNullException(nameof(sprite), "The sprite to add to the section was null.");
+			}
+
+			Sprites.Add(sprite);
+			MainLayer.AddSprite(sprite);
+		}
 	}
 }

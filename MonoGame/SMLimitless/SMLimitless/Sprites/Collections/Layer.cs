@@ -34,6 +34,9 @@ namespace SMLimitless.Sprites.Collections
 		{
 			owner = cOwner;
 			IsMainLayer = isMainLayer;
+
+			// temporary
+			tiles = new SizedGrid<Tile>(Vector2.Zero, (int)GameServices.GameObjectSize.X, (int)GameServices.GameObjectSize.Y, 1, 1);
 		}
 
 		public void Initialize()
@@ -112,6 +115,11 @@ namespace SMLimitless.Sprites.Collections
 			// Unlike when adding tiles, removing a tile doesn't shrink the grid even if the grid could shrink
 			// also holy cow the RemoveTile(Tile) implementation on master is *horrible*
 			tiles.Remove(tile);
+		}
+
+		internal void AddSprite(Sprite sprite)
+		{
+			sprites.Add(sprite);
 		}
 
 		internal void SetMainLayer()

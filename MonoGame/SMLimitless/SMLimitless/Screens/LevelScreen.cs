@@ -31,7 +31,12 @@ namespace SMLimitless.Screens
         public override void Initialize(Screen owner, string parameters)
         {
 			level = new Level();
-			level.Sections.Add(new Section(level));
+			//level.Sections.Add(new Section(level));
+
+			// temporary
+			level.ContentFolderPaths = new List<string>() { System.IO.Directory.GetCurrentDirectory() + @"\TestPackage" };
+			level.Sections.Add(TestSectionGenerator.GenerateSection(level));
+
 			level.ActiveSection = level.Sections.First();
         }
 
