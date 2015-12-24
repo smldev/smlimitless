@@ -18,7 +18,7 @@ namespace SMLimitless.Sprites
 		private RtSlopedSides slopedSides;
 		private int solidSides;				// Okay, so this is kind of ugly. This can be either a TileRectSolidSides or a TileTriSolidSides. At least we cast it for public access.
 
-		public CollidableShape TileShape { get; }
+		public CollidableShape TileShape { get; protected set; }
 
 		public Vector2 InitialPosition { get; protected internal set; }
 

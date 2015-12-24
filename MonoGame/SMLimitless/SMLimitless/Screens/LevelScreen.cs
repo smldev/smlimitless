@@ -36,7 +36,7 @@ namespace SMLimitless.Screens
 			// temporary
 			level.ContentFolderPaths = new List<string>() { System.IO.Directory.GetCurrentDirectory() + @"\TestPackage" };
 			level.Sections.Add(TestSectionGenerator.GenerateSection(level));
-
+			level.Initialize();
 			level.ActiveSection = level.Sections.First();
         }
 

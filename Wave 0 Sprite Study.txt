@@ -2,4 +2,8 @@ Super Mario Limitless
 Wave 0 Sprite Study
 
 - Goomba:
-	A goomba is an enemy that walks horizontally. The goomba does not turn on cliffs. 
+	- Walks horizontally
+	- Does not turn on cliffs
+	- Injures sprites with attribute "Player" on left, right, or bottom-sided collisions
+	- Is killed by sprites with attribute "Player" on top through "Stomp" action
+	- Is killed by sprites with attribute "SpinningShell", "PlayerFireball" on any side through "KnockOff" action

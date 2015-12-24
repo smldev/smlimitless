@@ -93,10 +93,12 @@ namespace SMLimitless.Collections
             {
                 throw new ArgumentOutOfRangeException(string.Format("SizedGrid<T>.ctor(int, int, int, int): Cell width and height must be greater than zero. Cell Width: {0}, Cell Height: {1}, Grid Width: {2}, Grid Height: {3}", cellWidth, cellHeight, gridWidth, gridHeight));
             }
-            else if (gridWidth <= 0 || gridHeight <= 0)
+            
+			if (gridWidth <= 0)
             {
-                throw new ArgumentOutOfRangeException(string.Format("SizedGrid<T>.ctor(int, int, int, int): Grid width and height must be greater than zero. Cell Width: {0}, Cell Height: {1}, Grid Width: {2}, Grid Height: {3}", cellWidth, cellHeight, gridWidth, gridHeight));
+				gridWidth = -gridWidth;
             }
+			if (gridHeight <= 0) { gridHeight = -gridHeight; }
 
 			grid = new Grid<T>(gridWidth, gridHeight);
 			Position = position;
@@ -340,7 +342,7 @@ namespace SMLimitless.Collections
 
 		private Vector2 OffsetPosition(Vector2 point)
 		{
-			return Position - point;
+			return point - Position;
 		}
 
 		public IEnumerator<T> GetEnumerator()

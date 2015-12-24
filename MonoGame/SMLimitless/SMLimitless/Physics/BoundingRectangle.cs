@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 using System;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json.Linq;
@@ -66,6 +67,7 @@ namespace SMLimitless.Physics
         /// </summary>
         /// <param name="start">The position of the top-left corner.</param>
         /// <param name="end">The size of the rectangle.</param>
+		[DebuggerStepThrough]
         public BoundingRectangle(Vector2 start, Vector2 end)
             : this(start.X, start.Y, end.X - start.X, end.Y - start.Y)
         {

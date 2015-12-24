@@ -21,14 +21,15 @@ namespace SMLimitless.Extensions
 
 			// so there's really no elegant initial value for result, except the bounds of First()...
 			var first = positionables.First();
-			BoundingRectangle result = new BoundingRectangle(first.Position, first.Size);
+			BoundingRectangle result = new BoundingRectangle(first.Position, first.Size + first.Position);
 
 			foreach (var positionable in positionables.Skip(1))	// ...so we need to treat it specially
 			{
-				BoundingRectangle bounds = new BoundingRectangle(positionable.Position, positionable.Size);
+				BoundingRectangle bounds = new BoundingRectangle(positionable.Position, positionable.Size + positionable.Position);
 				
 				if (bounds.Left < result.Left)
 				{
+					result.Width += (bounds.X + result.X);
 					result.X = bounds.X;
 				}
 				else if (bounds.Right > result.Right)
@@ -38,6 +39,7 @@ namespace SMLimitless.Extensions
 
 				if (bounds.Top < result.Top)
 				{
+					result.Height = (bounds.Y + result.Y);
 					result.Y = bounds.Y;
 				}
 				else if (bounds.Bottom > result.Bottom)

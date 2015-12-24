@@ -82,7 +82,7 @@ namespace SMLimitless.Sprites.Collections
 			if (!tiles.Any()) return;
 			if (!this.tiles.DoesRangeAlignToGrid(tiles)) { throw new ArgumentException("Tried to add tiles to a grid that weren't grid aligned."); }
 
-			BoundingRectangle allTilesBound = tiles.GetBoundsOfPositionables();
+			BoundingRectangle allTilesBound = tiles.Concat(this.tiles).GetBoundsOfPositionables();
 
 			// so, here's probably a good point to talk about cell coordinate agnosticity
 			// Tiles will have cell coordinates since they're in a grid where each cell has coordinates,
@@ -135,6 +135,7 @@ namespace SMLimitless.Sprites.Collections
 														  (int)(owner.Bounds.Width / objectSize.X), (int)(owner.Bounds.Height / objectSize.Y));
 			tiles.ForEach(t => newGrid.Add(t));
 			tiles = newGrid;
+			owner.MainLayer = this;
 		}
 
 		public void Move(Vector2 position)

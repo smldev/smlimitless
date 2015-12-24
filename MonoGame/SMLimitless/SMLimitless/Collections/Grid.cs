@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -137,6 +138,7 @@ namespace SMLimitless.Collections
             return (x >= 0 && x < Width) && (y >= 0 && y < Height);
         }
 
+		[DebuggerStepThrough]
 		public IEnumerator<T> GetEnumerator()
 		{
 			for (int y = 0; y < Height; y++)

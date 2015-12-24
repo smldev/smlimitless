@@ -31,7 +31,7 @@ namespace SMLimitless.Sprites.Collections
 		internal SparseCellGrid<Sprite> Sprites { get; private set; }
 
 		internal List<Layer> Layers { get; private set; }
-		internal Layer MainLayer { get; private set; }
+		internal Layer MainLayer { get; set; }
 		internal List<Path> Paths { get; private set; }
 
 		public Section(Level owner)
@@ -72,6 +72,10 @@ namespace SMLimitless.Sprites.Collections
 		public void Update()
 		{
 			System.Diagnostics.Stopwatch stopwatch = System.Diagnostics.Stopwatch.StartNew();
+
+			Background.Update();
+			Tiles.ForEach(t => t.Update());
+			Sprites.ForEach(s => s.Update());
 
 			stopwatch.Stop();
 			debugText = $"{1d / stopwatch.ElapsedMilliseconds:F2} FPS";

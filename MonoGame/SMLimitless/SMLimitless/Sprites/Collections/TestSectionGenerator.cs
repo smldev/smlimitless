@@ -29,7 +29,9 @@ namespace SMLimitless.Sprites.Collections
 			float tilePlacerY = 200f;
 
 			// really temporary
-			AssemblyManager.LoadAssembly(System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "TestPackage", "SmlSample.dll"));
+			// AssemblyManager.LoadAssembly(System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "TestPackage", "SmlSample.dll"));
+			// hey it actually was temporary
+			// TODO: have ContentPackageManager ignore multiple attempts to add the same package
 
 			Tile testTile3 = AssemblyManager.GetTileByFullName("SmlSample.TestTile3");
 			testTile3.GraphicsResourceName = "smw_concrete_block";
@@ -38,12 +40,14 @@ namespace SMLimitless.Sprites.Collections
             {
 				int runDistance = random.Next(3, 8);
 				tilePlacerY += (random.Next(1, 3) * 16f) * ((random.Next(0, 2) != 0) ? 1 : -1);
-				tilePlacerY = MathHelper.Clamp(tilePlacerY, 0, 1920);
+				tilePlacerY -= (tilePlacerY % 16);
+                tilePlacerY = MathHelper.Clamp(tilePlacerY, 0, 1920);
 
 				for (int i = 0; i < runDistance; i++)
 				{
 					Tile newTile = testTile3.Clone();
 					newTile.Position = new Vector2(tilePlacerX, tilePlacerY);
+					result.AddTile(newTile);
 					tilePlacerX += 16f;
 				}
 			}

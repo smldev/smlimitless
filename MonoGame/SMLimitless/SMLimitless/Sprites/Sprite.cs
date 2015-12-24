@@ -212,7 +212,6 @@ namespace SMLimitless.Sprites
         /// </summary>
         public virtual void Update()
         {
-			throw new NotImplementedException();
         }
 
         /// <summary>
