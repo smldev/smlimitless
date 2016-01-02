@@ -3326,12 +3326,12 @@
             Gets or sets the current value of the setting.
             </summary>
         </member>
-        <member name="P:SMLimitless.Physics.PhysicsSetting`1.LowRange">
+        <member name="P:SMLimitless.Physics.PhysicsSetting`1.Minimum">
             <summary>
             Gets the lowest value the value can be.
             </summary>
         </member>
-        <member name="P:SMLimitless.Physics.PhysicsSetting`1.HighRange">
+        <member name="P:SMLimitless.Physics.PhysicsSetting`1.Maximum">
             <summary>
             Gets the highest value the value can be.
             </summary>

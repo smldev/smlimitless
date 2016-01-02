@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using SMLimitless.Collections;
 using SMLimitless.Extensions;
+using SMLimitless.Input;
 using SMLimitless.Physics;
 
 namespace SMLimitless.Sprites.Collections
@@ -33,6 +35,8 @@ namespace SMLimitless.Sprites.Collections
 		internal List<Layer> Layers { get; private set; }
 		internal Layer MainLayer { get; set; }
 		internal List<Path> Paths { get; private set; }
+
+		private PhysicsSetting<int> REALLYTEMPORARYPHYSICSSETTINGFORTESTING;
 
 		public Section(Level owner)
 		{
@@ -65,6 +69,10 @@ namespace SMLimitless.Sprites.Collections
 			{
 				Background.LoadContent();
 				Layers.ForEach(l => l.LoadContent());
+
+				// really temporary
+				REALLYTEMPORARYPHYSICSSETTINGFORTESTING = new PhysicsSetting<int>("Test Setting", 0, 100, 25, PhysicsSettingType.Integer);
+
 				isContentLoaded = true;
 			}
 		}
@@ -76,6 +84,7 @@ namespace SMLimitless.Sprites.Collections
 			Background.Update();
 			Tiles.ForEach(t => t.Update());
 			Sprites.ForEach(s => s.Update());
+			TempUpdate();
 
 			stopwatch.Stop();
 			debugText = $"{1d / stopwatch.ElapsedMilliseconds:F2} FPS";
@@ -87,10 +96,17 @@ namespace SMLimitless.Sprites.Collections
 			Tiles.ForEach(t => t.Draw());
 			Sprites.ForEach(s => s.Draw());
 
-			GameServices.DrawStringDefault(debugText);
+			GameServices.DrawStringDefault(string.Join(" ", debugText, $"Value: {REALLYTEMPORARYPHYSICSSETTINGFORTESTING.Value}"));
 		}
 
-		private void TempUpdate() { }
+		private void TempUpdate() 
+		{ 
+			if (InputManager.IsNewKeyPress(Keys.OemTilde))
+			{
+				if (!GameServices.DebugForm.Visible) { GameServices.DebugForm.Show(); }
+				else { GameServices.DebugForm.Hide(); }
+			}
+		}
 
 		public void AddTile(Tile tile)
 		{

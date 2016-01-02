@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using SMLimitless.Debug;
+using SMLimitless.Forms;
 using SMLimitless.Graphics;
 using SMLimitless.Physics;
     
@@ -86,6 +87,8 @@ namespace SMLimitless
 		/// </summary>
 		public static DebugForm DebugForm { get; private set; }
 
+		public static PhysicsSettingsEditorForm PhysicsSettingsEditorForm { get; private set; }
+
         /// <summary>
         /// Gets the size, in pixels, of a QuadTree cell.
         /// </summary>
@@ -121,6 +124,7 @@ namespace SMLimitless
             AddService<ContentManager>(content);
 
 			DebugForm = new DebugForm();
+			PhysicsSettingsEditorForm = new PhysicsSettingsEditorForm();
         }
 
         /// <summary>

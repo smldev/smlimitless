@@ -127,8 +127,7 @@ namespace SMLimitless.Debug
 					AddToLogText(message);
 					break;
 				case "physedit":
-					Forms.PhysicsSettingsEditorForm physicsForm = new Forms.PhysicsSettingsEditorForm();
-					physicsForm.Show();
+					GameServices.PhysicsSettingsEditorForm.Show();
 					break;
 				default:
 					AddToLogText(string.Format("The command \"{0}\" does not exist.", command));
