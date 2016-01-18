@@ -255,6 +255,8 @@ namespace SMLimitless.Physics
 			}
 		}
 
+		public Vector2 TopRight => new Vector2(Right, Top);
+
 		/// <summary>
 		/// Returns a rectangle created from a simple string representation.
 		/// </summary>

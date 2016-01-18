@@ -324,7 +324,8 @@ namespace SMLimitless.Physics
         /// is treated as a collision between two rectangles.</remarks>
         public Vector2 GetCollisionResolution(BoundingRectangle rect)
         {
-            Vector2 rectCollisionPoint = (this.SlopedSides == RtSlopedSides.TopLeft || this.SlopedSides == RtSlopedSides.TopRight) ? rect.BottomCenter : rect.TopCenter;
+			// Vector2 rectCollisionPoint = (this.SlopedSides == RtSlopedSides.TopLeft || this.SlopedSides == RtSlopedSides.TopRight) ? rect.BottomCenter : rect.TopCenter;
+			Vector2 rectCollisionPoint = (this.SlopedSides == RtSlopedSides.TopLeft || SlopedSides == RtSlopedSides.TopRight) ? rect.BottomRight : rect.TopRight;
 
             if (!this.Bounds.IntersectsIncludingEdges(rectCollisionPoint))
             {
