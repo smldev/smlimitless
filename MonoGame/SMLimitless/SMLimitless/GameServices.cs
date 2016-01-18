@@ -111,6 +111,12 @@ namespace SMLimitless
             }
         }
 
+		static GameServices()
+		{
+			DebugForm = new DebugForm();
+			PhysicsSettingsEditorForm = new PhysicsSettingsEditorForm();
+		}
+
         /// <summary>
         /// Initializes the services container with key game services.
         /// </summary>
@@ -122,9 +128,6 @@ namespace SMLimitless
             AddService<GraphicsDevice>(graphicsDevice);
             AddService<SpriteBatch>(spriteBatch);
             AddService<ContentManager>(content);
-
-			DebugForm = new DebugForm();
-			PhysicsSettingsEditorForm = new PhysicsSettingsEditorForm();
         }
 
         /// <summary>

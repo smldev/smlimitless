@@ -50,7 +50,7 @@ namespace SMLimitless.Collections
         public int CellHeight { get; private set; }
 
         /// <summary>
-        /// Gets the width of the grid, represented as (width in cells * width of cell).
+        /// Gets the width of the grid in cells.
         /// </summary>
         public int Width
         {
@@ -61,7 +61,7 @@ namespace SMLimitless.Collections
         }
 
         /// <summary>
-        /// Gets the height of the grid, represented as (height in cells * height of cell).
+        /// Gets the height of the grid in cells.
         /// </summary>
         public int Height
         {

@@ -67,27 +67,27 @@ namespace SMLimitless.Sprites.Collections
             }
         }
 
-        /// <summary>
-        /// The acceleration caused by gravity, measured in pixels per second per second.
-        /// </summary>
-        public const float GravityAcceleration = 250f;
+		/// <summary>
+		/// The acceleration caused by gravity, measured in pixels per second per second.
+		/// </summary>
+		public static PhysicsSetting<float> GravityAcceleration = new PhysicsSetting<float>("Gravity Acceleration (pixels/s²)", 0f, 1000f, 250f, PhysicsSettingType.FloatingPoint);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Level"/> class.
         /// </summary>
         public Level()
         {
-            this.LevelExits = new List<LevelExit>();
-            this.Sections = new List<Section>();
-            this.EventScript = new EventScript();
+			LevelExits = new List<LevelExit>();
+			Sections = new List<Section>();
+			EventScript = new EventScript();
         }
 
         /// <summary>
         /// Initializes this level.
         /// </summary>
         public void Initialize() 
-		{ 
-			this.Sections.ForEach(s => s.Initialize());
+		{
+			Sections.ForEach(s => s.Initialize());
 			// ContentFolderPaths.ForEach(f => Content.ContentPackageManager.AddPackageFromFolder(f));
 		}
 
@@ -96,7 +96,7 @@ namespace SMLimitless.Sprites.Collections
         /// </summary>
         public void LoadContent() 
         {
-            this.Sections.ForEach(s => s.LoadContent());
+			Sections.ForEach(s => s.LoadContent());
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace SMLimitless.Sprites.Collections
         /// </summary>
         public void Update() 
         {
-            this.ActiveSection.Update();
+			ActiveSection.Update();
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace SMLimitless.Sprites.Collections
         /// </summary>
         public void Draw() 
         {
-            this.ActiveSection.Draw();
+			ActiveSection.Draw();
         }
 
         /// <summary>

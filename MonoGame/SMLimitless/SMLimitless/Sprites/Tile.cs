@@ -15,7 +15,6 @@ namespace SMLimitless.Sprites
 	public abstract class Tile : IName, IEditorObject, IPositionable2
 	{
 		private Vector2 position;
-		private RtSlopedSides slopedSides;
 		private int solidSides;				// Okay, so this is kind of ugly. This can be either a TileRectSolidSides or a TileTriSolidSides. At least we cast it for public access.
 
 		public CollidableShape TileShape { get; protected set; }
@@ -57,7 +56,7 @@ namespace SMLimitless.Sprites
 				}
 				else if (TileShape == CollidableShape.RightTriangle)
 				{
-					return new RightTriangle(Bounds, slopedSides);
+					return new RightTriangle(Bounds, SlopedSides);
 				}
 				else
 				{
@@ -102,6 +101,8 @@ namespace SMLimitless.Sprites
 				solidSides = (int)value;
 			}
 		}
+
+		protected internal RtSlopedSides SlopedSides { get; set; }
 
 		public Section Owner { get; set; }
 
@@ -179,8 +180,51 @@ namespace SMLimitless.Sprites
 		{
 			if (sprite == null) { throw new ArgumentNullException(nameof(sprite), "The provided sprite was null."); }
 
-			BoundingRectangle spriteHitbox = (TileShape == CollidableShape.Rectangle) ? sprite.Hitbox : sprite.GetSlopeHitbox(slopedSides);
+			BoundingRectangle spriteHitbox = (TileShape == CollidableShape.Rectangle) ? sprite.Hitbox : sprite.GetSlopeHitbox(SlopedSides);
 			return Hitbox.GetCollisionResolution(spriteHitbox);
+		}
+
+		internal bool CollisionOnSolidSide(Vector2 resolutionDistance)
+		{
+			if (TileShape == CollidableShape.Rectangle)
+			{
+				if (resolutionDistance.X != 0f)
+				{
+					if (resolutionDistance.X < 0f) { return (RectSolidSides & TileRectSolidSides.Left) == TileRectSolidSides.Left; }
+					else if (resolutionDistance.X > 0f) { return (RectSolidSides & TileRectSolidSides.Right) == TileRectSolidSides.Right; }
+				}
+				else if (resolutionDistance.Y != 0f)
+				{
+					if (resolutionDistance.Y < 0f) { return (RectSolidSides & TileRectSolidSides.Top) == TileRectSolidSides.Top; }
+					else if (resolutionDistance.Y > 0f) { return (RectSolidSides & TileRectSolidSides.Bottom) == TileRectSolidSides.Bottom; }
+				}
+			}
+			else if (TileShape == CollidableShape.RightTriangle)
+			{
+				if (resolutionDistance.X != 0f)
+				{
+					return (TriSolidSides & TileTriSolidSides.VerticalLeg) == TileTriSolidSides.VerticalLeg;
+				}
+				else if (resolutionDistance.Y != 0f)
+				{
+					if (resolutionDistance.Y < 0f)
+					{
+						if (SlopedSides == RtSlopedSides.TopLeft || SlopedSides == RtSlopedSides.TopRight) 
+						{ return (TriSolidSides & TileTriSolidSides.Slope) == TileTriSolidSides.Slope; }
+						else if (SlopedSides == RtSlopedSides.BottomLeft || SlopedSides == RtSlopedSides.BottomRight)
+						{ return (TriSolidSides & TileTriSolidSides.HorizontalLeg) == TileTriSolidSides.HorizontalLeg; }
+					}
+					else if (resolutionDistance.Y > 0f)
+					{
+						if (SlopedSides == RtSlopedSides.BottomLeft || SlopedSides == RtSlopedSides.BottomRight)
+						{ return (TriSolidSides & TileTriSolidSides.HorizontalLeg) == TileTriSolidSides.HorizontalLeg; }
+						else if (SlopedSides == RtSlopedSides.TopLeft || SlopedSides == RtSlopedSides.TopRight)
+						{ return (TriSolidSides & TileTriSolidSides.Slope) == TileTriSolidSides.Slope; }
+					}
+				}
+			}
+
+			return false;
 		}
 
 		/// <summary>
@@ -211,7 +255,7 @@ namespace SMLimitless.Sprites
 			clone.Position = Position;
 			clone.Size = Size;
 			clone.solidSides = solidSides;
-			clone.slopedSides = slopedSides;
+			clone.SlopedSides = SlopedSides;
 			clone.Name = Name.SafeCopy();
 
 			return clone;

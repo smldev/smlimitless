@@ -23,8 +23,8 @@ namespace SMLimitless.Sprites.Collections
 		private SizedGrid<Tile> tiles;  // TODO: this should be set on deserialize
 		private List<Sprite> sprites = new List<Sprite>();
 
-		private BoundingRectangle bounds = BoundingRectangle.NaN;
-		private Vector2 position = new Vector2(float.NaN);
+		public BoundingRectangle Bounds { get; private set; } = BoundingRectangle.NaN;
+		public Vector2 Position { get; private set; } = new Vector2(float.NaN);
 		private Vector2 velocity = Vector2.Zero;
 
 		[DefaultValue(""), Description("The name of this layer to be used in event scripting. This field is optional.")]
@@ -37,6 +37,7 @@ namespace SMLimitless.Sprites.Collections
 
 			// temporary
 			tiles = new SizedGrid<Tile>(Vector2.Zero, (int)GameServices.GameObjectSize.X, (int)GameServices.GameObjectSize.Y, 1, 1);
+			Bounds = tiles.Bounds;
 		}
 
 		public void Initialize()
@@ -70,7 +71,7 @@ namespace SMLimitless.Sprites.Collections
 
 		public void Draw(Color color)
 		{
-			bounds.DrawOutline(color);
+			Bounds.DrawOutline(color);
 		}
 
 		internal void AddTiles(IEnumerable<Tile> tiles)
@@ -91,18 +92,23 @@ namespace SMLimitless.Sprites.Collections
 			int allTilesBoundHeightInCells = (int)(allTilesBound.Height / this.tiles.CellHeight);
 
 			// ...adding tiles that are to the left and/or above the old grid...
-			Vector2 newGridOrigin = new Vector2(allTilesBound.X, allTilesBound.Y);
+			float newGridOriginX = (allTilesBound.X < this.tiles.Position.X) ? allTilesBound.X : this.tiles.Position.X;
+			float newGridOriginY = (allTilesBound.Y < this.tiles.Position.Y) ? allTilesBound.Y : this.tiles.Position.Y;
+			int newGridWidth = (allTilesBoundWidthInCells * this.tiles.CellWidth > this.tiles.Width) ? allTilesBoundWidthInCells * this.tiles.CellWidth : (this.tiles.Width);
+			int newGridHeight = (allTilesBoundHeightInCells * this.tiles.CellHeight > this.tiles.Height) ? allTilesBoundHeightInCells * this.tiles.CellHeight : (this.tiles.Height);
+			Vector2 newGridOrigin = new Vector2(newGridOriginX, newGridOriginY);
 			SizedGrid<Tile> newGrid = new SizedGrid<Tile>(newGridOrigin, this.tiles.CellWidth, this.tiles.CellHeight, 
-														  allTilesBoundWidthInCells, allTilesBoundHeightInCells);
+														  newGridWidth, newGridHeight);
 
 			// ...forces a change of the cell coordinates of every tile already in the grid.
 			// We also have to move the layer's position accordingly.
-			position = newGridOrigin;
+			Position = newGridOrigin;
 
 			this.tiles.ForEach(t => newGrid.Add(t));
 			tiles.ForEach(t => newGrid.Add(t));
 
 			this.tiles = newGrid;
+			Bounds = this.tiles.Bounds;
 		}
 
 		internal void AddTile(Tile tile)
@@ -122,6 +128,30 @@ namespace SMLimitless.Sprites.Collections
 			sprites.Add(sprite);
 		}
 
+		public Vector2 GetCellNumberAtPosition(Vector2 position)
+		{
+			Vector2 adjustedPosition = position - this.Position;
+			return new Vector2((adjustedPosition.X / tiles.CellWidth), (adjustedPosition.Y / tiles.CellHeight)).Floor();
+		}
+
+		public Vector2 GetClampedCellNumberAtPosition(Vector2 position)
+		{
+			Vector2 cellNumber = GetCellNumberAtPosition(position);
+			cellNumber.X = MathHelper.Clamp(cellNumber.X, 0, tiles.Width);
+			cellNumber.Y = MathHelper.Clamp(cellNumber.Y, 0, tiles.Height);
+			return cellNumber;
+		}
+
+		public Tile GetTile(int x, int y)
+		{
+			return tiles[x, y];
+		}
+		
+		public Tile GetTile(Vector2 cellNumber)
+		{
+			return GetTile((int)cellNumber.X, (int)cellNumber.Y);
+		}
+
 		internal void SetMainLayer()
 		{
 			if (owner.MainLayer != null)
@@ -136,13 +166,14 @@ namespace SMLimitless.Sprites.Collections
 			tiles.ForEach(t => newGrid.Add(t));
 			tiles = newGrid;
 			owner.MainLayer = this;
+			owner.Layers.Insert(0, this);
 		}
 
 		public void Move(Vector2 position)
 		{
 			if (IsMainLayer) { throw new InvalidOperationException("Cannot move the main layer."); }
 
-			Vector2 distance = position - this.position;
+			Vector2 distance = position - this.Position;
 			Translate(distance);
 		}
 
@@ -150,7 +181,8 @@ namespace SMLimitless.Sprites.Collections
 		{
 			if (IsMainLayer) { throw new InvalidOperationException("Cannot translate the main layer."); }
 
-			position += distance;
+			Position += distance;
+			tiles.Position += distance;
 
 			// Move every tile and sprite first.
 			tiles.ForEach(t => t.Position += distance);

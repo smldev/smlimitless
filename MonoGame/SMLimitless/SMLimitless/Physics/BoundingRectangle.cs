@@ -247,12 +247,20 @@ namespace SMLimitless.Physics
             }
         }
 
-        /// <summary>
-        /// Returns a rectangle created from a simple string representation.
-        /// </summary>
-        /// <param name="input">A string containing four comma-delimited numbers.</param>
-        /// <returns>A rectangle created from the string.</returns>
-        public static BoundingRectangle FromSimpleString(string input)
+		public Vector2 BottomRight
+		{
+			get
+			{
+				return new Vector2(this.Right, this.Bottom);
+			}
+		}
+
+		/// <summary>
+		/// Returns a rectangle created from a simple string representation.
+		/// </summary>
+		/// <param name="input">A string containing four comma-delimited numbers.</param>
+		/// <returns>A rectangle created from the string.</returns>
+		public static BoundingRectangle FromSimpleString(string input)
         {
             string[] components = input.Split(',');
 

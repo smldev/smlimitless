@@ -1,0 +1,94 @@
+Super Mario Limitless
+Sprite States as Full Objects
+
+In the beginning, sprites had states. A sprite state was a property of an enum type SpriteState with about a dozen different states. This was too restrictive, though, so sprite states were changed to strings, but the perils of stringly-typing took their toll: strings represent the same state might have different capitalization or word breaks ("ShellSpinning" vs. "shell_spinning"), and it would be impossible for sprites in one assembly to know about what states that sprites in another assembly might use. Eventually, states were dropped for attributes, collections of strings representing the various conditions of a certain sprite, such as "fireball" or "shell_spinning". Stringly typed attributes still present the same challenges, however, but the only other feasible solution, enumerations, are even more restrictive.
+
+We will extend this model of sprite behavior with more advanced sprite states. With the following class definition:
+
+public sealed class SpriteState
+{
+	public Action UpdateAction { get; }
+	public Action InitAction { get; }
+}
+
+...and the following changes to the Sprite class:
+
+public abstract class Sprite
+{
+	...
+	protected Dictionary<string, SpriteState> SpriteStates { get; }
+	private string currentStateName;
+	protected SpriteState CurrentState
+	{
+		get { return SpriteStates[currentStateName]; }
+	}
+	
+	protected void ChangeState(string stateName) { currentStateName = stateName; }
+}
+
+...we can model sprite states and behavior similarly to how a Turing machine uses rules regarding symbols on a tape to change the state of the system. State changes occur when a certain condition applies to an event that has occurred, such as a tile or sprite collision, timer expiring, etc. State changes themselves are almost stateless, carrying only the name of the new state as information. However, they do accept initialization Actions, such as those that start a timer.
+
+Below is a sample partial implementation of the Goomba class according to the new state system proposal.
+
+public sealed class Goomba : Sprite
+{
+	...
+	// States:
+	// 	"default": Default Goomba behavior
+	//	"flattened": Stomped by player
+	//	"killed": Knocked off stage
+	
+	public Goomba(...)
+	{
+		...
+		SpriteStates.Add("default", new SpriteState(UpdateDefault, () => {}));	// empty action because there's no initialization logic for this state that isn't taken care of in the ctor
+		SpriteStates.Add("flattened", new SpriteState(UpdateFlattened, () => { GameServices.Timers.Add(new Timer(2f, () => { this.Owner.RemoveSprite(this); })) });	// contrived example, but you can use lambdas as init logic if you don't want to make another method
+		SpriteStates.Add("killed", new SpriteState(UpdateKilled, InitKilled));
+	}
+	
+	private void UpdateDefault()
+	{
+		walkerComponent.Update();
+	}
+	
+	private void UpdateFlattened() {}
+	private void UpdateKilled()
+	{
+		// check to see if this sprite has fallen out of bounds
+		// if so, remove it
+	}
+	
+	private void InitKilled()
+	{
+		// disable the Enabled flag and collision
+		// give some impulse to make the sprite jump
+	}
+	
+	private void HandleTileCollision(Tile tile, Vector2 resolutionDistance)
+	{
+		// If we've collided with a tile that has attribute "fatal" or "lava" set,
+		if (tile.HasAttribute("fatal") || tile.HasAttribute("lava"))
+		{
+			// disappear in a cloud of smoke and play a sound
+			SmokeCloud cloud = new SmokeCloud();
+			cloud.Position = this.Position;
+			cloud.Initialize();
+			cloud.LoadContent();
+			owner.AddSprite(cloud);
+			owner.RemoveSprite(this);
+			SoundManager.PlaySound("puff");
+		}
+	}
+	
+	private void HandleSpriteCollision(Sprite sprite, Vector2 resolutionDistance)
+	{
+		if (sprite.HasAttribute("player") && resolutionDistance.Y < 0f)
+		{
+			ChangeState("flattened");
+		}
+		else if (sprite.HasAttribute("harmsSprites"))
+		{
+			ChangeState("killed");
+		}
+	}
+}

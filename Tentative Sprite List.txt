@@ -1,6 +1,16 @@
 Super Mario Limitless
 Tentative Sprite List
 
+- Wave 0 Sprites:
+	- Goomba
+	- Koopa Troopa
+	- Buzzy Beetle
+	- Lakitu
+	- Spiny +Egg
+	- Goal Flagpole
+	- Super Mushroom
+	- Fire Flower
+
 - Super Mario Bros.
 	Player forms: Small, Super, Fire + Invincible
 	- Enemies

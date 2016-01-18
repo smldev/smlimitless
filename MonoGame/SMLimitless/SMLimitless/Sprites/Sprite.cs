@@ -31,6 +31,9 @@ namespace SMLimitless.Sprites
 		/// </summary>
         private Vector2 velocity;
 
+		public static PhysicsSetting<float> MaximumGravitationalVelocity = new PhysicsSetting<float>("Max Gravitational Velocity", 0f, 1000f, 350f, PhysicsSettingType.FloatingPoint);
+		public static PhysicsSetting<float> UpwardAccelerationDecay = new PhysicsSetting<float>("Upward Acceleration Decay", 0.01f, 10f, 0.01f, PhysicsSettingType.FloatingPoint);
+
 		/// <summary>
 		/// Gets or sets an identification number that identifies all sprites of this kind.
 		/// </summary>
@@ -212,6 +215,31 @@ namespace SMLimitless.Sprites
         /// </summary>
         public virtual void Update()
         {
+			float delta = GameServices.GameTime.GetElapsedSeconds();
+
+			Components.ForEach(c => c.Update());
+
+			PreviousPosition = Position;
+
+			if (IsEmbedded)
+			{
+				Acceleration = Vector2.Zero;
+				Velocity = new Vector2(-25f, 0f);
+			}
+			else
+			{
+				if (Velocity.Y < MaximumGravitationalVelocity.Value)
+				{
+					Acceleration = new Vector2(Acceleration.X, Level.GravityAcceleration.Value);
+				}
+				else if (Velocity.Y > MaximumGravitationalVelocity.Value)
+				{
+					Acceleration = new Vector2(Acceleration.X, 0f);
+					Velocity = new Vector2(Velocity.X, MaximumGravitationalVelocity.Value);
+				}
+			}
+
+			Velocity += Acceleration * delta;
         }
 
         /// <summary>
@@ -231,15 +259,27 @@ namespace SMLimitless.Sprites
 					throw new ArgumentException("A sloped sides value of Default is not valid.", nameof(slopedSides));
 				case RtSlopedSides.TopLeft:
 				case RtSlopedSides.BottomLeft:
-					return new BoundingRectangle(Position, hitboxSize);
+					return new BoundingRectangle(Position.X, Position.Y, hitboxSize.X, hitboxSize.Y);
 				case RtSlopedSides.TopRight:
 				case RtSlopedSides.BottomRight:
-					return new BoundingRectangle(new Vector2(Position.X + (Size.X / 2f), Position.Y), hitboxSize);
+					Vector2 hitboxPosition = new Vector2(Position.X + (Size.X / 2f), Position.Y);
+					return new BoundingRectangle(hitboxPosition.X, hitboxPosition.Y, hitboxSize.X, hitboxSize.Y);
 				default:
 					throw new ArgumentOutOfRangeException(nameof(slopedSides), $"Invalid sloped sides value {slopedSides}. The expected range is from 0 to 4.");
 			}
 		}
 		
+		// WYLO: Okay, so I've been reminded of the fact that collision sucks.
+		// Rectangle collision is fine right now, but slopes are rough.
+		// The first thing you should do is go over UpdatePhysics() and figure out what every line does and comment it.
+		// Then, swap out the player sprite for a solid color rectangle so we can see it more easily.
+		// I don't know how to fix slopes, but here's their problems:
+		// * No collision occurs on the leading half between sprite and slope (may be by design)
+		// * Cannot move from slope to slope; sprite instead goes inside
+		// * Sprites don't collide with adjacent tiles on the ascent but do not fall down on the descent.
+		// Good luck.
+
+
 		/// <summary>
         /// Handles a collision between this sprite and a tile.
         /// </summary>

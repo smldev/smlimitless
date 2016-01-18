@@ -68,8 +68,11 @@
   <ItemGroup>
     <Compile Include="AssemblyMetadata.cs" />
     <Compile Include="Components\BasicWalkerComponent.cs" />
+    <Compile Include="PainterSprite.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimplePlayer.cs" />
+    <Compile Include="TestSlope1.cs" />
+    <Compile Include="TestSlope2.cs" />
     <Compile Include="TestTile3.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

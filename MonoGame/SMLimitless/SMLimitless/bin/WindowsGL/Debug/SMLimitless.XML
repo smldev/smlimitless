@@ -15,6 +15,11 @@
             A two-dimensional array containing the values.
             </summary>
         </member>
+        <member name="F:SMLimitless.Collections.Grid`1.valueList">
+            <summary>
+            A list containing the values. Makes for faster enumeration.
+            </summary>
+        </member>
         <member name="P:SMLimitless.Collections.Grid`1.Width">
             <summary>
             Gets the one-based width of this grid, measured in grid cells.
@@ -223,12 +228,12 @@
         </member>
         <member name="P:SMLimitless.Collections.SizedGrid`1.Width">
             <summary>
-            Gets the width of the grid, represented as (width in cells * width of cell).
+            Gets the width of the grid in cells.
             </summary>
         </member>
         <member name="P:SMLimitless.Collections.SizedGrid`1.Height">
             <summary>
-            Gets the height of the grid, represented as (height in cells * height of cell).
+            Gets the height of the grid in cells.
             </summary>
         </member>
         <member name="M:SMLimitless.Collections.SizedGrid`1.#ctor(Microsoft.Xna.Framework.Vector2,System.Int32,System.Int32,System.Int32,System.Int32)">

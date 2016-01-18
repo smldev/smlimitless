@@ -31,6 +31,11 @@ namespace SMLimitless.Collections
         /// </summary>
         private T[,] values;
 
+		/// <summary>
+		/// A list containing the values. Makes for faster enumeration.
+		/// </summary>
+		private List<T> valueList;
+
         /// <summary>
         /// Gets the one-based width of this grid, measured in grid cells.
         /// </summary>
@@ -66,6 +71,9 @@ namespace SMLimitless.Collections
 					throw new ArgumentOutOfRangeException($"Index of value to set must be within the bounds of the grid. X: {x}, Y: {y}");
 				}
 
+				T currentValue = values[x, y];
+				if (currentValue != null) { valueList.Remove(currentValue); }
+				if (value != null) { valueList.Add(value); }
 				values[x, y] = value;
             }
         }
@@ -83,6 +91,7 @@ namespace SMLimitless.Collections
             }
 
 			values = new T[width, height];
+			valueList = new List<T>();
 			Width = width;
 			Height = height;
         }
@@ -141,13 +150,7 @@ namespace SMLimitless.Collections
 		[DebuggerStepThrough]
 		public IEnumerator<T> GetEnumerator()
 		{
-			for (int y = 0; y < Height; y++)
-			{
-				for (int x = 0; x < Width; x++)
-				{
-					yield return this[x, y];
-				}
-			}
+			return valueList.GetEnumerator();
 		}
     }
 }

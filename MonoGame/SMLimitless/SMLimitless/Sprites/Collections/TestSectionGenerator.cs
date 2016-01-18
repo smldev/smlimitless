@@ -59,6 +59,13 @@ namespace SMLimitless.Sprites.Collections
 			player.CollisionMode = SpriteCollisionMode.OffsetNotify;
 			result.AddSprite(player);
 
+			Sprite painter = AssemblyManager.GetSpriteByFullName("SmlSample.PainterSprite");
+			painter.Position = new Vector2(16f, 0f);
+			painter.IsActive = true;
+			painter.State = (SpriteState)0;
+			painter.CollisionMode = SpriteCollisionMode.NoCollision;
+			result.AddSprite(painter);
+
 			return result;
 		}
 
