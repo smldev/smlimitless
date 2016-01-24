@@ -257,6 +257,10 @@ namespace SMLimitless.Physics
 
 		public Vector2 TopRight => new Vector2(Right, Top);
 
+		public Vector2 BottomLeft => new Vector2(Left, Bottom);
+
+		public Vector2 TopLeft => new Vector2(Left, Top);
+
 		/// <summary>
 		/// Returns a rectangle created from a simple string representation.
 		/// </summary>

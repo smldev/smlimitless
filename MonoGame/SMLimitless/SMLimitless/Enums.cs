@@ -230,6 +230,14 @@ namespace SMLimitless.Sprites
 		HorizontalLeg = 0x04
 	}
 
+	[Flags]
+	public enum TileAdjacencyFlags
+	{
+		NoAdjacentSlopes = 0x00,
+		SlopeOnLeft = 0x01,
+		SlopeOnRight = 0x02
+	}
+
     /// <summary>
     /// Enumerates different modes of collision handling
     /// that sprites can choose between.

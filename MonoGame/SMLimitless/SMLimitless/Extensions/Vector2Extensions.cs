@@ -387,9 +387,14 @@ namespace SMLimitless.Extensions
             return new Vector2(x, y);
         }
 
-        ////public static bool EqualityWithinEpsilon(this Vector2 a, Vector2 b, float epsilon)
-        ////{
-        // we have a lot of learning to do before this can work
-        ////}
-    }
+		public static Point ToPoint(this Vector2 vector)
+		{
+			return new Point((int)vector.X, (int)vector.Y);
+		}
+
+		////public static bool EqualityWithinEpsilon(this Vector2 a, Vector2 b, float epsilon)
+		////{
+		// we have a lot of learning to do before this can work
+		////}
+	}
 }

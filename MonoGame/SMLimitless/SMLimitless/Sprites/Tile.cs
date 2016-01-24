@@ -102,6 +102,8 @@ namespace SMLimitless.Sprites
 			}
 		}
 
+		public TileAdjacencyFlags AdjacencyFlags { get; internal set; }
+
 		protected internal RtSlopedSides SlopedSides { get; set; }
 
 		public Section Owner { get; set; }

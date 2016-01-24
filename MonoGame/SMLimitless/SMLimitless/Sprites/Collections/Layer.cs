@@ -107,6 +107,20 @@ namespace SMLimitless.Sprites.Collections
 			this.tiles.ForEach(t => newGrid.Add(t));
 			tiles.ForEach(t => newGrid.Add(t));
 
+			foreach (Tile tile in newGrid)
+			{
+				// Update adjacency flags
+				Vector2 tileCell = GetCellNumberAtPosition(tile.Position);
+				Vector2 cellLeft = new Vector2(tileCell.X - 1f, tileCell.Y);
+				Vector2 cellRight = new Vector2(tileCell.X + 1f, tileCell.Y);
+
+				Tile tileLeft = (cellLeft.X >= 0f) ? GetTile(cellLeft) : null;
+				Tile tileRight = (cellRight.X < newGrid.Width) ? GetTile(cellRight) : null;
+
+				if (tileLeft != null && tileLeft.TileShape == CollidableShape.RightTriangle && (tileLeft.SlopedSides == RtSlopedSides.TopLeft || tileLeft.SlopedSides == RtSlopedSides.BottomLeft)) { tile.AdjacencyFlags |= TileAdjacencyFlags.SlopeOnLeft; }
+				if (tileRight != null && tileRight.TileShape == CollidableShape.RightTriangle && (tileRight.SlopedSides == RtSlopedSides.TopRight || tileRight.SlopedSides == RtSlopedSides.BottomRight)) { tile.AdjacencyFlags |= TileAdjacencyFlags.SlopeOnRight; }
+			}
+
 			this.tiles = newGrid;
 			Bounds = this.tiles.Bounds;
 		}

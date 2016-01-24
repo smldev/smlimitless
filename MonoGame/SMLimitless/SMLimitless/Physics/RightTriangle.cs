@@ -230,8 +230,14 @@ namespace SMLimitless.Physics
             // But since the Y-axis is reversed, y = mx - b.
             // But we still need a positive value, so we return negative Y.
             float y = (this.Slope * x) - this.YIntersect;
-            return new Vector2(x, -y);
+            return new Vector2(x, (-y));
         }
+
+		public Vector2 GetClampedPointOnSlope(float x)
+		{
+			x = MathHelper.Clamp(x, Bounds.Left, Bounds.Right);
+			return GetPointOnSlope(x);
+		}
 
         /// <summary>
         /// Gets a point directly on the line that is
@@ -270,7 +276,7 @@ namespace SMLimitless.Physics
                 return false;
             }
 
-            float pointOnSlopeY = this.GetPointOnSlope(point.X).Y;
+            float pointOnSlopeY = this.GetClampedPointOnSlope(point.X).Y;
 
             if (this.SlopedSides == RtSlopedSides.TopLeft || this.SlopedSides == RtSlopedSides.TopRight)
             {
@@ -310,6 +316,33 @@ namespace SMLimitless.Physics
             return true;
         }
 
+		private bool IsSlopeCollision(BoundingRectangle rect, Vector2 intersect)
+		{
+			if (Math.Abs(intersect.X) < Math.Abs(intersect.Y))
+			{
+				if (VerticalSlopedSide == VerticalDirection.Up)
+				{
+					return intersect.Y < 0f;
+				}
+				else
+				{
+					return intersect.Y > 0f;
+				}
+			}
+			else
+			{
+				if (HorizontalSlopedSide == HorizontalDirection.Left)
+				{
+					return intersect.X < 0f;
+				}
+				else if (HorizontalSlopedSide == HorizontalDirection.Right)
+				{
+					return intersect.X > 0f;
+				}
+			}
+			return false;
+		}
+
         /// <summary>
         /// Gets the minimum distance to move a given rectangle such that
         /// it will no longer be intersecting this right triangle.
@@ -325,49 +358,15 @@ namespace SMLimitless.Physics
         public Vector2 GetCollisionResolution(BoundingRectangle rect)
         {
 			// Vector2 rectCollisionPoint = (this.SlopedSides == RtSlopedSides.TopLeft || this.SlopedSides == RtSlopedSides.TopRight) ? rect.BottomCenter : rect.TopCenter;
-			Vector2 rectCollisionPoint = (this.SlopedSides == RtSlopedSides.TopLeft || SlopedSides == RtSlopedSides.TopRight) ? rect.BottomRight : rect.TopRight;
+			Vector2 rectCollisionPoint = Vector2.Zero;
+			if (SlopedSides == RtSlopedSides.TopLeft) { rectCollisionPoint = rect.BottomRight; }
+			else if (SlopedSides == RtSlopedSides.TopRight) { rectCollisionPoint = rect.BottomLeft; }
+			else if (SlopedSides == RtSlopedSides.BottomLeft) { rectCollisionPoint = rect.TopRight; }
+			else if (SlopedSides == RtSlopedSides.BottomRight) { rectCollisionPoint = rect.TopLeft; }
 
-            if (!this.Bounds.IntersectsIncludingEdges(rectCollisionPoint))
+            if (!Bounds.IntersectsIncludingEdges(rectCollisionPoint))
             {
-                Vector2 resolution = this.Bounds.GetCollisionResolution(rect);
-                Vector2 result = Vector2.Zero;
-
-                if (this.HorizontalSlopedSide == HorizontalDirection.Right)
-                {
-                    // Straight edge is left
-                    if (resolution.X < 0f)
-                    {
-                        result.X = resolution.X;
-                    }
-                }
-                else if (this.HorizontalSlopedSide == HorizontalDirection.Left)
-                {
-                    // Straight edge is right
-                    if (resolution.X > 0f)
-                    {
-                        result.X = resolution.X;
-                    }
-                }
-
-                if (this.VerticalSlopedSide == VerticalDirection.Up)
-                {
-                    // Straight edge is bottom
-                    if (resolution.Y > 0f)
-                    {
-                        result.Y = resolution.Y;
-                    }
-                }
-                else if (this.VerticalSlopedSide == VerticalDirection.Down)
-                {
-                    // Straight edge is top
-                    if (resolution.Y < 0f)
-                    {
-                        result.Y = resolution.Y;
-                    }
-                }
-
-                // TODO: The above could be condensed into two conditionals, but alas, I'm too tired at the moment.
-                return result;
+				return Bounds.GetCollisionResolution(rect);
             }
             else
             {
@@ -421,9 +420,9 @@ namespace SMLimitless.Physics
         /// <returns>The distance to move the rectangle by to resolve this collision.</returns>
         private Vector2 ResolveSlopeCollision(BoundingRectangle that, Vector2 intersection)
         {
-            Vector2 topCenter = new Vector2(that.X + (that.Width / 2f), that.Y);
-            Vector2 bottomCenter = new Vector2(that.X + (that.Width / 2f), that.Bottom);
-            Vector2 pointOnSlope = this.GetPointOnSlope(that.X + (that.Width / 2f));
+			Vector2 topCenter = (HorizontalSlopedSide == HorizontalDirection.Left) ? that.TopRight : that.TopLeft;
+			Vector2 bottomCenter = (HorizontalSlopedSide == HorizontalDirection.Left) ? that.BottomRight : that.BottomLeft;
+            Vector2 pointOnSlope = this.GetPointOnSlope((HorizontalSlopedSide == HorizontalDirection.Left) ? that.Right : that.Left);
 
             if (pointOnSlope == Vector2.Zero)
             {
