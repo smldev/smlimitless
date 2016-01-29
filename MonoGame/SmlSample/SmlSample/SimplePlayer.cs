@@ -11,6 +11,7 @@ using SMLimitless.Input;
 using SMLimitless.Sprites;
 using SMLimitless.Sprites.Assemblies;
 using SMLimitless.Sprites.Collections;
+using SMLimitless.Sounds;
 
 namespace SmlSample
 {
@@ -18,6 +19,7 @@ namespace SmlSample
 	{
 		private StaticGraphicsObject graphics;
 		private int jumpTimeout = 5;
+		private Sound jumpSound;
 
 		public override string EditorCategory
 		{
@@ -31,11 +33,14 @@ namespace SmlSample
 		{
 			Size = new Vector2(16f);
 			IsActive = true;
+
+			jumpSound = ContentPackageManager.GetSoundResource("nsmbwiiJump");
 		}
 
 		public override void Initialize(Section owner)
 		{
 			base.Initialize(owner);
+			jumpSound.Initialize();
 		}
 
 		public override void DeserializeCustomObjects(JsonHelper customObjects)
@@ -52,6 +57,8 @@ namespace SmlSample
 		{
 			graphics = (StaticGraphicsObject)ContentPackageManager.GetGraphicsResource("simple_player");
 			graphics.LoadContent();
+
+			
 		}
 
 		public override void Update()
@@ -91,6 +98,7 @@ namespace SmlSample
 			if (InputManager.IsCurrentActionPress(InputAction.Jump) && jumpTimeout > 0)
 			{
 				Velocity = new Vector2(Velocity.X, (Velocity.Y <= MaxJumpVelocity) ? MaxJumpVelocity : Velocity.Y - JumpImpulse);
+				jumpSound.Play();
 				jumpTimeout--;
 			}
 

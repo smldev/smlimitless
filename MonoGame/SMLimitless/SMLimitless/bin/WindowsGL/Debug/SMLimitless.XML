@@ -5678,39 +5678,9 @@
             Represents a sound effect or music track.
             </summary>
         </member>
-        <member name="F:SMLimitless.Sounds.Sound.waveOutDevice">
-            <summary>
-            A device that can play waveform audio.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Sounds.Sound.mainOutputStream">
-            <summary>
-            A stream for the sound's data.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Sounds.Sound.volumeStream">
-            <summary>
-            Represents a channel for the mixer.
-            </summary>
-        </member>
         <member name="P:SMLimitless.Sounds.Sound.FilePath">
             <summary>
             Gets the path to the file that this sound was loaded from.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Sounds.Sound.Volume">
-            <summary>
-            Gets or sets the volume of the sound (between 0.0 and 1.0).
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Sounds.Sound.Pan">
-            <summary>
-            Gets or sets the pan of the sound, which determines how loud each speaker is (between -1.0 and 1.0).
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Sounds.Sound.Position">
-            <summary>
-            Gets or sets the position in samples of this sound.
             </summary>
         </member>
         <member name="M:SMLimitless.Sounds.Sound.#ctor(System.String)">
