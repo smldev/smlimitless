@@ -123,6 +123,8 @@ namespace SMLimitless.Sprites
 		/// </summary>
 		public Vector2 Acceleration { get; set; }
 
+		internal abstract object GetCustomSerializableObjects();
+
 		public bool HasMoved { get; set; }
 		#endregion
 

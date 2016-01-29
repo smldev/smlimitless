@@ -360,6 +360,24 @@ namespace SMLimitless.Collections
 			yield break;
 		}
 
+		public IEnumerable<Tuple<int, int, T>> EnumerateItemsWithGridCells()
+		{
+			HashSet<T> itemsProcessedSoFar = new HashSet<T>();
+
+			for (int y = 0; y < grid.Height; y++)
+			{
+				for (int x = 0; x < grid.Width; x++)
+				{
+					T item = this[x, y];
+					if (!item.Equals(default(T)) && !itemsProcessedSoFar.Contains(item))
+					{
+						itemsProcessedSoFar.Add(item);
+						yield return new Tuple<int, int, T>(x, y, item);
+					}
+				}
+			}
+		}
+
 		IEnumerator IEnumerable.GetEnumerator()
 		{
 			return grid.GetEnumerator();

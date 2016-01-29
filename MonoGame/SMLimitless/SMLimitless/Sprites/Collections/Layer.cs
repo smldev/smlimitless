@@ -13,18 +13,19 @@ namespace SMLimitless.Sprites.Collections
 {
 	public sealed class Layer : IName
 	{
-		public bool IsMainLayer { get; private set; }
+		public bool IsMainLayer { get; internal set; }
 		private bool isInitialized;
 		private bool isContentLoaded;
 		private bool isActive;
 
-		private Section owner;
+		internal Section Owner { get; private set; }
 
-		private SizedGrid<Tile> tiles;  // TODO: this should be set on deserialize
+		internal SizedGrid<Tile> Tiles { get; private set; } // TODO: this should be set on deserialize
 		private List<Sprite> sprites = new List<Sprite>();
 
 		public BoundingRectangle Bounds { get; private set; } = BoundingRectangle.NaN;
 		public Vector2 Position { get; private set; } = new Vector2(float.NaN);
+		public int Index { get; internal set; }
 		private Vector2 velocity = Vector2.Zero;
 
 		[DefaultValue(""), Description("The name of this layer to be used in event scripting. This field is optional.")]
@@ -32,20 +33,20 @@ namespace SMLimitless.Sprites.Collections
 
 		public Layer(Section cOwner, bool isMainLayer = false)
 		{
-			owner = cOwner;
+			Owner = cOwner;
 			IsMainLayer = isMainLayer;
 
 			// temporary
-			tiles = new SizedGrid<Tile>(Vector2.Zero, (int)GameServices.GameObjectSize.X, (int)GameServices.GameObjectSize.Y, 1, 1);
-			Bounds = tiles.Bounds;
+			Tiles = new SizedGrid<Tile>(Vector2.Zero, (int)GameServices.GameObjectSize.X, (int)GameServices.GameObjectSize.Y, 1, 1);
+			Bounds = Tiles.Bounds;
 		}
 
 		public void Initialize()
 		{
 			if (!isInitialized)
 			{
-				tiles.ForEach(t => t.Initialize(owner));
-				sprites.ForEach(s => s.Initialize(owner));
+				Tiles.ForEach(t => t.Initialize(Owner));
+				sprites.ForEach(s => s.Initialize(Owner));
 
 				isInitialized = true;
 			}
@@ -55,7 +56,7 @@ namespace SMLimitless.Sprites.Collections
 		{
 			if (!isContentLoaded)
 			{
-				tiles.ForEach(t => t.LoadContent());
+				Tiles.ForEach(t => t.LoadContent());
 				sprites.ForEach(s => s.LoadContent());
 
 				isContentLoaded = true;
@@ -65,7 +66,7 @@ namespace SMLimitless.Sprites.Collections
 		public void Update()
 		{
 			// TODO: change this method to account for active/inactive layers, tiles and sprites
-			tiles.ForEach(t => t.Update());
+			Tiles.ForEach(t => t.Update());
 			sprites.ForEach(s => s.Update());
 		}
 
@@ -81,30 +82,30 @@ namespace SMLimitless.Sprites.Collections
 			// but if we have a bunch of tiles to add at once, we only need to resize the grid once, if at all.
 
 			if (!tiles.Any()) return;
-			if (!this.tiles.DoesRangeAlignToGrid(tiles)) { throw new ArgumentException("Tried to add tiles to a grid that weren't grid aligned."); }
+			if (!this.Tiles.DoesRangeAlignToGrid(tiles)) { throw new ArgumentException("Tried to add tiles to a grid that weren't grid aligned."); }
 
-			BoundingRectangle allTilesBound = tiles.Concat(this.tiles).GetBoundsOfPositionables();
+			BoundingRectangle allTilesBound = tiles.Concat(this.Tiles).GetBoundsOfPositionables();
 
 			// so, here's probably a good point to talk about cell coordinate agnosticity
 			// Tiles will have cell coordinates since they're in a grid where each cell has coordinates,
 			// but you can't rely on them, and here's why:
-			int allTilesBoundWidthInCells = (int)(allTilesBound.Width / this.tiles.CellWidth);
-			int allTilesBoundHeightInCells = (int)(allTilesBound.Height / this.tiles.CellHeight);
+			int allTilesBoundWidthInCells = (int)(allTilesBound.Width / this.Tiles.CellWidth);
+			int allTilesBoundHeightInCells = (int)(allTilesBound.Height / this.Tiles.CellHeight);
 
 			// ...adding tiles that are to the left and/or above the old grid...
-			float newGridOriginX = (allTilesBound.X < this.tiles.Position.X) ? allTilesBound.X : this.tiles.Position.X;
-			float newGridOriginY = (allTilesBound.Y < this.tiles.Position.Y) ? allTilesBound.Y : this.tiles.Position.Y;
-			int newGridWidth = (allTilesBoundWidthInCells * this.tiles.CellWidth > this.tiles.Width) ? allTilesBoundWidthInCells * this.tiles.CellWidth : (this.tiles.Width);
-			int newGridHeight = (allTilesBoundHeightInCells * this.tiles.CellHeight > this.tiles.Height) ? allTilesBoundHeightInCells * this.tiles.CellHeight : (this.tiles.Height);
+			float newGridOriginX = (allTilesBound.X < this.Tiles.Position.X) ? allTilesBound.X : this.Tiles.Position.X;
+			float newGridOriginY = (allTilesBound.Y < this.Tiles.Position.Y) ? allTilesBound.Y : this.Tiles.Position.Y;
+			int newGridWidth = (allTilesBoundWidthInCells * this.Tiles.CellWidth > this.Tiles.Width) ? allTilesBoundWidthInCells * this.Tiles.CellWidth : (this.Tiles.Width);
+			int newGridHeight = (allTilesBoundHeightInCells * this.Tiles.CellHeight > this.Tiles.Height) ? allTilesBoundHeightInCells * this.Tiles.CellHeight : (this.Tiles.Height);
 			Vector2 newGridOrigin = new Vector2(newGridOriginX, newGridOriginY);
-			SizedGrid<Tile> newGrid = new SizedGrid<Tile>(newGridOrigin, this.tiles.CellWidth, this.tiles.CellHeight, 
+			SizedGrid<Tile> newGrid = new SizedGrid<Tile>(newGridOrigin, this.Tiles.CellWidth, this.Tiles.CellHeight, 
 														  newGridWidth, newGridHeight);
 
 			// ...forces a change of the cell coordinates of every tile already in the grid.
 			// We also have to move the layer's position accordingly.
 			Position = newGridOrigin;
 
-			this.tiles.ForEach(t => newGrid.Add(t));
+			this.Tiles.ForEach(t => newGrid.Add(t));
 			tiles.ForEach(t => newGrid.Add(t));
 
 			foreach (Tile tile in newGrid)
@@ -121,8 +122,8 @@ namespace SMLimitless.Sprites.Collections
 				if (tileRight != null && tileRight.TileShape == CollidableShape.RightTriangle && (tileRight.SlopedSides == RtSlopedSides.TopRight || tileRight.SlopedSides == RtSlopedSides.BottomRight)) { tile.AdjacencyFlags |= TileAdjacencyFlags.SlopeOnRight; }
 			}
 
-			this.tiles = newGrid;
-			Bounds = this.tiles.Bounds;
+			this.Tiles = newGrid;
+			Bounds = this.Tiles.Bounds;
 		}
 
 		internal void AddTile(Tile tile)
@@ -134,7 +135,7 @@ namespace SMLimitless.Sprites.Collections
 		{
 			// Unlike when adding tiles, removing a tile doesn't shrink the grid even if the grid could shrink
 			// also holy cow the RemoveTile(Tile) implementation on master is *horrible*
-			tiles.Remove(tile);
+			Tiles.Remove(tile);
 		}
 
 		internal void AddSprite(Sprite sprite)
@@ -145,20 +146,20 @@ namespace SMLimitless.Sprites.Collections
 		public Vector2 GetCellNumberAtPosition(Vector2 position)
 		{
 			Vector2 adjustedPosition = position - this.Position;
-			return new Vector2((adjustedPosition.X / tiles.CellWidth), (adjustedPosition.Y / tiles.CellHeight)).Floor();
+			return new Vector2((adjustedPosition.X / Tiles.CellWidth), (adjustedPosition.Y / Tiles.CellHeight)).Floor();
 		}
 
 		public Vector2 GetClampedCellNumberAtPosition(Vector2 position)
 		{
 			Vector2 cellNumber = GetCellNumberAtPosition(position);
-			cellNumber.X = MathHelper.Clamp(cellNumber.X, 0, tiles.Width);
-			cellNumber.Y = MathHelper.Clamp(cellNumber.Y, 0, tiles.Height);
+			cellNumber.X = MathHelper.Clamp(cellNumber.X, 0, Tiles.Width);
+			cellNumber.Y = MathHelper.Clamp(cellNumber.Y, 0, Tiles.Height);
 			return cellNumber;
 		}
 
 		public Tile GetTile(int x, int y)
 		{
-			return tiles[x, y];
+			return Tiles[x, y];
 		}
 		
 		public Tile GetTile(Vector2 cellNumber)
@@ -168,7 +169,7 @@ namespace SMLimitless.Sprites.Collections
 
 		internal void SetMainLayer()
 		{
-			if (owner.MainLayer != null)
+			if (Owner.MainLayer != null)
 			{
 				throw new InvalidOperationException("Tried to set a section's main layer, but the section already has a main layer.");
 			}
@@ -176,11 +177,11 @@ namespace SMLimitless.Sprites.Collections
 			IsMainLayer = true;
 			Vector2 objectSize = GameServices.GameObjectSize;
 			SizedGrid<Tile> newGrid = new SizedGrid<Tile>(Vector2.Zero, (int)objectSize.X, (int)objectSize.Y,
-														  (int)(owner.Bounds.Width / objectSize.X), (int)(owner.Bounds.Height / objectSize.Y));
-			tiles.ForEach(t => newGrid.Add(t));
-			tiles = newGrid;
-			owner.MainLayer = this;
-			owner.Layers.Insert(0, this);
+														  (int)(Owner.Bounds.Width / objectSize.X), (int)(Owner.Bounds.Height / objectSize.Y));
+			Tiles.ForEach(t => newGrid.Add(t));
+			Tiles = newGrid;
+			Owner.MainLayer = this;
+			Owner.Layers.Insert(0, this);
 		}
 
 		public void Move(Vector2 position)
@@ -196,14 +197,14 @@ namespace SMLimitless.Sprites.Collections
 			if (IsMainLayer) { throw new InvalidOperationException("Cannot translate the main layer."); }
 
 			Position += distance;
-			tiles.Position += distance;
+			Tiles.Position += distance;
 
 			// Move every tile and sprite first.
-			tiles.ForEach(t => t.Position += distance);
+			Tiles.ForEach(t => t.Position += distance);
 			sprites.ForEach(s => s.Position += distance);
 
 			// Finally, move the grid.
-			tiles.Position += distance;
+			Tiles.Position += distance;
 		}
 	}
 }

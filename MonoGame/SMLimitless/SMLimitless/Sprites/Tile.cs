@@ -38,6 +38,8 @@ namespace SMLimitless.Sprites
 
 		public bool HasMoved { get; set; }
 
+		public abstract object GetCustomSerializableObjects();
+
 		public BoundingRectangle Bounds
 		{
 			get

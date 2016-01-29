@@ -31,11 +31,12 @@ namespace SMLimitless.Sprites.Collections
 		public string Name { get; set; }
 
 		internal List<Tile> Tiles { get; private set; }
-		internal SparseCellGrid<Sprite> Sprites { get; private set; }
+		internal SparseCellGrid<Sprite> Sprites { get; set; }
 
-		internal List<Layer> Layers { get; private set; }
+		internal List<Layer> Layers { get; set; }
 		internal Layer MainLayer { get; set; }
-		internal List<Path> Paths { get; private set; }
+		internal List<Path> Paths { get; set; }
+		public bool IsLoaded { get; internal set; }
 
 		public Section(Level owner)
 		{

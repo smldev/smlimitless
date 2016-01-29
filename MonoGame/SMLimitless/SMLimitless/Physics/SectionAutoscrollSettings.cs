@@ -13,7 +13,7 @@ namespace SMLimitless.Physics
 		private Vector2 speed;
 		private string pathName;
 
-		public CameraScrollType ScrollType { get; }
+		public CameraScrollType ScrollType { get; internal set; }
 		
 		public Vector2 Speed
 		{
@@ -22,6 +22,12 @@ namespace SMLimitless.Physics
 				if (ScrollType != CameraScrollType.AutoScroll) { throw new InvalidOperationException("This section is not autoscrolling."); }
 
 				return speed;
+			}
+			internal set
+			{
+				if (ScrollType != CameraScrollType.AutoScroll) { throw new InvalidOperationException("This section is not autoscrolling."); }
+
+				speed = value;
 			}
 		}
 
@@ -32,6 +38,12 @@ namespace SMLimitless.Physics
 				if (ScrollType != CameraScrollType.AutoScrollAlongPath) { throw new InvalidOperationException("This section is not autoscrolling."); }
 
 				return pathName;
+			}
+			internal set
+			{
+				if (ScrollType != CameraScrollType.AutoScrollAlongPath) { throw new InvalidOperationException("This section is not autoscrolling."); }
+
+				pathName = value;
 			}
 		}
 

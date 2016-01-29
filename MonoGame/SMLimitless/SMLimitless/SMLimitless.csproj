@@ -83,6 +83,7 @@
     <Compile Include="Extensions\GameTimeExtensions.cs" />
     <Compile Include="Extensions\ListExtensions.cs" />
     <Compile Include="Extensions\NumericExtensions.cs" />
+    <Compile Include="Extensions\PointExtensions.cs" />
     <Compile Include="Extensions\PositionableExtensions.cs" />
     <Compile Include="Extensions\RectangleExtensions.cs" />
     <Compile Include="Extensions\SpriteBatchExtensions.cs" />
@@ -116,6 +117,10 @@
     <Compile Include="Interfaces\IPositionable.cs" />
     <Compile Include="Interfaces\IPositionable2.cs" />
     <Compile Include="IO\DataReader.cs" />
+    <Compile Include="IO\LevelSerializers\Serializer003.cs" />
+    <Compile Include="IO\LevelSerializers\Serializer003Types\LayerTileSaveData.cs" />
+    <Compile Include="IO\LevelSerializers\Serializer003Types\TilePositionCloud.cs" />
+    <Compile Include="IO\LevelSerializers\Serializer003Types\TileSaveData.cs" />
     <Compile Include="Physics\BoundingRectangle.cs" />
     <Compile Include="Physics\Camera2D.cs" />
     <Compile Include="Physics\Interpolator.cs" />
@@ -215,9 +220,7 @@
     <None Include="app.config" />
     <None Include="Properties\app.manifest" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="IO\LevelSerializers\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
       <Visible>False</Visible>
