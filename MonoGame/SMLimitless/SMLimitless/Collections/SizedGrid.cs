@@ -369,7 +369,7 @@ namespace SMLimitless.Collections
 				for (int x = 0; x < grid.Width; x++)
 				{
 					T item = this[x, y];
-					if (!item.Equals(default(T)) && !itemsProcessedSoFar.Contains(item))
+					if (item != null && !itemsProcessedSoFar.Contains(item))
 					{
 						itemsProcessedSoFar.Add(item);
 						yield return new Tuple<int, int, T>(x, y, item);

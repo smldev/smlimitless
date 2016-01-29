@@ -20,7 +20,7 @@ namespace SMLimitless.Sprites.Collections
 
 		internal Section Owner { get; private set; }
 
-		internal SizedGrid<Tile> Tiles { get; private set; } // TODO: this should be set on deserialize
+		internal SizedGrid<Tile> Tiles { get; set; }
 		private List<Sprite> sprites = new List<Sprite>();
 
 		public BoundingRectangle Bounds { get; private set; } = BoundingRectangle.NaN;
@@ -35,6 +35,7 @@ namespace SMLimitless.Sprites.Collections
 		{
 			Owner = cOwner;
 			IsMainLayer = isMainLayer;
+			if (IsMainLayer) { Owner.MainLayer = this; }
 
 			// temporary
 			Tiles = new SizedGrid<Tile>(Vector2.Zero, (int)GameServices.GameObjectSize.X, (int)GameServices.GameObjectSize.Y, 1, 1);

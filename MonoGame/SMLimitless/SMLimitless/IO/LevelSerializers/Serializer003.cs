@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 using Newtonsoft.Json.Linq;
 using SMLimitless.Collections;
 using SMLimitless.Extensions;
@@ -65,8 +66,8 @@ namespace SMLimitless.IO.LevelSerializers
 			return new
 			{
 				scrollType = (int)section.AutoscrollSettings.ScrollType,
-				speed = section.AutoscrollSettings.Speed.Serialize(),
-				pathName = section.AutoscrollSettings.PathName
+				speed = (section.AutoscrollSettings.ScrollType == CameraScrollType.AutoScroll) ? section.AutoscrollSettings.Speed.Serialize() : new Vector2(float.NaN).Serialize(),
+				pathName = (section.AutoscrollSettings.ScrollType == CameraScrollType.AutoScrollAlongPath) ? section.AutoscrollSettings.PathName : ""
 			};
 		}
 
@@ -109,6 +110,9 @@ namespace SMLimitless.IO.LevelSerializers
 					index = layer.Index,
 					name = layer.Name,
 					isMainLayer = layer.IsMainLayer,
+					position = layer.Tiles.Position.Serialize(),
+					gridWidth = layer.Tiles.Width,
+					gridHeight = layer.Tiles.Height,
 					uniqueTiles = GetUniqueTileObjects(layerData),
 					tilePositions = GetTilePositionCloudObjects(layerData)
 				});
@@ -239,7 +243,7 @@ namespace SMLimitless.IO.LevelSerializers
 			JArray levelExitObjects = (JArray)obj["levelExits"];
 
 			result.ContentFolderPaths = contentObjects.ToObject<List<string>>();
-			Content.ContentPackageManager.AddPackageFromFolder(System.IO.Directory.GetCurrentDirectory() + @"\" + result.ContentFolderPaths[0]); // TODO: make this not hardcoded
+			Content.ContentPackageManager.AddPackageFromFolder(result.ContentFolderPaths[0]); // TODO: make this not hardcoded
 
 			result.Sections = DeserializeSections(sectionObjects, result);
 			result.LevelExits = DeserializeLevelExits(levelExitObjects);
@@ -301,8 +305,8 @@ namespace SMLimitless.IO.LevelSerializers
 			SectionAutoscrollSettings result = new SectionAutoscrollSettings();
 
 			result.ScrollType = (CameraScrollType)(int)obj["scrollType"];
-			result.Speed = obj["speed"].ToVector2();
-			result.PathName = (string)obj["pathName"];
+			if (result.ScrollType == CameraScrollType.AutoScroll) { obj["speed"].ToVector2(); }
+			if (result.ScrollType == CameraScrollType.AutoScrollAlongPath) { result.PathName = (string)obj["pathName"]; }
 
 			return result;
 		}
@@ -348,7 +352,7 @@ namespace SMLimitless.IO.LevelSerializers
 
 			foreach (var entry in layerObjects)
 			{
-				Layer layer = new Layer(ownerSection);
+				Layer layer = new Layer(ownerSection, (bool)entry["isMainLayer"]);
 
 				layer.Index = (int)entry["index"];
 				layer.Name = (string)entry["name"];
@@ -356,6 +360,9 @@ namespace SMLimitless.IO.LevelSerializers
 
 				JArray tileDataArray = (JArray)entry["uniqueTiles"];
 				JArray positionsArray = (JArray)entry["tilePositions"];
+				Vector2 gridSize = new Vector2((int)entry["gridWidth"], (int)entry["gridHeight"]);
+				Vector2 position = entry["position"].ToVector2();
+				layer.Tiles = new SizedGrid<Tile>(position, (int)GameServices.GameObjectSize.X, (int)GameServices.GameObjectSize.Y, (int)gridSize.X, (int)gridSize.Y);
 				var uniqueTiles = DeserializeTileSaveData(tileDataArray);
 				var tilePositions = DeserializeTilePositionClouds(positionsArray);
 				LayerTileSaveData layerTileData = LayerTileSaveData.Merge(uniqueTiles, tilePositions);

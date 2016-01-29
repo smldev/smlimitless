@@ -54,5 +54,7 @@ namespace SmlSample
 		public override void Update()
 		{
 		}
+
+		public override object GetCustomSerializableObjects() { return null; }
 	}
 }

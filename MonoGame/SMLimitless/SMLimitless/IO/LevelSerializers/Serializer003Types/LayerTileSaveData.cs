@@ -98,9 +98,9 @@ namespace SMLimitless.IO.LevelSerializers.Serializer003Types
 					Tile resultTile = tile.Clone();
 					resultTile.InitialPosition = resultTile.Position = new Vector2(xPosition, yPosition);
 
-					tile.Initialize(layer.Owner);
-					tilesToAdd.Add(tile);
-					layer.Owner.AddTile(tile);
+					resultTile.Initialize(layer.Owner);
+					tilesToAdd.Add(resultTile);
+					layer.Owner.AddTile(resultTile);
 				}
 
 				layer.AddTiles(tilesToAdd);

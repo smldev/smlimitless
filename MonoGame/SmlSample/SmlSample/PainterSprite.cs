@@ -96,6 +96,8 @@ namespace SmlSample
 			}
 		}
 
+		public override object GetCustomSerializableObjects() { return null; }
+
 		public override void DeserializeCustomObjects(JsonHelper customObjects)
 		{
 		}

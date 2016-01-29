@@ -31,14 +31,16 @@ namespace SMLimitless.IO.LevelSerializers.Serializer003Types
 			CustomData = tile.GetCustomSerializableObjects();
 		}
 
-		public bool Equals(object obj)
+		public override bool Equals(object obj)
 		{
 			if (!(obj is TileSaveData) || obj == null) { return false; }
 			else
 			{
 				TileSaveData that = (TileSaveData)obj;
+
 				return TypeName == that.TypeName && SolidSides == that.SolidSides && Name == that.Name &&
-					   GraphicsResourceName == that.GraphicsResourceName && InitialState == that.InitialState && CustomData.Equals(that.CustomData);
+					   GraphicsResourceName == that.GraphicsResourceName && InitialState == that.InitialState &&
+					   (CustomData != null) ? (CustomData.Equals(that.CustomData)) : (that.CustomData == null);
 			}
 		}
 
@@ -50,7 +52,7 @@ namespace SMLimitless.IO.LevelSerializers.Serializer003Types
 				hash += TypeName.GetHashCode() * 137;
 				hash += SolidSides.GetHashCode() * 137;
 				hash += (Name != null) ? Name.GetHashCode() * 137 : 137;
-				hash += GraphicsResourceName.GetHashCode() * 137;
+				hash += (GraphicsResourceName != null) ? GraphicsResourceName.GetHashCode() * 137 : 137;
 				hash += (InitialState != null) ? InitialState.GetHashCode() * 137 : 137;
 				hash += (CustomData != null) ? CustomData.GetHashCode() * 137 : 137;
 				return hash;

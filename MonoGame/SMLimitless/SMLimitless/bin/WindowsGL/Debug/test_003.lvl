@@ -1,0 +1,91 @@
+{
+  "header": {
+    "version": "Version v0.03",
+    "name": null,
+    "author": null
+  },
+  "contentPackages": [
+    "C:\\Users\\Chris\\Documents\\GitHub\\smlimitless\\MonoGame\\SMLimitless\\SMLimitless\\bin\\WindowsGL\\Debug\\TestPackage"
+  ],
+  "levelExits": [],
+  "sections": [
+    {
+      "index": 0,
+      "name": null,
+      "bounds": "0, 0, 3200, 1920",
+      "scrollSettings": {
+        "scrollType": 0,
+        "speed": "NaN, NaN",
+        "pathName": ""
+      },
+      "background": {
+        "topColor": "0, 0, 0, 0",
+        "bottomColor": "0, 0, 0, 0",
+        "layers": [
+          {
+            "resourceName": "Background",
+            "scrollDirection": 1,
+            "scrollRate": 0.5
+          }
+        ]
+      },
+      "layers": [
+        {
+          "index": 0,
+          "name": null,
+          "isMainLayer": true,
+		  "position":"0,0",
+		  "gridWidth":"100",
+		  "gridHeight":"40",
+          "uniqueTiles": [
+            {
+              "id": 0,
+              "typeName": "SmlSample.TestTile3",
+              "solidSides": 15,
+              "name": "",
+              "graphicsResource": null,
+              "state": null,
+              "customData": null
+            }
+          ],
+          "tilePositions": [
+            {
+              "id": 0,
+              "positions": "50,5;51,5;52,5;53,5;54,5;59,6;60,6;61,6;62,6;63,6;64,6;65,6;45,7;46,7;47,7;48,7;49,7;55,7;56,7;57,7;58,7;41,8;42,8;43,8;44,8;35,9;36,9;37,9;38,9;39,9;40,9;6,10;7,10;8,10;9,10;30,10;31,10;32,10;33,10;34,10;0,11;1,11;2,11;3,11;4,11;5,11;23,11;24,11;25,11;26,11;27,11;28,11;29,11;10,12;11,12;12,12;13,12;14,12;15,12;16,13;17,13;18,13;19,13;20,13;21,13;22,1;"
+            }
+          ]
+		}
+        ],
+      "sprites": [
+        {
+          "typeName": "SmlSample.SimplePlayer",
+          "position": "0, 0",
+          "isActive": true,
+          "state": 0,
+          "collision": 0,
+          "name": null,
+          "message": null,
+          "isHostile": false,
+          "isMoving": false,
+          "direction": 0,
+          "customObjects": null
+        },
+        {
+          "typeName": "SmlSample.PainterSprite",
+          "position": "0, 0",
+          "isActive": true,
+          "state": 0,
+          "collision": 3,
+          "name": null,
+          "message": null,
+          "isHostile": false,
+          "isMoving": false,
+          "direction": 0,
+          "customObjects": null
+        }
+      ],
+      "paths": []
+    }
+  ],
+  "script": null
+}

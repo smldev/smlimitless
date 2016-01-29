@@ -10,7 +10,6 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
@@ -62,9 +61,9 @@ namespace SMLimitless
             ScreenManager.Initialize();
             GameServices.ScreenSize = new Vector2(GraphicsDevice.PresentationParameters.BackBufferWidth, GraphicsDevice.PresentationParameters.BackBufferHeight);
             string contentPackageSettingsPath = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), @"TestPackage\settings.txt");
-            SMLimitless.Content.ContentPackageManager.AddPackage(contentPackageSettingsPath);
+            // SMLimitless.Content.ContentPackageManager.AddPackage(contentPackageSettingsPath);
             //GameServices.Camera = new Physics.Camera2D(); // NOTE: comment out this line and the above if loading a LevelScreen.
-            ScreenManager.SetRootScreen(new LevelScreen(), System.IO.Directory.GetCurrentDirectory() + @"\level_serializer002.txt");
+            ScreenManager.SetRootScreen(new LevelScreen(), System.IO.Directory.GetCurrentDirectory() + @"\test_003.lvl");
             base.Initialize();
 
 			stopwatch.Stop();

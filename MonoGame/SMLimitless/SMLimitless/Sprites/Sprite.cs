@@ -41,9 +41,9 @@ namespace SMLimitless.Sprites
 
 		#region State Properties (components, state, owner)
 		/// <summary>
-        /// Gets a list of all the components used by this sprite instance.
-        /// </summary>
-        protected List<SpriteComponent> Components { get; private set; }
+		/// Gets a list of all the components used by this sprite instance.
+		/// </summary>
+		protected List<SpriteComponent> Components { get; private set; } = new List<SpriteComponent>();
 
 		/// <summary>
 		/// Gets the state of this sprite when it was first loaded into the level.
@@ -123,7 +123,7 @@ namespace SMLimitless.Sprites
 		/// </summary>
 		public Vector2 Acceleration { get; set; }
 
-		internal abstract object GetCustomSerializableObjects();
+		public abstract object GetCustomSerializableObjects();
 
 		public bool HasMoved { get; set; }
 		#endregion

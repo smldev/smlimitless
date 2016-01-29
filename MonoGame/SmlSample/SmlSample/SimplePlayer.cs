@@ -114,5 +114,7 @@ namespace SmlSample
 				Velocity = new Vector2(Velocity.X + amount, Velocity.Y);
 			}
 		}
+
+		public override object GetCustomSerializableObjects() { return null; }
 	}
 }

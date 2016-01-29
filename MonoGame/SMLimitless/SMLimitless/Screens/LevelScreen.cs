@@ -30,14 +30,13 @@ namespace SMLimitless.Screens
         /// <param name="parameters">Parameters to specify how the screen should be initialized. Contains a path to the level file to load.</param>
         public override void Initialize(Screen owner, string parameters)
         {
-			level = new Level();
+			// level = new Level();
 			//level.Sections.Add(new Section(level));
 
 			// temporary
-			level.ContentFolderPaths = new List<string>() { System.IO.Directory.GetCurrentDirectory() + @"\TestPackage" };
-			level.Sections.Add(TestSectionGenerator.GenerateSection(level));
+			// level.ContentFolderPaths = new List<string>() { System.IO.Directory.GetCurrentDirectory() + @"\TestPackage" };
+			level = new IO.LevelSerializers.Serializer003().Deserialize(System.IO.File.ReadAllText(parameters));
 			level.Initialize();
-			level.ActiveSection = level.Sections.First();
         }
 
         /// <summary>

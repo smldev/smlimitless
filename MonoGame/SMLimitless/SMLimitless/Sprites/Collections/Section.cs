@@ -252,6 +252,11 @@ namespace SMLimitless.Sprites.Collections
 			{
 				drawSlopeHitboxSides = (drawSlopeHitboxSides == RtSlopedSides.TopLeft) ? RtSlopedSides.TopRight : RtSlopedSides.TopLeft;
 			}
+			else if (InputManager.IsNewKeyPress(Keys.G))
+			{
+				string json = new IO.LevelSerializers.Serializer003().Serialize(Owner);
+				System.IO.File.WriteAllText(@"test_003.lvl", json);
+			}
 		}
 
 		public Tile GetTileAtPosition(Vector2 position)
