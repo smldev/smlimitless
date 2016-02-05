@@ -15,6 +15,8 @@ namespace SMLimitless.Sounds
 		private readonly CachedSound cachedSound;
 		private long position;
 
+		public event EventHandler PlaybackEndedEvent;
+
 		public CachedSoundSampleProvider(CachedSound cachedSound)
 		{
 			this.cachedSound = cachedSound;
@@ -26,7 +28,18 @@ namespace SMLimitless.Sounds
 			var samplesToCopy = Math.Min(availableSamples, count);
 			Array.Copy(cachedSound.AudioData, position, buffer, offset, samplesToCopy);
 			position += samplesToCopy;
+
+			if (samplesToCopy == 0) { OnPlaybackEnded(); }
+
 			return (int)samplesToCopy;
+		}
+
+		private void OnPlaybackEnded()
+		{
+			if (PlaybackEndedEvent != null)
+			{
+				PlaybackEndedEvent(this, new EventArgs());
+			}
 		}
 
 		public WaveFormat WaveFormat => cachedSound.WaveFormat;

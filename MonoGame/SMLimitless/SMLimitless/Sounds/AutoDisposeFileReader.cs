@@ -15,6 +15,8 @@ namespace SMLimitless.Sounds
 		private readonly AudioFileReader reader;
 		private bool isDisposed;
 
+		public event EventHandler PlaybackEndedEvent;
+
 		public AutoDisposeFileReader(AudioFileReader reader)
 		{
 			this.reader = reader;
@@ -28,10 +30,19 @@ namespace SMLimitless.Sounds
 			int read = reader.Read(buffer, offset, count);
 			if (read == 0)
 			{
+				OnPlaybackEnded();
 				reader.Dispose();
 				isDisposed = true;
 			}
 			return read;
+		}
+
+		private void OnPlaybackEnded()
+		{
+			if (PlaybackEndedEvent != null)
+			{
+				PlaybackEndedEvent(this, new EventArgs());
+			}
 		}
 
 		public WaveFormat WaveFormat { get; private set; }

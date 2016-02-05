@@ -32,6 +32,7 @@ namespace SMLimitless.Sprites.Collections
 
 		internal List<Tile> Tiles { get; private set; }
 		internal SparseCellGrid<Sprite> Sprites { get; set; }
+		internal List<Sprite> SpritesToAddOnNextFrame { get; } = new List<Sprite>();
 
 		internal List<Layer> Layers { get; set; }
 		internal Layer MainLayer { get; set; }
@@ -69,7 +70,7 @@ namespace SMLimitless.Sprites.Collections
 			{
 				Background.LoadContent();
 				Layers.ForEach(l => l.LoadContent());
-
+				Sprites.ForEach(s => s.LoadContent());
 				isContentLoaded = true;
 			}
 		}
@@ -78,15 +79,18 @@ namespace SMLimitless.Sprites.Collections
 		{
 			System.Diagnostics.Stopwatch stopwatch = System.Diagnostics.Stopwatch.StartNew();
 
-			UpdatePhysics();
-
-			Background.Update();
+			AddSpritesToAddOnNextFrame();
 			Tiles.ForEach(t => t.Update());
 			Sprites.ForEach(s => s.Update());
+			Sprites.Update();
+			UpdatePhysics();
+			Sprites.Update();
+			Sprites.RemoveAll(s => s.RemoveOnNextFrame);
+			Background.Update();
 			TempUpdate();
 
 			stopwatch.Stop();
-			Sprite player = Sprites.First(s => s.GetType().FullName.Contains("SimplePlayer"));
+			debugText = $"{stopwatch.ElapsedMilliseconds}";
 		}
 
 		private void UpdatePhysics()
@@ -129,6 +133,7 @@ namespace SMLimitless.Sprites.Collections
 									resolutionDirection = Math.Sign(resolutionDistance.Y);
 									slopeResolutionDirection = (tile.SlopedSides == RtSlopedSides.TopRight) ? -1 : 1;
 									sprite.Position = new Vector2(sprite.Position.X, (sprite.Position.Y + resolutionDistance.Y));
+									sprite.HandleTileCollision(tile, resolutionDistance);
 								}
 								else
 								{
@@ -161,7 +166,8 @@ namespace SMLimitless.Sprites.Collections
 								if (resolutionDirection == 0 || Math.Sign(resolutionDistance.X) == Math.Sign(resolutionDirection))	// If there has been no other horizontal resolution this frame, or if the last horizontal resolution was in the same direction as this one...
 								{
 									resolutionDirection = Math.Sign(resolutionDistance.X);											// The resolution direction is equal to the sign of the resolution distance.
-									sprite.Position = new Vector2((sprite.Position.X + resolutionDistance.X), sprite.Position.Y);	// Move the sprite to resolve the collision.
+									sprite.Position = new Vector2((sprite.Position.X + resolutionDistance.X), sprite.Position.Y);   // Move the sprite to resolve the collision.
+									sprite.HandleTileCollision(tile, resolutionDistance);
 								}
 								else
 								{
@@ -199,6 +205,7 @@ namespace SMLimitless.Sprites.Collections
 									resolutionDirection = Math.Sign(resolutionDistance.Y);                                      // The resolution direction is equal to the sign of the resolution distance (up = negative, down = positive).
 									sprite.Position = new Vector2(sprite.Position.X, sprite.Position.Y + resolutionDistance.Y); // Move the sprite vertically by the resolution distance.
 									sprite.Velocity = new Vector2(sprite.Velocity.X, 0f);                                       // Stop the sprite's vertical movement.
+									sprite.HandleTileCollision(tile, resolutionDistance);
 								}
 								else  // ...but if the last vertical resolution was in the opposite direction...
 								{
@@ -212,22 +219,29 @@ namespace SMLimitless.Sprites.Collections
 
 				nextSprite:
 				{ /* empty statement for target of label */ }
+
+				foreach (var collidableSprite in Sprites.GetItemsNearItem(sprite))
+				{
+					form.AddToLogText($"Processed {collidableSprite.GetType().FullName}");
+					
+					Vector2 intersectA = sprite.Hitbox.GetIntersectionDepth(collidableSprite.Hitbox);
+					Vector2 intersectB = collidableSprite.Hitbox.GetIntersectionDepth(sprite.Hitbox);
+					
+					if (sprite.Hitbox.Intersects(collidableSprite.Hitbox))
+					{
+						sprite.HandleSpriteCollision(collidableSprite, intersectA);
+						collidableSprite.HandleSpriteCollision(sprite, intersectB);
+					}
+				}
 			}
 		}
 
 		public void Draw()
 		{
 			Background.Draw();
-			Tiles.ForEach(t => 
-								{
-									if (t.TileShape == CollidableShape.Rectangle) { ((BoundingRectangle)t.Hitbox).DrawOutline(Color.Green); }
-									else if (t.TileShape == CollidableShape.RightTriangle) { t.Draw(); ((RightTriangle)t.Hitbox).Draw(false); }
-									
-									if ((t.AdjacencyFlags & TileAdjacencyFlags.SlopeOnLeft) == TileAdjacencyFlags.SlopeOnLeft) { GameServices.SpriteBatch.DrawRectangle(t.Position, t.Position + (t.Size / 4f), Color.Red); }
-									if ((t.AdjacencyFlags & TileAdjacencyFlags.SlopeOnRight) == TileAdjacencyFlags.SlopeOnRight) { GameServices.SpriteBatch.DrawRectangle(new Vector2(t.Position.X + 12f, t.Position.Y), new Vector2(t.Position.X + 16f, t.Position.Y + 4f), Color.Red); }
-								});
-			Sprites.ForEach(s => s.Hitbox.DrawOutline(Color.White));
-			Sprites.ForEach(s => s.GetSlopeHitbox(drawSlopeHitboxSides).DrawOutline(Color.Red));
+			Tiles.ForEach(t => t.Draw());
+			Sprites.ForEach(s => s.Draw());
+			Sprites.Draw();
 			GameServices.DrawStringDefault(debugText);
 
 			// GameServices.DrawStringDefault(string.Join(" ", debugText, ""));
@@ -257,6 +271,8 @@ namespace SMLimitless.Sprites.Collections
 				string json = new IO.LevelSerializers.Serializer003().Serialize(Owner);
 				System.IO.File.WriteAllText(@"test_003.lvl", json);
 			}
+
+			// if (Sprites.Cells[Sprites.GetCellNumberAtPosition(Sprites.First(s => s.GetType().FullName.Contains("Player")).Position)].Items.Count == 2) System.Diagnostics.Debugger.Break();
 		}
 
 		public Tile GetTileAtPosition(Vector2 position)
@@ -307,6 +323,25 @@ namespace SMLimitless.Sprites.Collections
 
 			Sprites.Add(sprite);
 			MainLayer.AddSprite(sprite);
+		}
+
+		public void AddSpriteOnNextFrame(Sprite sprite)
+		{
+			if (sprite == null)
+			{
+				throw new ArgumentNullException(nameof(sprite), "The sprite to add to the section was null.");
+			}
+
+			SpritesToAddOnNextFrame.Add(sprite);
+		}
+
+		private void AddSpritesToAddOnNextFrame()
+		{
+			if (SpritesToAddOnNextFrame.Any())
+			{
+				SpritesToAddOnNextFrame.ForEach(s => AddSprite(s));
+				SpritesToAddOnNextFrame.Clear();
+			}
 		}
 
 		public void RemoveTile(Tile tile)

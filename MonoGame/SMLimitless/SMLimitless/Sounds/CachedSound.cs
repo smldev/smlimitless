@@ -14,9 +14,12 @@ namespace SMLimitless.Sounds
 
 		public float[] AudioData { get; private set; }
 		public WaveFormat WaveFormat { get; private set; }
+		public string Name { get; }
 
 		public CachedSound(string audioFileName)
 		{
+			Name = audioFileName;
+
 			using (var audioFileReader = new AudioFileReader(audioFileName))
 			{
 				WaveFormat = audioFileReader.WaveFormat;

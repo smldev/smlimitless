@@ -16,6 +16,8 @@ namespace SMLimitless.Sounds
 		private readonly IWavePlayer outputDevice;
 		private readonly MixingSampleProvider mixer;
 
+		private List<string> playingSoundFileNames = new List<string>();
+
 		public static readonly AudioPlaybackEngine Instance = new AudioPlaybackEngine(44100, 2);
 
 		public AudioPlaybackEngine(int sampleRate = 44100, int channelCount = 2)
@@ -29,8 +31,14 @@ namespace SMLimitless.Sounds
 
 		public void PlaySound(string fileName)
 		{
-			var input = new AudioFileReader(fileName);
-			AddMixerInput(new AutoDisposeFileReader(input));
+			if (!playingSoundFileNames.Contains(fileName))
+			{
+				var input = new AudioFileReader(fileName);
+				var reader = new AutoDisposeFileReader(input);
+				reader.PlaybackEndedEvent += (sender, e) => playingSoundFileNames.Remove(fileName);
+				AddMixerInput(reader);
+				playingSoundFileNames.Add(fileName);
+			}
 		}
 
 		private ISampleProvider ConvertToRightChannelCount(ISampleProvider input)
@@ -50,7 +58,13 @@ namespace SMLimitless.Sounds
 
 		public void PlaySound(CachedSound sound)
 		{
-			AddMixerInput(new CachedSoundSampleProvider(sound));
+			if (!playingSoundFileNames.Contains(sound.Name))
+			{
+				CachedSoundSampleProvider provider = new CachedSoundSampleProvider(sound);
+				playingSoundFileNames.Add(sound.Name);
+				provider.PlaybackEndedEvent += (sender, e) => playingSoundFileNames.Remove(sound.Name);
+				AddMixerInput(provider);
+			}
 		}
 
 		private void AddMixerInput(ISampleProvider input)

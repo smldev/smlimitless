@@ -13,11 +13,11 @@ using SMLimitless.Physics;
 
 namespace SMLimitless.Extensions
 {
-    /// <summary>
-    /// Contains extension methods for the Vector2 structure.
-    /// </summary>
-    public static class Vector2Extensions
-    {
+	/// <summary>
+	/// Contains extension methods for the Vector2 structure.
+	/// </summary>
+	public static class Vector2Extensions
+	{
 		/// <summary>
 		/// Returns a vector with the absolute values of the components.
 		/// </summary>
@@ -161,6 +161,29 @@ namespace SMLimitless.Extensions
 		{
 			// Credit to http://stackoverflow.com/a/13459068/2709212
 			return MathHelper.ToDegrees((float)Math.Atan2(b.Y - a.Y, b.X - a.X));
+		}
+
+		public static Direction GetResolutionDirection(this Vector2 intersect)
+		{
+			if (intersect.X != 0f && intersect.Y != 0f) { throw new ArgumentException($"The intersect of {intersect} must have at least one zero component."); }
+			else if (intersect == Vector2.Zero) { return Direction.None; }
+			else if (intersect.X > 0f) { return Direction.Right; }
+			else if (intersect.X < 0f) { return Direction.Left; }
+			else if (intersect.Y > 0f) { return Direction.Up; }
+			else if (intersect.Y < 0f) { return Direction.Down; }
+			else { return Direction.None; }
+		}
+
+		public static FlaggedDirection GetIntersectionDirection(this Vector2 intersect)
+		{
+			FlaggedDirection result = FlaggedDirection.None;
+			if (intersect.X < 0f) { result |= FlaggedDirection.Left; }
+			else if (intersect.X > 0f) { result |= FlaggedDirection.Right; }
+
+			if (intersect.Y < 0f) { result |= FlaggedDirection.Up; }
+			else if (intersect.Y > 0f) { result |= FlaggedDirection.Down; }
+
+			return result;
 		}
 
 		/// <summary>

@@ -134,7 +134,5 @@ namespace SMLimitless.Sprites.Assemblies
                 typeToAssemblyDictionary.Add(type.FullName, assembly);
             }
         }
-
-		// WYLO: Using parts of the old code for guidance, recreate SimplePlayer and TestTile3.
     }
 }

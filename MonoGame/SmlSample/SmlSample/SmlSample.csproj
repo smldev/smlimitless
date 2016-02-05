@@ -73,6 +73,7 @@
     <Compile Include="SimplePlayer.cs" />
     <Compile Include="TestSlope1.cs" />
     <Compile Include="TestSlope2.cs" />
+    <Compile Include="TestSprite.cs" />
     <Compile Include="TestTile3.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -19,7 +19,7 @@ namespace SMLimitless.Sprites
         /// <summary>
         /// Gets the sprite that's using this component.
         /// </summary>
-        public Sprite Owner { get; private set; }
+        public Sprite Owner { get; protected set; }
 
         /// <summary>
         /// Updates this sprite component.
@@ -39,12 +39,12 @@ namespace SMLimitless.Sprites
         /// A method called when the owner sprite collides with a tile.
         /// </summary>
         /// <param name="collidingTile">The tile that the owner sprite collided with.</param>
-        public virtual void HandleTileCollision(Tile collidingTile) { }
+        public virtual void HandleTileCollision(Tile collidingTile, Vector2 resolutionDistance) { }
 
         /// <summary>
         /// A method called when the owner sprite collides with another sprite.
         /// </summary>
         /// <param name="collidingSprite">The sprite that the owner sprite collided with.</param>
-        public virtual void HandleSpriteCollision(Sprite collidingSprite) { }
+        public virtual void HandleSpriteCollision(Sprite collidingSprite, Vector2 resolutionDistance) { }
     }
 }

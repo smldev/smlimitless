@@ -9,6 +9,7 @@ using SMLimitless.Extensions;
 using SMLimitless.Graphics;
 using SMLimitless.Interfaces;
 using SMLimitless.Physics;
+using SMLimitless.Sprites;
 
 namespace SMLimitless.Collections
 {
@@ -121,6 +122,11 @@ namespace SMLimitless.Collections
 			LocalRemove(item);
 		}
 
+		public void RemoveAll(Predicate<T> predicate)
+		{
+			cells.Values.ForEach(c => c.Items.RemoveWhere(predicate));
+		}
+
 		/// <summary>
 		/// Adds an item to the cell grid without adding it to the Items collection.
 		/// </summary>
@@ -213,7 +219,7 @@ namespace SMLimitless.Collections
 		/// </summary>
 		/// <param name="position">The position to get the cell number for.</param>
 		/// <returns>A two-dimensional, zero-based index of the cell that the given position is within.</returns>
-		private Point GetCellNumberAtPosition(Vector2 position)
+		internal Point GetCellNumberAtPosition(Vector2 position)
 		{
 			return new Point((int)Math.Floor(position.X / CellSize.X), (int)Math.Floor(position.Y / CellSize.Y));
 		}
@@ -233,18 +239,34 @@ namespace SMLimitless.Collections
 
 		public IEnumerator<T> GetEnumerator()
 		{
-			foreach (var cell in cells)
+			foreach (T item in cells.SelectMany(c => cells.Values.SelectMany(v => v.Items)).Distinct()) // good god
 			{
-				foreach (T item in cell.Value.Items)
-				{
-					yield return item;
-				}
+				yield return item;
 			}
 		}
 
 		IEnumerator IEnumerable.GetEnumerator()
 		{
 			return GetEnumerator();
+		}
+
+		internal IEnumerable<T> GetItemsNearItem(T item)
+		{
+			SparseCellRange range = GetCellsItemIsIn(item);
+
+			for (int y = range.TopLeft.Y; y <= range.BottomRight.Y; y++)
+			{
+				for (int x = range.TopLeft.X; x <= range.BottomRight.X; x++)
+				{
+					if (Cells.ContainsKey(new Point(x, y)))
+					{
+						foreach (T itemInCell in Cells[new Point(x, y)].Items)
+						{
+							if (!ReferenceEquals(item, itemInCell)) { yield return itemInCell; }
+						}
+					}
+				}
+			}
 		}
 	}
 }

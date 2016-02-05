@@ -43,7 +43,7 @@ namespace SMLimitless.Sprites
 		/// <summary>
 		/// Gets a list of all the components used by this sprite instance.
 		/// </summary>
-		protected List<SpriteComponent> Components { get; private set; } = new List<SpriteComponent>();
+		public List<SpriteComponent> Components { get; private set; } = new List<SpriteComponent>();
 
 		/// <summary>
 		/// Gets the state of this sprite when it was first loaded into the level.
@@ -125,7 +125,10 @@ namespace SMLimitless.Sprites
 
 		public abstract object GetCustomSerializableObjects();
 
-		public bool HasMoved { get; set; }
+		public bool HasMoved
+		{
+			get; set;
+		}
 		#endregion
 
 		#region Collision Properties (mode, hitbox, resting tile/slope)
@@ -199,7 +202,6 @@ namespace SMLimitless.Sprites
         public virtual void Initialize(Section owner)
         {
 			Owner = owner;
-			Components = new List<SpriteComponent>();
 			//// Initialize all the properties
 			////this.IsActive = true;
 			////this.IsHostile = true;
@@ -270,36 +272,25 @@ namespace SMLimitless.Sprites
 					throw new ArgumentOutOfRangeException(nameof(slopedSides), $"Invalid sloped sides value {slopedSides}. The expected range is from 0 to 4.");
 			}
 		}
-		
-		// WYLO: Okay, so I've been reminded of the fact that collision sucks.
-		// Rectangle collision is fine right now, but slopes are rough.
-		// The first thing you should do is go over UpdatePhysics() and figure out what every line does and comment it.
-		// Then, swap out the player sprite for a solid color rectangle so we can see it more easily.
-		// I don't know how to fix slopes, but here's their problems:
-		// * No collision occurs on the leading half between sprite and slope (may be by design)
-		// * Cannot move from slope to slope; sprite instead goes inside
-		// * Sprites don't collide with adjacent tiles on the ascent but do not fall down on the descent.
-		// Good luck.
-
 
 		/// <summary>
         /// Handles a collision between this sprite and a tile.
         /// </summary>
         /// <param name="tile">The tile that this sprite has collided with.</param>
-        /// <param name="intersect">The depth of the intersection.</param>
-        public virtual void HandleTileCollision(Tile tile, Vector2 intersect)
+        /// <param name="resolutionDistance">The depth of the intersection.</param>
+        public virtual void HandleTileCollision(Tile tile, Vector2 resolutionDistance)
         {
-			Components.ForEach(f => f.HandleTileCollision(tile));
+			Components.ForEach(f => f.HandleTileCollision(tile, resolutionDistance));
         }
 
         /// <summary>
         /// Handles a collision between this sprite and another.
         /// </summary>
         /// <param name="sprite">The sprite that has collided with this one.</param>
-        /// <param name="intersect">The depth of the intersection.</param>
-        public virtual void HandleSpriteCollision(Sprite sprite, Vector2 intersect)
+        /// <param name="resolutionDistance">The depth of the intersection.</param>
+        public virtual void HandleSpriteCollision(Sprite sprite, Vector2 resolutionDistance)
         {
-			Components.ForEach(f => f.HandleSpriteCollision(sprite));
+			Components.ForEach(f => f.HandleSpriteCollision(sprite, resolutionDistance));
         }
 		#endregion
 

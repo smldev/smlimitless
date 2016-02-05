@@ -155,6 +155,8 @@
     <Compile Include="Sprites\Collections\ScreenExit.cs" />
     <Compile Include="Sprites\Collections\Section.cs" />
     <Compile Include="Sprites\Collections\TestSectionGenerator.cs" />
+    <Compile Include="Sprites\Components\HealthComponent.cs" />
+    <Compile Include="Sprites\Components\WalkerComponent.cs" />
     <Compile Include="Sprites\Sprite.cs" />
     <Compile Include="Sprites\SpriteComponent.cs" />
     <Compile Include="Sprites\Tile.cs" />

@@ -12,6 +12,7 @@ using SMLimitless.Input;
 using SMLimitless.Sprites;
 using SMLimitless.Sprites.Assemblies;
 using SMLimitless.Sprites.Collections;
+using SMLimitless.Sprites.Components;
 
 namespace SmlSample
 {
@@ -19,7 +20,7 @@ namespace SmlSample
 	{
 		private List<StaticGraphicsObject> tileGraphics;
 		private string[] tileTypeNames = new string[] { "SmlSample.TestTile3", "SmlSample.TestSlope1", "SmlSample.TestSlope2" };
-		private string[] graphicsObjectNames = new string[] { "smw_concrete_block", "smw_grass_slope1", "smw_grass_slope2" };
+		private string[] graphicsObjectNames = new string[] { "smw_grass_slope1", "smw_grass_slope1", "smw_grass_slope2" };
 		private int currentGraphicIndex;
 		private Assembly currentAssembly; // laziness carries over, apparently
 
@@ -35,6 +36,7 @@ namespace SmlSample
 		{
 			tileGraphics = new List<StaticGraphicsObject>();
 			Size = new Vector2(16f);
+			Position = new Vector2(32f, 128f);
 			currentAssembly = Assembly.GetExecutingAssembly();
 		}
 
@@ -93,6 +95,14 @@ namespace SmlSample
 				{
 					currentGraphicIndex++;
 				}
+			}
+			else if (InputManager.IsNewKeyPress(Microsoft.Xna.Framework.Input.Keys.J))
+			{
+				TestSprite sprite = new TestSprite();
+				sprite.Initialize(Owner);
+				sprite.LoadContent();
+				sprite.Position = Position;
+				Owner.AddSpriteOnNextFrame(sprite);
 			}
 		}
 

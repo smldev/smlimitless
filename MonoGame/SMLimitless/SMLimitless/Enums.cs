@@ -496,6 +496,16 @@ namespace SMLimitless.Physics
         Down = 1
     }
 
+	[Flags]
+	public enum FlaggedDirection
+	{
+		None = 0,
+		Up = 1,
+		Down = 2,
+		Left = 4,
+		Right = 8
+	}
+
     /// <summary>
     /// An enumeration of the collidable shapes that
     /// SML supports.

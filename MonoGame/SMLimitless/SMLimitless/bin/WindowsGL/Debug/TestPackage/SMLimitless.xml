@@ -2472,14 +2472,14 @@
             Handles a collision between this sprite and a tile.
             </summary>
             <param name="tile">The tile that this sprite has collided with.</param>
-            <param name="intersect">The depth of the intersection.</param>
+            <param name="resolutionDistance">The depth of the intersection.</param>
         </member>
         <member name="M:SMLimitless.Sprites.Sprite.HandleSpriteCollision(SMLimitless.Sprites.Sprite,Microsoft.Xna.Framework.Vector2)">
             <summary>
             Handles a collision between this sprite and another.
             </summary>
             <param name="sprite">The sprite that has collided with this one.</param>
-            <param name="intersect">The depth of the intersection.</param>
+            <param name="resolutionDistance">The depth of the intersection.</param>
         </member>
         <member name="M:SMLimitless.Sprites.Sprite.Damage">
             <summary>
@@ -2513,13 +2513,13 @@
             </summary>
             <param name="owner">The sprite that owns this component.</param>
         </member>
-        <member name="M:SMLimitless.Sprites.SpriteComponent.HandleTileCollision(SMLimitless.Sprites.Tile)">
+        <member name="M:SMLimitless.Sprites.SpriteComponent.HandleTileCollision(SMLimitless.Sprites.Tile,Microsoft.Xna.Framework.Vector2)">
             <summary>
             A method called when the owner sprite collides with a tile.
             </summary>
             <param name="collidingTile">The tile that the owner sprite collided with.</param>
         </member>
-        <member name="M:SMLimitless.Sprites.SpriteComponent.HandleSpriteCollision(SMLimitless.Sprites.Sprite)">
+        <member name="M:SMLimitless.Sprites.SpriteComponent.HandleSpriteCollision(SMLimitless.Sprites.Sprite,Microsoft.Xna.Framework.Vector2)">
             <summary>
             A method called when the owner sprite collides with another sprite.
             </summary>
@@ -5678,39 +5678,9 @@
             Represents a sound effect or music track.
             </summary>
         </member>
-        <member name="F:SMLimitless.Sounds.Sound.waveOutDevice">
-            <summary>
-            A device that can play waveform audio.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Sounds.Sound.mainOutputStream">
-            <summary>
-            A stream for the sound's data.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Sounds.Sound.volumeStream">
-            <summary>
-            Represents a channel for the mixer.
-            </summary>
-        </member>
         <member name="P:SMLimitless.Sounds.Sound.FilePath">
             <summary>
             Gets the path to the file that this sound was loaded from.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Sounds.Sound.Volume">
-            <summary>
-            Gets or sets the volume of the sound (between 0.0 and 1.0).
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Sounds.Sound.Pan">
-            <summary>
-            Gets or sets the pan of the sound, which determines how loud each speaker is (between -1.0 and 1.0).
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Sounds.Sound.Position">
-            <summary>
-            Gets or sets the position in samples of this sound.
             </summary>
         </member>
         <member name="M:SMLimitless.Sounds.Sound.#ctor(System.String)">

@@ -72,7 +72,7 @@
         },
         {
           "typeName": "SmlSample.PainterSprite",
-          "position": "0, 0",
+          "position": "32, 64",
           "isActive": true,
           "state": 0,
           "collision": 3,

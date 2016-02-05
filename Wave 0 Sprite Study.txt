@@ -1,9 +1,99 @@
 Super Mario Limitless
 Wave 0 Sprite Study
 
-- Goomba:
-	- Walks horizontally
-	- Does not turn on cliffs
-	- Injures sprites with attribute "Player" on left, right, or bottom-sided collisions
-	- Is killed by sprites with attribute "Player" on top through "Stomp" action
-	- Is killed by sprites with attribute "SpinningShell", "PlayerFireball" on any side through "KnockOff" action
+- Wave 0 Sprites:
+	- Goomba
+	- Koopa Troopa
+	- Buzzy Beetle
+	- Lakitu
+	- Spiny +Egg
+	- Goal Flagpole
+	- Super Mushroom
+	- Fire Flower
+
+The player is defined as any sprite with attribute "player".
+
+Damage Types:
+	- HarmfulSprite
+	- PlayerStomp
+	- PlayerFireball
+	- HarmfulTile
+	- Lava
+	
+Goomba:
+	- Walks across the ground
+	- Doesn't turn on cliffs
+	- Turns when it hits the wall
+	- Immune to nothing
+	- Injures players who collide with it on its left, right, or bottom sides
+	- Is killed by players who collide with it on its top side while falling
+	- Attributes: 
+	- Internal States: Walking, Stomped, Dead
+	- Components: Walker, Health, Damage
+	- Settings: float WalkingSpeed (pixels per second)
+
+KoopaTroopa:
+	- Defines enum KoopaColor { Green, Red }
+	- Walks across the ground
+	- Doesn't turn on cliffs except when KoopaColor is Red
+	- Turns when it hits walls
+	- Injures players on collision with LRB sides
+	- Internal States: Walking, Shell, ShellEmerging, ShellSpinning, Dead
+	- Changes state by players who collide with it on its top side while falling
+		- { Walking -> Shell}
+		- { Shell ShellEmerging -> ShellSpinning }
+		- { ShellSpinning -> Shell }
+	- When it enters the Shell state, it starts a Timer. When this timer expires, it enters the ShellEmerging state.
+	- When it enters the ShellEmerging state, it starts a Timer. When this timer expires, it enters the Walking state.
+	- Components: Walker, Health, Damage
+	- Attributes: "shellSpinning" | "shell"
+	- Settings: float WalkingSpeed (pixels per second), float ShellHoldTime (seconds), float ShellEmergeTime (seconds)
+
+BuzzyBeetle:
+	- Behaves mostly like a Koopa, except it has no KoopaColor and is immune to sprites with attribute "fireball"
+	- Doesn't turn on cliffs
+	- States, transitions, settings, and attributes are the same as a Koopa
+	
+Lakitu:
+	- Flies at a constant defined height
+	- Accelerates instead of constant velocity
+	- Tries to hover around player's horizontal position
+	- Throws a sprite of a certain kind (default: Spiny in egg state) at a certain interval while there are less than a certain number of that sprite in the active area (default: 5)
+	- When throwing a sprite, the sprite is given horizontal velocity equal to the Lakitu's horizontal velocity
+	- Internal States: Default, Dead
+	- Attributes: 
+	- Settings: MaximumSpeed, Acceleration, ThrowDelay, ThrowIfOnscreenSpritesAreLessThan
+	
+Spiny:
+	- Internal States: Egg, Default, Dead
+	- Transition { Egg -> Default } occurs when the sprite lands on a tile from above.
+	- The sprite behaves mostly like a Goomba
+	- Injures player on all sides in Egg/Default states
+	- Attributes:
+	- Settings: WalkingSpeed
+
+Goal Flagpole:
+	- A type of LevelExit
+	- It's 11 tiles tall and 1 tile wide
+	- It has a flag at the top, beneath the top ball
+	- The bottom tile is a standard square tile that has default collision
+	- Collisions with the bottom tile occur after normal collision routines
+	- Collisions with the flagpole occur somewhat within the sprite
+	- The player grabs the flagpole and lowers down it, bringing the flag with him at the same rate
+	- As soon as the flag reaches the bottom, the player flips to the other side, and the standard goal-handling procedure occurs
+	- The higher the player grabs the flagpole, the more points are received, divided evenly into eight portions { 100, 200, 400, 800, 1000, 2000, 4000, 8000 }
+	- Sprites other than the player do not activate the flagpole but do collide with it.
+	- It defines a flags enum FlagpoleBarriers { None, Above, Below } that can prevent the player from going over or under the flagpole
+	- This barrier extends infinitely at the center of the flagpole bar
+
+Super Mushroom:
+	- Has attribute "powerup"
+	- Slides across the ground and turns on walls but not cliffs
+	- When it collides with the player, the player becomes Super if the player is Small and then despawns
+	- Immune to sprites but not tiles (i.e. Lava/Acid)
+
+Fire Flower:
+	- Has attribute "powerup"
+	- Doesn't move
+	- When it collides with the player, the player becomes Fire if the player isn't already Fire
+	- Immune to sprites but not tiles (i.e. Lava/Acid)

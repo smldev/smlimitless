@@ -12,6 +12,7 @@ using SMLimitless.Sprites;
 using SMLimitless.Sprites.Assemblies;
 using SMLimitless.Sprites.Collections;
 using SMLimitless.Sounds;
+using SMLimitless.Sprites.Components;
 
 namespace SmlSample
 {
@@ -19,7 +20,7 @@ namespace SmlSample
 	{
 		private StaticGraphicsObject graphics;
 		private int jumpTimeout = 5;
-		private Sound jumpSound;
+		private CachedSound jumpSound;
 
 		public override string EditorCategory
 		{
@@ -34,13 +35,15 @@ namespace SmlSample
 			Size = new Vector2(16f);
 			IsActive = true;
 
-			jumpSound = ContentPackageManager.GetSoundResource("nsmbwiiJump");
+			jumpSound = new CachedSound(ContentPackageManager.GetAbsoluteFilePath("nsmbwiiJump"));
 		}
 
 		public override void Initialize(Section owner)
 		{
 			base.Initialize(owner);
-			jumpSound.Initialize();
+
+			Components.Add(new HealthComponent(1, new string[] { }));
+			((HealthComponent)Components[0]).SpriteDeath += (sender, e) => { RemoveOnNextFrame = true; };
 		}
 
 		public override void DeserializeCustomObjects(JsonHelper customObjects)
@@ -98,7 +101,7 @@ namespace SmlSample
 			if (InputManager.IsCurrentActionPress(InputAction.Jump) && jumpTimeout > 0)
 			{
 				Velocity = new Vector2(Velocity.X, (Velocity.Y <= MaxJumpVelocity) ? MaxJumpVelocity : Velocity.Y - JumpImpulse);
-				jumpSound.Play();
+				AudioPlaybackEngine.Instance.PlaySound(jumpSound);
 				jumpTimeout--;
 			}
 
