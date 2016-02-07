@@ -70,7 +70,7 @@ namespace SmlSample
 			}
 			else
 			{
-				((HealthComponent)sprite.Components[0]).Damage(1, "contact");
+				if (sprite is SimplePlayer) { ((HealthComponent)sprite.Components.First(c => c is HealthComponent)).Damage(1, "contact"); }
 			}
 		}
 	}
