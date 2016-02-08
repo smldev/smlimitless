@@ -123,6 +123,7 @@
     <Compile Include="IO\LevelSerializers\Serializer003Types\TileSaveData.cs" />
     <Compile Include="Physics\BoundingRectangle.cs" />
     <Compile Include="Physics\Camera2D.cs" />
+    <Compile Include="Physics\CameraSystem.cs" />
     <Compile Include="Physics\Interpolator.cs" />
     <Compile Include="Physics\InterpolatorScales.cs" />
     <Compile Include="Physics\Path.cs" />

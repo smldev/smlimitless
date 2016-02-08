@@ -26,6 +26,7 @@ namespace SMLimitless.Sprites.Collections
 		public Background Background { get; internal set; }
 		public BoundingRectangle Bounds { get; internal set; }
 		public Camera2D Camera { get; private set; }
+		public CameraSystem CameraSystem { get; private set; }
 		public int Index { get; set; }
 		public Level Owner { get; private set; }
 		public string Name { get; set; }
@@ -60,6 +61,9 @@ namespace SMLimitless.Sprites.Collections
 				Background.Initialize();
 				Layers.ForEach(l => l.Initialize());
 				Sprites.ForEach(s => s.Initialize(this));
+
+				CameraSystem = new CameraSystem(Camera, Bounds, Sprites.First(s => s.GetType().FullName.Contains("SimplePlayer")), Sprites.First(s => s.GetType().FullName.Contains("Painter")));
+
 				isInitialized = true;
 			}
 		}
@@ -86,6 +90,7 @@ namespace SMLimitless.Sprites.Collections
 			UpdatePhysics();
 			Sprites.Update();
 			Sprites.RemoveAll(s => s.RemoveOnNextFrame);
+			CameraSystem.Update();
 			Background.Update();
 			TempUpdate();
 
@@ -241,7 +246,6 @@ namespace SMLimitless.Sprites.Collections
 			Background.Draw();
 			Tiles.ForEach(t => t.Draw());
 			Sprites.ForEach(s => s.Draw());
-			Sprites.Draw();
 			GameServices.DrawStringDefault(debugText);
 
 			// GameServices.DrawStringDefault(string.Join(" ", debugText, ""));
@@ -285,6 +289,7 @@ namespace SMLimitless.Sprites.Collections
 			for (int i = highestIndex; i >= 0; i--)
 			{
 				Layer layer = Layers[i];
+				if (!layer.Bounds.Intersects(position)) { continue; }
 				Tile tile = layer.GetTile(layer.GetCellNumberAtPosition(position));
 				if (tile != null) { return tile; }
 			}

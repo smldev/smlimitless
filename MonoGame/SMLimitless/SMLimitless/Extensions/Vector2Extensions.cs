@@ -108,6 +108,16 @@ namespace SMLimitless.Extensions
 			return (left.X >= right.X) && (left.Y >= right.Y);
 		}
 
+		public static bool GreaterThan(this Vector2 left, float right)
+		{
+			return (left.X > right) && (left.Y > right);
+		}
+
+		public static bool GreaterThanOrEqualTo(this Vector2 left, float right)
+		{
+			return (left.X >= right) && (left.Y >= right);
+		}
+
 		/// <summary>
 		/// Checks if one or both of the components of a Vector2 are equal to Single.NaN.
 		/// </summary>

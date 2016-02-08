@@ -91,7 +91,7 @@ namespace SMLimitless.Physics
         {
             get
             {
-                return GameServices.ScreenSize * this.Zoom;
+                return GameServices.ScreenSize / this.Zoom;
             }
         }
 

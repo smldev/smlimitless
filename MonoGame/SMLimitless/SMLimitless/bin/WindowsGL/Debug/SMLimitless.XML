@@ -2997,6 +2997,11 @@
             </summary>
             <returns>The matrix transformation.</returns>
         </member>
+        <member name="P:SMLimitless.Physics.CameraSystem.ActiveBounds">
+            <summary>
+            Gets a rectangle in which game objects such as tiles and sprites are active.
+            </summary>
+        </member>
         <member name="T:SMLimitless.Physics.InterpolatorScaleDelegate">
             <summary>
             A delegate used by Interpolators to scale their progress and generate their current value.
