@@ -428,6 +428,25 @@ namespace SMLimitless.Physics
 			return (that.Left >= Left) && (that.Right <= Right) && (that.Top >= Top) && (that.Bottom <= Bottom);
 		}
 
+		public RectangularSpaceDivision GetPointRelation(Vector2 point)
+		{
+			if (IntersectsIncludingEdges(point)) { return RectangularSpaceDivision.Within; }
+			bool above = point.Y < Top;
+			bool below = point.Y > Bottom;
+			bool left = point.X < Left;
+			bool right = point.X > Right;
+
+			if (above && (!left && !right)) { return RectangularSpaceDivision.Above; }
+			else if (above && left && !right) { return RectangularSpaceDivision.AboveLeft; }
+			else if (above && !left && right) { return RectangularSpaceDivision.AboveRight; }
+			else if (left && (!above && !below)) { return RectangularSpaceDivision.Left; }
+			else if (right && (!above && !below)) { return RectangularSpaceDivision.Right; }
+			else if (below && (!left && !right)) { return RectangularSpaceDivision.Below; }
+			else if (below && (left && !right)) { return RectangularSpaceDivision.BelowLeft; }
+			else if (below && (!left && right)) { return RectangularSpaceDivision.BelowRight; }
+			else { throw new InvalidOperationException(); }
+		}
+
         /// <summary>
         /// Returns the intersection depth between a given rectangle and this one.
         /// </summary>

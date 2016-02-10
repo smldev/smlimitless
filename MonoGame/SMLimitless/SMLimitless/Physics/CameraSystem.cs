@@ -12,7 +12,7 @@ namespace SMLimitless.Physics
 	public sealed class CameraSystem
 	{
 		private const float ActiveBoundsFactor = 1.2f;
-		private const float ZoomRate = 2f;								// two factors of zoom per second
+		private const float ZoomRate = 0.33f;								
 		private const float ZoomOutDistanceBoundary = 0.1f;             // the distance a tracking object has to be from the edge of the viewport before the system zooms out
 		private const float ZoomInDistanceBoundary = 0.3f;				// the distance a tracking object has to be from the edge of the viewport before the system zooms in
 
@@ -22,6 +22,7 @@ namespace SMLimitless.Physics
 		private Camera2D camera;
 		private BoundingRectangle totalBounds;
 		private List<IPositionable2> trackingObjects;
+		private bool objectOutsideOfZoomOutBoundary = false;			// this flag is set if at least one object is outside the zoom out boundary
 		
 		/// <summary>
 		/// Gets a rectangle in which game objects such as tiles and sprites are active.
@@ -65,10 +66,10 @@ namespace SMLimitless.Physics
 		private static BoundingRectangle CreateInsetRectangle(BoundingRectangle rect, float factor)
 		{
 			BoundingRectangle result = rect;
-			result.X += (result.Width * factor);
-			result.Y += (result.Width * factor);
-			result.Width -= (result.Width * (factor * 2f));
-			result.Height -= (result.Height * (factor * 2f));
+			result.X += (result.Width * (factor / 2f));
+			result.Y += (result.Height * (factor / 2f));
+			result.Width -= (result.Width * factor);
+			result.Height -= (result.Height * factor);
 
 			return result;
 		}
@@ -91,19 +92,26 @@ namespace SMLimitless.Physics
 		{
 			if (trackingObjects.Count == 1) { return false; }
 
+			bool result = false;
+
 			BoundingRectangle zoomOutBoundary = CreateInsetRectangle(camera.Viewport, ZoomOutDistanceBoundary);
+			List<RectangularSpaceDivision> centerPointRelations = new List<RectangularSpaceDivision>(trackingObjects.Count);
 			foreach (var trackingObject in trackingObjects)
 			{
 				Vector2 objectCenter = GetObjectCenter(trackingObject);
+				centerPointRelations.Add(zoomOutBoundary.GetPointRelation(objectCenter));
 				BoundingRectangle objectBounds = new BoundingRectangle(trackingObject.Position.X, trackingObject.Position.Y, trackingObject.Size.X, trackingObject.Size.Y);
 				if (!zoomOutBoundary.IntersectsIncludingEdges(objectCenter) && camera.Zoom >= 1f / MaximumZoomFactor.Value &&
 				(totalBounds.GetIntersectionDepth(objectBounds).Abs().GreaterThan(ZoomOutDistanceBoundary)))
 				{
-					return true;
+					result = true;
 				}
 			}
 
-			return false;
+			result = result && centerPointRelations.Any(c => c != centerPointRelations[0]);    // don't zoom out if all objects are on the same side
+
+			objectOutsideOfZoomOutBoundary = result;
+			return result;
 		}
 
 		private static Vector2 GetObjectCenter(IPositionable2 trackingObject)
@@ -119,16 +127,7 @@ namespace SMLimitless.Physics
 
 		private bool ZoomInRequired()
 		{
-			BoundingRectangle zoomInBoundary = CreateInsetRectangle(camera.Viewport, ZoomInDistanceBoundary);
-			foreach (var trackingObject in trackingObjects)
-			{
-				Vector2 objectCenter = GetObjectCenter(trackingObject);
-				if (!zoomInBoundary.IntersectsIncludingEdges(objectCenter) && camera.Zoom <= 1f)
-				{
-					return true;
-				}
-			}
-			return false;
+			return !objectOutsideOfZoomOutBoundary;
 		}
 
 		public void Update()
@@ -142,11 +141,11 @@ namespace SMLimitless.Physics
 			// and thus if we need to zoom out.
 			if (ZoomOutRequired())
 			{
-				camera.Zoom -= ZoomRate * delta;
+				camera.Zoom = MathHelper.Clamp((camera.Zoom - (ZoomRate * delta)), (1f / MaximumZoomFactor.Value), 1f);
 			}
 			else if (ZoomInRequired())
 			{
-				camera.Zoom += ZoomRate * delta;
+				camera.Zoom = MathHelper.Clamp((camera.Zoom + (ZoomRate * delta)), (1f / MaximumZoomFactor.Value), 1f);
 			}
 
 			// Set up some variables to determine where we should be horizontally and vertically.
@@ -176,6 +175,17 @@ namespace SMLimitless.Physics
 
 			// Move the camera.
 			camera.Position = newCameraOrigin;
+		}
+
+		public void Draw()
+		{
+			string debugText = $"Camera Pos: {camera.Position}, Zoom: {camera.Zoom}, Objcount: {trackingObjects.Count}";
+			GameServices.DebugFont.DrawString(debugText, camera.Position + new Vector2(16f, 32f), 1f / camera.Zoom);
+
+			Vector2 cameraCenter = GetCenterOfAllTrackingObjects();
+			GameServices.SpriteBatch.DrawRectangle(new Rectangle((int)(cameraCenter.X - 4f), (int)(cameraCenter.Y - 4f), 8, 8), Color.Red);
+			GameServices.SpriteBatch.DrawRectangleEdges(CreateInsetRectangle(camera.Viewport, ZoomOutDistanceBoundary).ToRectangle(), Color.Red);
+			GameServices.SpriteBatch.DrawRectangleEdges(CreateInsetRectangle(camera.Viewport, ZoomInDistanceBoundary).ToRectangle(), Color.Green);
 		}
 	}
 }

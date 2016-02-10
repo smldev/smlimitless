@@ -544,4 +544,18 @@ namespace SMLimitless.Physics
         /// </summary>
         Slope
     }
+
+	public enum RectangularSpaceDivision
+	{
+		None,
+		Within,
+		Above,
+		Below,
+		Left,
+		Right,
+		AboveLeft,
+		AboveRight,
+		BelowLeft,
+		BelowRight
+	}
 }

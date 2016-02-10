@@ -248,7 +248,7 @@ namespace SMLimitless.Sprites.Collections
 			Sprites.ForEach(s => s.Draw());
 			GameServices.DrawStringDefault(debugText);
 
-			// GameServices.DrawStringDefault(string.Join(" ", debugText, ""));
+			CameraSystem.Draw();
 		}
 
 		private void TempUpdate() 
