@@ -62,7 +62,7 @@ namespace SMLimitless.Sprites.Collections
 				Layers.ForEach(l => l.Initialize());
 				Sprites.ForEach(s => s.Initialize(this));
 
-				CameraSystem = new CameraSystem(Camera, Bounds, Sprites.First(s => s.GetType().FullName.Contains("SimplePlayer")), Sprites.First(s => s.GetType().FullName.Contains("Painter")));
+				CameraSystem = new CameraSystem(Camera, Bounds, Sprites.First(s => s.GetType().FullName.Contains("SimplePlayer")));
 
 				isInitialized = true;
 			}
@@ -247,8 +247,6 @@ namespace SMLimitless.Sprites.Collections
 			Tiles.ForEach(t => t.Draw());
 			Sprites.ForEach(s => s.Draw());
 			GameServices.DrawStringDefault(debugText);
-
-			CameraSystem.Draw();
 		}
 
 		private void TempUpdate() 
