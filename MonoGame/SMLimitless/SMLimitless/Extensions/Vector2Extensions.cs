@@ -123,6 +123,7 @@ namespace SMLimitless.Extensions
 		/// </summary>
 		/// <param name="vector">The Vector2 to check.</param>
 		/// <returns>True if one or both of the components equal Single.NaN, false if neither do.</returns>
+		[System.Diagnostics.DebuggerStepThrough]
 		public static bool IsNaN(this Vector2 vector)
 		{
 			return float.IsNaN(vector.X) || float.IsNaN(vector.Y);

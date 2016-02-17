@@ -119,8 +119,15 @@ namespace SMLimitless.Sprites.Collections
 				Tile tileLeft = (cellLeft.X >= 0f) ? GetTile(cellLeft) : null;
 				Tile tileRight = (cellRight.X < newGrid.Width) ? GetTile(cellRight) : null;
 
-				if (tileLeft != null && tileLeft.TileShape == CollidableShape.RightTriangle && (tileLeft.SlopedSides == RtSlopedSides.TopLeft || tileLeft.SlopedSides == RtSlopedSides.BottomLeft)) { tile.AdjacencyFlags |= TileAdjacencyFlags.SlopeOnLeft; }
-				if (tileRight != null && tileRight.TileShape == CollidableShape.RightTriangle && (tileRight.SlopedSides == RtSlopedSides.TopRight || tileRight.SlopedSides == RtSlopedSides.BottomRight)) { tile.AdjacencyFlags |= TileAdjacencyFlags.SlopeOnRight; }
+				if (tileLeft != null && tileLeft.TileShape == CollidableShape.RightTriangle && (tileLeft.SlopedSides == RtSlopedSides.TopLeft || tileLeft.SlopedSides == RtSlopedSides.BottomLeft))
+				{
+					tile.AdjacencyFlags |= TileAdjacencyFlags.SlopeOnLeft;
+				}
+
+				if (tileRight != null && tileRight.TileShape == CollidableShape.RightTriangle && (tileRight.SlopedSides == RtSlopedSides.TopRight || tileRight.SlopedSides == RtSlopedSides.BottomRight)) 
+				{
+					tile.AdjacencyFlags |= TileAdjacencyFlags.SlopeOnRight;
+				}
 			}
 
 			this.Tiles = newGrid;
@@ -166,6 +173,20 @@ namespace SMLimitless.Sprites.Collections
 		public Tile GetTile(Vector2 cellNumber)
 		{
 			return GetTile((int)cellNumber.X, (int)cellNumber.Y);
+		}
+
+		/// <summary>
+		/// Gets a tile in a given cell, or null if there is no tile in that cell, or the given cell is out of bounds.
+		/// </summary>
+		/// <param name="cellNumber">The cell for which to get the tile.</param>
+		/// <returns>A Tile or null.</returns>
+		public Tile SafeGetTile(Vector2 cellNumber)
+		{
+			if (Tiles.IndexWithinBounds((int)cellNumber.X, (int)cellNumber.Y))
+			{
+				return GetTile(cellNumber);
+			}
+			return null;
 		}
 
 		internal void SetMainLayer()

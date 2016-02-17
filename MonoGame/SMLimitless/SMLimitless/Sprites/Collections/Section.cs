@@ -22,6 +22,9 @@ namespace SMLimitless.Sprites.Collections
 		private bool isInitialized;
 		private bool isContentLoaded;
 
+		private int slopeResolutions = 0;
+		private int verticalResolutions = 0;
+
 		public SectionAutoscrollSettings AutoscrollSettings { get; internal set; }
 		public Background Background { get; internal set; }
 		public BoundingRectangle Bounds { get; internal set; }
@@ -95,7 +98,8 @@ namespace SMLimitless.Sprites.Collections
 			TempUpdate();
 
 			stopwatch.Stop();
-			debugText = $"{stopwatch.ElapsedMilliseconds}";
+
+			debugText = $"Slope: {slopeResolutions}, Vertical: {verticalResolutions}";
 		}
 
 		private void UpdatePhysics()
@@ -109,6 +113,7 @@ namespace SMLimitless.Sprites.Collections
 				float delta = GameServices.GameTime.GetElapsedSeconds();    // The number of seconds that have elapsed since the last Update call.
 				Point intSpritePosition = Point.Zero;
 
+				// Resolution with the sloped side of a sloped tile
 				sprite.Position = new Vector2((sprite.Position.X + sprite.Velocity.X * delta), sprite.Position.Y);  // Move the sprite horizontally by its horizontal velocity.
 				intSpritePosition = sprite.Position.ToPoint();
 				foreach (Layer layer in GetLayersIntersectingRectangle(sprite.Hitbox))								// For every layer this sprite intersects...
@@ -123,7 +128,8 @@ namespace SMLimitless.Sprites.Collections
 							Tile tile = layer.GetTile(x, y);
 							if (tile != null && tile.TileShape == CollidableShape.RightTriangle)
 							{
-								HorizontalDirection adjacentDirection = (tile.SlopedSides == RtSlopedSides.TopLeft || tile.SlopedSides == RtSlopedSides.BottomLeft) ? HorizontalDirection.Right : HorizontalDirection.Left;
+								HorizontalDirection tileSlopeDirection = (tile.SlopedSides == RtSlopedSides.TopLeft || tile.SlopedSides == RtSlopedSides.BottomLeft) ? HorizontalDirection.Left : HorizontalDirection.Right;
+								HorizontalDirection adjacentDirection = (tileSlopeDirection == HorizontalDirection.Left) ? HorizontalDirection.Right : HorizontalDirection.Left;
 								adjacentCell = new Vector2(x + (int)adjacentDirection, y);
 
 								Vector2 resolutionDistance = tile.GetCollisionResolution(sprite);
@@ -138,6 +144,7 @@ namespace SMLimitless.Sprites.Collections
 									resolutionDirection = Math.Sign(resolutionDistance.Y);
 									slopeResolutionDirection = (tile.SlopedSides == RtSlopedSides.TopRight) ? -1 : 1;
 									sprite.Position = new Vector2(sprite.Position.X, (sprite.Position.Y + resolutionDistance.Y));
+									slopeResolutions++;
 									sprite.HandleTileCollision(tile, resolutionDistance);
 								}
 								else
@@ -152,6 +159,7 @@ namespace SMLimitless.Sprites.Collections
 					cellRangeTopLeft = layer.GetClampedCellNumberAtPosition(sprite.Position);
 					cellRangeBottomRight = layer.GetClampedCellNumberAtPosition(sprite.Hitbox.BottomRight);
 
+					// Horizontal resolution
 					for (int y = (int)cellRangeTopLeft.Y; y <= (int)cellRangeBottomRight.Y; y++)	// For each row of tiles in the cells intersected by the sprite...
 					{
 						for (int x = (int)cellRangeTopLeft.X; x <= (int)cellRangeBottomRight.X; x++)	// For each cell intersected by the sprite...
@@ -184,6 +192,7 @@ namespace SMLimitless.Sprites.Collections
 					}
 				}
 
+				// Vertical resolution
 				resolutionDirection = 0;
 				// Move the sprite by its Y velocity (upwards or downwards).
 				sprite.Position = new Vector2(sprite.Position.X, (sprite.Position.Y + sprite.Velocity.Y * delta));  // Move the sprite vertically by (Velocity.Y * delta).
@@ -209,6 +218,7 @@ namespace SMLimitless.Sprites.Collections
 								{
 									resolutionDirection = Math.Sign(resolutionDistance.Y);                                      // The resolution direction is equal to the sign of the resolution distance (up = negative, down = positive).
 									sprite.Position = new Vector2(sprite.Position.X, sprite.Position.Y + resolutionDistance.Y); // Move the sprite vertically by the resolution distance.
+									verticalResolutions++;
 									sprite.Velocity = new Vector2(sprite.Velocity.X, 0f);                                       // Stop the sprite's vertical movement.
 									sprite.HandleTileCollision(tile, resolutionDistance);
 								}

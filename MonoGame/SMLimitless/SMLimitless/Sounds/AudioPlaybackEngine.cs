@@ -22,7 +22,7 @@ namespace SMLimitless.Sounds
 
 		public AudioPlaybackEngine(int sampleRate = 44100, int channelCount = 2)
 		{
-			outputDevice = new WaveOutEvent();
+			outputDevice = new WaveOutEvent() { DesiredLatency = 150 };
 			mixer = new MixingSampleProvider(WaveFormat.CreateIeeeFloatWaveFormat(sampleRate, channelCount));
 			mixer.ReadFully = true;
 			outputDevice.Init(mixer);
