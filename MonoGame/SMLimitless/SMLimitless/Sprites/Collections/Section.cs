@@ -128,9 +128,18 @@ namespace SMLimitless.Sprites.Collections
 							Tile tile = layer.GetTile(x, y);
 							if (tile != null && tile.TileShape == CollidableShape.RightTriangle)
 							{
-								HorizontalDirection tileSlopeDirection = (tile.SlopedSides == RtSlopedSides.TopLeft || tile.SlopedSides == RtSlopedSides.BottomLeft) ? HorizontalDirection.Left : HorizontalDirection.Right;
+								HorizontalDirection tileSlopeDirection = tile.SlopedSides.GetHorizontalDirection();
 								HorizontalDirection adjacentDirection = (tileSlopeDirection == HorizontalDirection.Left) ? HorizontalDirection.Right : HorizontalDirection.Left;
 								adjacentCell = new Vector2(x + (int)adjacentDirection, y);
+								var adjacentTile = layer.SafeGetTile(adjacentCell);
+								
+								if (adjacentTile != null)
+								{
+									if (adjacentTile.TileShape == CollidableShape.RightTriangle && adjacentTile.SlopedSides.GetHorizontalDirection().IsOppositeDirection(tileSlopeDirection))
+									{
+										continue;
+									}
+								}
 
 								Vector2 resolutionDistance = tile.GetCollisionResolution(sprite);
 								if (resolutionDistance.Y == 0f || resolutionDistance.IsNaN())
@@ -144,7 +153,6 @@ namespace SMLimitless.Sprites.Collections
 									resolutionDirection = Math.Sign(resolutionDistance.Y);
 									slopeResolutionDirection = (tile.SlopedSides == RtSlopedSides.TopRight) ? -1 : 1;
 									sprite.Position = new Vector2(sprite.Position.X, (sprite.Position.Y + resolutionDistance.Y));
-									slopeResolutions++;
 									sprite.HandleTileCollision(tile, resolutionDistance);
 								}
 								else
@@ -212,7 +220,10 @@ namespace SMLimitless.Sprites.Collections
 								Vector2 resolutionDistance = tile.GetCollisionResolution(sprite);                           // Determine the resolution distance between this tile and the sprite.
 								if (resolutionDistance.Y == 0f || resolutionDistance.IsNaN() || !tile.CollisionOnSolidSide(resolutionDistance)) continue; // If there's no vertical collision here, or if we collided on a non-solid edge, continue to the next cell.
 								if ((tile.AdjacencyFlags & TileAdjacencyFlags.SlopeOnLeft) == TileAdjacencyFlags.SlopeOnLeft && sprite.Hitbox.Center.X < tile.Hitbox.Bounds.Left) continue;
-								else if ((tile.AdjacencyFlags & TileAdjacencyFlags.SlopeOnRight) == TileAdjacencyFlags.SlopeOnRight && sprite.Hitbox.Center.X > tile.Hitbox.Bounds.Right) continue;
+								else if ((tile.AdjacencyFlags & TileAdjacencyFlags.SlopeOnRight) == TileAdjacencyFlags.SlopeOnRight && sprite.Hitbox.Center.X > tile.Hitbox.Bounds.Right)
+								{
+									slopeResolutions++; continue;
+								}
 
 								if (resolutionDirection == 0 || Math.Sign(resolutionDirection) == Math.Sign(resolutionDistance.Y))  // If there has been no other vertical collision, or the last vertical resolution was in the same direction as this one...
 								{
