@@ -72,6 +72,8 @@ namespace SMLimitless
         /// </summary>
         public static Camera2D Camera { get; set; }
 
+		public static Dictionary<string, Effect> Effects { get; set; } = new Dictionary<string, Effect>();
+
         /// <summary>
         /// Gets or sets the size of the window. Measured in pixels.
         /// </summary>

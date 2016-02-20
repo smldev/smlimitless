@@ -42,11 +42,9 @@ namespace SMLimitless
         public SmlProgram()
         {
 			graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
+            Content.RootDirectory = "InternalContent";
 
 			IsMouseVisible = true;
-
-			
         }
 
         /// <summary>
@@ -82,6 +80,7 @@ namespace SMLimitless
             GameServices.InitializeFont("font");
 
             ScreenManager.LoadContent();
+			GameServices.Effects.Add("TestShader", Content.Load<Effect>("TestShader"));
 		
 			stopwatch.Stop();
 			Logger.LogInfo(string.Format("Load content completed (took {0} ms)", stopwatch.ElapsedMilliseconds));
@@ -93,6 +92,7 @@ namespace SMLimitless
         protected override void UnloadContent()
         {
             SoundManager.UnloadContent();
+			Content.Unload();
         }
 
         /// <summary>
@@ -130,8 +130,14 @@ namespace SMLimitless
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+			
+			spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, GameServices.Camera.GetTransformation());
+			
+			//foreach (Effect effect in GameServices.Effects.Values)
+			//{
+			//	effect.CurrentTechnique.Passes[0].Apply();
+			//}
 
-			spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, GameServices.Camera.GetTransformation());
             ScreenManager.Draw();
 			spriteBatch.End();
 

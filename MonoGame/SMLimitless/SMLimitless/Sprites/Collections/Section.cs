@@ -7,6 +7,7 @@ using SMLimitless.Collections;
 using SMLimitless.Extensions;
 using SMLimitless.Input;
 using SMLimitless.Physics;
+using SMLimitless.Screens.Effects;
 
 namespace SMLimitless.Sprites.Collections
 {
@@ -21,6 +22,7 @@ namespace SMLimitless.Sprites.Collections
 		private bool isDeserialized;
 		private bool isInitialized;
 		private bool isContentLoaded;
+		private IrisEffect irisEffect;
 
 		private int slopeResolutions = 0;
 		private int verticalResolutions = 0;
@@ -66,6 +68,7 @@ namespace SMLimitless.Sprites.Collections
 				Sprites.ForEach(s => s.Initialize(this));
 
 				CameraSystem = new CameraSystem(Camera, Bounds, Sprites.First(s => s.GetType().FullName.Contains("SimplePlayer")));
+				irisEffect = new IrisEffect(Camera.Viewport.Center);
 
 				isInitialized = true;
 			}
@@ -78,6 +81,10 @@ namespace SMLimitless.Sprites.Collections
 				Background.LoadContent();
 				Layers.ForEach(l => l.LoadContent());
 				Sprites.ForEach(s => s.LoadContent());
+
+				irisEffect.LoadContent();
+				irisEffect.Start(90, Interfaces.EffectDirection.Forward, Vector2.Zero, Color.Black);
+
 				isContentLoaded = true;
 			}
 		}
@@ -86,6 +93,7 @@ namespace SMLimitless.Sprites.Collections
 		{
 			System.Diagnostics.Stopwatch stopwatch = System.Diagnostics.Stopwatch.StartNew();
 
+			irisEffect.Update();
 			AddSpritesToAddOnNextFrame();
 			Tiles.ForEach(t => t.Update());
 			Sprites.ForEach(s => s.Update());
@@ -268,6 +276,7 @@ namespace SMLimitless.Sprites.Collections
 			Tiles.ForEach(t => t.Draw());
 			Sprites.ForEach(s => s.Draw());
 			GameServices.DrawStringDefault(debugText);
+			irisEffect.Draw();
 		}
 
 		private void TempUpdate() 
@@ -293,6 +302,14 @@ namespace SMLimitless.Sprites.Collections
 			{
 				string json = new IO.LevelSerializers.Serializer003().Serialize(Owner);
 				System.IO.File.WriteAllText(@"test_003.lvl", json);
+			}
+			else if (InputManager.IsNewKeyPress(Keys.H))
+			{
+				irisEffect.Start(60, Interfaces.EffectDirection.Forward, Vector2.Zero, Color.Black);
+			}
+			else if (InputManager.IsNewKeyPress(Keys.K))
+			{
+				irisEffect.Start(60, Interfaces.EffectDirection.Backward, Vector2.Zero, Color.Black);
 			}
 
 			// if (Sprites.Cells[Sprites.GetCellNumberAtPosition(Sprites.First(s => s.GetType().FullName.Contains("Player")).Position)].Items.Count == 2) System.Diagnostics.Debugger.Break();

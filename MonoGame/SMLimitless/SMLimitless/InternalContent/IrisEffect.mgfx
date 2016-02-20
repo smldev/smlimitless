@@ -1,0 +1,22 @@
+sampler TextureSampler : register(s0);
+float2 irisCenter;
+float radius;
+float4 backColor;
+
+float4 PixelShaderFunction(float4 pos : SV_POSITION, float4 color1 : COLOR0, float2 coords: TEXCOORD0) : COLOR0
+{
+	float4 p = pos;
+	float2 c = irisCenter;
+	float r = radius;
+	
+	float alpha = abs(1 - step(pow(p.x - c.x, 2) + pow(p.y - c.y, 2), r * r));
+	return float4(backColor.r, backColor.g, backColor.b, alpha * backColor.a);
+}
+
+technique Technique1
+{
+	pass Pass1
+	{
+		PixelShader = compile ps_3_0 PixelShaderFunction();
+	}
+}

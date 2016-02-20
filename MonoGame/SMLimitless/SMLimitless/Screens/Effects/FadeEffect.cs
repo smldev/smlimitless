@@ -56,7 +56,7 @@ namespace SMLimitless.Screens.Effects
         /// </summary>
         public FadeEffect()
         {
-            this.isInitialized = true;
+			isInitialized = true;
         }
 
         /// <summary>
@@ -80,19 +80,19 @@ namespace SMLimitless.Screens.Effects
         /// <param name="color">The color to fade to or from.</param>
         public void Start(int length, EffectDirection direction, Vector2 position, Color color)
         {
-            if ((direction == EffectDirection.Forward && this.currentFadeLevel == 1f) || (direction == EffectDirection.Backward && this.currentFadeLevel == 0f)) 
+            if ((direction == EffectDirection.Forward && currentFadeLevel == 1f) || (direction == EffectDirection.Backward && currentFadeLevel == 0f)) 
             {
                 return;
             }
 
-            this.isRunning = true;
-            this.fadeDelta = 1.0f / length;
-            this.dir = direction;
+			isRunning = true;
+			fadeDelta = 1.0f / length;
+			dir = direction;
             this.color = color;
-            if (this.dir == EffectDirection.Backward)
+            if (dir == EffectDirection.Backward)
             {
-                // fade in from black
-                this.currentFadeLevel = 1.0f;
+				// fade in from black
+				currentFadeLevel = 1.0f;
             }
         }
 
@@ -101,9 +101,9 @@ namespace SMLimitless.Screens.Effects
         /// </summary>
         public void Stop()
         {
-            this.isRunning = false;
-            this.currentFadeLevel = 0f;
-            this.fadeDelta = 0f;
+			isRunning = false;
+			currentFadeLevel = 0f;
+			fadeDelta = 0f;
         }
 
         /// <summary>
@@ -116,11 +116,11 @@ namespace SMLimitless.Screens.Effects
             this.color = color;
             if (direction == EffectDirection.Forward)
             {
-                this.currentFadeLevel = 1f;
+				currentFadeLevel = 1f;
             }
             else
             {
-                this.currentFadeLevel = 0f;
+				currentFadeLevel = 0f;
             }
         }
 
@@ -129,28 +129,28 @@ namespace SMLimitless.Screens.Effects
         /// </summary>
         public void Update()
         {
-            if (this.isRunning && this.isInitialized)
+            if (isRunning && isInitialized)
             {
-                switch (this.dir)
+                switch (dir)
                 {
                     case EffectDirection.Forward:
                         // fade to black
-                        if (this.currentFadeLevel < 1.0f)
+                        if (currentFadeLevel < 1.0f)
                         {
-                            this.currentFadeLevel += this.fadeDelta;
+							currentFadeLevel += fadeDelta;
                         }
                         else FadeFinished();
                         break;
                     case EffectDirection.Backward:
-                        if (this.currentFadeLevel > 0f)
+                        if (currentFadeLevel > 0f)
                         {
-                            this.currentFadeLevel -= this.fadeDelta;
+							currentFadeLevel -= fadeDelta;
                         }
                         else FadeFinished();
                         break;
                 }
             }
-            else if (!this.isInitialized)
+            else if (!isInitialized)
             {
                 throw new InvalidOperationException("The fade effect was not properly initialized.  Please set the screen size.");
             }
@@ -161,9 +161,9 @@ namespace SMLimitless.Screens.Effects
         /// </summary>
         public void Draw()
         {
-            if (this.isInitialized)
+            if (isInitialized)
             {
-                GameServices.SpriteBatch.DrawRectangle(Vector2.Zero.ToRectangle(GameServices.ScreenSize), this.color * this.currentFadeLevel);
+                GameServices.SpriteBatch.DrawRectangle(Vector2.Zero.ToRectangle(GameServices.ScreenSize), color * currentFadeLevel);
             }
         }
 
@@ -173,11 +173,11 @@ namespace SMLimitless.Screens.Effects
         /// </summary>
         private void FadeFinished()
         {
-            this.isRunning = false;
-            this.fadeDelta = 0f;
-            if (this.EffectCompletedEvent != null)
+			isRunning = false;
+			fadeDelta = 0f;
+            if (EffectCompletedEvent != null)
             {
-                this.EffectCompletedEvent(this, this.dir);
+				EffectCompletedEvent(this, dir);
             }
         }
     }
