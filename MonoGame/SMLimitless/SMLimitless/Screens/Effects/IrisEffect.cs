@@ -30,6 +30,7 @@ namespace SMLimitless.Screens.Effects
 		public IrisEffect(Vector2 center)
 		{
 			irisCenter = center;
+			currentFadeLevel = 1f;
 
 			Vector2 screenSize = GameServices.ScreenSize;
 			irisRadius = (float)Math.Sqrt((screenSize.X * screenSize.X) + (screenSize.Y + screenSize.Y));
@@ -54,17 +55,8 @@ namespace SMLimitless.Screens.Effects
 				irisEffect.Parameters["irisCenter"].SetValue(irisCenter);
 				irisEffect.Parameters["radius"].SetValue(irisRadius);
 				irisEffect.Parameters["backColor"].SetValue(new Vector4(r, g, b, a));
-				//irisEffect.CurrentTechnique.Passes[0].Apply();
-
-				// WYLO: you have a GameDev.SE question open and waiting
-				// problem: the black portion of the texture isn't transparent
-				// problem 2: the inner portion of the texture isn't transparent
 
 				quadRenderer.Render(irisEffect);
-
-				//GameServices.SpriteBatch.End();
-
-				//GameServices.SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, GameServices.Camera.GetTransformation());
 			}
 		}
 
@@ -80,11 +72,11 @@ namespace SMLimitless.Screens.Effects
 			this.color = color;
 			if (direction == EffectDirection.Forward)
 			{
-				currentFadeLevel = 1f;
+				currentFadeLevel = 0f;
 			}
 			else
 			{
-				currentFadeLevel = 0f;
+				currentFadeLevel = 1f;
 			}
 		}
 

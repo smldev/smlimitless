@@ -1,0 +1,4 @@
+[ContentPackage]
+Name = SmlSprites
+Author = Celarix
+AssemblyPath = SmlSprites.dll

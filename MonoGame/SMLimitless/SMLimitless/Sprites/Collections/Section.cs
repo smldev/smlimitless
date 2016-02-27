@@ -15,7 +15,6 @@ namespace SMLimitless.Sprites.Collections
 	{
 		private Debug.DebugForm form = new Debug.DebugForm();
 		private string debugText = "";
-		private RtSlopedSides drawSlopeHitboxSides = RtSlopedSides.TopLeft;
 
 		private Vector2 autoscrollSpeed;
 		private string autoscrollPathName;
@@ -23,9 +22,6 @@ namespace SMLimitless.Sprites.Collections
 		private bool isInitialized;
 		private bool isContentLoaded;
 		private IrisEffect irisEffect;
-
-		private int slopeResolutions = 0;
-		private int verticalResolutions = 0;
 
 		public SectionAutoscrollSettings AutoscrollSettings { get; internal set; }
 		public Background Background { get; internal set; }
@@ -67,7 +63,7 @@ namespace SMLimitless.Sprites.Collections
 				Layers.ForEach(l => l.Initialize());
 				Sprites.ForEach(s => s.Initialize(this));
 
-				CameraSystem = new CameraSystem(Camera, Bounds, Sprites.First(s => s.GetType().FullName.Contains("SimplePlayer")));
+				CameraSystem = new CameraSystem(Camera, Bounds);
 				irisEffect = new IrisEffect(Camera.Viewport.Center);
 
 				isInitialized = true;
@@ -106,8 +102,6 @@ namespace SMLimitless.Sprites.Collections
 			TempUpdate();
 
 			stopwatch.Stop();
-
-			debugText = $"Slope: {slopeResolutions}, Vertical: {verticalResolutions}";
 		}
 
 		private void UpdatePhysics()
@@ -230,14 +224,13 @@ namespace SMLimitless.Sprites.Collections
 								if ((tile.AdjacencyFlags & TileAdjacencyFlags.SlopeOnLeft) == TileAdjacencyFlags.SlopeOnLeft && sprite.Hitbox.Center.X < tile.Hitbox.Bounds.Left) continue;
 								else if ((tile.AdjacencyFlags & TileAdjacencyFlags.SlopeOnRight) == TileAdjacencyFlags.SlopeOnRight && sprite.Hitbox.Center.X > tile.Hitbox.Bounds.Right)
 								{
-									slopeResolutions++; continue;
+									continue;
 								}
 
 								if (resolutionDirection == 0 || Math.Sign(resolutionDirection) == Math.Sign(resolutionDistance.Y))  // If there has been no other vertical collision, or the last vertical resolution was in the same direction as this one...
 								{
 									resolutionDirection = Math.Sign(resolutionDistance.Y);                                      // The resolution direction is equal to the sign of the resolution distance (up = negative, down = positive).
 									sprite.Position = new Vector2(sprite.Position.X, sprite.Position.Y + resolutionDistance.Y); // Move the sprite vertically by the resolution distance.
-									verticalResolutions++;
 									sprite.Velocity = new Vector2(sprite.Velocity.X, 0f);                                       // Stop the sprite's vertical movement.
 									sprite.HandleTileCollision(tile, resolutionDistance);
 								}
@@ -293,10 +286,6 @@ namespace SMLimitless.Sprites.Collections
 			else if (InputManager.IsNewKeyPress(Keys.D))
 			{
 				GameServices.Camera.Zoom *= (1f / 1.05f);
-			}
-			else if (InputManager.IsNewKeyPress(Keys.F))
-			{
-				drawSlopeHitboxSides = (drawSlopeHitboxSides == RtSlopedSides.TopLeft) ? RtSlopedSides.TopRight : RtSlopedSides.TopLeft;
 			}
 			else if (InputManager.IsNewKeyPress(Keys.G))
 			{

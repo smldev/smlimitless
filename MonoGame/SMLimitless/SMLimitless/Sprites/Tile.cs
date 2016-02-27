@@ -261,6 +261,7 @@ namespace SMLimitless.Sprites
 			clone.solidSides = solidSides;
 			clone.SlopedSides = SlopedSides;
 			clone.Name = Name.SafeCopy();
+			clone.GraphicsResourceName = GraphicsResourceName.SafeCopy();
 
 			return clone;
 		}

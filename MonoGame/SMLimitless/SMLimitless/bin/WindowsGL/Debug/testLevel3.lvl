@@ -1,0 +1,179 @@
+{
+	"header": {
+		"version": "Version v0.03",
+		"name": "SML Test Level #3 (2/26/2016)",
+		"author": "Celarix"
+	},
+	"contentPackages": [
+		"SmlSprites"
+	],
+	"levelExits": [
+	],
+	"sections": [
+		{
+			"index": 0,
+			"name": "Main Section",
+			"bounds": "0, 0, 3200, 960",
+			"scrollSettings": {
+				"scrollType": 0,
+				"speed": "NaN, NaN",
+				"pathName": ""
+			},
+			"background": {
+				"topColor": "0, 0, 0, 0",
+				"bottomColor": "0, 0, 0, 0",
+				"layers": [
+					{
+						"resourceName": "BackgroundSMBHills",
+						"scrollDirection": 1,
+						"scrollRate": 0.5
+					}
+				]
+			},
+			"layers": [
+				{
+					"index": 0,
+					"name": "Main Layer",
+					"isMainLayer": true,
+					"position": "0, 0",
+					"gridWidth": "200",
+					"gridHeight": "60",
+					"uniqueTiles": [
+						{
+							"id": 0,
+							"typeName": "SmlSprites.Tiles.SolidTile",
+							"solidSides": 15,
+							"collisionType": 0,
+							"name": "",
+							"graphicsResource": "SMBGrassTopLeft",
+							"state": null,
+							"customData": null
+						},
+						{
+							"id": 1,
+							"typeName": "SmlSprites.Tiles.SolidTile",
+							"solidSides": 15,
+							"collisionType": 0,
+							"name": "",
+							"graphicsResource": "SMBGrassTopCenter",
+							"state": null,
+							"customData": null
+						},
+						{
+							"id": 2,
+							"typeName": "SmlSprites.Tiles.SolidTile",
+							"solidSides": 15,
+							"collisionType": 0,
+							"name": "",
+							"graphicsResource": "SMBGrassTopRight",
+							"state": null,
+							"customData": null
+						},
+						{
+							"id": 3,
+							"typeName": "SmlSprites.Tiles.SolidTile",
+							"solidSides": 15,
+							"collisionType": 0,
+							"name": "",
+							"graphicsResource": "SMBGrassCenterLeft",
+							"state": null,
+							"customData": null
+						},
+						{
+							"id": 4,
+							"typeName": "SmlSprites.Tiles.SolidTile",
+							"solidSides": 15,
+							"collisionType": 0,
+							"name": "",
+							"graphicsResource": "SMBGrassCenter",
+							"state": null,
+							"customData": null
+						},
+						{
+							"id": 5,
+							"typeName": "SmlSprites.Tiles.SolidTile",
+							"solidSides": 15,
+							"collisionType": 0,
+							"name": "",
+							"graphicsResource": "SMBGrassCenterRight",
+							"state": null,
+							"customData": null
+						},
+						{
+							"id": 6,
+							"typeName": "SmlSprites.Tiles.SolidTile",
+							"solidSides": 15,
+							"collisionType": 0,
+							"name": "",
+							"graphicsResource": "SMBGrassBottomLeft",
+							"state": null,
+							"customData": null
+						},
+						{
+							"id": 7,
+							"typeName": "SmlSprites.Tiles.SolidTile",
+							"solidSides": 15,
+							"collisionType": 0,
+							"name": "",
+							"graphicsResource": "SMBGrassBottomCenter",
+							"state": null,
+							"customData": null
+						},
+						{
+							"id": 8,
+							"typeName": "SmlSprites.Tiles.SolidTile",
+							"solidSides": 15,
+							"collisionType": 0,
+							"name": "",
+							"graphicsResource": "SMBGrassBottomRight",
+							"state": null,
+							"customData": null
+						},
+					],
+					"tilePositions": [
+						{
+							"id": 0,
+							"positions": "0,0;"
+						},
+						{
+							"id": 1,
+							"positions": "1,0;"
+						},
+						{
+							"id": 2,
+							"positions": "2,0;"
+						},
+						{
+							"id": 3,
+							"positions": "0,1;"
+						},
+						{
+							"id": 4,
+							"positions": "1,1;"
+						},
+						{
+							"id": 5,
+							"positions": "2,1;"
+						},
+						{
+							"id": 6,
+							"positions": "0,2;"
+						},
+						{
+							"id": 7,
+							"positions": "1,2;"
+						},
+						{
+							"id": 8,
+							"positions": "2,2;"
+						},
+					]
+				}
+			],
+			"sprites": [
+			],
+			"paths": []
+		}
+	],
+	"script": null
+}

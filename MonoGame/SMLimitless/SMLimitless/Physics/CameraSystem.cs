@@ -39,7 +39,6 @@ namespace SMLimitless.Physics
 		{
 			if (camera == null) { throw new ArgumentNullException(nameof(camera), "Cannot create a camera system with a null camera."); }
 			if (totalBounds.IsNaN() || totalBounds.Width <= 0f || totalBounds.Height <= 0f) { throw new ArgumentException($"The total bounds rectangle for the camera system has a zero or negative area. X: {totalBounds.X}, Y: {totalBounds.Y}, Width: {totalBounds.Width}, Height: {totalBounds.Height}", nameof(totalBounds)); }
-			if (trackingObjects.Length == 0) { throw new ArgumentException("The provided collection of camera tracking objects had no objects.", nameof(trackingObjects)); }
 
 			this.camera = camera;
 			this.totalBounds = totalBounds;
@@ -90,7 +89,7 @@ namespace SMLimitless.Physics
 
 		private bool ZoomOutRequired()
 		{
-			if (trackingObjects.Count == 1) { return false; }
+			if (trackingObjects.Count <= 1) { return false; }
 
 			bool result = false;
 
@@ -136,6 +135,7 @@ namespace SMLimitless.Physics
 
 			// Calculate the center point of all tracking objects.
 			Vector2 center = GetCenterOfAllTrackingObjects();
+			if (center.IsNaN()) { center = Vector2.Zero; }
 
 			// Determine if any tracking objects have exited the zoom-out distance boundary
 			// and thus if we need to zoom out.
