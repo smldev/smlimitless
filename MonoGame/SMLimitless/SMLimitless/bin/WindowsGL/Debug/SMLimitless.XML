@@ -2453,6 +2453,17 @@
             Gets or sets an editor property representing which direction this sprite is facing.
             </summary>
         </member>
+        <member name="M:SMLimitless.Sprites.Sprite.ResolveDirection(SMLimitless.Sprites.Sprite,SMLimitless.Sprites.SpriteDirection,SMLimitless.Sprites.Collections.Section)">
+            <summary>
+            Resolves a sprite direction into a horizontal direction.
+            </summary>
+            <param name="sprite">The sprite for which the direction needs to be resolved.</param>
+            <param name="direction">The direction that needs to be resolved.</param>
+            <param name="section">The section which the <paramref name="sprite"/> is in.</param>
+            <returns>Left if <paramref name="direction"/> is Left, or Right if <paramref name="direction"/> is Right.
+            If <paramref name="direction"/> is FacePlayer, then the returned direction will be the one facing the first player
+            in the section, or Left if there are no players.</returns>
+        </member>
         <member name="M:SMLimitless.Sprites.Sprite.Initialize(SMLimitless.Sprites.Collections.Section)">
             <summary>
             Initializes this sprite.

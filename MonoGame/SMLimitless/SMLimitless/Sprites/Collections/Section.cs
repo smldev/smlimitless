@@ -34,6 +34,7 @@ namespace SMLimitless.Sprites.Collections
 
 		internal List<Tile> Tiles { get; private set; }
 		internal SparseCellGrid<Sprite> Sprites { get; set; }
+		internal List<Sprite> Players { get; set; } = new List<Sprite>();
 		internal List<Sprite> SpritesToAddOnNextFrame { get; } = new List<Sprite>();
 
 		internal List<Layer> Layers { get; set; }

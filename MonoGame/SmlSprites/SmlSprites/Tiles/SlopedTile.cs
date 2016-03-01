@@ -13,7 +13,7 @@ using SMLimitless.Sprites.Assemblies;
 
 namespace SmlSprites.Tiles
 {
-	public sealed class SolidTile : Tile
+	public sealed class SlopedTile : Tile
 	{
 		private IGraphicsObject graphics;
 
@@ -28,18 +28,19 @@ namespace SmlSprites.Tiles
 			}
 		}
 
-		public SolidTile()
+		public SlopedTile()
 		{
-			TileShape = CollidableShape.Rectangle;
-			RectSolidSides = TileRectSolidSides.Top | TileRectSolidSides.Left | TileRectSolidSides.Right | TileRectSolidSides.Bottom;
+			TileShape = CollidableShape.RightTriangle;
+			TriSolidSides = TileTriSolidSides.Slope | TileTriSolidSides.HorizontalLeg | TileTriSolidSides.VerticalLeg;
 		}
 
 		public override void DeserializeCustomObjects(JsonHelper customObjects)
 		{
 			widthInGridCells = customObjects.GetInt("widthInGridCells");
 			heightInGridCells = customObjects.GetInt("heightInGridCells");
+			SlopedSides = (RtSlopedSides)customObjects.GetInt("slopedSides");
 
-			Size = new Vector2(widthInGridCells * GameServices.GameObjectSize.X, GameServices.GameObjectSize.Y);
+			Size = new Vector2(widthInGridCells * GameServices.GameObjectSize.X, heightInGridCells * GameServices.GameObjectSize.Y);
 		}
 
 		public override void LoadContent()
@@ -61,8 +62,9 @@ namespace SmlSprites.Tiles
 		{
 			return new
 			{
+				widthInGridCells = this.widthInGridCells,
 				heightInGridCells = this.heightInGridCells,
-				widthInGridCells = this.widthInGridCells
+				slopedSides = this.SlopedSides
 			};
 		}
 

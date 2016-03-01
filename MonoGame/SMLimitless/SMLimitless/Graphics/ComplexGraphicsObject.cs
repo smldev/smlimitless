@@ -336,7 +336,7 @@ namespace SMLimitless.Graphics
             Dictionary<string, IGraphicsObject> cloneObjects = new Dictionary<string, IGraphicsObject>();
             foreach (var graphicsObjectPair in this.graphicsObjects)
             {
-                cloneObjects.Add(graphicsObjectPair.Key, graphicsObjectPair.Value.Clone());
+				result.graphicsObjects.Add(graphicsObjectPair.Key, graphicsObjectPair.Value.Clone());
             }
 
             result.CurrentObjectName = this.CurrentObjectName;

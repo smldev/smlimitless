@@ -431,7 +431,7 @@ namespace SMLimitless.IO.LevelSerializers
 				sprite.IsHostile = (bool)entry["isHostile"];
 				sprite.IsMoving = (bool)entry["isMoving"];
 				sprite.Direction = (SpriteDirection)(int)entry["direction"];
-				sprite.DeserializeCustomObjects(new JsonHelper(entry["customObject"]));
+				sprite.DeserializeCustomObjects(new JsonHelper(entry["customObjects"]));
 
 				result.Add(sprite);
 			}

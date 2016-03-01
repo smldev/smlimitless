@@ -132,7 +132,7 @@ namespace SMLimitless.Forms
 			numericUpDown.Location = new Point(DefaultSidePadding + (int)(PanelSettings.Width * 0.8f) + (DefaultSidePadding * 2), newControlY + ControlHeight);
 			numericUpDown.Width = 45;
 			PanelSettings.Controls.Add(numericUpDown);
-			newControlY += ControlHeight + DefaultSidePadding;
+			newControlY += trackBar.Height + DefaultSidePadding;
 
 			trackBarControl = trackBar;
 			nudControl = numericUpDown;
@@ -144,6 +144,7 @@ namespace SMLimitless.Forms
 			label.AutoSize = true;
 			label.Text = name;
 			label.Location = new Point(DefaultSidePadding, newControlY);
+			label.Click += (sender, e) => { MessageBox.Show($"You found me! Text: {label.Text}"); };
 			PanelSettings.Controls.Add(label);
 			newControlY += LabelHeightSingleLine + DefaultSidePadding;
 
@@ -176,7 +177,7 @@ namespace SMLimitless.Forms
 			textBox.Location = new Point(DefaultSidePadding + (int)(PanelSettings.Width * 0.8f) + (DefaultSidePadding * 2), newControlY + ControlHeight);
 			textBox.Width = 45;
 			PanelSettings.Controls.Add(textBox);
-			newControlY += ControlHeight + DefaultSidePadding;
+			newControlY += trackBar.Height + DefaultSidePadding;
 
 			trackBarControl = trackBar;
 			textBoxControl = textBox;

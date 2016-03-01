@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json.Linq;
 using SMLimitless.Extensions;
@@ -193,6 +194,32 @@ namespace SMLimitless.Sprites
         [DefaultValue(SpriteDirection.FacePlayer), Description("The direction that this sprite faces when it loads.")]
         public SpriteDirection Direction { get; set; }
 		#endregion
+
+		/// <summary>
+		/// Resolves a sprite direction into a horizontal direction.
+		/// </summary>
+		/// <param name="sprite">The sprite for which the direction needs to be resolved.</param>
+		/// <param name="direction">The direction that needs to be resolved.</param>
+		/// <param name="section">The section which the <paramref name="sprite"/> is in.</param>
+		/// <returns>Left if <paramref name="direction"/> is Left, or Right if <paramref name="direction"/> is Right.
+		/// If <paramref name="direction"/> is FacePlayer, then the returned direction will be the one facing the first player
+		/// in the section, or Left if there are no players.</returns>
+		public static SpriteDirection ResolveDirection(Sprite sprite, SpriteDirection direction, Section section)
+		{
+			if (section == null) { throw new ArgumentNullException(nameof(section), "Cannot resolve direction; the provided section was null."); }
+			if (direction != SpriteDirection.FacePlayer) { return (direction == SpriteDirection.Left) ? SpriteDirection.Left : SpriteDirection.Right; }
+			if (!section.Players.Any()) { return SpriteDirection.Left; }
+
+			Sprite firstPlayer = section.Players.First();
+			if (firstPlayer.Position.X < sprite.Position.X)
+			{
+				return SpriteDirection.Left;
+			}
+			else
+			{
+				return SpriteDirection.Right;
+			}
+		}
 
 		#region Core Gameobject Methods
         /// <summary>
