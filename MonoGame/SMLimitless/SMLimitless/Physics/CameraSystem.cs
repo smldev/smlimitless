@@ -21,13 +21,15 @@ namespace SMLimitless.Physics
 		
 		private Camera2D camera;
 		private BoundingRectangle totalBounds;
-		private List<IPositionable2> trackingObjects;
 		private bool objectOutsideOfZoomOutBoundary = false;			// this flag is set if at least one object is outside the zoom out boundary
 		
 		/// <summary>
 		/// Gets a rectangle in which game objects such as tiles and sprites are active.
 		/// </summary>
 		public BoundingRectangle ActiveBounds { get; private set; }
+		internal List<IPositionable2> TrackingObjects { get; private set; }
+
+		public bool StayInBounds { get; set; } = true;
 
 		static CameraSystem()
 		{
@@ -42,7 +44,7 @@ namespace SMLimitless.Physics
 
 			this.camera = camera;
 			this.totalBounds = totalBounds;
-			this.trackingObjects = trackingObjects.ToList();
+			this.TrackingObjects = trackingObjects.ToList();
 
 			this.camera.Zoom = 1f;
 			this.camera.Rotation = 0f;
@@ -77,25 +79,25 @@ namespace SMLimitless.Physics
 		{
 			Vector2 sum = Vector2.Zero;
 
-			foreach (IPositionable2 trackingObject in trackingObjects)
+			foreach (IPositionable2 trackingObject in TrackingObjects)
 			{
 				Vector2 center = GetObjectCenter(trackingObject);
 				sum += center;
 			}
 
-			sum /= trackingObjects.Count;
+			sum /= TrackingObjects.Count;
 			return sum;
 		}
 
 		private bool ZoomOutRequired()
 		{
-			if (trackingObjects.Count <= 1) { return false; }
+			if (TrackingObjects.Count <= 1) { return false; }
 
 			bool result = false;
 
 			BoundingRectangle zoomOutBoundary = CreateInsetRectangle(camera.Viewport, ZoomOutDistanceBoundary);
-			List<RectangularSpaceDivision> centerPointRelations = new List<RectangularSpaceDivision>(trackingObjects.Count);
-			foreach (var trackingObject in trackingObjects)
+			List<RectangularSpaceDivision> centerPointRelations = new List<RectangularSpaceDivision>(TrackingObjects.Count);
+			foreach (var trackingObject in TrackingObjects)
 			{
 				Vector2 objectCenter = GetObjectCenter(trackingObject);
 				centerPointRelations.Add(zoomOutBoundary.GetPointRelation(objectCenter));
@@ -120,6 +122,7 @@ namespace SMLimitless.Physics
 
 		private bool CameraAtEdges()
 		{
+			if (!StayInBounds) { return false; }
 			return camera.Viewport.X == totalBounds.X || camera.Viewport.Y == totalBounds.Y ||
 				   camera.Viewport.Right == totalBounds.Right || camera.Viewport.Bottom == totalBounds.Bottom;
 		}
@@ -170,22 +173,38 @@ namespace SMLimitless.Physics
 			Vector2 newCameraOrigin = Vector2.Zero;
 			float cameraOriginMaxX = totalBounds.Right - camera.Viewport.Width;
 			float cameraOriginMaxY = totalBounds.Bottom - camera.Viewport.Height;
-			newCameraOrigin.X = MathHelper.Clamp(camera.Position.X + cameraXTranslation, totalBounds.X, cameraOriginMaxX);
-			newCameraOrigin.Y = MathHelper.Clamp(camera.Position.Y + cameraYTranslation, totalBounds.Y, cameraOriginMaxY);
+			if (StayInBounds)
+			{
+				newCameraOrigin.X = MathHelper.Clamp(camera.Position.X + cameraXTranslation, totalBounds.X, cameraOriginMaxX);
+				newCameraOrigin.Y = MathHelper.Clamp(camera.Position.Y + cameraYTranslation, totalBounds.Y, cameraOriginMaxY);
+			}
+			else
+			{
+				newCameraOrigin.X = camera.Position.X + cameraXTranslation;
+				newCameraOrigin.Y = camera.Position.Y + cameraYTranslation;
+			}
 
 			// Move the camera.
 			camera.Position = newCameraOrigin;
 		}
 
-		public void Draw()
+		public void Draw(bool debug)
 		{
-			string debugText = $"Camera Pos: {camera.Position}, Zoom: {camera.Zoom}, Objcount: {trackingObjects.Count}";
-			GameServices.DebugFont.DrawString(debugText, camera.Position + new Vector2(16f, 32f), 1f / camera.Zoom);
+			if (!StayInBounds)
+			{
+				GameServices.SpriteBatch.DrawRectangleEdges(totalBounds.ToRectangle(), Color.LightGreen);
+			}
+		
+			if (debug)
+			{
+				string debugText = $"Camera Pos: {camera.Position}, Zoom: {camera.Zoom}, Objcount: {TrackingObjects.Count}";
+				GameServices.DebugFont.DrawString(debugText, camera.Position + new Vector2(16f, 32f), 1f / camera.Zoom);
 
-			Vector2 cameraCenter = GetCenterOfAllTrackingObjects();
-			GameServices.SpriteBatch.DrawRectangle(new Rectangle((int)(cameraCenter.X - 4f), (int)(cameraCenter.Y - 4f), 8, 8), Color.Red);
-			GameServices.SpriteBatch.DrawRectangleEdges(CreateInsetRectangle(camera.Viewport, ZoomOutDistanceBoundary).ToRectangle(), Color.Red);
-			GameServices.SpriteBatch.DrawRectangleEdges(CreateInsetRectangle(camera.Viewport, ZoomInDistanceBoundary).ToRectangle(), Color.Green);
+				Vector2 cameraCenter = GetCenterOfAllTrackingObjects();
+				GameServices.SpriteBatch.DrawRectangle(new Rectangle((int)(cameraCenter.X - 4f), (int)(cameraCenter.Y - 4f), 8, 8), Color.Red);
+				GameServices.SpriteBatch.DrawRectangleEdges(CreateInsetRectangle(camera.Viewport, ZoomOutDistanceBoundary).ToRectangle(), Color.Red);
+				GameServices.SpriteBatch.DrawRectangleEdges(CreateInsetRectangle(camera.Viewport, ZoomInDistanceBoundary).ToRectangle(), Color.Green);
+			}
 		}
 	}
 }

@@ -76,6 +76,14 @@
     </Compile>
     <Compile Include="Debug\Logger.cs" />
     <Compile Include="Editor\EditorButton.cs" />
+    <Compile Include="Editor\EditorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editor\EditorForm.Designer.cs">
+      <DependentUpon>EditorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editor\SpriteData.cs" />
+    <Compile Include="Editor\TileData.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Extensions\ColorExtensions.cs" />
     <Compile Include="Extensions\DictionaryExtensions.cs" />
@@ -119,6 +127,7 @@
     <Compile Include="Interfaces\IPositionable.cs" />
     <Compile Include="Interfaces\IPositionable2.cs" />
     <Compile Include="IO\DataReader.cs" />
+    <Compile Include="IO\EditorTileData.cs" />
     <Compile Include="IO\LevelSerializers\Serializer003.cs" />
     <Compile Include="IO\LevelSerializers\Serializer003Types\LayerTileSaveData.cs" />
     <Compile Include="IO\LevelSerializers\Serializer003Types\TilePositionCloud.cs" />
@@ -161,6 +170,7 @@
     <Compile Include="Sprites\Collections\TestSectionGenerator.cs" />
     <Compile Include="Sprites\Components\HealthComponent.cs" />
     <Compile Include="Sprites\Components\WalkerComponent.cs" />
+    <Compile Include="Sprites\InternalSprites\EditorCameraTrackingObject.cs" />
     <Compile Include="Sprites\Sprite.cs" />
     <Compile Include="Sprites\SpriteComponent.cs" />
     <Compile Include="Sprites\Tile.cs" />
@@ -222,6 +232,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Debug\DebugForm.resx">
       <DependentUpon>DebugForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editor\EditorForm.resx">
+      <DependentUpon>EditorForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\PhysicsSettingsEditorForm.resx">
       <DependentUpon>PhysicsSettingsEditorForm.cs</DependentUpon>

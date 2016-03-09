@@ -12,6 +12,7 @@ using SMLimitless.Extensions;
 using SMLimitless.Graphics;
 
 using DrawRect = System.Drawing.Rectangle;
+using XnaRect = Microsoft.Xna.Framework.Rectangle;
 
 namespace SMLimitless.Editor
 {
@@ -50,7 +51,7 @@ namespace SMLimitless.Editor
         /// <summary>
         /// The part of the texture containing the button's image.
         /// </summary>
-        private Microsoft.Xna.Framework.Rectangle textureSourceRectangle;
+        private XnaRect textureSourceRectangle;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EditorButton"/> struct.
@@ -71,7 +72,7 @@ namespace SMLimitless.Editor
         /// </summary>
         /// <param name="source">The texture on which the image is.</param>
         /// <param name="sourceRectangle">The part of the texture where the image is.</param>
-        public void SetImage(Texture2D source, Microsoft.Xna.Framework.Rectangle sourceRectangle)
+        public void SetImage(Texture2D source, XnaRect sourceRectangle)
         {
             if (source == null)
             {

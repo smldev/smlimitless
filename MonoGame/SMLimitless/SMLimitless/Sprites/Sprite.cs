@@ -152,6 +152,8 @@ namespace SMLimitless.Sprites
 		#endregion
 
 		#region Editor Properties (category, label, name, message, hostility, moving, direction)
+		
+
         /// <summary>
         /// Gets the name of the category that this sprite is categorized within in the level editor.
         /// </summary>

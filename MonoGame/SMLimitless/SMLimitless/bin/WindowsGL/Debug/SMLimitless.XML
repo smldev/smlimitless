@@ -993,6 +993,23 @@
             <param name="source">The texture on which the image is.</param>
             <param name="sourceRectangle">The part of the texture where the image is.</param>
         </member>
+        <member name="F:SMLimitless.Editor.EditorForm.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Editor.EditorForm.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:SMLimitless.Editor.EditorForm.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
         <member name="T:SMLimitless.Direction">
             <summary>
             Enumerates the four cardinal directions.

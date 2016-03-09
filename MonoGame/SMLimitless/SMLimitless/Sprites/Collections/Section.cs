@@ -4,10 +4,13 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using SMLimitless.Collections;
+using SMLimitless.Editor;
 using SMLimitless.Extensions;
 using SMLimitless.Input;
+using SMLimitless.Interfaces;
 using SMLimitless.Physics;
 using SMLimitless.Screens.Effects;
+using SMLimitless.Sprites.InternalSprites;
 
 namespace SMLimitless.Sprites.Collections
 {
@@ -31,6 +34,10 @@ namespace SMLimitless.Sprites.Collections
 		public int Index { get; set; }
 		public Level Owner { get; private set; }
 		public string Name { get; set; }
+
+		public bool EditorActive { get; internal set; }
+		private EditorCameraTrackingObject editorTrackingObject = null;
+		private EditorForm editorForm = null;
 
 		internal List<Tile> Tiles { get; private set; }
 		internal SparseCellGrid<Sprite> Sprites { get; set; }
@@ -92,11 +99,20 @@ namespace SMLimitless.Sprites.Collections
 
 			irisEffect.Update();
 			AddSpritesToAddOnNextFrame();
-			Tiles.ForEach(t => t.Update());
-			Sprites.ForEach(s => s.Update());
-			Sprites.Update();
-			UpdatePhysics();
-			Sprites.Update();
+
+			if (!EditorActive)
+			{
+				Tiles.ForEach(t => t.Update());
+				Sprites.ForEach(s => s.Update());
+				Sprites.Update();
+				UpdatePhysics();
+				Sprites.Update();
+			}
+			else
+			{
+				editorTrackingObject.Update();
+			}
+
 			Sprites.RemoveAll(s => s.RemoveOnNextFrame);
 			CameraSystem.Update();
 			Background.Update();
@@ -269,6 +285,7 @@ namespace SMLimitless.Sprites.Collections
 			Background.Draw();
 			Tiles.ForEach(t => t.Draw());
 			Sprites.ForEach(s => s.Draw());
+			CameraSystem.Draw(debug: false);
 			GameServices.DrawStringDefault(debugText);
 			irisEffect.Draw();
 		}
@@ -282,11 +299,7 @@ namespace SMLimitless.Sprites.Collections
 			}
 			else if (InputManager.IsNewKeyPress(Keys.E))
 			{
-				GameServices.Camera.Zoom *= 1.05f;
-			}
-			else if (InputManager.IsNewKeyPress(Keys.D))
-			{
-				GameServices.Camera.Zoom *= (1f / 1.05f);
+				ToggleEditor();
 			}
 			else if (InputManager.IsNewKeyPress(Keys.G))
 			{
@@ -301,8 +314,41 @@ namespace SMLimitless.Sprites.Collections
 			{
 				irisEffect.Start(60, Interfaces.EffectDirection.Backward, Vector2.Zero, Color.Black);
 			}
+		}
 
-			// if (Sprites.Cells[Sprites.GetCellNumberAtPosition(Sprites.First(s => s.GetType().FullName.Contains("Player")).Position)].Items.Count == 2) System.Diagnostics.Debugger.Break();
+		private void ToggleEditor()
+		{
+			if (!EditorActive)
+			{
+				// Enable the level editor.
+				EditorActive = true;
+
+				editorTrackingObject = new EditorCameraTrackingObject();
+				editorTrackingObject.Initialize(this);
+				editorTrackingObject.Position = Camera.Viewport.Center;
+
+				CameraSystem.StayInBounds = false;
+				CameraSystem.TrackingObjects.Clear();
+				CameraSystem.TrackingObjects.Add(editorTrackingObject);
+
+				editorForm = new EditorForm(Owner, this);
+				editorForm.Show();
+			}
+			else
+			{
+				// Disable the level editor.
+				EditorActive = false;
+
+				editorTrackingObject = null;
+
+				CameraSystem.StayInBounds = true;
+				CameraSystem.TrackingObjects.Clear();
+				// TODO: call whatever gets the right tracking objects here
+
+				editorForm.Close();
+				editorForm.Dispose();
+				editorForm = null;
+			}
 		}
 
 		public Tile GetTileAtPosition(Vector2 position)

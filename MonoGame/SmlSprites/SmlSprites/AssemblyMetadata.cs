@@ -8,5 +8,12 @@ namespace SmlSprites
 {
 	public sealed class AssemblyMetadata
 	{
+		public static string ObjectDataJSONPath
+		{
+			get
+			{
+				return "objectData.json";
+			}
+		}
 	}
 }

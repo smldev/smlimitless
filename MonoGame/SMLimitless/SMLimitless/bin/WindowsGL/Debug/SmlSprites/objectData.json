@@ -1,0 +1,284 @@
+{
+	"tileData": [
+		{
+			"typeName": "SmlSprites.Tiles.SolidTile",
+			"defaultStates": [
+				{
+					"solidSides": 15,
+					"collisionType": 0,
+					"graphicsResource": "SMBGrassTopLeft",
+					"state": null,
+					"customData": {
+						"widthInGridCells": 1,
+						"heightInGridCells": 1
+					}
+				},
+				{
+					"solidSides": 15,
+					"collisionType": 0,
+					"graphicsResource": "SMBGrassTopCenter",
+					"state": null,
+					"customData": {
+						"widthInGridCells": 1,
+						"heightInGridCells": 1
+					}
+				},
+				{
+					"solidSides": 15,
+					"collisionType": 0,
+					"graphicsResource": "SMBGrassTopRight",
+					"state": null,
+					"customData": {
+						"widthInGridCells": 1,
+						"heightInGridCells": 1
+					}
+				},
+				{
+					"solidSides": 15,
+					"collisionType": 0,
+					"graphicsResource": "SMBGrassCenterLeft",
+					"state": null,
+					"customData": {
+						"widthInGridCells": 1,
+						"heightInGridCells": 1
+					}
+				},
+				{
+					"solidSides": 15,
+					"collisionType": 0,
+					"graphicsResource": "SMBGrassCenter",
+					"state": null,
+					"customData": {
+						"widthInGridCells": 1,
+						"heightInGridCells": 1
+					}
+				},
+				{
+					"solidSides": 15,
+					"collisionType": 0,
+					"graphicsResource": "SMBGrassCenterRight",
+					"state": null,
+					"customData": {
+						"widthInGridCells": 1,
+						"heightInGridCells": 1
+					}
+				},
+				{
+					"solidSides": 15,
+					"collisionType": 0,
+					"graphicsResource": "SMBGrassBottomLeft",
+					"state": null,
+					"customData": {
+						"widthInGridCells": 1,
+						"heightInGridCells": 1
+					}
+				},
+				{
+					"solidSides": 15,
+					"collisionType": 0,
+					"graphicsResource": "SMBGrassBottomCenter",
+					"state": null,
+					"customData": {
+						"widthInGridCells": 1,
+						"heightInGridCells": 1
+					}
+				},
+				{
+					"solidSides": 15,
+					"collisionType": 0,
+					"graphicsResource": "SMBGrassBottomRight",
+					"state": null,
+					"customData": {
+						"widthInGridCells": 1,
+						"heightInGridCells": 1
+					}
+				},
+				{
+					"solidSides": 15,
+					"collisionType": 0,
+					"graphicsResource": "SMBSlopeSupport1_1TopLeft",
+					"state": null,
+					"customData": {
+						"widthInGridCells": 1,
+						"heightInGridCells": 1
+					}
+				},
+				{
+					"solidSides": 15,
+					"collisionType": 0,
+					"graphicsResource": "SMBSlopeSupport1_1TopRight",
+					"state": null,
+					"customData": {
+						"widthInGridCells": 1,
+						"heightInGridCells": 1
+					}
+				},
+				{
+					"solidSides": 15,
+					"collisionType": 0,
+					"graphicsResource": "SMBSlopeSupport1_1BottomLeft",
+					"state": null,
+					"customData": {
+						"widthInGridCells": 1,
+						"heightInGridCells": 1
+					}
+				},
+				{
+					"solidSides": 15,
+					"collisionType": 0,
+					"graphicsResource": "SMBSlopeSupport1_1BottomRight",
+					"state": null,
+					"customData": {
+						"widthInGridCells": 1,
+						"heightInGridCells": 1
+					}
+				},
+				{
+					"solidSides": 15,
+					"collisionType": 0,
+					"graphicsResource": "SMBSlopeSupport2_1TopLeft",
+					"state": null,
+					"customData": {
+						"widthInGridCells": 2,
+						"heightInGridCells": 1
+					}
+				},
+				{
+					"solidSides": 15,
+					"collisionType": 0,
+					"graphicsResource": "SMBSlopeSupport2_1TopRight",
+					"state": null,
+					"customData": {
+						"widthInGridCells": 2,
+						"heightInGridCells": 1
+					}
+				},
+				{
+					"solidSides": 15,
+					"collisionType": 0,
+					"graphicsResource": "SMBSlopeSupport2_1BottomLeft",
+					"state": null,
+					"customData": {
+						"widthInGridCells": 2,
+						"heightInGridCells": 1
+					}
+				},
+				{
+					"solidSides": 15,
+					"collisionType": 0,
+					"graphicsResource": "SMBSlopeSupport2_1BottomRight",
+					"state": null,
+					"customData": {
+						"widthInGridCells": 2,
+						"heightInGridCells": 1
+					}
+				}
+			]
+		},
+		{
+			"typeName": "SmlSprites.Tiles.SlopedTile",
+			"defaultStates": [
+				{
+					"solidSides": 7,
+					"collisionType": 0,
+					"graphicsResource": "SMBSlope1_1TopLeft",
+					"state": null,
+					"customData": {
+						"widthInGridCells": 1,
+						"heightInGridCells": 1,
+						"slopedSides": 1
+					}
+				},
+				{
+					"solidSides": 7,
+					"collisionType": 0,
+					"graphicsResource": "SMBSlope1_1TopRight",
+					"state": null,
+					"customData": {
+						"widthInGridCells": 1,
+						"heightInGridCells": 1,
+						"slopedSides": 2
+					}
+				},
+				{
+					"solidSides": 7,
+					"collisionType": 0,
+					"graphicsResource": "SMBSlope1_1BottomLeft",
+					"state": null,
+					"customData": {
+						"widthInGridCells": 1,
+						"heightInGridCells": 1,
+						"slopedSides": 3
+					}
+				},
+				{
+					"solidSides": 7,
+					"collisionType": 0,
+					"graphicsResource": "SMBSlope1_1TopRight",
+					"state": null,
+					"customData": {
+						"widthInGridCells": 1,
+						"heightInGridCells": 1,
+						"slopedSides": 4
+					}
+				},
+				{
+					"solidSides": 7,
+					"collisionType": 0,
+					"graphicsResource": "SMBSlope2_1TopLeft",
+					"state": null,
+					"customData": {
+						"widthInGridCells": 1,
+						"heightInGridCells": 1,
+						"slopedSides": 1
+					}
+				},
+				{
+					"solidSides": 7,
+					"collisionType": 0,
+					"graphicsResource": "SMBSlope2_1TopRight",
+					"state": null,
+					"customData": {
+						"widthInGridCells": 1,
+						"heightInGridCells": 1,
+						"slopedSides": 2
+					}
+				},
+				{
+					"solidSides": 7,
+					"collisionType": 0,
+					"graphicsResource": "SMBSlope2_1BottomLeft",
+					"state": null,
+					"customData": {
+						"widthInGridCells": 1,
+						"heightInGridCells": 1,
+						"slopedSides": 3
+					}
+				},
+				{
+					"solidSides": 7,
+					"collisionType": 0,
+					"graphicsResource": "SMBSlope2_1BottomRight",
+					"state": null,
+					"customData": {
+						"widthInGridCells": 1,
+						"heightInGridCells": 1,
+						"slopedSides": 4
+					}
+				}
+			]
+		}
+	],
+	"spriteData": [
+		{
+			"typeName": "SmlSprites.SMB.Enemies.Goomba",
+			"editorResourceName": "SMBGoomba",
+			"editorTextureSourceRectangle": "0, 0, 16, 16",
+			"state": 0,
+			"collision": 0,
+			"customObjects": {
+				"palette": 0
+			}
+		}
+	]
+}
