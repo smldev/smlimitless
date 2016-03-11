@@ -4823,6 +4823,12 @@
             Loads the content for this object.
             </summary>
         </member>
+        <member name="M:SMLimitless.Graphics.IGraphicsObject.GetEditorGraphics">
+            <summary>
+            Loads a frame of this graphics object that can be used in the level editor form.
+            </summary>
+            <returns>A texture containing a graphic.</returns>
+        </member>
         <member name="M:SMLimitless.Graphics.IGraphicsObject.Update">
             <summary>
             Updates this object.

@@ -32,14 +32,14 @@
 			this.ButtonDelete = new System.Windows.Forms.Button();
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.TabPageTiles = new System.Windows.Forms.TabPage();
-			this.TabPageSprites = new System.Windows.Forms.TabPage();
-			this.TabPageSettings = new System.Windows.Forms.TabPage();
 			this.PanelTiles = new System.Windows.Forms.Panel();
+			this.TabPageSprites = new System.Windows.Forms.TabPage();
 			this.PanelSprites = new System.Windows.Forms.Panel();
-			this.StaticLabelLevelSettings = new System.Windows.Forms.Label();
-			this.PropertyLevel = new System.Windows.Forms.PropertyGrid();
-			this.PropertySection = new System.Windows.Forms.PropertyGrid();
+			this.TabPageSettings = new System.Windows.Forms.TabPage();
 			this.StaticLabelSectionSettings = new System.Windows.Forms.Label();
+			this.PropertySection = new System.Windows.Forms.PropertyGrid();
+			this.PropertyLevel = new System.Windows.Forms.PropertyGrid();
+			this.StaticLabelLevelSettings = new System.Windows.Forms.Label();
 			this.tabControl1.SuspendLayout();
 			this.TabPageTiles.SuspendLayout();
 			this.TabPageSprites.SuspendLayout();
@@ -54,6 +54,7 @@
 			this.ButtonCursor.TabIndex = 0;
 			this.ButtonCursor.Text = "Cursor";
 			this.ButtonCursor.UseVisualStyleBackColor = true;
+			this.ButtonCursor.Click += new System.EventHandler(this.ButtonCursor_Click);
 			// 
 			// ButtonDelete
 			// 
@@ -63,6 +64,7 @@
 			this.ButtonDelete.TabIndex = 1;
 			this.ButtonDelete.Text = "Delete";
 			this.ButtonDelete.UseVisualStyleBackColor = true;
+			this.ButtonDelete.Click += new System.EventHandler(this.ButtonDelete_Click);
 			// 
 			// tabControl1
 			// 
@@ -72,7 +74,7 @@
 			this.tabControl1.Location = new System.Drawing.Point(13, 43);
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
-			this.tabControl1.Size = new System.Drawing.Size(659, 231);
+			this.tabControl1.Size = new System.Drawing.Size(659, 289);
 			this.tabControl1.TabIndex = 2;
 			// 
 			// TabPageTiles
@@ -81,10 +83,19 @@
 			this.TabPageTiles.Location = new System.Drawing.Point(4, 22);
 			this.TabPageTiles.Name = "TabPageTiles";
 			this.TabPageTiles.Padding = new System.Windows.Forms.Padding(3);
-			this.TabPageTiles.Size = new System.Drawing.Size(651, 205);
+			this.TabPageTiles.Size = new System.Drawing.Size(651, 263);
 			this.TabPageTiles.TabIndex = 0;
 			this.TabPageTiles.Text = "Tiles";
 			this.TabPageTiles.UseVisualStyleBackColor = true;
+			// 
+			// PanelTiles
+			// 
+			this.PanelTiles.AutoScroll = true;
+			this.PanelTiles.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.PanelTiles.Location = new System.Drawing.Point(3, 3);
+			this.PanelTiles.Name = "PanelTiles";
+			this.PanelTiles.Size = new System.Drawing.Size(645, 257);
+			this.PanelTiles.TabIndex = 0;
 			// 
 			// TabPageSprites
 			// 
@@ -92,10 +103,19 @@
 			this.TabPageSprites.Location = new System.Drawing.Point(4, 22);
 			this.TabPageSprites.Name = "TabPageSprites";
 			this.TabPageSprites.Padding = new System.Windows.Forms.Padding(3);
-			this.TabPageSprites.Size = new System.Drawing.Size(651, 205);
+			this.TabPageSprites.Size = new System.Drawing.Size(651, 263);
 			this.TabPageSprites.TabIndex = 1;
 			this.TabPageSprites.Text = "Sprites";
 			this.TabPageSprites.UseVisualStyleBackColor = true;
+			// 
+			// PanelSprites
+			// 
+			this.PanelSprites.AutoSize = true;
+			this.PanelSprites.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.PanelSprites.Location = new System.Drawing.Point(3, 3);
+			this.PanelSprites.Name = "PanelSprites";
+			this.PanelSprites.Size = new System.Drawing.Size(645, 257);
+			this.PanelSprites.TabIndex = 0;
 			// 
 			// TabPageSettings
 			// 
@@ -106,51 +126,10 @@
 			this.TabPageSettings.Location = new System.Drawing.Point(4, 22);
 			this.TabPageSettings.Name = "TabPageSettings";
 			this.TabPageSettings.Padding = new System.Windows.Forms.Padding(3);
-			this.TabPageSettings.Size = new System.Drawing.Size(651, 205);
+			this.TabPageSettings.Size = new System.Drawing.Size(651, 263);
 			this.TabPageSettings.TabIndex = 2;
 			this.TabPageSettings.Text = "Settings";
 			this.TabPageSettings.UseVisualStyleBackColor = true;
-			// 
-			// PanelTiles
-			// 
-			this.PanelTiles.AutoScroll = true;
-			this.PanelTiles.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.PanelTiles.Location = new System.Drawing.Point(3, 3);
-			this.PanelTiles.Name = "PanelTiles";
-			this.PanelTiles.Size = new System.Drawing.Size(645, 199);
-			this.PanelTiles.TabIndex = 0;
-			// 
-			// PanelSprites
-			// 
-			this.PanelSprites.AutoSize = true;
-			this.PanelSprites.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.PanelSprites.Location = new System.Drawing.Point(3, 3);
-			this.PanelSprites.Name = "PanelSprites";
-			this.PanelSprites.Size = new System.Drawing.Size(645, 199);
-			this.PanelSprites.TabIndex = 0;
-			// 
-			// StaticLabelLevelSettings
-			// 
-			this.StaticLabelLevelSettings.AutoSize = true;
-			this.StaticLabelLevelSettings.Location = new System.Drawing.Point(7, 7);
-			this.StaticLabelLevelSettings.Name = "StaticLabelLevelSettings";
-			this.StaticLabelLevelSettings.Size = new System.Drawing.Size(80, 13);
-			this.StaticLabelLevelSettings.TabIndex = 0;
-			this.StaticLabelLevelSettings.Text = "Level Settings:";
-			// 
-			// PropertyLevel
-			// 
-			this.PropertyLevel.Location = new System.Drawing.Point(10, 24);
-			this.PropertyLevel.Name = "PropertyLevel";
-			this.PropertyLevel.Size = new System.Drawing.Size(308, 175);
-			this.PropertyLevel.TabIndex = 1;
-			// 
-			// PropertySection
-			// 
-			this.PropertySection.Location = new System.Drawing.Point(324, 24);
-			this.PropertySection.Name = "PropertySection";
-			this.PropertySection.Size = new System.Drawing.Size(321, 175);
-			this.PropertySection.TabIndex = 2;
 			// 
 			// StaticLabelSectionSettings
 			// 
@@ -161,11 +140,34 @@
 			this.StaticLabelSectionSettings.TabIndex = 3;
 			this.StaticLabelSectionSettings.Text = "Section Settings:";
 			// 
+			// PropertySection
+			// 
+			this.PropertySection.Location = new System.Drawing.Point(324, 24);
+			this.PropertySection.Name = "PropertySection";
+			this.PropertySection.Size = new System.Drawing.Size(321, 233);
+			this.PropertySection.TabIndex = 2;
+			// 
+			// PropertyLevel
+			// 
+			this.PropertyLevel.Location = new System.Drawing.Point(10, 24);
+			this.PropertyLevel.Name = "PropertyLevel";
+			this.PropertyLevel.Size = new System.Drawing.Size(308, 233);
+			this.PropertyLevel.TabIndex = 1;
+			// 
+			// StaticLabelLevelSettings
+			// 
+			this.StaticLabelLevelSettings.AutoSize = true;
+			this.StaticLabelLevelSettings.Location = new System.Drawing.Point(7, 7);
+			this.StaticLabelLevelSettings.Name = "StaticLabelLevelSettings";
+			this.StaticLabelLevelSettings.Size = new System.Drawing.Size(80, 13);
+			this.StaticLabelLevelSettings.TabIndex = 0;
+			this.StaticLabelLevelSettings.Text = "Level Settings:";
+			// 
 			// EditorForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(684, 286);
+			this.ClientSize = new System.Drawing.Size(684, 344);
 			this.Controls.Add(this.tabControl1);
 			this.Controls.Add(this.ButtonDelete);
 			this.Controls.Add(this.ButtonCursor);

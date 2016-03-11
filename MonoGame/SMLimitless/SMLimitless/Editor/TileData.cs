@@ -29,14 +29,16 @@ namespace SMLimitless.Editor
 	
 	public sealed class TileDefaultState
 	{
+		public string TypeName { get; }
 		public int SolidSides { get; }
 		public int CollisionType { get; }
 		public string GraphicsResource { get; }
 		public string State { get; }
 		public JObject CustomData { get; }
 
-		public TileDefaultState(int solidStates, int collisionType, string graphicsResource, string state, JObject customData)
+		public TileDefaultState(string typeName, int solidStates, int collisionType, string graphicsResource, string state, JObject customData)
 		{
+			TypeName = typeName;
 			SolidSides = solidStates;
 			CollisionType = collisionType;
 			GraphicsResource = graphicsResource;

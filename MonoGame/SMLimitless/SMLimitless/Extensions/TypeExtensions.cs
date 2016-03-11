@@ -84,5 +84,10 @@ namespace SMLimitless.Extensions
         {
             return type.InheritsFrom(typeof(Screen));
         }
+
+		public static bool IsStatic(this Type type)
+		{
+			return type.IsClass && type.IsAbstract && type.IsSealed;
+		}
     }
 }

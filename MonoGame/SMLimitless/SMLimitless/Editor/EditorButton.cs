@@ -23,20 +23,52 @@ namespace SMLimitless.Editor
     /// </summary>
     public struct EditorButton
     {
+		public Button Button { get; private set; }
+		
         /// <summary>
         /// Gets or sets the distance from the left edge of the window in pixels.
         /// </summary>
-        public int X { get; set; }
+        public int X
+		{
+			get
+			{
+				return Button.Location.X;
+			}
+			set
+			{
+				Button.Location = new System.Drawing.Point(value, Button.Location.Y);
+			}
+		}
 
         /// <summary>
         /// Gets or sets the distance from the top edge of the window in pixels.
         /// </summary>
-        public int Y { get; set; }
+        public int Y
+		{
+			get
+			{
+				return Button.Location.Y;
+			}
+			set
+			{
+				Button.Location = new System.Drawing.Point(Button.Location.X, value);
+			}
+		}
 
         /// <summary>
         /// Gets or sets the size of the button in pixels.
         /// </summary>
-        public DrawRect Size { get; set; }
+        public Size Size 
+		{
+			get
+			{
+				return Button.Size;
+			}
+			set
+			{
+				Button.Size = value;
+			}
+		}
 
         /// <summary>
         /// Gets the image displayed on the button.
@@ -64,7 +96,7 @@ namespace SMLimitless.Editor
         {
             this.X = x;
             this.Y = y;
-            this.Size = new DrawRect(x, y, width, height);
+			this.Size = new Size(width, height);
         }
 
         /// <summary>

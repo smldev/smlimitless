@@ -197,6 +197,11 @@ namespace SMLimitless.Graphics
             }
         }
 
+		public Texture2D GetEditorGraphics()
+		{
+			return graphicsObjects[CurrentObjectName].GetEditorGraphics();
+		}
+
         /// <summary>
         /// Updates the currently active object in this ComplexGraphicsObject.
         /// </summary>

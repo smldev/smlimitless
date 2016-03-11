@@ -97,6 +97,11 @@ namespace SMLimitless.Graphics
             }
         }
 
+		public Texture2D GetEditorGraphics()
+		{
+			return texture;
+		}
+
         /// <summary>
         /// Updates this object.
         /// </summary>

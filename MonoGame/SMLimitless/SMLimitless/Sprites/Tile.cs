@@ -15,7 +15,7 @@ namespace SMLimitless.Sprites
 	public abstract class Tile : IName, IEditorObject, IPositionable2
 	{
 		private Vector2 position;
-		private int solidSides;				// Okay, so this is kind of ugly. This can be either a TileRectSolidSides or a TileTriSolidSides. At least we cast it for public access.
+		internal int SolidSides { get; set; }			// Okay, so this is kind of ugly. This can be either a TileRectSolidSides or a TileTriSolidSides. At least we cast it for public access.
 
 		public CollidableShape TileShape { get; protected set; }
 
@@ -73,16 +73,16 @@ namespace SMLimitless.Sprites
 			get
 			{
 				if (TileShape != CollidableShape.Rectangle) throw new InvalidOperationException("Tried to get the rectangular solid sides of a triangle.");
-				if (solidSides < 0x00 || solidSides > 0x0F) /* too many flags set */ throw new InvalidOperationException($"The solid sides of this tile are not in a valid form. Value: {solidSides}");
+				if (SolidSides < 0x00 || SolidSides > 0x0F) /* too many flags set */ throw new InvalidOperationException($"The solid sides of this tile are not in a valid form. Value: {SolidSides}");
 
-				return (TileRectSolidSides)solidSides;
+				return (TileRectSolidSides)SolidSides;
 			}
 			set
 			{
 				if (TileShape != CollidableShape.Rectangle) throw new InvalidOperationException("Tried to set the rectangular solid sides of a triangle.");
 				if (value < 0x00 || (int)value > 0x0F) throw new ArgumentException($"Invalid value to set solid sides. Value: {value}.", nameof(value));
 
-				solidSides = (int)value;
+				SolidSides = (int)value;
 			}
 		}
 
@@ -91,16 +91,16 @@ namespace SMLimitless.Sprites
 			get
 			{
 				if (TileShape != CollidableShape.RightTriangle) throw new InvalidOperationException("Tried to get the triangular solid sides of a rectangle.");
-				if (solidSides < 0x00 || solidSides > 0x07) throw new InvalidOperationException($"The solid sides of this tile are not in a valid state. Value: {solidSides}");
+				if (SolidSides < 0x00 || SolidSides > 0x07) throw new InvalidOperationException($"The solid sides of this tile are not in a valid state. Value: {SolidSides}");
 
-				return (TileTriSolidSides)solidSides;
+				return (TileTriSolidSides)SolidSides;
 			}
 			set
 			{
 				if (TileShape != CollidableShape.RightTriangle) throw new InvalidOperationException("Tried to set the triangular solid sides of a rectangle.");
 				if (value < 0x00 || (int)value > 0x07) throw new ArgumentOutOfRangeException(nameof(value), $"Invalid value to set solid sides. Value: {value}.");
 
-				solidSides = (int)value;
+				SolidSides = (int)value;
 			}
 		}
 
@@ -258,7 +258,7 @@ namespace SMLimitless.Sprites
 			clone.State = State.SafeCopy();
 			clone.Position = Position;
 			clone.Size = Size;
-			clone.solidSides = solidSides;
+			clone.SolidSides = SolidSides;
 			clone.SlopedSides = SlopedSides;
 			clone.Name = Name.SafeCopy();
 			clone.GraphicsResourceName = GraphicsResourceName.SafeCopy();

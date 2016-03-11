@@ -52,13 +52,13 @@ namespace SMLimitless.IO
 				List<TileDefaultState> tileDefaultStates = new List<TileDefaultState>();
 				foreach (var defaultState in defaultStates)
 				{
-					int solidSides = (int)defaultStates["solidSides"];
-					int collisionType = (int)defaultStates["collisionType"];
-					string graphicsResource = (string)defaultStates["graphicsResource"];
-					string state = (string)defaultStates["state"];
-					JObject customData = (JObject)defaultStates["customData"];
+					int solidSides = (int)defaultState["solidSides"];
+					int collisionType = (int)defaultState["collisionType"];
+					string graphicsResource = (string)defaultState["graphicsResource"];
+					string state = (string)defaultState["state"];
+					JObject customData = (JObject)defaultState["customData"];
 
-					var tileDefaultState = new TileDefaultState(solidSides, collisionType, graphicsResource, state, customData);
+					var tileDefaultState = new TileDefaultState(typeName, solidSides, collisionType, graphicsResource, state, customData);
 					tileDefaultStates.Add(tileDefaultState);
 				}
 
@@ -76,7 +76,7 @@ namespace SMLimitless.IO
 				Rectangle editorTextureSourceRectangle = BoundingRectangle.FromSimpleString((string)sprite["editorTextureSourceRectangle"]).ToRectangle();
 				int state = (int)sprite["state"];
 				int collision = (int)sprite["collision"];
-				JObject customObjects = (JObject)sprite["customObject"];
+				JObject customObjects = (JObject)sprite["customObjects"];
 
 				spriteData.Add(new SpriteData(typeName, editorResourceName, editorTextureSourceRectangle, state, collision, customObjects));
 			}

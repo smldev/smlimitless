@@ -43,6 +43,7 @@ namespace SMLimitless.Sprites.Collections
 		internal SparseCellGrid<Sprite> Sprites { get; set; }
 		internal List<Sprite> Players { get; set; } = new List<Sprite>();
 		internal List<Sprite> SpritesToAddOnNextFrame { get; } = new List<Sprite>();
+		internal EditorSelectedObject editorSelectedObject = new EditorSelectedObject();
 
 		internal List<Layer> Layers { get; set; }
 		internal Layer MainLayer { get; set; }
@@ -70,6 +71,7 @@ namespace SMLimitless.Sprites.Collections
 				Background.Initialize();
 				Layers.ForEach(l => l.Initialize());
 				Sprites.ForEach(s => s.Initialize(this));
+				editorSelectedObject.Initialize(this);
 
 				CameraSystem = new CameraSystem(Camera, Bounds);
 				irisEffect = new IrisEffect(Camera.Viewport.Center);
@@ -85,6 +87,7 @@ namespace SMLimitless.Sprites.Collections
 				Background.LoadContent();
 				Layers.ForEach(l => l.LoadContent());
 				Sprites.ForEach(s => s.LoadContent());
+				editorSelectedObject.LoadContent();
 
 				irisEffect.LoadContent();
 				irisEffect.Start(90, Interfaces.EffectDirection.Forward, Vector2.Zero, Color.Black);
@@ -111,6 +114,7 @@ namespace SMLimitless.Sprites.Collections
 			else
 			{
 				editorTrackingObject.Update();
+				editorSelectedObject.Update();
 			}
 
 			Sprites.RemoveAll(s => s.RemoveOnNextFrame);
@@ -285,6 +289,7 @@ namespace SMLimitless.Sprites.Collections
 			Background.Draw();
 			Tiles.ForEach(t => t.Draw());
 			Sprites.ForEach(s => s.Draw());
+			editorSelectedObject.Draw();
 			CameraSystem.Draw(debug: false);
 			GameServices.DrawStringDefault(debugText);
 			irisEffect.Draw();
@@ -331,7 +336,7 @@ namespace SMLimitless.Sprites.Collections
 				CameraSystem.TrackingObjects.Clear();
 				CameraSystem.TrackingObjects.Add(editorTrackingObject);
 
-				editorForm = new EditorForm(Owner, this);
+				editorForm = new EditorForm(Owner, this, editorSelectedObject);
 				editorForm.Show();
 			}
 			else

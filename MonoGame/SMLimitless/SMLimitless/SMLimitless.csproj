@@ -127,7 +127,7 @@
     <Compile Include="Interfaces\IPositionable.cs" />
     <Compile Include="Interfaces\IPositionable2.cs" />
     <Compile Include="IO\DataReader.cs" />
-    <Compile Include="IO\EditorTileData.cs" />
+    <Compile Include="IO\EditorObjectData.cs" />
     <Compile Include="IO\LevelSerializers\Serializer003.cs" />
     <Compile Include="IO\LevelSerializers\Serializer003Types\LayerTileSaveData.cs" />
     <Compile Include="IO\LevelSerializers\Serializer003Types\TilePositionCloud.cs" />
@@ -170,7 +170,9 @@
     <Compile Include="Sprites\Collections\TestSectionGenerator.cs" />
     <Compile Include="Sprites\Components\HealthComponent.cs" />
     <Compile Include="Sprites\Components\WalkerComponent.cs" />
+    <Compile Include="Sprites\InternalSprites\CollisionMode.cs" />
     <Compile Include="Sprites\InternalSprites\EditorCameraTrackingObject.cs" />
+    <Compile Include="Sprites\InternalSprites\EditorSelectedObject.cs" />
     <Compile Include="Sprites\Sprite.cs" />
     <Compile Include="Sprites\SpriteComponent.cs" />
     <Compile Include="Sprites\Tile.cs" />

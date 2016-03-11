@@ -36,6 +36,12 @@ namespace SMLimitless.Graphics
         /// </summary>
         void LoadContent();
 
+		/// <summary>
+		/// Loads a frame of this graphics object that can be used in the level editor form.
+		/// </summary>
+		/// <returns>A texture containing a graphic.</returns>
+		Texture2D GetEditorGraphics();
+
         /// <summary>
         /// Updates this object.
         /// </summary>

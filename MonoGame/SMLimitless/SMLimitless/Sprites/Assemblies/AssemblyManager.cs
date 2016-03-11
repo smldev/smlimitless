@@ -10,6 +10,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using SMLimitless.Extensions;
+using SMLimitless.IO;
 
 namespace SMLimitless.Sprites.Assemblies
 {
@@ -59,6 +60,26 @@ namespace SMLimitless.Sprites.Assemblies
             loadedAssemblies.Add(assembly);
             AddTypesToDictionary(assembly);
         }
+
+		public static List<EditorObjectData> GetAllObjectData()
+		{
+			List<EditorObjectData> result = new List<EditorObjectData>();
+
+			foreach (var loadedAssembly in loadedAssemblies)
+			{
+				EditorObjectData objectData = new EditorObjectData();
+				string objectDataJSONBasePath = Path.GetDirectoryName(loadedAssembly.Location);
+
+				Type assemblyMetadataType = loadedAssembly.GetType($"{loadedAssembly.GetName().Name}.AssemblyMetadata");
+				var objectDataJSONPathProperty = assemblyMetadataType.GetProperty("ObjectDataJSONPath");
+				string path = Path.Combine(objectDataJSONBasePath, (string)objectDataJSONPathProperty.GetValue(null));
+
+				objectData.ReadData(path);
+				result.Add(objectData);
+			}
+
+			return result;
+		}
 
         /// <summary>
         /// Returns a fully constructed sprite instances given a sprite's full name.
