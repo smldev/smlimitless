@@ -113,6 +113,16 @@ namespace SMLimitless
             }
         }
 
+		/// <summary>
+		/// Gets or sets a value indicating whether the collision debugger is active.
+		/// </summary>
+		public static bool CollisionDebuggerActive { get; set; }
+
+		/// <summary>
+		/// Gets or sets the current <see cref="Forms.CollisionDebuggerForm"/> instance.
+		/// </summary>
+		public static CollisionDebuggerForm CollisionDebuggerForm { get; set; }
+
 		static GameServices()
 		{
 			DebugForm = new DebugForm();

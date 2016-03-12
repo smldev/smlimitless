@@ -4154,6 +4154,23 @@
             <param name="jsonEntry">A JSON token containing two comma-delimited numbers.</param>
             <returns>A Vector2 converted from the token.</returns>
         </member>
+        <member name="F:SMLimitless.Forms.CollisionDebuggerForm.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Forms.CollisionDebuggerForm.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:SMLimitless.Forms.CollisionDebuggerForm.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
         <member name="T:SMLimitless.Forms.PhysicsSettingsEditorForm">
             <summary>
             A form which contains sliders to adjust various physics properties of objects.
@@ -4239,6 +4256,16 @@
         <member name="P:SMLimitless.GameServices.GameObjectSize">
             <summary>
             Gets the standard size for a game object (tile/sprite/etc). Subject to change.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.GameServices.CollisionDebuggerActive">
+            <summary>
+            Gets or sets a value indicating whether the collision debugger is active.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.GameServices.CollisionDebuggerForm">
+            <summary>
+            Gets or sets the current <see cref="T:SMLimitless.Forms.CollisionDebuggerForm"/> instance.
             </summary>
         </member>
         <member name="M:SMLimitless.GameServices.InitializeServices(Microsoft.Xna.Framework.Graphics.GraphicsDevice,Microsoft.Xna.Framework.Graphics.SpriteBatch,Microsoft.Xna.Framework.Content.ContentManager)">

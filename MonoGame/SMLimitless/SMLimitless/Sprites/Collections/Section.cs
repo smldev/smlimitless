@@ -45,6 +45,11 @@ namespace SMLimitless.Sprites.Collections
 		internal List<Sprite> SpritesToAddOnNextFrame { get; } = new List<Sprite>();
 		internal EditorSelectedObject editorSelectedObject = new EditorSelectedObject();
 
+		private bool isCollisionDebuggingInitialized = false;
+		internal Sprite CollisionDebugSelectedSprite { get; set; }
+		private List<Tile> collisionDebugCollidedTiles = new List<Tile>();
+		private CollisionDebugSelectSprite selectorSprite = new CollisionDebugSelectSprite();
+
 		internal List<Layer> Layers { get; set; }
 		internal Layer MainLayer { get; set; }
 		internal List<Path> Paths { get; set; }
@@ -72,12 +77,26 @@ namespace SMLimitless.Sprites.Collections
 				Layers.ForEach(l => l.Initialize());
 				Sprites.ForEach(s => s.Initialize(this));
 				editorSelectedObject.Initialize(this);
+				selectorSprite.Initialize(this);
 
 				CameraSystem = new CameraSystem(Camera, Bounds);
 				irisEffect = new IrisEffect(Camera.Viewport.Center);
 
 				isInitialized = true;
 			}
+		}
+
+		private void InitializeCollisionDebugging()
+		{
+			GameServices.CollisionDebuggerForm.Section = this;
+			Sprites.Add(selectorSprite);
+			isCollisionDebuggingInitialized = true;
+		}
+
+		private void UninitializeCollisionDebugging()
+		{
+			selectorSprite.RemoveOnNextFrame = true;
+			isCollisionDebuggingInitialized = false;
 		}
 
 		public void LoadContent()
@@ -105,6 +124,9 @@ namespace SMLimitless.Sprites.Collections
 
 			if (!EditorActive)
 			{
+				if (GameServices.CollisionDebuggerActive && !isCollisionDebuggingInitialized) { InitializeCollisionDebugging(); }
+				else if (!GameServices.CollisionDebuggerActive && isCollisionDebuggingInitialized) { UninitializeCollisionDebugging(); }
+
 				Tiles.ForEach(t => t.Update());
 				Sprites.ForEach(s => s.Update());
 				Sprites.Update();
@@ -127,6 +149,8 @@ namespace SMLimitless.Sprites.Collections
 
 		private void UpdatePhysics()
 		{
+			collisionDebugCollidedTiles.Clear();
+
 			foreach (Sprite sprite in Sprites)
 			{
 				// -1: up/left, 0: none, 1: down/right
@@ -135,6 +159,9 @@ namespace SMLimitless.Sprites.Collections
 				Vector2 adjacentCell = new Vector2(float.NaN);				// Stores the grid cell number of the cell adjacent to the current cell.
 				float delta = GameServices.GameTime.GetElapsedSeconds();    // The number of seconds that have elapsed since the last Update call.
 				Point intSpritePosition = Point.Zero;
+
+				int numberOfCollidingTiles = 0;
+				bool slopeCollisionOccurred = false;
 
 				// Resolution with the sloped side of a sloped tile
 				sprite.Position = new Vector2((sprite.Position.X + sprite.Velocity.X * delta), sprite.Position.Y);  // Move the sprite horizontally by its horizontal velocity.
@@ -148,7 +175,7 @@ namespace SMLimitless.Sprites.Collections
 					{
 						for (int x = (int)cellRangeTopLeft.X; x <= (int)cellRangeBottomRight.X; x++)
 						{
-							Tile tile = layer.GetTile(x, y);
+							Tile tile = layer.SafeGetTile(new Vector2(x, y));
 							if (tile != null && tile.TileShape == CollidableShape.RightTriangle)
 							{
 								HorizontalDirection tileSlopeDirection = tile.SlopedSides.GetHorizontalDirection();
@@ -177,6 +204,10 @@ namespace SMLimitless.Sprites.Collections
 									slopeResolutionDirection = (tile.SlopedSides == RtSlopedSides.TopRight) ? -1 : 1;
 									sprite.Position = new Vector2(sprite.Position.X, (sprite.Position.Y + resolutionDistance.Y));
 									sprite.HandleTileCollision(tile, resolutionDistance);
+
+									numberOfCollidingTiles++;
+									collisionDebugCollidedTiles.Add(tile);
+									slopeCollisionOccurred = true;
 								}
 								else
 								{
@@ -195,7 +226,7 @@ namespace SMLimitless.Sprites.Collections
 					{
 						for (int x = (int)cellRangeTopLeft.X; x <= (int)cellRangeBottomRight.X; x++)	// For each cell intersected by the sprite...
 						{
-							Tile tile = layer.GetTile(x, y);	// Get the tile in the cell.
+							Tile tile = layer.SafeGetTile(new Vector2(x, y));	// Get the tile in the cell.
 							if (tile != null) // && tile.TileShape == CollidableShape.Rectangle)					// If there's a rectangular tile here...
 							{
 								Vector2 resolutionDistance = tile.GetCollisionResolution(sprite);																			// Get the resolution distance between this tile and the sprite.
@@ -212,6 +243,9 @@ namespace SMLimitless.Sprites.Collections
 									resolutionDirection = Math.Sign(resolutionDistance.X);											// The resolution direction is equal to the sign of the resolution distance.
 									sprite.Position = new Vector2((sprite.Position.X + resolutionDistance.X), sprite.Position.Y);   // Move the sprite to resolve the collision.
 									sprite.HandleTileCollision(tile, resolutionDistance);
+
+									numberOfCollidingTiles++;
+									collisionDebugCollidedTiles.Add(tile);
 								}
 								else
 								{
@@ -237,7 +271,7 @@ namespace SMLimitless.Sprites.Collections
 					{
 						for (int x = (int)cellRangeTopLeft.X; x <= (int)cellRangeBottomRight.X; x++)    // For every cell the sprite intersects...
 						{
-							Tile tile = layer.GetTile(x, y);    // Get the tile inside the cell.
+							Tile tile = layer.SafeGetTile(new Vector2(x, y));    // Get the tile inside the cell.
 							if (tile != null)                   // If there's a tile here...
 							{
 								Vector2 resolutionDistance = tile.GetCollisionResolution(sprite);                           // Determine the resolution distance between this tile and the sprite.
@@ -254,6 +288,9 @@ namespace SMLimitless.Sprites.Collections
 									sprite.Position = new Vector2(sprite.Position.X, sprite.Position.Y + resolutionDistance.Y); // Move the sprite vertically by the resolution distance.
 									sprite.Velocity = new Vector2(sprite.Velocity.X, 0f);                                       // Stop the sprite's vertical movement.
 									sprite.HandleTileCollision(tile, resolutionDistance);
+
+									numberOfCollidingTiles++;
+									collisionDebugCollidedTiles.Add(tile);
 								}
 								else  // ...but if the last vertical resolution was in the opposite direction...
 								{
@@ -265,8 +302,11 @@ namespace SMLimitless.Sprites.Collections
 					}
 				}
 
-				nextSprite:
-				{ /* empty statement for target of label */ }
+			nextSprite:
+				if (sprite == CollisionDebugSelectedSprite && GameServices.CollisionDebuggerActive)
+				{
+					GameServices.CollisionDebuggerForm.Update(numberOfCollidingTiles, slopeCollisionOccurred);
+				}
 
 				foreach (var collidableSprite in Sprites.GetItemsNearItem(sprite))
 				{
@@ -284,6 +324,14 @@ namespace SMLimitless.Sprites.Collections
 			}
 		}
 
+		private void UpdateCollisionDebug()
+		{
+			if (GameServices.CollisionDebuggerActive)
+			{
+				
+			}
+		}
+
 		public void Draw()
 		{
 			Background.Draw();
@@ -292,7 +340,30 @@ namespace SMLimitless.Sprites.Collections
 			editorSelectedObject.Draw();
 			CameraSystem.Draw(debug: false);
 			GameServices.DrawStringDefault(debugText);
+			DrawCollisionDebug();
 			irisEffect.Draw();
+		}
+
+		private void DrawCollisionDebug()
+		{
+			if (GameServices.CollisionDebuggerActive && CollisionDebugSelectedSprite != null)
+			{
+				// Draw a rectangle outline around the selected sprite.
+				GameServices.SpriteBatch.DrawRectangleEdges(CollisionDebugSelectedSprite.Hitbox.ToRectangle(), Color.Red);
+
+				// Draw the hitbox of every collided tile.
+				foreach (Tile tile in collisionDebugCollidedTiles)
+				{
+					if (tile.TileShape == CollidableShape.Rectangle)
+					{
+						GameServices.SpriteBatch.DrawRectangleEdges(((BoundingRectangle)tile.Hitbox).ToRectangle(), Color.LimeGreen);
+					}
+					else if (tile.TileShape == CollidableShape.RightTriangle)
+					{
+						((RightTriangle)tile.Hitbox).Draw(false);
+					}
+				}
+			}
 		}
 
 		private void TempUpdate() 
@@ -439,6 +510,16 @@ namespace SMLimitless.Sprites.Collections
 			if (sprite == null) { throw new ArgumentNullException(nameof(sprite), "The sprite to remove from the section was not null."); }
 
 			Sprites.Remove(sprite);
+		}
+
+		internal void CollisionDebugSelectSprite(Sprite sprite)
+		{
+			if (sprite == null) { throw new ArgumentNullException(nameof(sprite), "The sprite to select for collision debugging was null."); }
+
+			CollisionDebugSelectedSprite = sprite;
+			CameraSystem.TrackingObjects.Clear();
+			CameraSystem.TrackingObjects.Add(sprite);
+			GameServices.CollisionDebuggerForm.SelectedSprite = sprite;
 		}
 	}
 }

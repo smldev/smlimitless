@@ -100,6 +100,12 @@
     <Compile Include="Extensions\Texture2DExtensions.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="Extensions\Vector2Extensions.cs" />
+    <Compile Include="Forms\CollisionDebuggerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\CollisionDebuggerForm.Designer.cs">
+      <DependentUpon>CollisionDebuggerForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\PhysicsSettingsEditorForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -170,6 +176,7 @@
     <Compile Include="Sprites\Collections\TestSectionGenerator.cs" />
     <Compile Include="Sprites\Components\HealthComponent.cs" />
     <Compile Include="Sprites\Components\WalkerComponent.cs" />
+    <Compile Include="Sprites\InternalSprites\CollisionDebugSelectSprite.cs" />
     <Compile Include="Sprites\InternalSprites\CollisionMode.cs" />
     <Compile Include="Sprites\InternalSprites\EditorCameraTrackingObject.cs" />
     <Compile Include="Sprites\InternalSprites\EditorSelectedObject.cs" />
@@ -237,6 +244,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Editor\EditorForm.resx">
       <DependentUpon>EditorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\CollisionDebuggerForm.resx">
+      <DependentUpon>CollisionDebuggerForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\PhysicsSettingsEditorForm.resx">
       <DependentUpon>PhysicsSettingsEditorForm.cs</DependentUpon>

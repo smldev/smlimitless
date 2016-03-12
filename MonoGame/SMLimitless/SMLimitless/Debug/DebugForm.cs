@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using SMLimitless.Forms;
 
 namespace SMLimitless.Debug
 {
@@ -128,6 +129,22 @@ namespace SMLimitless.Debug
 					break;
 				case "physedit":
 					GameServices.PhysicsSettingsEditorForm.Show();
+					break;
+				case "colldebug":
+					if (!GameServices.CollisionDebuggerActive)
+					{
+						// Activate the collision debugger
+						GameServices.CollisionDebuggerActive = true;
+						GameServices.CollisionDebuggerForm = new CollisionDebuggerForm();
+						GameServices.CollisionDebuggerForm.Show();
+					}
+					else
+					{
+						// Disable the collision debugger
+						GameServices.CollisionDebuggerActive = false;
+						GameServices.CollisionDebuggerForm.Close();
+						GameServices.CollisionDebuggerForm = null;
+					}
 					break;
 				default:
 					AddToLogText(string.Format("The command \"{0}\" does not exist.", command));

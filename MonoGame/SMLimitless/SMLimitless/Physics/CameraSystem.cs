@@ -91,7 +91,7 @@ namespace SMLimitless.Physics
 
 		private bool ZoomOutRequired()
 		{
-			if (TrackingObjects.Count <= 1) { return false; }
+			if (TrackingObjects.Count <= 1 || GameServices.CollisionDebuggerActive) { return false; }
 
 			bool result = false;
 
@@ -149,6 +149,13 @@ namespace SMLimitless.Physics
 			else if (ZoomInRequired())
 			{
 				camera.Zoom = MathHelper.Clamp((camera.Zoom + (ZoomRate * delta)), (1f / MaximumZoomFactor.Value), 1f);
+			}
+
+			// If the collision debugger is active, we need to zoom in really close.
+			const float collisionDebugMaxZoomFactorMultiplier = 8f;
+			if (GameServices.CollisionDebuggerActive && TrackingObjects.Any() && !(TrackingObjects.First().GetType().FullName.Contains("Debug")))
+			{
+				camera.Zoom *= collisionDebugMaxZoomFactorMultiplier;
 			}
 
 			// Set up some variables to determine where we should be horizontally and vertically.

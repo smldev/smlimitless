@@ -22,7 +22,14 @@ namespace SMLimitless.Extensions
         /// <returns>The number of elapsed seconds since the last update.</returns>
         public static float GetElapsedSeconds(this GameTime gameTime)
         {
-            return (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (!GameServices.CollisionDebuggerActive)
+			{
+				return (float)gameTime.ElapsedGameTime.TotalSeconds;
+			}
+			else
+			{
+				return ((float)gameTime.ElapsedGameTime.TotalSeconds) * GameServices.CollisionDebuggerForm.TimeScale;
+			}
         }
 
         /// <summary>
@@ -32,7 +39,14 @@ namespace SMLimitless.Extensions
         /// <returns>The number of elapsed milliseconds since the last update.</returns>
         public static float GetElapsedMilliseconds(this GameTime gameTime)
         {
-            return (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-        }
+			if (!GameServices.CollisionDebuggerActive)
+			{
+				return (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+			}
+			else
+			{
+				return ((float)gameTime.ElapsedGameTime.TotalMilliseconds) * GameServices.CollisionDebuggerForm.TimeScale;
+			}
+		}
     }
 }
