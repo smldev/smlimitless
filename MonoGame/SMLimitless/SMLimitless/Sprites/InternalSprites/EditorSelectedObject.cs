@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json.Linq;
 using SMLimitless.Editor;
+using SMLimitless.Extensions;
 using SMLimitless.Input;
 using SMLimitless.Sprites.Assemblies;
 
@@ -59,11 +60,10 @@ namespace SMLimitless.Sprites.InternalSprites
 
 		public override void Update()
 		{
-			Vector2 mousePosition = InputManager.MousePosition;
+			Vector2 mousePosition = Owner.MousePosition;
 			Vector2 newPosition = Vector2.Zero;
 
-			//newPosition.X = ((mousePosition.X / 16f) % 1f) * 16f - 8f;
-			//newPosition.Y = ((mousePosition.Y / 16f) % 1f) * 16f - 8f;
+			if (mousePosition.IsNaN()) { mousePosition = Position; }
 
 			newPosition.X = (float)Math.Floor(mousePosition.X / 16f) * 16f;
 			newPosition.Y = (float)Math.Floor(mousePosition.Y / 16f) * 16f;

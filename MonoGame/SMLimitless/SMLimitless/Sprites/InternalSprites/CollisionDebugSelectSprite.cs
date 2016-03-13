@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using SMLimitless.Extensions;
 using SMLimitless.Input;
 using SMLimitless.Sprites.Assemblies;
 
@@ -44,12 +45,24 @@ namespace SMLimitless.Sprites.InternalSprites
 
 		public override void Update()
 		{
-			Position = InputManager.MousePosition;
+			Vector2 mousePosition = Owner.MousePosition;
+			if (!mousePosition.IsNaN()) { Position = mousePosition; }
 			
 			if (InputManager.IsNewMousePress(MouseButtons.LeftButton) && (Owner.CollisionDebugSelectedSprite == null || Owner.CollisionDebugSelectedSprite == this))
 			{
-				Sprite sprite = Owner.Sprites.FirstOrDefault(s => s.Hitbox.Within(InputManager.MousePosition, true));
+				Sprite sprite = Owner.Sprites.FirstOrDefault(s => s.Hitbox.Within(Position, true));
 				if (sprite != null) { Owner.CollisionDebugSelectSprite(sprite); }
+			}
+
+			if (InputManager.IsNewMousePress(MouseButtons.RightButton))
+			{
+				Sprite sprite = Owner.Sprites.FirstOrDefault(s => s.Hitbox.Within(Position, true));
+				if (sprite != null && !sprite.GetType().FullName.Contains("Debug")) { sprite.BreakOnCollision = !sprite.BreakOnCollision; }
+				else
+				{
+					Tile tile = Owner.GetTileAtPosition(Position);
+					if (tile != null) { tile.BreakOnCollision = !tile.BreakOnCollision; }
+				}
 			}
 
 			base.Update();

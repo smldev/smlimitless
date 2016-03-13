@@ -33,6 +33,7 @@
 			this.TextTimeScale = new System.Windows.Forms.TextBox();
 			this.ButtonSetTimeScale = new System.Windows.Forms.Button();
 			this.TextCollisionInfo = new System.Windows.Forms.TextBox();
+			this.TextTileInfo = new System.Windows.Forms.TextBox();
 			this.SuspendLayout();
 			// 
 			// StaticLabelTimeScale
@@ -75,11 +76,23 @@
     "[y]\r\nAcceleration (px/sec²): [x], [y]\r\nColliding with [number] tiles\r\nSlope coll" +
     "ision? [yes/no]";
 			// 
+			// TextTileInfo
+			// 
+			this.TextTileInfo.Location = new System.Drawing.Point(17, 204);
+			this.TextTileInfo.Multiline = true;
+			this.TextTileInfo.Name = "TextTileInfo";
+			this.TextTileInfo.ReadOnly = true;
+			this.TextTileInfo.Size = new System.Drawing.Size(255, 102);
+			this.TextTileInfo.TabIndex = 4;
+			this.TextTileInfo.Text = "Tile Type: [type]\r\nLocation: [x], [y], Size: [x], [y]\r\nShape: [shape]\r\nSloped Sid" +
+    "es: [sides]\r\n";
+			// 
 			// CollisionDebuggerForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(284, 261);
+			this.ClientSize = new System.Drawing.Size(284, 318);
+			this.Controls.Add(this.TextTileInfo);
 			this.Controls.Add(this.TextCollisionInfo);
 			this.Controls.Add(this.ButtonSetTimeScale);
 			this.Controls.Add(this.TextTimeScale);
@@ -101,5 +114,6 @@
 		private System.Windows.Forms.TextBox TextTimeScale;
 		private System.Windows.Forms.Button ButtonSetTimeScale;
 		private System.Windows.Forms.TextBox TextCollisionInfo;
+		private System.Windows.Forms.TextBox TextTileInfo;
 	}
 }

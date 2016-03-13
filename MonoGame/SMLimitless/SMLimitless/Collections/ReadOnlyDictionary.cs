@@ -19,37 +19,6 @@ namespace SMLimitless.Collections
 		private readonly IDictionary<TKey, TValue> _dictionary;
 
 		/// <summary>
-		/// Gets a value from this dictionary for a given key.
-		/// </summary>
-		/// <param name="key">The key for which to get the value.</param>
-		/// <returns>The value for the given key.</returns>
-		public TValue this[TKey key]
-		{
-			get
-			{
-				return _dictionary[key];
-			}
-		}
-
-		/// <summary>
-		/// Gets a value from this dictionary for a given key.
-		/// Attempting to set a value will throw a NotSupportedException.
-		/// </summary>
-		/// <param name="key">The key for which to get the value.</param>
-		/// <returns>The value for the given key.</returns>
-		TValue IDictionary<TKey, TValue>.this[TKey key]
-		{
-			get
-			{
-				return this[key];
-			}
-			set
-			{
-				throw ReadOnlyException();
-			}
-		}
-
-		/// <summary>
 		/// Gets the number of items in this dictionary.
 		/// </summary>
 		public int Count
@@ -79,6 +48,37 @@ namespace SMLimitless.Collections
 		public ICollection<TValue> Values
 		{
 			get { return _dictionary.Values; }
+		}
+
+		/// <summary>
+		/// Gets a value from this dictionary for a given key.
+		/// </summary>
+		/// <param name="key">The key for which to get the value.</param>
+		/// <returns>The value for the given key.</returns>
+		public TValue this[TKey key]
+		{
+			get
+			{
+				return _dictionary[key];
+			}
+		}
+
+		/// <summary>
+		/// Gets a value from this dictionary for a given key.
+		/// Attempting to set a value will throw a NotSupportedException.
+		/// </summary>
+		/// <param name="key">The key for which to get the value.</param>
+		/// <returns>The value for the given key.</returns>
+		TValue IDictionary<TKey, TValue>.this[TKey key]
+		{
+			get
+			{
+				return this[key];
+			}
+			set
+			{
+				throw ReadOnlyException();
+			}
 		}
 
 		/// <summary>

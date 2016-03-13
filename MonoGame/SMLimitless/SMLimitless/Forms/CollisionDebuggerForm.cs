@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.Xna.Framework;
 using SMLimitless.Sprites;
 using SMLimitless.Sprites.Collections;
 
@@ -34,12 +35,17 @@ namespace SMLimitless.Forms
 			TimeScale = float.Parse(TextTimeScale.Text);
 		}
 
-		public void Update(int numberOfCollidingTiles, bool slopeCollisionOccurred)
+		public void Update(int numberOfCollidingTiles, bool slopeCollisionOccurred, Vector2 totalOffset)
 		{
-			TextCollisionInfo.Text = GetCollisionInformation(numberOfCollidingTiles, slopeCollisionOccurred);
+			TextCollisionInfo.Text = GetCollisionInformation(numberOfCollidingTiles, slopeCollisionOccurred, totalOffset);
 		}
 
-		private string GetCollisionInformation(int numberOfCollidingTiles, bool slopeCollisionOccurred)
+		public void SetTileInfo(Tile tile)
+		{
+			TextTileInfo.Text = GetTileInformation(tile);
+		}
+
+		private string GetCollisionInformation(int numberOfCollidingTiles, bool slopeCollisionOccurred, Vector2 totalOffset)
 		{
 			if (SelectedSprite == null) { return "No sprite selected."; }
 
@@ -50,8 +56,22 @@ namespace SMLimitless.Forms
 			resultBuilder.AppendLine($"Velocity (px/sec): {SelectedSprite.Velocity.X.ToString("F1")}, {SelectedSprite.Velocity.Y.ToString("F1")}");
 			resultBuilder.AppendLine($"Acceleration (px/sec²): {SelectedSprite.Acceleration.X.ToString("F1")}, {SelectedSprite.Acceleration.Y.ToString("F1")}");
 			resultBuilder.AppendLine($"Embedded? {((SelectedSprite.IsEmbedded) ? "Yes" : "No")}");
+			resultBuilder.AppendLine($"Total offset: {totalOffset.X.ToString("F1")}, {totalOffset.Y.ToString("F1")}");
 			resultBuilder.AppendLine($"Colliding with {numberOfCollidingTiles} tiles.");
 			resultBuilder.AppendLine($"Slope collisions? {((slopeCollisionOccurred) ? "Yes" : "No" )}");
+
+			return resultBuilder.ToString();
+		}
+
+		private string GetTileInformation(Tile tile)
+		{
+			if (tile == null) { return "No tile under cursor."; }
+
+			StringBuilder resultBuilder = new StringBuilder();
+			resultBuilder.AppendLine($"Tile Type: {tile.GetType().FullName}");
+			resultBuilder.Append($"Position: {tile.Position.X}, {tile.Position.Y}, Size: {tile.Size.X}, {tile.Size.Y}");
+			resultBuilder.AppendLine($"Tile Shape: {tile.TileShape}");
+			resultBuilder.AppendLine($"Sloped Sides: {((tile.TileShape == Physics.CollidableShape.RightTriangle) ? tile.SlopedSides.ToString() : "N/A")}");
 
 			return resultBuilder.ToString();
 		}

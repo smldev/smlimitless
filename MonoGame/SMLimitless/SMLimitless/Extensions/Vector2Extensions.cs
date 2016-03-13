@@ -29,29 +29,22 @@ namespace SMLimitless.Extensions
 		}
 
 		/// <summary>
-		/// Returns a vector from a given vector moved by a given distance in a given cardinal direction.
+		/// Converts a string containing compact vectors into a list vectors.
 		/// </summary>
-		/// <param name="vector">The original vector.</param>
-		/// <param name="direction">The direction in which the return vector is moved.</param>
-		/// <param name="distance">The distance by which to move the return vector.</param>
-		/// <returns>A vector moved by the given distance in the given direction.</returns>
-		public static Vector2 Move(this Vector2 vector, Direction direction, float distance)
+		/// <param name="value">The string containing the compact vectors.</param>
+		/// <returns>A list of vectors.</returns>
+		public static List<Vector2> DeserializeCompact(this string value)
 		{
-			switch (direction)
+			var result = new List<Vector2>();
+			var values = value.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+
+			if (values.Length == 0)
 			{
-				case Direction.None:
-					throw new ArgumentException("The value of None is not a valid direction.", nameof(direction));
-				case Direction.Up:
-					return new Vector2(vector.X, vector.Y - distance);
-				case Direction.Down:
-					return new Vector2(vector.X, vector.Y + distance);
-				case Direction.Left:
-					return new Vector2(vector.X - distance, vector.Y);
-				case Direction.Right:
-					return new Vector2(vector.X + distance, vector.Y);
-				default:
-					throw new ArgumentOutOfRangeException(nameof(direction), $"An invalid Direction value was passed. Expected between 1 and 4, got {direction}.");
+				throw new ArgumentException("Vector2Extensions.DeserializeCompact(this string): Input string was in an invalid format.");
 			}
+
+			values.ForEach(v => result.Add(Parse(v)));
+			return result;
 		}
 
 		/// <summary>
@@ -87,79 +80,21 @@ namespace SMLimitless.Extensions
 		}
 
 		/// <summary>
-		/// Compares the components of one vector to another.
+		/// Converts a string, formatted as "x,y", into a Vector2.
 		/// </summary>
-		/// <param name="left">The first vector.</param>
-		/// <param name="right">The second vector.</param>
-		/// <returns>True if left is greater than right, false if otherwise.</returns>
-		public static bool GreaterThan(this Vector2 left, Vector2 right)
+		/// <param name="value">The string from which to convert.</param>
+		/// <returns>A Vector2 containing the values of the string.</returns>
+		public static Vector2 FromString(this string value)
 		{
-			return (left.X > right.X) && (left.Y > right.Y);
-		}
+			string[] values = value.Split(',');
+			values[1].Trim();
 
-		/// <summary>
-		/// Compares the components of one vector to another.
-		/// </summary>
-		/// <param name="left">The first vector.</param>
-		/// <param name="right">The second vector.</param>
-		/// <returns>True if left is greater than or equal to right, false if otherwise.</returns>
-		public static bool GreaterThanOrEqualTo(this Vector2 left, Vector2 right)
-		{
-			return (left.X >= right.X) && (left.Y >= right.Y);
-		}
+			float x, y;
 
-		public static bool GreaterThan(this Vector2 left, float right)
-		{
-			return (left.X > right) && (left.Y > right);
-		}
+			if (!float.TryParse(values[0], out x)) { throw new ArgumentException(string.Format("Vector2Extensions.FromString(this string): Invalid value for X component. Got {0}.", values[0])); }
+			if (!float.TryParse(values[1], out y)) { throw new ArgumentException(string.Format("Vector2Extensions.FromString(this string): Invalid value for Y component. Got {0}.", values[1])); }
 
-		public static bool GreaterThanOrEqualTo(this Vector2 left, float right)
-		{
-			return (left.X >= right) && (left.Y >= right);
-		}
-
-		/// <summary>
-		/// Checks if one or both of the components of a Vector2 are equal to Single.NaN.
-		/// </summary>
-		/// <param name="vector">The Vector2 to check.</param>
-		/// <returns>True if one or both of the components equal Single.NaN, false if neither do.</returns>
-		[System.Diagnostics.DebuggerStepThrough]
-		public static bool IsNaN(this Vector2 vector)
-		{
-			return float.IsNaN(vector.X) || float.IsNaN(vector.Y);
-		}
-
-		/// <summary>
-		/// Compares the components of one vector to another.
-		/// </summary>
-		/// <param name="left">The first vector.</param>
-		/// <param name="right">The second vector.</param>
-		/// <returns>True if left is less than right, false if otherwise.</returns>
-		public static bool LessThan(this Vector2 left, Vector2 right)
-		{
-			return (left.X < right.X) && (left.Y < right.Y);
-		}
-
-		/// <summary>
-		/// Compares the components of one vector to another.
-		/// </summary>
-		/// <param name="left">The first vector.</param>
-		/// <param name="right">The second vector.</param>
-		/// <returns>True if left is less than or equal to right, false if otherwise.</returns>
-		public static bool LessThanOrEqualTo(this Vector2 left, Vector2 right)
-		{
-			return (left.X <= right.X) && (left.Y <= right.Y);
-		}
-
-		/// <summary>
-		/// Divides the components of a vector by another, and returns the remainder.
-		/// </summary>
-		/// <param name="a">The divisor vector.</param>
-		/// <param name="b">The dividend vector.</param>
-		/// <returns>The remainder of the quotient.</returns>
-		public static Vector2 Mod(this Vector2 a, Vector2 b)
-		{
-			return new Vector2(a.X % b.X, a.Y % b.Y);
+			return new Vector2(x, y);
 		}
 
 		/// <summary>
@@ -174,6 +109,18 @@ namespace SMLimitless.Extensions
 			return MathHelper.ToDegrees((float)Math.Atan2(b.Y - a.Y, b.X - a.X));
 		}
 
+		public static FlaggedDirection GetIntersectionDirection(this Vector2 intersect)
+		{
+			FlaggedDirection result = FlaggedDirection.None;
+			if (intersect.X < 0f) { result |= FlaggedDirection.Left; }
+			else if (intersect.X > 0f) { result |= FlaggedDirection.Right; }
+
+			if (intersect.Y < 0f) { result |= FlaggedDirection.Up; }
+			else if (intersect.Y > 0f) { result |= FlaggedDirection.Down; }
+
+			return result;
+		}
+
 		public static Direction GetResolutionDirection(this Vector2 intersect)
 		{
 			if (intersect.X != 0f && intersect.Y != 0f) { throw new ArgumentException($"The intersect of {intersect} must have at least one zero component."); }
@@ -185,16 +132,36 @@ namespace SMLimitless.Extensions
 			else { return Direction.None; }
 		}
 
-		public static FlaggedDirection GetIntersectionDirection(this Vector2 intersect)
+		/// <summary>
+		/// Compares the components of one vector to another.
+		/// </summary>
+		/// <param name="left">The first vector.</param>
+		/// <param name="right">The second vector.</param>
+		/// <returns>True if left is greater than right, false if otherwise.</returns>
+		public static bool GreaterThan(this Vector2 left, Vector2 right)
 		{
-			FlaggedDirection result = FlaggedDirection.None;
-			if (intersect.X < 0f) { result |= FlaggedDirection.Left; }
-			else if (intersect.X > 0f) { result |= FlaggedDirection.Right; }
+			return (left.X > right.X) && (left.Y > right.Y);
+		}
 
-			if (intersect.Y < 0f) { result |= FlaggedDirection.Up; }
-			else if (intersect.Y > 0f) { result |= FlaggedDirection.Down; }
+		public static bool GreaterThan(this Vector2 left, float right)
+		{
+			return (left.X > right) && (left.Y > right);
+		}
 
-			return result;
+		/// <summary>
+		/// Compares the components of one vector to another.
+		/// </summary>
+		/// <param name="left">The first vector.</param>
+		/// <param name="right">The second vector.</param>
+		/// <returns>True if left is greater than or equal to right, false if otherwise.</returns>
+		public static bool GreaterThanOrEqualTo(this Vector2 left, Vector2 right)
+		{
+			return (left.X >= right.X) && (left.Y >= right.Y);
+		}
+
+		public static bool GreaterThanOrEqualTo(this Vector2 left, float right)
+		{
+			return (left.X >= right) && (left.Y >= right);
 		}
 
 		/// <summary>
@@ -233,6 +200,17 @@ namespace SMLimitless.Extensions
 			}
 
 			return (largestSoFar.Y != float.MinValue) ? largestSoFar : Vector2.Zero;
+		}
+
+		/// <summary>
+		/// Checks if one or both of the components of a Vector2 are equal to Single.NaN.
+		/// </summary>
+		/// <param name="vector">The Vector2 to check.</param>
+		/// <returns>True if one or both of the components equal Single.NaN, false if neither do.</returns>
+		[System.Diagnostics.DebuggerStepThrough]
+		public static bool IsNaN(this Vector2 vector)
+		{
+			return float.IsNaN(vector.X) || float.IsNaN(vector.Y);
 		}
 
 		/// <summary>
@@ -275,6 +253,64 @@ namespace SMLimitless.Extensions
 			return (smallestSoFar != new Vector2(float.MaxValue)) ? smallestSoFar : Vector2.Zero;
 		}
 
+		/// <summary>
+		/// Compares the components of one vector to another.
+		/// </summary>
+		/// <param name="left">The first vector.</param>
+		/// <param name="right">The second vector.</param>
+		/// <returns>True if left is less than right, false if otherwise.</returns>
+		public static bool LessThan(this Vector2 left, Vector2 right)
+		{
+			return (left.X < right.X) && (left.Y < right.Y);
+		}
+
+		/// <summary>
+		/// Compares the components of one vector to another.
+		/// </summary>
+		/// <param name="left">The first vector.</param>
+		/// <param name="right">The second vector.</param>
+		/// <returns>True if left is less than or equal to right, false if otherwise.</returns>
+		public static bool LessThanOrEqualTo(this Vector2 left, Vector2 right)
+		{
+			return (left.X <= right.X) && (left.Y <= right.Y);
+		}
+
+		/// <summary>
+		/// Divides the components of a vector by another, and returns the remainder.
+		/// </summary>
+		/// <param name="a">The divisor vector.</param>
+		/// <param name="b">The dividend vector.</param>
+		/// <returns>The remainder of the quotient.</returns>
+		public static Vector2 Mod(this Vector2 a, Vector2 b)
+		{
+			return new Vector2(a.X % b.X, a.Y % b.Y);
+		}
+
+		/// <summary>
+		/// Returns a vector from a given vector moved by a given distance in a given cardinal direction.
+		/// </summary>
+		/// <param name="vector">The original vector.</param>
+		/// <param name="direction">The direction in which the return vector is moved.</param>
+		/// <param name="distance">The distance by which to move the return vector.</param>
+		/// <returns>A vector moved by the given distance in the given direction.</returns>
+		public static Vector2 Move(this Vector2 vector, Direction direction, float distance)
+		{
+			switch (direction)
+			{
+				case Direction.None:
+					throw new ArgumentException("The value of None is not a valid direction.", nameof(direction));
+				case Direction.Up:
+					return new Vector2(vector.X, vector.Y - distance);
+				case Direction.Down:
+					return new Vector2(vector.X, vector.Y + distance);
+				case Direction.Left:
+					return new Vector2(vector.X - distance, vector.Y);
+				case Direction.Right:
+					return new Vector2(vector.X + distance, vector.Y);
+				default:
+					throw new ArgumentOutOfRangeException(nameof(direction), $"An invalid Direction value was passed. Expected between 1 and 4, got {direction}.");
+			}
+		}
 		/// <summary>
 		/// Parses a string containing a vector value formatted "x,y".
 		/// </summary>
@@ -323,37 +359,6 @@ namespace SMLimitless.Extensions
 		}
 
 		/// <summary>
-		/// Converts a list of vectors into a string in which values are compact.
-		/// </summary>
-		/// <param name="values">The values to convert.</param>
-		/// <returns>A string containing all values of the list expressed in "x,y" form.</returns>
-		public static string SerializeCompact(this List<Vector2> values)
-		{
-			StringBuilder result = new StringBuilder();
-			values.ForEach(v => result.Append(string.Format("{0},{1};", v.X, v.Y)));
-			return result.ToString();
-		}
-
-		/// <summary>
-		/// Converts a string containing compact vectors into a list vectors.
-		/// </summary>
-		/// <param name="value">The string containing the compact vectors.</param>
-		/// <returns>A list of vectors.</returns>
-		public static List<Vector2> DeserializeCompact(this string value)
-		{
-			var result = new List<Vector2>();
-			var values = value.Split(new char[] {';'}, StringSplitOptions.RemoveEmptyEntries);
-
-			if (values.Length == 0)
-			{
-				throw new ArgumentException("Vector2Extensions.DeserializeCompact(this string): Input string was in an invalid format.");
-			}
-
-			values.ForEach(v => result.Add(Parse(v)));
-			return result;
-		}
-
-		/// <summary>
 		/// Returns a string representation of a point suitable for JSON serialization.
 		/// </summary>
 		/// <param name="value">The point to serialize.</param>
@@ -364,68 +369,60 @@ namespace SMLimitless.Extensions
 		}
 
 		/// <summary>
-		/// Converts a string, formatted as "x,y", into a Vector2.
+		/// Converts a list of vectors into a string in which values are compact.
 		/// </summary>
-		/// <param name="value">The string from which to convert.</param>
-		/// <returns>A Vector2 containing the values of the string.</returns>
-		public static Vector2 FromString(this string value)
+		/// <param name="values">The values to convert.</param>
+		/// <returns>A string containing all values of the list expressed in "x,y" form.</returns>
+		public static string SerializeCompact(this List<Vector2> values)
 		{
-			string[] values = value.Split(',');
-			values[1].Trim();
-
-			float x, y;
-
-			if (!float.TryParse(values[0], out x)) { throw new ArgumentException(string.Format("Vector2Extensions.FromString(this string): Invalid value for X component. Got {0}.", values[0])); }
-			if (!float.TryParse(values[1], out y)) { throw new ArgumentException(string.Format("Vector2Extensions.FromString(this string): Invalid value for Y component. Got {0}.", values[1])); }
-
-			return new Vector2(x, y);
+			StringBuilder result = new StringBuilder();
+			values.ForEach(v => result.Append(string.Format("{0},{1};", v.X, v.Y)));
+			return result.ToString();
 		}
-
-		/// <summary>
-        /// Converts this Vector2 and another Vector2 into a rectangle.
-        /// </summary>
-        /// <param name="position">The Vector2 that will become the X and Y components of the rectangle.</param>
-        /// <param name="size">The Vector2 that will become the Width and Height components of the rectangle.</param>
-        /// <returns>A rectangle constructed from the two vectors.</returns>
-        /// <remarks>As the Rectangle type uses integers for components, any fractional component will be lost.</remarks>
-        public static Rectangle ToRectangle(this Vector2 position, Vector2 size)
-        {
-            return new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y);
-        }
-
-        /// <summary>
-        /// Converts a JToken value into a Vector2.
-        /// </summary>
-        /// <param name="jsonEntry">A JSON token containing two comma-delimited numbers.</param>
-        /// <returns>A Vector2 converted from the token.</returns>
-        public static Vector2 ToVector2(this JToken jsonEntry)
-        {
-            string json = jsonEntry.ToString();
-            string[] values = json.Split(',');
-
-            if (values.Length != 2)
-            {
-                throw new ArgumentException(string.Format("Vector2Extensions.ToVector2(JToken): Tried to turn a non-vector object into a vector.", json));
-            }
-
-            if (values[0].Contains("NaN") || values[1].Contains("NaN"))
-            {
-                return new Vector2(float.NaN, float.NaN);
-            }
-
-            values[1] = values[1].TrimStart(); // there's a space on the front
-            float x, y;
-            if (!float.TryParse(values[0], out x)) { throw new ArgumentException(string.Format("Vector2Extensions.ToVector2(JToken): Invalid value {0} for X component.", values[0])); }
-            if (!float.TryParse(values[1], out y)) { throw new ArgumentException(string.Format("Vector2Extensions.ToVector2(JToken): Invalid value {0} for Y component.", values[1])); }
-
-            return new Vector2(x, y);
-        }
-
 		public static Point ToPoint(this Vector2 vector)
 		{
 			return new Point((int)vector.X, (int)vector.Y);
 		}
 
+		/// <summary>
+		/// Converts this Vector2 and another Vector2 into a rectangle.
+		/// </summary>
+		/// <param name="position">The Vector2 that will become the X and Y components of the rectangle.</param>
+		/// <param name="size">The Vector2 that will become the Width and Height components of the rectangle.</param>
+		/// <returns>A rectangle constructed from the two vectors.</returns>
+		/// <remarks>As the Rectangle type uses integers for components, any fractional component will be lost.</remarks>
+		public static Rectangle ToRectangle(this Vector2 position, Vector2 size)
+		{
+			return new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y);
+		}
+
+		/// <summary>
+		/// Converts a JToken value into a Vector2.
+		/// </summary>
+		/// <param name="jsonEntry">A JSON token containing two comma-delimited numbers.</param>
+		/// <returns>A Vector2 converted from the token.</returns>
+		public static Vector2 ToVector2(this JToken jsonEntry)
+		{
+			string json = jsonEntry.ToString();
+			string[] values = json.Split(',');
+
+			if (values.Length != 2)
+			{
+				throw new ArgumentException(string.Format("Vector2Extensions.ToVector2(JToken): Tried to turn a non-vector object into a vector.", json));
+			}
+
+			if (values[0].Contains("NaN") || values[1].Contains("NaN"))
+			{
+				return new Vector2(float.NaN, float.NaN);
+			}
+
+			values[1] = values[1].TrimStart(); // there's a space on the front
+			float x, y;
+			if (!float.TryParse(values[0], out x)) { throw new ArgumentException(string.Format("Vector2Extensions.ToVector2(JToken): Invalid value {0} for X component.", values[0])); }
+			if (!float.TryParse(values[1], out y)) { throw new ArgumentException(string.Format("Vector2Extensions.ToVector2(JToken): Invalid value {0} for Y component.", values[1])); }
+
+			return new Vector2(x, y);
+		}
 		////public static bool EqualityWithinEpsilon(this Vector2 a, Vector2 b, float epsilon)
 		////{
 		// we have a lot of learning to do before this can work

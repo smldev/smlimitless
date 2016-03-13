@@ -75,21 +75,6 @@
             An internal dictionary which contains the values exposed as read-only.
             </summary>
         </member>
-        <member name="P:SMLimitless.Collections.ReadOnlyDictionary`2.Item(`0)">
-            <summary>
-            Gets a value from this dictionary for a given key.
-            </summary>
-            <param name="key">The key for which to get the value.</param>
-            <returns>The value for the given key.</returns>
-        </member>
-        <member name="P:SMLimitless.Collections.ReadOnlyDictionary`2.System#Collections#Generic#IDictionary{TKey,TValue}#Item(`0)">
-            <summary>
-            Gets a value from this dictionary for a given key.
-            Attempting to set a value will throw a NotSupportedException.
-            </summary>
-            <param name="key">The key for which to get the value.</param>
-            <returns>The value for the given key.</returns>
-        </member>
         <member name="P:SMLimitless.Collections.ReadOnlyDictionary`2.Count">
             <summary>
             Gets the number of items in this dictionary.
@@ -109,6 +94,21 @@
             <summary>
             Gets a collection of the values in this dictionary.
             </summary>
+        </member>
+        <member name="P:SMLimitless.Collections.ReadOnlyDictionary`2.Item(`0)">
+            <summary>
+            Gets a value from this dictionary for a given key.
+            </summary>
+            <param name="key">The key for which to get the value.</param>
+            <returns>The value for the given key.</returns>
+        </member>
+        <member name="P:SMLimitless.Collections.ReadOnlyDictionary`2.System#Collections#Generic#IDictionary{TKey,TValue}#Item(`0)">
+            <summary>
+            Gets a value from this dictionary for a given key.
+            Attempting to set a value will throw a NotSupportedException.
+            </summary>
+            <param name="key">The key for which to get the value.</param>
+            <returns>The value for the given key.</returns>
         </member>
         <member name="M:SMLimitless.Collections.ReadOnlyDictionary`2.#ctor">
             <summary>
@@ -255,13 +255,6 @@
             <param name="y">The Y-coordinate of the cell.</param>
             <returns>The object at the specified grid cell, or null if there is no object in the cell.</returns>
         </member>
-        <member name="M:SMLimitless.Collections.SizedGrid`1.DoesRangeAlignToGrid(System.Collections.Generic.IEnumerable{`0})">
-            <summary>
-            Returns a value indicating whether all items in an enumerable align to the grid.
-            </summary>
-            <param name="items">The items to check for alignment.</param>
-            <returns>True if all items align to the grid, false if they don't.</returns>
-        </member>
         <member name="M:SMLimitless.Collections.SizedGrid`1.Add(SMLimitless.Interfaces.IPositionable2)">
             <summary>
             Adds an item to the grid.
@@ -300,12 +293,12 @@
             <param name="position">The position to return for.</param>
             <returns>The object at the position, or null if there is no object.</returns>
         </member>
-        <member name="M:SMLimitless.Collections.SizedGrid`1.Draw(Microsoft.Xna.Framework.Color)">
+        <member name="M:SMLimitless.Collections.SizedGrid`1.DoesRangeAlignToGrid(System.Collections.Generic.IEnumerable{`0})">
             <summary>
-            Draws the cell borders of this grid.
+            Returns a value indicating whether all items in an enumerable align to the grid.
             </summary>
-            <param name="position">The position to start drawing the grid at.</param>
-            <param name="lineColor">The color of the cell lines.</param>
+            <param name="items">The items to check for alignment.</param>
+            <returns>True if all items align to the grid, false if they don't.</returns>
         </member>
         <member name="M:SMLimitless.Collections.SizedGrid`1.IndexWithinBounds(System.Int32,System.Int32)">
             <summary>
@@ -321,6 +314,13 @@
             </summary>
             <param name="point">The point to check.</param>
             <returns>True if the point falls within the grid, false if otherwise.</returns>
+        </member>
+        <member name="M:SMLimitless.Collections.SizedGrid`1.Draw(Microsoft.Xna.Framework.Color)">
+            <summary>
+            Draws the cell borders of this grid.
+            </summary>
+            <param name="position">The position to start drawing the grid at.</param>
+            <param name="lineColor">The color of the cell lines.</param>
         </member>
         <member name="T:SMLimitless.Collections.SparseCell`1">
             <summary>
@@ -373,6 +373,18 @@
             <param name="cCellSize">The size of this cell.</param>
             <param name="cCellNumber">The two-dimensional, zero-based index of this cell.</param>
         </member>
+        <member name="M:SMLimitless.Collections.SparseCell`1.Add(`0)">
+            <summary>
+            Adds an item to this cell.
+            </summary>
+            <param name="item">The item to add.</param>
+        </member>
+        <member name="M:SMLimitless.Collections.SparseCell`1.Remove(`0)">
+            <summary>
+            Removes an item from this cell.
+            </summary>
+            <param name="item">The item to remove.</param>
+        </member>
         <member name="M:SMLimitless.Collections.SparseCell`1.CreateBounds">
             <summary>
             Creates the bounding rectangle of this cell.
@@ -385,18 +397,6 @@
             </summary>
             <param name="item">The item to check for intersection.</param>
             <returns>True if the item intersects this cell (including a tangent, edges-only intersection), False if it does not.</returns>
-        </member>
-        <member name="M:SMLimitless.Collections.SparseCell`1.Add(`0)">
-            <summary>
-            Adds an item to this cell.
-            </summary>
-            <param name="item">The item to add.</param>
-        </member>
-        <member name="M:SMLimitless.Collections.SparseCell`1.Remove(`0)">
-            <summary>
-            Removes an item from this cell.
-            </summary>
-            <param name="item">The item to remove.</param>
         </member>
         <member name="T:SMLimitless.Collections.SparseCellGrid`1">
             <summary>
@@ -477,17 +477,6 @@
             </summary>
             <param name="item">The item to remove.</param>
         </member>
-        <member name="M:SMLimitless.Collections.SparseCellGrid`1.Update">
-            <summary>
-            Checks and updates the containing cells of all items that have moved since the last update.
-            Removes any empty cells.
-            </summary>
-        </member>
-        <member name="M:SMLimitless.Collections.SparseCellGrid`1.Draw">
-            <summary>
-            Draws each cell as white rectangular edges with their cell number printed in the corner.
-            </summary>
-        </member>
         <member name="M:SMLimitless.Collections.SparseCellGrid`1.AddItemToCell(`0,Microsoft.Xna.Framework.Point)">
             <summary>
             Adds an item to a given cell.
@@ -508,6 +497,17 @@
             </summary>
             <param name="item">The item to get the cells for.</param>
             <returns>The range of cells the item is in.</returns>
+        </member>
+        <member name="M:SMLimitless.Collections.SparseCellGrid`1.Update">
+            <summary>
+            Checks and updates the containing cells of all items that have moved since the last update.
+            Removes any empty cells.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Collections.SparseCellGrid`1.Draw">
+            <summary>
+            Draws each cell as white rectangular edges with their cell number printed in the corner.
+            </summary>
         </member>
         <member name="T:SMLimitless.Collections.SparseCellRange">
             <summary>
@@ -539,11 +539,6 @@
             </summary>
             <typeparam name="T">Any class.</typeparam>
         </member>
-        <member name="P:SMLimitless.Collections.Hierarchy`1.Data">
-            <summary>
-            Gets or sets the data contained within this node.
-            </summary>
-        </member>
         <member name="P:SMLimitless.Collections.Hierarchy`1.Parent">
             <summary>
             Gets the next level up in the hierarchy.
@@ -553,6 +548,11 @@
         <member name="P:SMLimitless.Collections.Hierarchy`1.Children">
             <summary>
             Gets a collection of the children of this node in the hierarchy.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Collections.Hierarchy`1.Data">
+            <summary>
+            Gets or sets the data contained within this node.
             </summary>
         </member>
         <member name="M:SMLimitless.Collections.Hierarchy`1.#ctor(`0)">
@@ -3773,7 +3773,7 @@
             A blank, 1x1 texture, used in drawing the primitives.
             </summary>
         </member>
-        <member name="F:SMLimitless.Extensions.SpriteBatchExtensions.initialized">
+        <member name="F:SMLimitless.Extensions.SpriteBatchExtensions.isInitialized">
             <summary>
             Set when the <see cref="M:SMLimitless.Extensions.SpriteBatchExtensions.Initialize(Microsoft.Xna.Framework.Graphics.SpriteBatch)"/> method is called.
             </summary>
@@ -3974,14 +3974,12 @@
             <param name="vector">The vector to get the absolute value of.</param>
             <returns>A vector with the absolute values of the components.</returns>
         </member>
-        <member name="M:SMLimitless.Extensions.Vector2Extensions.Move(Microsoft.Xna.Framework.Vector2,SMLimitless.Direction,System.Single)">
+        <member name="M:SMLimitless.Extensions.Vector2Extensions.DeserializeCompact(System.String)">
             <summary>
-            Returns a vector from a given vector moved by a given distance in a given cardinal direction.
+            Converts a string containing compact vectors into a list vectors.
             </summary>
-            <param name="vector">The original vector.</param>
-            <param name="direction">The direction in which the return vector is moved.</param>
-            <param name="distance">The distance by which to move the return vector.</param>
-            <returns>A vector moved by the given distance in the given direction.</returns>
+            <param name="value">The string containing the compact vectors.</param>
+            <returns>A list of vectors.</returns>
         </member>
         <member name="M:SMLimitless.Extensions.Vector2Extensions.Floor(Microsoft.Xna.Framework.Vector2)">
             <summary>
@@ -4006,6 +4004,21 @@
             <param name="divisor">The vector by which to divide the floored vector by.</param>
             <returns>A vector with both components floored and divided by the components in the divisor.</returns>
         </member>
+        <member name="M:SMLimitless.Extensions.Vector2Extensions.FromString(System.String)">
+            <summary>
+            Converts a string, formatted as "x,y", into a Vector2.
+            </summary>
+            <param name="value">The string from which to convert.</param>
+            <returns>A Vector2 containing the values of the string.</returns>
+        </member>
+        <member name="M:SMLimitless.Extensions.Vector2Extensions.GetAngleBetweenVectors(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Gets the angle between two given vectors.
+            </summary>
+            <param name="a">The first vector.</param>
+            <param name="b">The second vector.</param>
+            <returns>The angle between the vectors.</returns>
+        </member>
         <member name="M:SMLimitless.Extensions.Vector2Extensions.GreaterThan(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2)">
             <summary>
             Compares the components of one vector to another.
@@ -4022,12 +4035,40 @@
             <param name="right">The second vector.</param>
             <returns>True if left is greater than or equal to right, false if otherwise.</returns>
         </member>
+        <member name="M:SMLimitless.Extensions.Vector2Extensions.GreatestVectorByX(System.Collections.Generic.IEnumerable{Microsoft.Xna.Framework.Vector2})">
+            <summary>
+            Returns a vector with the largest X component, given a collection of vectors.
+            </summary>
+            <param name="vectors">A collection of vectors.</param>
+            <returns>The vector with the largest X component.</returns>
+        </member>
+        <member name="M:SMLimitless.Extensions.Vector2Extensions.GreatestVectorByY(System.Collections.Generic.IEnumerable{Microsoft.Xna.Framework.Vector2})">
+            <summary>
+            Returns a vector with the largest Y component, given a collection of vectors.
+            </summary>
+            <param name="vectors">A collection of vectors.</param>
+            <returns>The vector with the largest Y component.</returns>
+        </member>
         <member name="M:SMLimitless.Extensions.Vector2Extensions.IsNaN(Microsoft.Xna.Framework.Vector2)">
             <summary>
             Checks if one or both of the components of a Vector2 are equal to Single.NaN.
             </summary>
             <param name="vector">The Vector2 to check.</param>
             <returns>True if one or both of the components equal Single.NaN, false if neither do.</returns>
+        </member>
+        <member name="M:SMLimitless.Extensions.Vector2Extensions.LeastVectorByX(System.Collections.Generic.IEnumerable{Microsoft.Xna.Framework.Vector2})">
+            <summary>
+            Returns the vector with the lowest X component, given a collection of vectors.
+            </summary>
+            <param name="vectors">A collection of vectors.</param>
+            <returns>The vector with the lowest X component.</returns>
+        </member>
+        <member name="M:SMLimitless.Extensions.Vector2Extensions.LeastVectorByY(System.Collections.Generic.IEnumerable{Microsoft.Xna.Framework.Vector2})">
+            <summary>
+            Returns the vector with the lowest Y component, given a collection of vectors.
+            </summary>
+            <param name="vectors">The collection of vectors.</param>
+            <returns>The vector with the lowest Y component.</returns>
         </member>
         <member name="M:SMLimitless.Extensions.Vector2Extensions.LessThan(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2)">
             <summary>
@@ -4053,41 +4094,14 @@
             <param name="b">The dividend vector.</param>
             <returns>The remainder of the quotient.</returns>
         </member>
-        <member name="M:SMLimitless.Extensions.Vector2Extensions.GetAngleBetweenVectors(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2)">
+        <member name="M:SMLimitless.Extensions.Vector2Extensions.Move(Microsoft.Xna.Framework.Vector2,SMLimitless.Direction,System.Single)">
             <summary>
-            Gets the angle between two given vectors.
+            Returns a vector from a given vector moved by a given distance in a given cardinal direction.
             </summary>
-            <param name="a">The first vector.</param>
-            <param name="b">The second vector.</param>
-            <returns>The angle between the vectors.</returns>
-        </member>
-        <member name="M:SMLimitless.Extensions.Vector2Extensions.GreatestVectorByX(System.Collections.Generic.IEnumerable{Microsoft.Xna.Framework.Vector2})">
-            <summary>
-            Returns a vector with the largest X component, given a collection of vectors.
-            </summary>
-            <param name="vectors">A collection of vectors.</param>
-            <returns>The vector with the largest X component.</returns>
-        </member>
-        <member name="M:SMLimitless.Extensions.Vector2Extensions.GreatestVectorByY(System.Collections.Generic.IEnumerable{Microsoft.Xna.Framework.Vector2})">
-            <summary>
-            Returns a vector with the largest Y component, given a collection of vectors.
-            </summary>
-            <param name="vectors">A collection of vectors.</param>
-            <returns>The vector with the largest Y component.</returns>
-        </member>
-        <member name="M:SMLimitless.Extensions.Vector2Extensions.LeastVectorByX(System.Collections.Generic.IEnumerable{Microsoft.Xna.Framework.Vector2})">
-            <summary>
-            Returns the vector with the lowest X component, given a collection of vectors.
-            </summary>
-            <param name="vectors">A collection of vectors.</param>
-            <returns>The vector with the lowest X component.</returns>
-        </member>
-        <member name="M:SMLimitless.Extensions.Vector2Extensions.LeastVectorByY(System.Collections.Generic.IEnumerable{Microsoft.Xna.Framework.Vector2})">
-            <summary>
-            Returns the vector with the lowest Y component, given a collection of vectors.
-            </summary>
-            <param name="vectors">The collection of vectors.</param>
-            <returns>The vector with the lowest Y component.</returns>
+            <param name="vector">The original vector.</param>
+            <param name="direction">The direction in which the return vector is moved.</param>
+            <param name="distance">The distance by which to move the return vector.</param>
+            <returns>A vector moved by the given distance in the given direction.</returns>
         </member>
         <member name="M:SMLimitless.Extensions.Vector2Extensions.Parse(System.String)">
             <summary>
@@ -4110,20 +4124,6 @@
             <param name="value">The vectors to serialize.</param>
             <returns>A list of strings in the format of "X, Y".</returns>
         </member>
-        <member name="M:SMLimitless.Extensions.Vector2Extensions.SerializeCompact(System.Collections.Generic.List{Microsoft.Xna.Framework.Vector2})">
-            <summary>
-            Converts a list of vectors into a string in which values are compact.
-            </summary>
-            <param name="values">The values to convert.</param>
-            <returns>A string containing all values of the list expressed in "x,y" form.</returns>
-        </member>
-        <member name="M:SMLimitless.Extensions.Vector2Extensions.DeserializeCompact(System.String)">
-            <summary>
-            Converts a string containing compact vectors into a list vectors.
-            </summary>
-            <param name="value">The string containing the compact vectors.</param>
-            <returns>A list of vectors.</returns>
-        </member>
         <member name="M:SMLimitless.Extensions.Vector2Extensions.Serialize(Microsoft.Xna.Framework.Point)">
             <summary>
             Returns a string representation of a point suitable for JSON serialization.
@@ -4131,12 +4131,12 @@
             <param name="value">The point to serialize.</param>
             <returns>A string in the format "{x}, {y}".</returns>
         </member>
-        <member name="M:SMLimitless.Extensions.Vector2Extensions.FromString(System.String)">
+        <member name="M:SMLimitless.Extensions.Vector2Extensions.SerializeCompact(System.Collections.Generic.List{Microsoft.Xna.Framework.Vector2})">
             <summary>
-            Converts a string, formatted as "x,y", into a Vector2.
+            Converts a list of vectors into a string in which values are compact.
             </summary>
-            <param name="value">The string from which to convert.</param>
-            <returns>A Vector2 containing the values of the string.</returns>
+            <param name="values">The values to convert.</param>
+            <returns>A string containing all values of the list expressed in "x,y" form.</returns>
         </member>
         <member name="M:SMLimitless.Extensions.Vector2Extensions.ToRectangle(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2)">
             <summary>

@@ -27,7 +27,7 @@ namespace SMLimitless.Extensions
         /// <summary>
         /// Set when the <see cref="Initialize"/> method is called.
         /// </summary>
-        private static bool initialized;
+        private static bool isInitialized;
 
         /// <summary>
         /// Draws a texture to the screen.
@@ -147,11 +147,11 @@ namespace SMLimitless.Extensions
         /// <param name="spriteBatch">The SpriteBatch used to initialize.</param>
         public static void Initialize(this SpriteBatch spriteBatch)
         {
-            if (!initialized)
+            if (!isInitialized)
             {
                 blank = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
                 blank.SetData(new Color[] { Color.White });
-                initialized = true;
+                isInitialized = true;
             }
         }
     }

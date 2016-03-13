@@ -21,6 +21,7 @@ namespace SMLimitless.Editor
     /// an object's button on the level editor
     /// selection window.
     /// </summary>
+	[Obsolete]
     public struct EditorButton
     {
 		public Button Button { get; private set; }

@@ -19,11 +19,6 @@ namespace SMLimitless.Collections
     public class Hierarchy<T> where T : class
     {
         /// <summary>
-        /// Gets or sets the data contained within this node.
-        /// </summary>
-        public T Data { get; set; }
-
-        /// <summary>
         /// Gets the next level up in the hierarchy.
         /// Use .Add() to assign a parent.
         /// </summary>
@@ -33,6 +28,11 @@ namespace SMLimitless.Collections
         /// Gets a collection of the children of this node in the hierarchy.
         /// </summary>
         public List<Hierarchy<T>> Children { get; private set; }
+
+		/// <summary>
+		/// Gets or sets the data contained within this node.
+		/// </summary>
+		public T Data { get; set; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Hierarchy{T}"/> class.

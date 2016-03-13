@@ -137,6 +137,140 @@ namespace SMLimitless.Collections
         }
 
 		/// <summary>
+		/// Adds an item to the grid.
+		/// WARNING: This will overwrite any items that are
+		/// already present where the item will be placed.
+		/// </summary>
+		/// <param name="item">The item to add to the grid.</param>
+		public void Add(IPositionable2 item)
+		{
+			if (item.Position.X % CellWidth != 0 || item.Position.Y % CellHeight != 0)
+			{
+				throw new ArgumentException(string.Format("SizedGrid<T>.Add(IPositionable): The item's position does not align to the grid. Items must be aligned to ({0}, {1})-pixel boundaries. Item's position is {2}, {3}.", CellWidth, CellHeight, item.Position.X, item.Position.Y));
+			}
+			else if (item.Size.X % CellWidth != 0 || item.Size.Y % CellHeight != 0)
+			{
+				throw new ArgumentException(string.Format("SizedGrid<T>.Add(IPositionable): The item's size is not a multiple of the grid's cell size. Each grid cell has a size of {0}, {1}, and the item has a size of {2}, {3}.", CellWidth, CellHeight, item.Position.X, item.Position.Y));
+			}
+			else if (!Bounds.IntersectsIncludingEdges(item.Position))
+			{
+				throw new ArgumentException("Attempted to add an item that was outside the bounds of the grid. To add such an item, call AddWithResize instead.");
+			}
+
+			var startingCell = GetCellAtPosition(item.Position);
+			int widthInCells = (int)item.Size.X / CellWidth;
+			int heightInCells = (int)item.Size.Y / CellHeight;
+
+			for (int y = startingCell.Y; y < startingCell.Y + heightInCells; y++)
+			{
+				for (int x = startingCell.X; x < startingCell.X + widthInCells; x++)
+				{
+					if (this[x, y] != null)
+					{
+						Remove(this[x, y]);
+					}
+
+					this[x, y] = (T)item;
+				}
+			}
+		}
+
+		public void AddWithResize(T item)
+		{
+			// we don't need this right now
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Removes an item from the grid.
+		/// </summary>
+		/// <param name="item">The item to be removed from the grid.</param>
+		public void Remove(IPositionable2 item)
+		{
+			if (item == null)
+			{
+				throw new ArgumentNullException("item", "SizedGrid<T>.Remove(IPositionable): Cannot remove a null reference from the grid.");
+			}
+
+			var startingCell = GetCellAtPosition(item.Position);
+			int widthInCells = (int)item.Size.X / CellWidth;
+			int heightInCells = (int)item.Size.Y / CellHeight;
+
+			for (int y = startingCell.Y; y < startingCell.Y + heightInCells; y++)
+			{
+				for (int x = startingCell.X; x < startingCell.X + widthInCells; x++)
+				{
+					this[x, y] = default(T);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Returns a portion of this grid.
+		/// </summary>
+		/// <param name="x">The X-position on this grid of the top-left corner of the subgrid.</param>
+		/// <param name="y">The Y-position on this grid of the top-left corner of the subgrid.</param>
+		/// <param name="width">The width of the subgrid.</param>
+		/// <param name="height">The height of the subgrid.</param>
+		/// <returns>A portion of this grid.</returns>
+		public SizedGrid<T> GetSubgrid(int x, int y, int width, int height)
+		{
+			if (!IndexWithinBounds(x, y))
+			{
+				throw new ArgumentException(string.Format("SizedGrid.GetSubgrid(int, int, int, int): The starting position {0}, {1} is not within the grid.", x, y));
+			}
+
+			if (!IndexWithinBounds(x + width, y + height))
+			{
+				throw new ArgumentException(string.Format("SizedGrid.GetSubgrid(int, int, int, int): The ending position {0}, {1} is not within the grid.", x + width, y + height));
+			}
+
+			Vector2 subgridPosition = Position + new Vector2(x * CellWidth, y * CellWidth);
+			SizedGrid<T> result = new SizedGrid<T>(subgridPosition, CellWidth, CellWidth, width, height);
+			int resultX = 0, resultY = 0;
+
+			for (int yPos = y; yPos < y + height; yPos++)
+			{
+				for (int xPos = x; xPos < x + width; xPos++)
+				{
+					result[resultX, resultY] = this[xPos, yPos];
+					resultX++;
+				}
+
+				resultY++;
+				resultX = 0;
+			}
+
+			return result;
+		}
+
+		/// <summary>
+		/// Returns the cell number for a given position.
+		/// </summary>
+		/// <param name="position">The position to return for.</param>
+		/// <returns>The cell number for the given position.</returns>
+		public Point GetCellAtPosition(Vector2 position)
+		{
+			position = OffsetPosition(position);
+
+			int x = (int)(position.X / CellWidth);
+			int y = (int)(position.Y / CellHeight);
+
+			return new Point(x, y);
+		}
+
+		/// <summary>
+		/// Returns the object at the given position on the grid.
+		/// </summary>
+		/// <param name="position">The position to return for.</param>
+		/// <returns>The object at the position, or null if there is no object.</returns>
+		public T GetObjectAtPosition(Vector2 position)
+		{
+			Point cell = GetCellAtPosition(position);
+			return this[cell.X, cell.Y];
+		}
+
+		/// <summary>
 		/// Returns a value indicating whether all items in an enumerable align to the grid.
 		/// </summary>
 		/// <param name="items">The items to check for alignment.</param>
@@ -149,171 +283,6 @@ namespace SMLimitless.Collections
 				return offset.X % CellWidth == 0 && offset.Y % CellHeight == 0;
 			});
 		}
-
-        /// <summary>
-        /// Adds an item to the grid.
-        /// WARNING: This will overwrite any items that are
-        /// already present where the item will be placed.
-        /// </summary>
-        /// <param name="item">The item to add to the grid.</param>
-        public void Add(IPositionable2 item)
-        {
-            if (item.Position.X % CellWidth != 0 || item.Position.Y % CellHeight != 0)
-            {
-                throw new ArgumentException(string.Format("SizedGrid<T>.Add(IPositionable): The item's position does not align to the grid. Items must be aligned to ({0}, {1})-pixel boundaries. Item's position is {2}, {3}.", CellWidth, CellHeight, item.Position.X, item.Position.Y));
-            }
-            else if (item.Size.X % CellWidth != 0 || item.Size.Y % CellHeight != 0)
-            {
-                throw new ArgumentException(string.Format("SizedGrid<T>.Add(IPositionable): The item's size is not a multiple of the grid's cell size. Each grid cell has a size of {0}, {1}, and the item has a size of {2}, {3}.", CellWidth, CellHeight, item.Position.X, item.Position.Y));
-            }
-			else if (!Bounds.IntersectsIncludingEdges(item.Position))
-			{
-				throw new ArgumentException("Attempted to add an item that was outside the bounds of the grid. To add such an item, call AddWithResize instead.");
-			}
-
-			var startingCell = GetCellAtPosition(item.Position);
-            int widthInCells = (int)item.Size.X / CellWidth;
-            int heightInCells = (int)item.Size.Y / CellHeight;
-
-            for (int y = startingCell.Y; y < startingCell.Y + heightInCells; y++)
-            {
-                for (int x = startingCell.X; x < startingCell.X + widthInCells; x++)
-                {
-                    if (this[x, y] != null)
-                    {
-						Remove(this[x, y]);
-                    }
-
-                    this[x, y] = (T)item;
-                }
-            }
-        }
-
-		public void AddWithResize(T item)
-		{
-			// we don't need this right now
-			throw new NotImplementedException();
-		}
-
-        /// <summary>
-        /// Removes an item from the grid.
-        /// </summary>
-        /// <param name="item">The item to be removed from the grid.</param>
-        public void Remove(IPositionable2 item)
-        {
-            if (item == null)
-            {
-                throw new ArgumentNullException("item", "SizedGrid<T>.Remove(IPositionable): Cannot remove a null reference from the grid.");
-            }
-
-			var startingCell = GetCellAtPosition(item.Position);
-            int widthInCells = (int)item.Size.X / CellWidth;
-            int heightInCells = (int)item.Size.Y / CellHeight;
-
-            for (int y = startingCell.Y; y < startingCell.Y + heightInCells; y++)
-            {
-                for (int x = startingCell.X; x < startingCell.X + widthInCells; x++)
-                {
-                    this[x, y] = default(T);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Returns a portion of this grid.
-        /// </summary>
-        /// <param name="x">The X-position on this grid of the top-left corner of the subgrid.</param>
-        /// <param name="y">The Y-position on this grid of the top-left corner of the subgrid.</param>
-        /// <param name="width">The width of the subgrid.</param>
-        /// <param name="height">The height of the subgrid.</param>
-        /// <returns>A portion of this grid.</returns>
-        public SizedGrid<T> GetSubgrid(int x, int y, int width, int height)
-        {
-            if (!IndexWithinBounds(x, y))
-            {
-                throw new ArgumentException(string.Format("SizedGrid.GetSubgrid(int, int, int, int): The starting position {0}, {1} is not within the grid.", x, y));
-            }
-            
-            if (!IndexWithinBounds(x + width, y + height))
-            {
-                throw new ArgumentException(string.Format("SizedGrid.GetSubgrid(int, int, int, int): The ending position {0}, {1} is not within the grid.", x + width, y + height));
-            }
-
-			Vector2 subgridPosition = Position + new Vector2(x * CellWidth, y * CellWidth);
-            SizedGrid<T> result = new SizedGrid<T>(subgridPosition, CellWidth, CellWidth, width, height);
-            int resultX = 0, resultY = 0;
-
-            for (int yPos = y; yPos < y + height; yPos++)
-            {
-                for (int xPos = x; xPos < x + width; xPos++)
-                {
-                    result[resultX, resultY] = this[xPos, yPos];
-                    resultX++;
-                }
-
-                resultY++;
-                resultX = 0;
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Returns the cell number for a given position.
-        /// </summary>
-        /// <param name="position">The position to return for.</param>
-        /// <returns>The cell number for the given position.</returns>
-        public Point GetCellAtPosition(Vector2 position)
-        {
-			position = OffsetPosition(position);
-
-            int x = (int)(position.X / CellWidth);
-            int y = (int)(position.Y / CellHeight);
-
-            return new Point(x, y);
-        }
-
-        /// <summary>
-        /// Returns the object at the given position on the grid.
-        /// </summary>
-        /// <param name="position">The position to return for.</param>
-        /// <returns>The object at the position, or null if there is no object.</returns>
-        public T GetObjectAtPosition(Vector2 position)
-        {
-            Point cell = GetCellAtPosition(position);
-            return this[cell.X, cell.Y];
-        }
-
-        /// <summary>
-        /// Draws the cell borders of this grid.
-        /// </summary>
-        /// <param name="position">The position to start drawing the grid at.</param>
-        /// <param name="lineColor">The color of the cell lines.</param>
-        public void Draw(Color lineColor)
-        {
-            // The total number of vertical lines to draw is (height + 1).
-            // The total number of horizontal lines to draw is (width + 1).
-            float gridWidth = CellWidth * grid.Width;
-            float gridHeight = CellHeight * grid.Height;
-
-            float xPosition = Position.X;
-            float yPosition = Position.Y;
-
-            for (int y = 0; y <= grid.Height; y++)
-            {
-                GameServices.SpriteBatch.DrawLine(1f, lineColor, new Vector2(xPosition, yPosition), new Vector2(xPosition + gridWidth, yPosition));
-                yPosition += CellHeight;
-            }
-
-            yPosition = Position.Y;
-
-            for (int x = 0; x <= grid.Width; x++)
-            {
-                GameServices.SpriteBatch.DrawLine(1f, lineColor, new Vector2(xPosition, yPosition), new Vector2(xPosition, yPosition + gridHeight));
-                xPosition += CellWidth;
-            }
-        }
-
         /// <summary>
         /// Checks if a grid cell coordinate falls within the bounds of the grid.
         /// </summary>
@@ -343,6 +312,36 @@ namespace SMLimitless.Collections
 		private Vector2 OffsetPosition(Vector2 point)
 		{
 			return point - Position;
+		}
+
+		/// <summary>
+		/// Draws the cell borders of this grid.
+		/// </summary>
+		/// <param name="position">The position to start drawing the grid at.</param>
+		/// <param name="lineColor">The color of the cell lines.</param>
+		public void Draw(Color lineColor)
+		{
+			// The total number of vertical lines to draw is (height + 1).
+			// The total number of horizontal lines to draw is (width + 1).
+			float gridWidth = CellWidth * grid.Width;
+			float gridHeight = CellHeight * grid.Height;
+
+			float xPosition = Position.X;
+			float yPosition = Position.Y;
+
+			for (int y = 0; y <= grid.Height; y++)
+			{
+				GameServices.SpriteBatch.DrawLine(1f, lineColor, new Vector2(xPosition, yPosition), new Vector2(xPosition + gridWidth, yPosition));
+				yPosition += CellHeight;
+			}
+
+			yPosition = Position.Y;
+
+			for (int x = 0; x <= grid.Width; x++)
+			{
+				GameServices.SpriteBatch.DrawLine(1f, lineColor, new Vector2(xPosition, yPosition), new Vector2(xPosition, yPosition + gridHeight));
+				xPosition += CellWidth;
+			}
 		}
 
 		public IEnumerator<T> GetEnumerator()

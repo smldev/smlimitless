@@ -125,6 +125,8 @@ namespace SMLimitless.Sprites
 		public string InitialState { get; set; }
 		public string State { get; set; }
 
+		public bool BreakOnCollision { get; set; }
+
 		/// <summary>
 		/// Gets or sets the name of this tile to be used in event scripting.  This field is optional.
 		/// </summary>

@@ -93,6 +93,28 @@ namespace SMLimitless.Collections
 		}
 
 		/// <summary>
+		/// Adds an item to this cell.
+		/// </summary>
+		/// <param name="item">The item to add.</param>
+		public void Add(T item)
+		{
+			if (!ItemIntersectsCell(item)) { throw new ArgumentOutOfRangeException(nameof(item.Position), $"When trying to add an item to a sparse cell, the item was found to be outside of the cell. Please validate the positioning of the item or which cell it should go in. Expected range: from {new Vector2(Bounds.Top, Bounds.Left)} to {new Vector2(Bounds.Bottom, Bounds.Right)} (cell {cellNumber.X},{cellNumber.Y}). Item's actual properties: position {item.Position}, size {item.Size}"); }
+
+			cellItems.Add(item);
+		}
+
+		/// <summary>
+		/// Removes an item from this cell.
+		/// </summary>
+		/// <param name="item">The item to remove.</param>
+		public void Remove(T item)
+		{
+			////if (!cellItems.Contains(item)) { throw new ArgumentException("Tried to remove an item from a sparse cell that wasn't in the sparse cell. Please validate the item's cell.", nameof(item)); }
+
+			cellItems.Remove(item);
+		}
+
+		/// <summary>
 		/// Creates the bounding rectangle of this cell.
 		/// </summary>
 		/// <returns>The bounding rectangle of this cell.</returns>
@@ -119,28 +141,6 @@ namespace SMLimitless.Collections
 			}
 
 			return new BoundingRectangle(item.Position, item.Position + item.Size).IntersectsIncludingEdges(Bounds);
-		}
-
-		/// <summary>
-		/// Adds an item to this cell.
-		/// </summary>
-		/// <param name="item">The item to add.</param>
-		public void Add(T item)
-		{
-			if (!ItemIntersectsCell(item)) { throw new ArgumentOutOfRangeException(nameof(item.Position), $"When trying to add an item to a sparse cell, the item was found to be outside of the cell. Please validate the positioning of the item or which cell it should go in. Expected range: from {new Vector2(Bounds.Top, Bounds.Left)} to {new Vector2(Bounds.Bottom, Bounds.Right)} (cell {cellNumber.X},{cellNumber.Y}). Item's actual properties: position {item.Position}, size {item.Size}"); }
-
-			cellItems.Add(item);
-		}
-
-		/// <summary>
-		/// Removes an item from this cell.
-		/// </summary>
-		/// <param name="item">The item to remove.</param>
-		public void Remove(T item)
-		{
-			////if (!cellItems.Contains(item)) { throw new ArgumentException("Tried to remove an item from a sparse cell that wasn't in the sparse cell. Please validate the item's cell.", nameof(item)); }
-
-			cellItems.Remove(item);
 		}
 	}
 }

@@ -130,6 +130,8 @@ namespace SMLimitless.Sprites
 		{
 			get; set;
 		}
+
+		public bool BreakOnCollision { get; set; }
 		#endregion
 
 		#region Collision Properties (mode, hitbox, resting tile/slope)

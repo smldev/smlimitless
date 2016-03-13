@@ -122,7 +122,7 @@ namespace SMLimitless.Collections
 			LocalRemove(item);
 		}
 
-		public void RemoveAll(Predicate<T> predicate)
+		public void RemoveAllWhere(Predicate<T> predicate)
 		{
 			cells.Values.ForEach(c => c.Items.RemoveWhere(predicate));
 		}
@@ -156,6 +156,63 @@ namespace SMLimitless.Collections
 			{
 				cell.Value.Remove(item);
 			}
+		}
+
+		/// <summary>
+		/// Adds an item to a given cell.
+		/// </summary>
+		/// <param name="item">The item to add.</param>
+		/// <param name="cellNumber">The two-dimensional, zero-based index of the cell to which to add the item.</param>
+		private void AddItemToCell(T item, Point cellNumber)
+		{
+			if (!cells.ContainsKey(cellNumber))
+			{
+				cells.Add(cellNumber, new SparseCell<T>(CellSize, cellNumber));
+			}
+
+			cells[cellNumber].Add(item);
+		}
+
+		internal IEnumerable<T> GetItemsNearItem(T item)
+		{
+			SparseCellRange range = GetCellsItemIsIn(item);
+
+			for (int y = range.TopLeft.Y; y <= range.BottomRight.Y; y++)
+			{
+				for (int x = range.TopLeft.X; x <= range.BottomRight.X; x++)
+				{
+					if (Cells.ContainsKey(new Point(x, y)))
+					{
+						foreach (T itemInCell in Cells[new Point(x, y)].Items)
+						{
+							if (!ReferenceEquals(item, itemInCell)) { yield return itemInCell; }
+						}
+					}
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets the cell number at a given position.
+		/// </summary>
+		/// <param name="position">The position to get the cell number for.</param>
+		/// <returns>A two-dimensional, zero-based index of the cell that the given position is within.</returns>
+		internal Point GetCellNumberAtPosition(Vector2 position)
+		{
+			return new Point((int)Math.Floor(position.X / CellSize.X), (int)Math.Floor(position.Y / CellSize.Y));
+		}
+
+		/// <summary>
+		/// Gets a range containing the two-dimensional, zero-based indices of every cell a given item is in.
+		/// </summary>
+		/// <param name="item">The item to get the cells for.</param>
+		/// <returns>The range of cells the item is in.</returns>
+		private SparseCellRange GetCellsItemIsIn(T item)
+		{
+			Point cellTopLeft = GetCellNumberAtPosition(new Vector2(item.Position.X, item.Position.Y));
+			Point cellBottomRight = GetCellNumberAtPosition(new Vector2(item.Position.X + item.Size.X, item.Position.Y + item.Size.Y));
+
+			return new SparseCellRange(cellTopLeft, cellBottomRight);
 		}
 
 		/// <summary>
@@ -198,45 +255,6 @@ namespace SMLimitless.Collections
 				}
 			}
 		}
-
-		/// <summary>
-		/// Adds an item to a given cell.
-		/// </summary>
-		/// <param name="item">The item to add.</param>
-		/// <param name="cellNumber">The two-dimensional, zero-based index of the cell to which to add the item.</param>
-		private void AddItemToCell(T item, Point cellNumber)
-		{
-			if (!cells.ContainsKey(cellNumber))
-			{
-				cells.Add(cellNumber, new SparseCell<T>(CellSize, cellNumber));
-			}
-
-			cells[cellNumber].Add(item);
-		}
-
-		/// <summary>
-		/// Gets the cell number at a given position.
-		/// </summary>
-		/// <param name="position">The position to get the cell number for.</param>
-		/// <returns>A two-dimensional, zero-based index of the cell that the given position is within.</returns>
-		internal Point GetCellNumberAtPosition(Vector2 position)
-		{
-			return new Point((int)Math.Floor(position.X / CellSize.X), (int)Math.Floor(position.Y / CellSize.Y));
-		}
-
-		/// <summary>
-		/// Gets a range containing the two-dimensional, zero-based indices of every cell a given item is in.
-		/// </summary>
-		/// <param name="item">The item to get the cells for.</param>
-		/// <returns>The range of cells the item is in.</returns>
-		private SparseCellRange GetCellsItemIsIn(T item)
-		{
-			Point cellTopLeft = GetCellNumberAtPosition(new Vector2(item.Position.X, item.Position.Y));
-			Point cellBottomRight = GetCellNumberAtPosition(new Vector2(item.Position.X + item.Size.X, item.Position.Y + item.Size.Y));
-
-			return new SparseCellRange(cellTopLeft, cellBottomRight);
-		}
-
 		public IEnumerator<T> GetEnumerator()
 		{
 			foreach (T item in cells.SelectMany(c => cells.Values.SelectMany(v => v.Items)).Distinct()) // good god
@@ -248,25 +266,6 @@ namespace SMLimitless.Collections
 		IEnumerator IEnumerable.GetEnumerator()
 		{
 			return GetEnumerator();
-		}
-
-		internal IEnumerable<T> GetItemsNearItem(T item)
-		{
-			SparseCellRange range = GetCellsItemIsIn(item);
-
-			for (int y = range.TopLeft.Y; y <= range.BottomRight.Y; y++)
-			{
-				for (int x = range.TopLeft.X; x <= range.BottomRight.X; x++)
-				{
-					if (Cells.ContainsKey(new Point(x, y)))
-					{
-						foreach (T itemInCell in Cells[new Point(x, y)].Items)
-						{
-							if (!ReferenceEquals(item, itemInCell)) { yield return itemInCell; }
-						}
-					}
-				}
-			}
 		}
 	}
 }
