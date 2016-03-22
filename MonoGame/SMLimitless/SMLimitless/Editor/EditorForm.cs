@@ -28,6 +28,8 @@ namespace SMLimitless.Editor
 		public EditorState EditorState { get; private set; } = EditorState.Cursor;
 		private EditorSelectedObject selectedObject;
 
+		private PropertyForm propertyForm;
+
 		public EditorForm(Level level, Section section, EditorSelectedObject selectedObject)
 		{
 			InitializeComponent();
@@ -38,6 +40,8 @@ namespace SMLimitless.Editor
 
 			PropertyLevel.SelectedObject = level;
 			PropertySection.SelectedObject = section;
+
+			propertyForm = new PropertyForm(selectedObject);
 
 			PopulateObjectTabs();
 		}
@@ -127,6 +131,18 @@ namespace SMLimitless.Editor
 		private void ButtonCursor_Click(object sender, EventArgs e)
 		{
 			selectedObject.SelectedObjectType = EditorSelectedObjectType.Nothing;
+		}
+
+		private void EditorForm_Load(object sender, EventArgs e)
+		{
+			propertyForm.Show();
+		}
+
+		private void EditorForm_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			propertyForm.Close();
+			propertyForm.Dispose();
+			propertyForm = null;
 		}
 	}
 

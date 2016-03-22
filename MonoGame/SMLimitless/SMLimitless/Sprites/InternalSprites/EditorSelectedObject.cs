@@ -18,6 +18,26 @@ namespace SMLimitless.Sprites.InternalSprites
 		private Tile selectedTile = null;
 		private Sprite selectedSprite = null;
 
+		public Tile SelectedTile
+		{
+			get
+			{
+				if (SelectedObjectType == EditorSelectedObjectType.Tile) { return selectedTile; }
+				throw new InvalidOperationException("The currently selected object is not a tile.");
+			}
+		}
+
+		public Sprite SelectedSprite
+		{
+			get
+			{
+				if (SelectedObjectType == EditorSelectedObjectType.Sprite) { return selectedSprite; }
+				throw new InvalidOperationException("The currently selected object is not a sprite.");
+			}
+		}
+
+		public event EventHandler SelectedObjectChanged;
+
 		public override string EditorCategory
 		{
 			get
@@ -82,12 +102,18 @@ namespace SMLimitless.Sprites.InternalSprites
 		{
 			SelectedObjectType = EditorSelectedObjectType.Tile;
 			selectedTile = tile.Clone();
+			selectedTile.Initialize(Owner);
+			selectedTile.LoadContent();
+			OnSelectedObjectChanged();
 		}
 
 		public void SelectExistingSprite(Sprite sprite)
 		{
 			SelectedObjectType = EditorSelectedObjectType.Sprite;
 			selectedSprite = AssemblyManager.GetSpriteByFullName(sprite.GetType().FullName);
+			selectedTile.Initialize(Owner);
+			selectedTile.LoadContent();
+			OnSelectedObjectChanged();
 		}
 
 		public void SelectTileFromEditor(TileDefaultState defaultState)
@@ -102,6 +128,8 @@ namespace SMLimitless.Sprites.InternalSprites
 			tile.LoadContent();
 			SelectedObjectType = EditorSelectedObjectType.Tile;
 			selectedTile = tile;
+
+			OnSelectedObjectChanged();
 		}
 
 		public void SelectSpriteFromEditor(SpriteData spriteData)
@@ -116,6 +144,8 @@ namespace SMLimitless.Sprites.InternalSprites
 			sprite.LoadContent();
 			SelectedObjectType = EditorSelectedObjectType.Sprite;
 			selectedSprite = sprite;
+
+			OnSelectedObjectChanged();
 		}
 
 		private void OnLeftClick()
@@ -149,7 +179,7 @@ namespace SMLimitless.Sprites.InternalSprites
 					Sprite sprite = AssemblyManager.GetSpriteByFullName(selectedSprite.GetType().FullName);
 					sprite.CollisionMode = selectedSprite.CollisionMode;
 					sprite.State = sprite.InitialState = selectedSprite.InitialState;
-					sprite.DeserializeCustomObjects(new JsonHelper(JObject.FromObject(sprite.GetCustomSerializableObjects())));
+					sprite.DeserializeCustomObjects(new JsonHelper(JObject.FromObject(selectedSprite.GetCustomSerializableObjects())));
 					sprite.Initialize(Owner);
 					sprite.LoadContent();
 					sprite.Position = Position;
@@ -157,6 +187,14 @@ namespace SMLimitless.Sprites.InternalSprites
 					break;
 				default:
 					break;
+			}
+		}
+
+		private void OnSelectedObjectChanged()
+		{
+			if (SelectedObjectChanged != null)
+			{
+				SelectedObjectChanged(this, new EventArgs());
 			}
 		}
 	}

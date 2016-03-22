@@ -5,18 +5,19 @@
 //-----------------------------------------------------------------------
 namespace SMLimitless.Input
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using Microsoft.Xna.Framework;
-    using Microsoft.Xna.Framework.Input;
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
+	using System.Text;
+	using Extensions;
+	using Microsoft.Xna.Framework;
+	using Microsoft.Xna.Framework.Input;
 
-    /// <summary>
-    /// Provides access to current and previous keyboard and mouse states for use in input.
-    /// This class is mostly built from RCIX's XNA InputManager class that he posted on Stack Exchange.
-    /// </summary>
-    public static class InputManager
+	/// <summary>
+	/// Provides access to current and previous keyboard and mouse states for use in input.
+	/// This class is mostly built from RCIX's XNA InputManager class that he posted on Stack Exchange.
+	/// </summary>
+	public static class InputManager
     {
         /// <summary>
         /// The keyboard state at the call before last to Update().
@@ -202,6 +203,12 @@ namespace SMLimitless.Input
             return lastKeyboardState.IsKeyDown(key) && currentKeyboardState.IsKeyUp(key);
         }
 
+		public static bool IsMouseInWindow()
+		{
+			Vector2 screenSize = GameServices.ScreenSize;
+			return MousePosition.X >= 0f && MousePosition.X <= screenSize.X && MousePosition.Y >= 0f && MousePosition.Y <= screenSize.Y;
+		}
+
         /// <summary>
         /// Determines if a mouse button was pressed on this frame but not the last.
         /// </summary>
@@ -209,6 +216,8 @@ namespace SMLimitless.Input
         /// <returns>True if the mouse press is new, false otherwise.</returns>
         public static bool IsNewMousePress(MouseButtons button)
         {
+			if (!IsMouseInWindow()) { return false; }
+			
             switch (button)
             {
                 case MouseButtons.LeftButton:
@@ -233,7 +242,9 @@ namespace SMLimitless.Input
         /// <returns>True if the mouse press is current, false if otherwise.</returns>
         public static bool IsCurrentMousePress(MouseButtons button)
         {
-            switch (button)
+			if (!IsMouseInWindow()) { return false; }
+
+			switch (button)
             {
                 case MouseButtons.LeftButton:
                     return lastMouseState.LeftButton == ButtonState.Pressed && currentMouseState.LeftButton == ButtonState.Pressed;
@@ -257,7 +268,9 @@ namespace SMLimitless.Input
         /// <returns>True if the mouse press is old, false if otherwise.</returns>
         public static bool IsOldMousePress(MouseButtons button)
         {
-            switch (button)
+			if (!IsMouseInWindow()) { return false; }
+
+			switch (button)
             {
                 case MouseButtons.LeftButton:
                     return lastMouseState.LeftButton == ButtonState.Pressed && currentMouseState.LeftButton == ButtonState.Released;

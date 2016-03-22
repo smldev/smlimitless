@@ -1010,6 +1010,23 @@
             the contents of this method with the code editor.
             </summary>
         </member>
+        <member name="F:SMLimitless.Editor.PropertyForm.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Editor.PropertyForm.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:SMLimitless.Editor.PropertyForm.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
         <member name="T:SMLimitless.Direction">
             <summary>
             Enumerates the four cardinal directions.
@@ -1472,6 +1489,11 @@
             Enumerates the solid sides of a rectangular tile.
             </summary>
         </member>
+        <member name="F:SMLimitless.Sprites.TileRectSolidSides.NotARectangle">
+            <summary>
+            This collidable shape is not a rectangle.
+            </summary>
+        </member>
         <member name="F:SMLimitless.Sprites.TileRectSolidSides.Passive">
             <summary>
             No side is solid.
@@ -1500,6 +1522,11 @@
         <member name="T:SMLimitless.Sprites.TileTriSolidSides">
             <summary>
             Enumerates the solid sides of a sloped tile.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.TileTriSolidSides.NotATriangle">
+            <summary>
+            This collidable shape is not a triangle.
             </summary>
         </member>
         <member name="F:SMLimitless.Sprites.TileTriSolidSides.Passive">

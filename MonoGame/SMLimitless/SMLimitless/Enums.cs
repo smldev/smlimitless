@@ -178,6 +178,11 @@ namespace SMLimitless.Sprites
 	public enum TileRectSolidSides
 	{
 		/// <summary>
+		/// This collidable shape is not a rectangle.
+		/// </summary>
+		NotARectangle = 0xFF,	
+
+		/// <summary>
 		/// No side is solid.
 		/// </summary>
 		Passive = 0x00,
@@ -209,6 +214,11 @@ namespace SMLimitless.Sprites
 	[Flags]
 	public enum TileTriSolidSides
 	{
+		/// <summary>
+		/// This collidable shape is not a triangle.
+		/// </summary>
+		NotATriangle = 0xFF,
+	
 		/// <summary>
 		/// No side is solid.
 		/// </summary>

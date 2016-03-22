@@ -72,8 +72,8 @@ namespace SMLimitless.Sprites
 		{
 			get
 			{
-				if (TileShape != CollidableShape.Rectangle) throw new InvalidOperationException("Tried to get the rectangular solid sides of a triangle.");
-				if (SolidSides < 0x00 || SolidSides > 0x0F) /* too many flags set */ throw new InvalidOperationException($"The solid sides of this tile are not in a valid form. Value: {SolidSides}");
+				if (TileShape != CollidableShape.Rectangle) return TileRectSolidSides.NotARectangle;
+				if ((SolidSides < 0x00 || SolidSides > 0x0F) && SolidSides != 0xFF) /* too many flags set */ throw new InvalidOperationException($"The solid sides of this tile are not in a valid form. Value: {SolidSides}");
 
 				return (TileRectSolidSides)SolidSides;
 			}
@@ -90,8 +90,8 @@ namespace SMLimitless.Sprites
 		{
 			get
 			{
-				if (TileShape != CollidableShape.RightTriangle) throw new InvalidOperationException("Tried to get the triangular solid sides of a rectangle.");
-				if (SolidSides < 0x00 || SolidSides > 0x07) throw new InvalidOperationException($"The solid sides of this tile are not in a valid state. Value: {SolidSides}");
+				if (TileShape != CollidableShape.RightTriangle) return TileTriSolidSides.NotATriangle;
+				if ((SolidSides < 0x00 || SolidSides > 0x07) && SolidSides != 0xFF) throw new InvalidOperationException($"The solid sides of this tile are not in a valid state. Value: {SolidSides}");
 
 				return (TileTriSolidSides)SolidSides;
 			}

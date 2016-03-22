@@ -176,6 +176,8 @@
 			this.MaximizeBox = false;
 			this.Name = "EditorForm";
 			this.Text = "Editor";
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.EditorForm_FormClosing);
+			this.Load += new System.EventHandler(this.EditorForm_Load);
 			this.tabControl1.ResumeLayout(false);
 			this.TabPageTiles.ResumeLayout(false);
 			this.TabPageSprites.ResumeLayout(false);

@@ -23,9 +23,21 @@ namespace SmlSprites.SMB.Enemies
 
 		private ComplexGraphicsObject graphics;
 		private bool isFlippedOver = false;
+		private GoombaPalette palette;
 
 		[DefaultValue(GoombaPalette.Overworld), Description("The palette used by this Goomba.")]
-		public GoombaPalette Palette;
+		public GoombaPalette Palette
+		{
+			get
+			{
+				return palette;
+			}
+			set
+			{
+				palette = value;
+				ChangePalette();
+			}
+		}
 
 		public override string EditorCategory
 		{
@@ -55,15 +67,22 @@ namespace SmlSprites.SMB.Enemies
 			base.Initialize(owner);
 			graphics = (ComplexGraphicsObject)ContentPackageManager.GetGraphicsResource("SMBGoomba");
 
-			if		(Palette == GoombaPalette.Overworld) { graphics.CurrentObjectName = "walking_OW";     }
-			else if (Palette == GoombaPalette.Cave)		 { graphics.CurrentObjectName = "walking_cave";   }
-			else if (Palette == GoombaPalette.Castle)	 { graphics.CurrentObjectName = "walking_castle"; }
-			else { throw new ArgumentException($"The provided goomba palette number {(int)Palette} doesn't match any palettes."); }
+			ChangePalette();
 
 			Components.Add(new WalkerComponent(this, ResolveDirection(this, Direction, owner), 32f));
 			Components.Add(new HealthComponent(1, new string[] { }));
 
 			// TODO: Add damage and death handlers
+		}
+
+		private void ChangePalette()
+		{
+			if (graphics == null) { return; }
+
+			if (Palette == GoombaPalette.Overworld) { graphics.CurrentObjectName = "walking_OW"; }
+			else if (Palette == GoombaPalette.Cave) { graphics.CurrentObjectName = "walking_cave"; }
+			else if (Palette == GoombaPalette.Castle) { graphics.CurrentObjectName = "walking_castle"; }
+			else { throw new ArgumentException($"The provided goomba palette number {(int)Palette} doesn't match any palettes."); }
 		}
 
 		public override void Draw()
