@@ -20,7 +20,7 @@ namespace SmlSprites.Tiles
 		private int widthInGridCells;
 		private int heightInGridCells;
 
-		private static PhysicsSetting<float> SurfaceFrictionSetting = new PhysicsSetting<float>("Solid Tile: Surface Friction", 0f, 5000f, 12f, PhysicsSettingType.FloatingPoint);
+		private static PhysicsSetting<float> SurfaceFrictionSetting = new PhysicsSetting<float>("Solid Tile: Surface Friction", 0f, 5000f, 4500f, PhysicsSettingType.FloatingPoint);
 
 		public override string EditorCategory
 		{
@@ -71,8 +71,8 @@ namespace SmlSprites.Tiles
 		{
 			return new
 			{
-				heightInGridCells = this.heightInGridCells,
-				widthInGridCells = this.widthInGridCells
+				heightInGridCells = heightInGridCells,
+				widthInGridCells = widthInGridCells
 			};
 		}
 

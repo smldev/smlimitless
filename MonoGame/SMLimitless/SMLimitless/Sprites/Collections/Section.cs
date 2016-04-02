@@ -355,7 +355,7 @@ namespace SMLimitless.Sprites.Collections
 
 			}
 			Sprite playerSprite = Sprites.First(s => s.GetType().FullName.Contains("PlayerMario"));
-			debugText = $"Acceleration: {playerSprite.Acceleration.X}, {playerSprite.Acceleration.Y}. Velocity: {playerSprite.Velocity.X}, {playerSprite.Velocity.Y}";
+			debugText = $"Player Sprite GFX Name: {playerSprite.GetType().GetProperty("DebugGraphicsName").GetValue(playerSprite)}";
 		}
 
 		private void TempUpdate()
@@ -403,7 +403,7 @@ namespace SMLimitless.Sprites.Collections
 			}
 			editorSelectedObject.Draw();
 			CameraSystem.Draw(debug: false);
-			GameServices.DrawStringDefault(debugText);
+			GameServices.DebugFont.DrawString(debugText, new Vector2(280f, 16f), 1f);
 			DrawCollisionDebug();
 			irisEffect.Draw();
 		}
