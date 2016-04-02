@@ -22,8 +22,9 @@ namespace SmlSprites.Players
 
 		private static PhysicsSetting<float> MaximumWalkingSpeed = new PhysicsSetting<float>("Player: Max Walking Speed", 0f, 100f, 35f, PhysicsSettingType.FloatingPoint);
 		private static PhysicsSetting<float> MaximumRunningSpeed = new PhysicsSetting<float>("Player: Max Running Speed", 0f, 150f, 50f, PhysicsSettingType.FloatingPoint);
-		private static PhysicsSetting<float> MaximumAcceleration = new PhysicsSetting<float>("Player: Max Acceleration (abs)", 0f, 10000f, 200f, PhysicsSettingType.FloatingPoint);
-		private static PhysicsSetting<int> RunAccelerationTime = new PhysicsSetting<int>("Player: Frames to Max Running Speed", 1, 60, 15, PhysicsSettingType.Integer);
+		//private static PhysicsSetting<float> MaximumAcceleration = new PhysicsSetting<float>("Player: Max Acceleration (abs)", 0f, 10000f, 200f, PhysicsSettingType.FloatingPoint);
+		//private static PhysicsSetting<int> RunAccelerationTime = new PhysicsSetting<int>("Player: Frames to Max Running Speed", 1, 60, 15, PhysicsSettingType.Integer);
+		private static PhysicsSetting<float> MovementAcceleration = new PhysicsSetting<float>("Player: Acceleration", 0f, 10000f, 200f, PhysicsSettingType.FloatingPoint);
 
 		public string DebugGraphicsName { get; protected set; } = "";
 		protected Vector2 TargetVelocity { get; set; }
@@ -65,7 +66,7 @@ namespace SmlSprites.Players
 		public override void Update()
 		{
 			CheckForWalkRunInput();
-			ClampHorizontalSpeed();
+			DetermineHorizontalAcceleration();
 
 			ApplyTileSurfaceFriction();
 			DeterminePlayerGraphicsObject();
@@ -143,8 +144,36 @@ namespace SmlSprites.Players
 				// If the user is holding both left and right down, we should cancel the acceleration and do nothing.
 				CancelHorizontalAcceleration();
 			}
-			else if (isLeftDown) { AdjustAccelerationForWalkingOrRunning(HorizontalDirection.Left); }
-			else if (isRightDown) { AdjustAccelerationForWalkingOrRunning(HorizontalDirection.Right); }
+			else if (isLeftDown)
+			{
+				TargetVelocity = new Vector2((IsRunning)  ? -MaximumRunningSpeed.Value : -MaximumWalkingSpeed.Value, TargetVelocity.Y);
+			}
+			else if (isRightDown)
+			{
+				TargetVelocity = new Vector2((IsRunning) ? MaximumRunningSpeed.Value : MaximumWalkingSpeed.Value, TargetVelocity.Y);
+			}
+		}
+
+		protected void DetermineHorizontalAcceleration()
+		{
+			float absTargetVelocityX = Math.Abs(TargetVelocity.X);
+			float absCurrentVelocityX = Math.Abs(Velocity.X);
+			
+			if (absCurrentVelocityX < absTargetVelocityX)
+			{
+				// The player is moving slower than they need to be. Accelerate them.
+				Acceleration = new Vector2((TargetVelocity.X >= 0f) ? MovementAcceleration.Value : -MovementAcceleration.Value, Acceleration.Y);
+			}
+			else if (absCurrentVelocityX > absTargetVelocityX)
+			{
+				// The player is moving more quickly than they need to be. Slow them down if they're standing on a tile.
+				ApplyTileSurfaceFriction();
+			}
+			else if (absCurrentVelocityX == absTargetVelocityX)
+			{
+				// The player is moving exactly as fast as they need to be.
+				Acceleration = new Vector2(0f, Acceleration.Y);
+			}
 		}
 
 		protected void CancelHorizontalAcceleration()
@@ -153,60 +182,19 @@ namespace SmlSprites.Players
 			TargetVelocity = new Vector2(0f, TargetVelocity.Y);
 		}
 
-		protected void AdjustAccelerationForWalkingOrRunning(HorizontalDirection direction)
-		{
-			float accelerationDelta;
-			bool isRunning = IsRunning;	// avoid multiple InputManager calls
-
-			if (direction == HorizontalDirection.Left) 
-			{
-				TargetVelocity = new Vector2((IsRunning) ? -MaximumRunningSpeed.Value : -MaximumWalkingSpeed.Value);
-				accelerationDelta = -MaximumRunningSpeed.Value / RunAccelerationTime.Value;
-			}
-			else if (direction == HorizontalDirection.Right)
-			{
-				TargetVelocity = new Vector2((IsRunning) ? MaximumRunningSpeed.Value : MaximumWalkingSpeed.Value);
-				accelerationDelta = MaximumRunningSpeed.Value / RunAccelerationTime.Value;
-			}
-			else { throw new ArgumentException($"The provided direction {direction} was invalid."); }
-
-			Acceleration = new Vector2(MathHelper.Clamp(Acceleration.X + accelerationDelta, -MaximumAcceleration.Value, MaximumAcceleration.Value), Acceleration.Y);
-		}
-
-		protected void ClampHorizontalSpeed()
-		{
-			//bool isRunning = InputManager.IsCurrentActionPress(InputAction.Run) || InputManager.IsCurrentActionPress(InputAction.AltRun);
-
-			//if (!isRunning)
-			//{
-			//	// Player is walking; clamp their speed to the maximum walking velocity.
-			//	if (Velocity.X < -MaximumWalkingSpeed.Value || Velocity.X > MaximumWalkingSpeed.Value)
-			//	{
-			//		float clampedVelocity = MathHelper.Clamp(Velocity.X, -MaximumWalkingSpeed.Value, MaximumWalkingSpeed.Value);
-			//		Acceleration = new Vector2(0f, Acceleration.Y);
-			//		Velocity = new Vector2(clampedVelocity, Velocity.Y);
-			//	}
-			//}
-			//else
-			//{
-			//	// Player is running.
-				
-			//}
-		}
-
 		protected void ApplyTileSurfaceFriction()
 		{
 			bool isLeftDown = InputManager.IsCurrentActionPress(InputAction.Left);
 			bool isRightDown = InputManager.IsCurrentActionPress(InputAction.Right);
 
+			Vector2 checkPosition = Hitbox.BottomCenter;
+			checkPosition.Y += GameServices.GameObjectSize.Y / 2f;
+
+			Tile tileBeneathPlayer = Owner.GetTileAtPosition(checkPosition);
+			if (tileBeneathPlayer == null) { return; }
+
 			if (!IsMoving || (IsMoving && !IsRunning && Math.Abs(Velocity.X) > MaximumWalkingSpeed.Value))
 			{
-				Vector2 checkPosition = Hitbox.BottomCenter;
-				checkPosition.Y += GameServices.GameObjectSize.Y / 2f;
-
-				Tile tileBeneathPlayer = Owner.GetTileAtPosition(checkPosition);
-				if (tileBeneathPlayer == null) { return; }
-
 				float tileSurfaceFrictionDelta = tileBeneathPlayer.SurfaceFriction * GameServices.GameTime.GetElapsedSeconds();
 				
 				if (Velocity.X > -0.1f && Velocity.X < 0.1f)
