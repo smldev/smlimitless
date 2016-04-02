@@ -2587,6 +2587,11 @@
             </summary>
             <param name="collidingSprite">The sprite that the owner sprite collided with.</param>
         </member>
+        <member name="P:SMLimitless.Sprites.Tile.SurfaceFriction">
+            <summary>
+            Gets the surface friction of the tile - how much sprites not moving on their own decelerate in each frame. Measured in pixels per second squared.
+            </summary>
+        </member>
         <member name="P:SMLimitless.Sprites.Tile.EditorCategory">
             <summary>
             Gets the name of the category that this tile is

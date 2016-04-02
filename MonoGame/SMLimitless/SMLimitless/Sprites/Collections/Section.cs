@@ -110,7 +110,17 @@ namespace SMLimitless.Sprites.Collections
 				editorSelectedObject.LoadContent();
 
 				irisEffect.LoadContent();
-				irisEffect.Start(90, Interfaces.EffectDirection.Forward, Vector2.Zero, Color.Black);
+				irisEffect.Start(90, EffectDirection.Forward, Vector2.Zero, Color.Black);
+
+				// TEMPORARY: Code to add a test player; remove when player support is a bit better
+				Vector2 createPlayerAt = Tiles.First(t => GetTileAtPosition(new Vector2(t.Position.X, t.Position.Y - 8f)) == null).Position;
+				createPlayerAt.Y -= 16f;
+				Sprite playerSprite = Assemblies.AssemblyManager.GetSpriteByFullName("SmlSprites.Players.PlayerMario");
+				playerSprite.Initialize(this);
+				playerSprite.LoadContent();
+				playerSprite.Position = createPlayerAt;
+				Sprites.Add(playerSprite);
+				CameraSystem.TrackingObjects.Add(playerSprite);
 
 				isContentLoaded = true;
 			}
@@ -255,6 +265,8 @@ namespace SMLimitless.Sprites.Collections
 								{
 									resolutionDirection = Math.Sign(resolutionDistance.X);                                          // The resolution direction is equal to the sign of the resolution distance.
 									sprite.Position = new Vector2((sprite.Position.X + resolutionDistance.X), sprite.Position.Y);   // Move the sprite to resolve the collision.
+									sprite.Velocity = new Vector2(0f, sprite.Position.Y);
+									sprite.Acceleration = new Vector2(0f, sprite.Acceleration.Y);
 									sprite.HandleTileCollision(tile, resolutionDistance);
 
 									numberOfCollidingTiles++;
@@ -340,7 +352,10 @@ namespace SMLimitless.Sprites.Collections
 						collidableSprite.HandleSpriteCollision(sprite, intersectB);
 					}
 				}
+
 			}
+			Sprite playerSprite = Sprites.First(s => s.GetType().FullName.Contains("PlayerMario"));
+			debugText = $"Acceleration: {playerSprite.Acceleration.X}, {playerSprite.Acceleration.Y}. Velocity: {playerSprite.Velocity.X}, {playerSprite.Velocity.Y}";
 		}
 
 		private void TempUpdate()
@@ -403,7 +418,7 @@ namespace SMLimitless.Sprites.Collections
 			for (int i = highestIndex; i >= 0; i--)
 			{
 				Layer layer = Layers[i];
-				if (!layer.Bounds.Intersects(position)) { continue; }
+				if (!layer.Bounds.IntersectsIncludingEdges(position)) { continue; }
 				Tile tile = layer.GetTile(layer.GetCellNumberAtPosition(position));
 				if (tile != null) { return tile; }
 			}

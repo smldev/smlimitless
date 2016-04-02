@@ -36,6 +36,11 @@ namespace SMLimitless.Sprites
 
 		public Vector2 Size { get; set; }
 
+		/// <summary>
+		/// Gets the surface friction of the tile - how much sprites not moving on their own decelerate in each frame. Measured in pixels per second squared.
+		/// </summary>
+		public abstract float SurfaceFriction { get; }
+
 		public bool HasMoved { get; set; }
 
 		public abstract object GetCustomSerializableObjects();

@@ -15,6 +15,7 @@ namespace SmlSprites.Tiles
 {
 	public sealed class SlopedTile : Tile
 	{
+		private static PhysicsSetting<float> SurfaceFrictionSetting = new PhysicsSetting<float>("Sloped Tile: Surface Friction", 0f, 500f, 12f, PhysicsSettingType.FloatingPoint);
 		private IGraphicsObject graphics;
 
 		private int widthInGridCells;
@@ -25,6 +26,14 @@ namespace SmlSprites.Tiles
 			get
 			{
 				return "Standard Tiles";
+			}
+		}
+
+		public override float SurfaceFriction
+		{
+			get
+			{
+				return SurfaceFrictionSetting.Value;
 			}
 		}
 

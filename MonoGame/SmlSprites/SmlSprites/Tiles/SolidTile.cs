@@ -20,11 +20,21 @@ namespace SmlSprites.Tiles
 		private int widthInGridCells;
 		private int heightInGridCells;
 
+		private static PhysicsSetting<float> SurfaceFrictionSetting = new PhysicsSetting<float>("Solid Tile: Surface Friction", 0f, 5000f, 12f, PhysicsSettingType.FloatingPoint);
+
 		public override string EditorCategory
 		{
 			get
 			{
 				return "Standard Tiles";
+			}
+		}
+
+		public override float SurfaceFriction
+		{
+			get
+			{
+				return SurfaceFrictionSetting.Value;
 			}
 		}
 
