@@ -265,7 +265,7 @@ namespace SMLimitless.Sprites.Collections
 								{
 									resolutionDirection = Math.Sign(resolutionDistance.X);                                          // The resolution direction is equal to the sign of the resolution distance.
 									sprite.Position = new Vector2((sprite.Position.X + resolutionDistance.X), sprite.Position.Y);   // Move the sprite to resolve the collision.
-									sprite.Velocity = new Vector2(0f, sprite.Position.Y);
+									sprite.Velocity = new Vector2(0f, sprite.Velocity.Y);
 									sprite.Acceleration = new Vector2(0f, sprite.Acceleration.Y);
 									sprite.HandleTileCollision(tile, resolutionDistance);
 

@@ -19,15 +19,20 @@ namespace SmlSprites.Players
 	public class PlayerMario : Sprite
 	{
 		private StaticGraphicsObject placeholderGraphics;
+		private int sprintChargeTimer = 0;
 
 		private static PhysicsSetting<float> MaximumWalkingSpeed = new PhysicsSetting<float>("Player: Max Walking Speed", 0f, 100f, 35f, PhysicsSettingType.FloatingPoint);
 		private static PhysicsSetting<float> MaximumRunningSpeed = new PhysicsSetting<float>("Player: Max Running Speed", 0f, 150f, 50f, PhysicsSettingType.FloatingPoint);
-		//private static PhysicsSetting<float> MaximumAcceleration = new PhysicsSetting<float>("Player: Max Acceleration (abs)", 0f, 10000f, 200f, PhysicsSettingType.FloatingPoint);
-		//private static PhysicsSetting<int> RunAccelerationTime = new PhysicsSetting<int>("Player: Frames to Max Running Speed", 1, 60, 15, PhysicsSettingType.Integer);
+		private static PhysicsSetting<float> MaximumSprintingSpeed = new PhysicsSetting<float>("Player: Max Sprinting Speed", 0f, 150f, 65f, PhysicsSettingType.FloatingPoint);
 		private static PhysicsSetting<float> MovementAcceleration = new PhysicsSetting<float>("Player: Acceleration", 0f, 10000f, 200f, PhysicsSettingType.FloatingPoint);
+		private static PhysicsSetting<int> FramesToSprintingAllowed = new PhysicsSetting<int>("Player: Frames to Sprinting Allowed", 1, 120, 60, PhysicsSettingType.Integer);
+
+		private static PhysicsSetting<float> JumpImpulse = new PhysicsSetting<float>("Player: Jump Impulse", 5f, 5000f, 77f, PhysicsSettingType.FloatingPoint);
+		private static PhysicsSetting<float> JumpGravityMultiplier = new PhysicsSetting<float>("Player: Jump Gravity Multiplier", 0.01f, 1f, 0.5f, PhysicsSettingType.FloatingPoint);
 
 		public string DebugGraphicsName { get; protected set; } = "";
 		protected Vector2 TargetVelocity { get; set; }
+		protected bool IsJumping { get; set; }
 
 		public override string EditorCategory
 		{
@@ -67,6 +72,9 @@ namespace SmlSprites.Players
 		{
 			CheckForWalkRunInput();
 			DetermineHorizontalAcceleration();
+			SprintIfAllowed();
+
+			CheckForJumpInput();
 
 			ApplyTileSurfaceFriction();
 			DeterminePlayerGraphicsObject();
@@ -88,7 +96,14 @@ namespace SmlSprites.Players
 			}
 			else
 			{
-				Acceleration = new Vector2(Acceleration.X, Level.GravityAcceleration.Value);
+				if (InputManager.IsCurrentActionPress(InputAction.Jump) || InputManager.IsCurrentActionPress(InputAction.SpinJump) && IsJumping)
+				{
+					Acceleration = new Vector2(Acceleration.X, Level.GravityAcceleration.Value * JumpGravityMultiplier.Value);
+				}
+				else
+				{
+					Acceleration = new Vector2(Acceleration.X, Level.GravityAcceleration.Value);
+				}
 				TargetVelocity = new Vector2(TargetVelocity.X, MaximumGravitationalVelocity.Value);
 			}
 
@@ -146,11 +161,13 @@ namespace SmlSprites.Players
 			}
 			else if (isLeftDown)
 			{
-				TargetVelocity = new Vector2((IsRunning)  ? -MaximumRunningSpeed.Value : -MaximumWalkingSpeed.Value, TargetVelocity.Y);
+				float targetVelocityX = (sprintChargeTimer == FramesToSprintingAllowed.Value) ? -MaximumSprintingSpeed.Value : (IsRunning) ? -MaximumRunningSpeed.Value : -MaximumWalkingSpeed.Value;
+				TargetVelocity = new Vector2(targetVelocityX, TargetVelocity.Y);
 			}
 			else if (isRightDown)
 			{
-				TargetVelocity = new Vector2((IsRunning) ? MaximumRunningSpeed.Value : MaximumWalkingSpeed.Value, TargetVelocity.Y);
+				float targetVelocityX = (sprintChargeTimer == FramesToSprintingAllowed.Value) ? MaximumSprintingSpeed.Value : (IsRunning) ? MaximumRunningSpeed.Value : MaximumWalkingSpeed.Value;
+				TargetVelocity = new Vector2(targetVelocityX, TargetVelocity.Y);
 			}
 		}
 
@@ -173,6 +190,25 @@ namespace SmlSprites.Players
 			{
 				// The player is moving exactly as fast as they need to be.
 				Acceleration = new Vector2(0f, Acceleration.Y);
+			}
+		}
+
+		protected void SprintIfAllowed()
+		{
+			if (Math.Abs(Velocity.X) >= MaximumRunningSpeed.Value && IsMoving)
+			{
+				if (sprintChargeTimer < FramesToSprintingAllowed.Value)
+				{
+					sprintChargeTimer++;
+				}
+				else
+				{
+					TargetVelocity = new Vector2((Velocity.X > 0f) ? MaximumSprintingSpeed.Value : -MaximumSprintingSpeed.Value, TargetVelocity.Y);
+				}
+			}
+			else if (Math.Abs(Velocity.X) < MaximumRunningSpeed.Value && sprintChargeTimer != 0)
+			{
+				sprintChargeTimer = 0;
 			}
 		}
 
@@ -212,13 +248,28 @@ namespace SmlSprites.Players
 			}
 		}
 
+		protected void CheckForJumpInput()
+		{
+			bool isJumpDown = InputManager.IsNewActionPress(InputAction.Jump);
+
+			if (isJumpDown && !IsJumping)
+			{
+				Velocity = new Vector2(Velocity.X, -JumpImpulse.Value);
+				IsJumping = true;
+			}
+		}
+
 		protected void DeterminePlayerGraphicsObject()
 		{
 			if (Velocity.X == 0f /* && IsOnGround */) { SetPlayerGraphicsObject("standing"); }
 			if (Velocity.X != 0f /* && IsOnGround */)
 			{
 				if (Math.Sign(Velocity.X) != Math.Sign(Acceleration.X) && IsMoving) { SetPlayerGraphicsObject("skidding"); }
-				else { SetPlayerGraphicsObject("walking"); }
+				else
+				{
+					if (Velocity.X < MaximumSprintingSpeed.Value) { SetPlayerGraphicsObject("walking"); }
+					else { SetPlayerGraphicsObject("sprinting"); }
+				}
 			}
 		}
 
@@ -248,6 +299,11 @@ namespace SmlSprites.Players
 		public override void LoadContent()
 		{
 			placeholderGraphics.LoadContent();
+		}
+
+		public override void HandleTileCollision(Tile tile, Vector2 resolutionDistance)
+		{
+			if (resolutionDistance.Y < 0f) { IsJumping = false; }
 		}
 		#endregion
 	}
