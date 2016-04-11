@@ -39,12 +39,14 @@ namespace SMLimitless.Sprites
         /// A method called when the owner sprite collides with a tile.
         /// </summary>
         /// <param name="collidingTile">The tile that the owner sprite collided with.</param>
+		/// <param name="resolutionDistance">The distance by which the sprite was moved in order to resolve the tile collision.</param>
         public virtual void HandleTileCollision(Tile collidingTile, Vector2 resolutionDistance) { }
 
         /// <summary>
         /// A method called when the owner sprite collides with another sprite.
         /// </summary>
         /// <param name="collidingSprite">The sprite that the owner sprite collided with.</param>
+		/// <param name="resolutionDistance">The distance by which the sprite was moved in order to resolve the sprite collision.</param>
         public virtual void HandleSpriteCollision(Sprite collidingSprite, Vector2 resolutionDistance) { }
     }
 }

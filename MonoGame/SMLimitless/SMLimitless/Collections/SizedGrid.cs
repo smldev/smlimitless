@@ -37,6 +37,9 @@ namespace SMLimitless.Collections
         /// </summary>
         private Grid<T> grid;
 
+		/// <summary>
+		/// Gets the position of the top-left corner of this grid.
+		/// </summary>
 		public Vector2 Position { get; internal set; }
 
         /// <summary>
@@ -317,7 +320,6 @@ namespace SMLimitless.Collections
 		/// <summary>
 		/// Draws the cell borders of this grid.
 		/// </summary>
-		/// <param name="position">The position to start drawing the grid at.</param>
 		/// <param name="lineColor">The color of the cell lines.</param>
 		public void Draw(Color lineColor)
 		{
@@ -344,6 +346,10 @@ namespace SMLimitless.Collections
 			}
 		}
 
+		/// <summary>
+		/// Gets the enumerator for this grid.
+		/// </summary>
+		/// <returns>An enumerator that enumerates over each grid cell.</returns>
 		public IEnumerator<T> GetEnumerator()
 		{
 			var gridEnumerator = grid.GetEnumerator();
@@ -359,6 +365,10 @@ namespace SMLimitless.Collections
 			yield break;
 		}
 
+		/// <summary>
+		/// Returns an enumerable that enumerates over the grid.
+		/// </summary>
+		/// <returns>An enumerable that returns the contents of each grid cell, as well as the coordinates of each grid cell in X, Y order.</returns>
 		public IEnumerable<Tuple<int, int, T>> EnumerateItemsWithGridCells()
 		{
 			HashSet<T> itemsProcessedSoFar = new HashSet<T>();
@@ -377,6 +387,10 @@ namespace SMLimitless.Collections
 			}
 		}
 
+		/// <summary>
+		/// The explicit interface implementation of IEnumerable.GetEnumerator().
+		/// </summary>
+		/// <returns>The enumerator returned by the GetEnumerator() method.</returns>
 		IEnumerator IEnumerable.GetEnumerator()
 		{
 			return grid.GetEnumerator();

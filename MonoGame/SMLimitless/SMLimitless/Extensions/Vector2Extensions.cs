@@ -109,6 +109,11 @@ namespace SMLimitless.Extensions
 			return MathHelper.ToDegrees((float)Math.Atan2(b.Y - a.Y, b.X - a.X));
 		}
 
+		/// <summary>
+		/// Given a <see cref="Vector2"/> instance, returns a flagged <see cref="FlaggedDirection"/> value indicating the direction of each component.
+		/// </summary>
+		/// <param name="intersect">The vector to get the directions of.</param>
+		/// <returns>A <see cref="FlaggedDirection"/> instance. "Left" is set for X &lt; 0, "Right" is set for X &gt; 0, "Up" is set for Y &lt; 0, "Down" is set for Y &gt; 0, "None" is set for X = Y = 0.</returns>
 		public static FlaggedDirection GetIntersectionDirection(this Vector2 intersect)
 		{
 			FlaggedDirection result = FlaggedDirection.None;
@@ -121,6 +126,12 @@ namespace SMLimitless.Extensions
 			return result;
 		}
 
+		/// <summary>
+		/// Given a resolution distance, gets the direction of the resolution.
+		/// </summary>
+		/// <param name="intersect">A <see cref="Vector2"/> instance with at least one component equal to zero.</param>
+		/// <returns>The direction in which a resolution occurs, or Direction.None if both components of <paramref name="intersect"/> are zero.</returns>
+		/// <exception cref="ArgumentException">Thrown if neither component of <paramref name="intersect"/> are zero.</exception>
 		public static Direction GetResolutionDirection(this Vector2 intersect)
 		{
 			if (intersect.X != 0f && intersect.Y != 0f) { throw new ArgumentException($"The intersect of {intersect} must have at least one zero component."); }
@@ -143,6 +154,12 @@ namespace SMLimitless.Extensions
 			return (left.X > right.X) && (left.Y > right.Y);
 		}
 
+		/// <summary>
+		/// Does a greater-than comparison on both components of two <see cref="Vector2"/> instances.
+		/// </summary>
+		/// <param name="left">The first vector to compare.</param>
+		/// <param name="right">The second vector to compare.</param>
+		/// <returns>True if both components of <paramref name="left"/> are greater than their corresponding components in <paramref name="right"/>.</returns>
 		public static bool GreaterThan(this Vector2 left, float right)
 		{
 			return (left.X > right) && (left.Y > right);
@@ -159,6 +176,12 @@ namespace SMLimitless.Extensions
 			return (left.X >= right.X) && (left.Y >= right.Y);
 		}
 
+		/// <summary>
+		/// Determines if both components of one vector are greater than or equal to both components of another vector.
+		/// </summary>
+		/// <param name="left">The first vector to compare.</param>
+		/// <param name="right">The second vector to compare.</param>
+		/// <returns>True if both components of <paramref name="left"/> are greater than or equal to both components of <paramref name="right"/>.</returns>
 		public static bool GreaterThanOrEqualTo(this Vector2 left, float right)
 		{
 			return (left.X >= right) && (left.Y >= right);
@@ -379,6 +402,12 @@ namespace SMLimitless.Extensions
 			values.ForEach(v => result.Append(string.Format("{0},{1};", v.X, v.Y)));
 			return result.ToString();
 		}
+
+		/// <summary>
+		/// Converts a <see cref="Vector2"/> instance to a <see cref="Point"/> instance.
+		/// </summary>
+		/// <param name="vector">The <see cref="Vector2"/> to convert to a <see cref="Point"/>.</param>
+		/// <returns>A point with components equal to the integral portion of each vector component.</returns>
 		public static Point ToPoint(this Vector2 vector)
 		{
 			return new Point((int)vector.X, (int)vector.Y);

@@ -32,7 +32,14 @@ namespace SMLimitless.Sprites
 		/// </summary>
         private Vector2 velocity;
 
+		/// <summary>
+		/// A physics setting representing the maximum downward velocity a sprite can acquire through falling. Measured in pixels per second.
+		/// </summary>
 		public static PhysicsSetting<float> MaximumGravitationalVelocity = new PhysicsSetting<float>("Max Gravitational Velocity", 0f, 1000f, 350f, PhysicsSettingType.FloatingPoint);
+
+		/// <summary>
+		/// A physics setting representing the rate that any upward acceleration is reduced to zero. Measured in pixels per second cubed.
+		/// </summary>
 		public static PhysicsSetting<float> UpwardAccelerationDecay = new PhysicsSetting<float>("Upward Acceleration Decay", 0.01f, 10f, 0.01f, PhysicsSettingType.FloatingPoint);
 
 		/// <summary>
@@ -126,6 +133,9 @@ namespace SMLimitless.Sprites
 
 		public abstract object GetCustomSerializableObjects();
 
+		/// <summary>
+		/// Gets or sets a value indicating whether the sprite has moved during this frame.
+		/// </summary>
 		public bool HasMoved
 		{
 			get; set;
@@ -284,6 +294,13 @@ namespace SMLimitless.Sprites
 		#endregion
 
 		#region Collision Handlers
+		/// <summary>
+		/// Gets the hitbox of this sprite for collision with a slope.
+		/// </summary>
+		/// <param name="slopedSides">The sloped sides of the slope.</param>
+		/// <returns>The left half of the sprite's hitbox for TopLeft and BottomLeft slopes or the right half of the hitbox for TopRight and BottomRight slopes.</returns>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="slopedSides"/> has a value of Default.</exception>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="slopedSides"/> does not have a valid value.</exception>
         public BoundingRectangle GetSlopeHitbox(RtSlopedSides slopedSides)
 		{
 			Vector2 hitboxSize = new Vector2(Size.X / 2f, Size.Y);

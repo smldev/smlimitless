@@ -8,8 +8,16 @@ using SMLimitless.Sprites.Assemblies;
 
 namespace SMLimitless.Sprites.Collections
 {
+	/// <summary>
+	/// A class that generates a section for testing purposes.
+	/// </summary>
 	public static class TestSectionGenerator
 	{
+		/// <summary>
+		/// Creates a test section.
+		/// </summary>
+		/// <param name="owner">The level that will own this section.</param>
+		/// <returns>A section consisting of randomly placed and sized rows of concrete blocks with a TestPlayer.</returns>
 		public static Section GenerateSection(Level owner)
 		{
 			// Create a section of randomly placed stretches of stone tiles.

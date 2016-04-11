@@ -97,6 +97,10 @@ namespace SMLimitless.Graphics
             }
         }
 
+		/// <summary>
+		/// Gets a single texture that can be used on a button in the editor.
+		/// </summary>
+		/// <returns>The texture of this graphics object.</returns>
 		public Texture2D GetEditorGraphics()
 		{
 			return texture;

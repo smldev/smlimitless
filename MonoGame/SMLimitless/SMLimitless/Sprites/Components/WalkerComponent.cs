@@ -8,6 +8,9 @@ using SMLimitless.Extensions;
 
 namespace SMLimitless.Sprites.Components
 {
+	/// <summary>
+	/// A component which moves the sprite horizontally along a surface of tiles.
+	/// </summary>
 	public sealed class WalkerComponent : SpriteComponent
 	{
 		private Direction direction;
@@ -34,9 +37,22 @@ namespace SMLimitless.Sprites.Components
 			}
 		}
 
+		/// <summary>
+		/// The initial direction (Left, Right, or FacePlayer) that the sprites starts out facing.
+		/// </summary>
 		public SpriteDirection StartingDirection { get; }
+
+		/// <summary>
+		/// The initial velocity that the sprite has. 
+		/// </summary>
 		public float InitialHorizontalVelocity { get; }
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="WalkerComponent"/> class.
+		/// </summary>
+		/// <param name="owner">The sprite that owns this component.</param>
+		/// <param name="startingDirection">The initial direction (Left, Right, or FacePlayer) that the sprites starts out facing.</param>
+		/// <param name="initialHorizontalVelocity">The initial velocity that the sprite has. Provide a positive value; the sign is automatically determined based on initial direction.</param>
 		public WalkerComponent(Sprite owner, SpriteDirection startingDirection, float initialHorizontalVelocity)
 		{
 			Owner = owner;
@@ -48,11 +64,19 @@ namespace SMLimitless.Sprites.Components
 			CurrentVelocity = initialHorizontalVelocity;
 		}
 
+		/// <summary>
+		/// Update this component.
+		/// </summary>
 		public override void Update()
 		{
 			
 		}
 
+		/// <summary>
+		/// Handle a collision between this component's owner sprite and a tile.
+		/// </summary>
+		/// <param name="collidingTile">The tile that the owner sprite has collided with.</param>
+		/// <param name="resolutionDistance">The distance by which the owner sprite was moved to resolve the collision.</param>
 		public override void HandleTileCollision(Tile collidingTile, Vector2 resolutionDistance)
 		{
 			if (resolutionDistance.GetResolutionDirection() == Direction.Right && direction == Direction.Left)

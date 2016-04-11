@@ -12,15 +12,28 @@ using SMLimitless.Sprites.Collections;
 
 namespace SMLimitless.Sprites
 {
+	/// <summary>
+	/// A unit of terrain in <see cref="Section"/>. Sprites can collide with, slide down, and walk across these tiles.
+	/// </summary>
 	public abstract class Tile : IName, IEditorObject, IPositionable2
 	{
 		private Vector2 position;
 		internal int SolidSides { get; set; }			// Okay, so this is kind of ugly. This can be either a TileRectSolidSides or a TileTriSolidSides. At least we cast it for public access.
 
+		/// <summary>
+		/// Gets a value indicating the shape of this tile.
+		/// </summary>
 		public CollidableShape TileShape { get; protected set; }
 
+		/// <summary>
+		/// Gets the initial position of this tile in the section in pixels.
+		/// </summary>
 		public Vector2 InitialPosition { get; protected internal set; }
 
+		/// <summary>
+		/// Gets or sets the position of this tile in the section in pixels.
+		/// </summary>
+		/// <remarks>When this property is set, the HasMoved flag is set and the new position is corrected if it is very close to a pixel boundary.</remarks>
 		public Vector2 Position
 		{
 			get
@@ -34,6 +47,9 @@ namespace SMLimitless.Sprites
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the size of this tile in pixels.
+		/// </summary>
 		public Vector2 Size { get; set; }
 
 		/// <summary>
@@ -41,10 +57,20 @@ namespace SMLimitless.Sprites
 		/// </summary>
 		public abstract float SurfaceFriction { get; }
 
+		/// <summary>
+		/// Gets or sets a value indicating whether this tile has moved during this frame.
+		/// </summary>
 		public bool HasMoved { get; set; }
 
+		/// <summary>
+		/// Gets an anonymous object containing other objects that need to be saved in the level file.
+		/// </summary>
+		/// <returns>An anonymous object containing objects to be saved in the level file.</returns>
 		public abstract object GetCustomSerializableObjects();
 
+		/// <summary>
+		/// Gets a rectangle that totally contains this tile.
+		/// </summary>
 		public BoundingRectangle Bounds
 		{
 			get
@@ -53,6 +79,9 @@ namespace SMLimitless.Sprites
 			}
 		}
 
+		/// <summary>
+		/// Gets the collidable hitbox for this tile.
+		/// </summary>
 		public ICollidableShape Hitbox
 		{
 			get
@@ -73,6 +102,13 @@ namespace SMLimitless.Sprites
 		}
 		
 		// TODO: Add PropertyGrid attributes
+
+		/// <summary>
+		/// Gets or sets a value indicating which sides of a rectangular tile are solid.
+		/// </summary>
+		/// <exception cref="InvalidOperationException">Thrown in the getter if the internal SolidSides property has been set to an invalid value.</exception>
+		/// <exception cref="InvalidOperationException">Thrown in the setter if this tile is not a rectangle.</exception>
+		/// <exception cref="ArgumentException">Thrown in the setter if the provided value was invalid.</exception>
 		public TileRectSolidSides RectSolidSides
 		{
 			get
@@ -91,6 +127,12 @@ namespace SMLimitless.Sprites
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets a value indicating which sides of a triangular tile are solid.
+		/// </summary>
+		/// <exception cref="InvalidOperationException">Thrown in the getter if the value of the internal SolidSides property is invalid.</exception>
+		/// <exception cref="InvalidOperationException">Thrown in the setter if this tile is not a triangle.</exception>
+		/// <exception cref="ArgumentException">Thrown in the setter if the provided value is invalid.</exception>
 		public TileTriSolidSides TriSolidSides
 		{
 			get
@@ -109,10 +151,19 @@ namespace SMLimitless.Sprites
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating if there are slopes on either side of this tile.
+		/// </summary>
 		public TileAdjacencyFlags AdjacencyFlags { get; internal set; }
 
+		/// <summary>
+		/// Gets or sets a value indicating which two sides of this tile have been replaced by the sloped side.
+		/// </summary>
 		protected internal RtSlopedSides SlopedSides { get; set; }
 
+		/// <summary>
+		/// Gets or sets the <see cref="Section"/> that owns this tile.
+		/// </summary>
 		public Section Owner { get; set; }
 
 		/// <summary>
@@ -126,10 +177,24 @@ namespace SMLimitless.Sprites
 		/// </summary>
 		public string EditorLabel { get; set; }
 
+		/// <summary>
+		/// Gets or sets a flag indicating whether this tile is active.
+		/// </summary>
 		public bool IsActive { get; set; }
+
+		/// <summary>
+		/// Gets or sets a string indicating the initial state of this tile.
+		/// </summary>
 		public string InitialState { get; set; }
+
+		/// <summary>
+		/// Gets or sets a string indicating the current state of this tile.
+		/// </summary>
 		public string State { get; set; }
 
+		/// <summary>
+		/// Gets or sets a value indicating whether a collision between this tile and a sprite should break the debugger if the collision debugger is enabled.
+		/// </summary>
 		public bool BreakOnCollision { get; set; }
 
 		/// <summary>
@@ -254,6 +319,10 @@ namespace SMLimitless.Sprites
 		/// <param name="intersect">The depth of the intersection.</param>
 		public abstract void HandleCollision(Sprite sprite, Vector2 intersect);
 
+		/// <summary>
+		/// Creates a deep copy of this tile.
+		/// </summary>
+		/// <returns>A new tile instance with most of the same values as this tile.</returns>
 		public Tile Clone()
 		{
 			Tile clone = AssemblyManager.GetTileByFullName(GetType().FullName);

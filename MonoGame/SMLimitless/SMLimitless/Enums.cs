@@ -240,11 +240,25 @@ namespace SMLimitless.Sprites
 		HorizontalLeg = 0x04
 	}
 
+	/// <summary>
+	/// An enumeration listing if there is a sloped tile on either side of a tile.
+	/// </summary>
 	[Flags]
 	public enum TileAdjacencyFlags
 	{
+		/// <summary>
+		/// There are no sloped tiles on either side of this tile.
+		/// </summary>
 		NoAdjacentSlopes = 0x00,
+		
+		/// <summary>
+		/// There is a sloped tile to the left of this tile.
+		/// </summary>
 		SlopeOnLeft = 0x01,
+
+		/// <summary>
+		/// There is a sloped tile to the right of this tile.
+		/// </summary>
 		SlopeOnRight = 0x02
 	}
 

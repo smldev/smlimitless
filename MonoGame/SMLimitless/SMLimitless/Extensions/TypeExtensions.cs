@@ -85,6 +85,11 @@ namespace SMLimitless.Extensions
             return type.InheritsFrom(typeof(Screen));
         }
 
+		/// <summary>
+		/// Determines if a given type is static.
+		/// </summary>
+		/// <param name="type">The type to check.</param>
+		/// <returns>True if the type is static, false if it is not.</returns>
 		public static bool IsStatic(this Type type)
 		{
 			return type.IsClass && type.IsAbstract && type.IsSealed;
