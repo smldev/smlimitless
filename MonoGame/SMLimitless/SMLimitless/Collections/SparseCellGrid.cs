@@ -122,6 +122,10 @@ namespace SMLimitless.Collections
 			LocalRemove(item);
 		}
 
+		/// <summary>
+		/// Removes all items from this grid that match a predicate.
+		/// </summary>
+		/// <param name="predicate">All the removed items must match this predicate.</param>
 		public void RemoveAllWhere(Predicate<T> predicate)
 		{
 			cells.Values.ForEach(c => c.Items.RemoveWhere(predicate));
@@ -255,6 +259,11 @@ namespace SMLimitless.Collections
 				}
 			}
 		}
+
+		/// <summary>
+		/// Gets the enumerator for this grid.
+		/// </summary>
+		/// <returns>An enumerator that enumerates over every item in this grid cell by cell.</returns>
 		public IEnumerator<T> GetEnumerator()
 		{
 			foreach (T item in cells.SelectMany(c => cells.Values.SelectMany(v => v.Items)).Distinct()) // good god
@@ -263,6 +272,10 @@ namespace SMLimitless.Collections
 			}
 		}
 
+		/// <summary>
+		/// The explicit interface implementation of IEnumerable.GetEnumerator().
+		/// </summary>
+		/// <returns>The enumerator returned by the GetEnumerator() method.</returns>
 		IEnumerator IEnumerable.GetEnumerator()
 		{
 			return GetEnumerator();

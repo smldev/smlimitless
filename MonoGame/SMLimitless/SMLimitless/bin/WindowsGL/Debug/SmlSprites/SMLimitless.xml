@@ -216,6 +216,11 @@
             The internal grid.
             </summary>
         </member>
+        <member name="P:SMLimitless.Collections.SizedGrid`1.Position">
+            <summary>
+            Gets the position of the top-left corner of this grid.
+            </summary>
+        </member>
         <member name="P:SMLimitless.Collections.SizedGrid`1.CellWidth">
             <summary>
             Gets the width of a grid cell, usually in pixels.
@@ -234,6 +239,11 @@
         <member name="P:SMLimitless.Collections.SizedGrid`1.Height">
             <summary>
             Gets the height of the grid in cells.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Collections.SizedGrid`1.Bounds">
+            <summary>
+            Gets a rectangle that can completely contain this sized grid.
             </summary>
         </member>
         <member name="M:SMLimitless.Collections.SizedGrid`1.#ctor(Microsoft.Xna.Framework.Vector2,System.Int32,System.Int32,System.Int32,System.Int32)">
@@ -262,6 +272,12 @@
             already present where the item will be placed.
             </summary>
             <param name="item">The item to add to the grid.</param>
+        </member>
+        <member name="M:SMLimitless.Collections.SizedGrid`1.AddWithResize(`0)">
+            <summary>
+            This method is not implemented.
+            </summary>
+            <param name="item">The item to add.</param>
         </member>
         <member name="M:SMLimitless.Collections.SizedGrid`1.Remove(SMLimitless.Interfaces.IPositionable2)">
             <summary>
@@ -319,8 +335,25 @@
             <summary>
             Draws the cell borders of this grid.
             </summary>
-            <param name="position">The position to start drawing the grid at.</param>
             <param name="lineColor">The color of the cell lines.</param>
+        </member>
+        <member name="M:SMLimitless.Collections.SizedGrid`1.GetEnumerator">
+            <summary>
+            Gets the enumerator for this grid.
+            </summary>
+            <returns>An enumerator that enumerates over each grid cell.</returns>
+        </member>
+        <member name="M:SMLimitless.Collections.SizedGrid`1.EnumerateItemsWithGridCells">
+            <summary>
+            Returns an enumerable that enumerates over the grid.
+            </summary>
+            <returns>An enumerable that returns the contents of each grid cell, as well as the coordinates of each grid cell in X, Y order.</returns>
+        </member>
+        <member name="M:SMLimitless.Collections.SizedGrid`1.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            The explicit interface implementation of IEnumerable.GetEnumerator().
+            </summary>
+            <returns>The enumerator returned by the GetEnumerator() method.</returns>
         </member>
         <member name="T:SMLimitless.Collections.SparseCell`1">
             <summary>
@@ -465,6 +498,12 @@
             </summary>
             <param name="item">The item to remove.</param>
         </member>
+        <member name="M:SMLimitless.Collections.SparseCellGrid`1.RemoveAllWhere(System.Predicate{`0})">
+            <summary>
+            Removes all items from this grid that match a predicate.
+            </summary>
+            <param name="predicate">All the removed items must match this predicate.</param>
+        </member>
         <member name="M:SMLimitless.Collections.SparseCellGrid`1.LocalAdd(`0)">
             <summary>
             Adds an item to the cell grid without adding it to the Items collection.
@@ -508,6 +547,18 @@
             <summary>
             Draws each cell as white rectangular edges with their cell number printed in the corner.
             </summary>
+        </member>
+        <member name="M:SMLimitless.Collections.SparseCellGrid`1.GetEnumerator">
+            <summary>
+            Gets the enumerator for this grid.
+            </summary>
+            <returns>An enumerator that enumerates over every item in this grid cell by cell.</returns>
+        </member>
+        <member name="M:SMLimitless.Collections.SparseCellGrid`1.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            The explicit interface implementation of IEnumerable.GetEnumerator().
+            </summary>
+            <returns>The enumerator returned by the GetEnumerator() method.</returns>
         </member>
         <member name="T:SMLimitless.Collections.SparseCellRange">
             <summary>
@@ -1010,6 +1061,12 @@
             the contents of this method with the code editor.
             </summary>
         </member>
+        <member name="M:SMLimitless.Editor.PropertyForm.#ctor(SMLimitless.Sprites.InternalSprites.EditorSelectedObject)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SMLimitless.Editor.PropertyForm"/> class.
+            </summary>
+            <param name="selectedObject">An <see cref="T:SMLimitless.Sprites.InternalSprites.EditorSelectedObject"/> instance currently in use by the level editor.</param>
+        </member>
         <member name="F:SMLimitless.Editor.PropertyForm.components">
             <summary>
             Required designer variable.
@@ -1026,6 +1083,120 @@
             Required method for Designer support - do not modify
             the contents of this method with the code editor.
             </summary>
+        </member>
+        <member name="T:SMLimitless.Editor.SpriteData">
+            <summary>
+            A class containing information about the default state for a sprite in an assembly, used by the editor to place instance of this sprite.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.SpriteData.TypeName">
+            <summary>
+            Gets the full type name of the sprite.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.SpriteData.EditorResourceName">
+            <summary>
+            Gets the name of the graphics resource to use on the editor button.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.SpriteData.EditorTextureSourceRectangle">
+            <summary>
+            Gets the rectangle on the editor button graphics resource that contains the texture to use on the editor button.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.SpriteData.State">
+            <summary>
+            Gets an integer representing the initial value of the State property of the sprite.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.SpriteData.Collision">
+            <summary>
+            Gets an integer representing the initial value of the Collision property of the sprite.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.SpriteData.CustomData">
+            <summary>
+            Gets a JSON object containing custom objects for the sprite.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Editor.SpriteData.#ctor(System.String,System.String,Microsoft.Xna.Framework.Rectangle,System.Int32,System.Int32,Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SMLimitless.Editor.SpriteData"/> class.
+            </summary>
+            <param name="typeName">The full type name of the sprite.</param>
+            <param name="editorResourceName">The name of the graphics resource to use on the editor button.</param>
+            <param name="editorTextureSourceRectangle">The rectangle on the editor button graphics resource that contains the texture to use on the editor button.</param>
+            <param name="state">An integer representing the initial value of the State property of the sprite.</param>
+            <param name="collision">An integer representing the initial value of the Collision property of the sprite.</param>
+            <param name="customData">A JSON object containing custom objects for the sprite.</param>
+        </member>
+        <member name="T:SMLimitless.Editor.TileData">
+            <summary>
+            A class containing information about every available tile type in an assembly, as well as each variety of each tile.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.TileData.TypeName">
+            <summary>
+            Gets the full type name of the tile.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.TileData.DefaultStates">
+            <summary>
+            Gets a read-only list of the default states of this tile.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Editor.TileData.#ctor(System.String,System.Collections.Generic.IEnumerable{SMLimitless.Editor.TileDefaultState})">
+            <summary>
+            Initializes a new instance of the <see cref="T:SMLimitless.Editor.TileData"/> class.
+            </summary>
+            <param name="typeName">The full type name of the tile.</param>
+            <param name="defaultStates">An enumerable containing default states for this tile.</param>
+        </member>
+        <member name="T:SMLimitless.Editor.TileDefaultState">
+            <summary>
+            A class containing information about a certain variety of a tile.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.TileDefaultState.TypeName">
+            <summary>
+            Gets the full type name of the tile for which this <see cref="T:SMLimitless.Editor.TileDefaultState"/> is a variety of.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.TileDefaultState.SolidSides">
+            <summary>
+            Gets an integer representing either a <see cref="T:SMLimitless.Sprites.TileRectSolidSides"/> or <see cref="T:SMLimitless.Sprites.TileTriSolidSides"/> enum instance, depending on what shape the tile has.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.TileDefaultState.CollisionType">
+            <summary>
+            Gets an integer representing the <see cref="T:SMLimitless.Sprites.TileCollisionType"/> enum instance for this variety.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.TileDefaultState.GraphicsResource">
+            <summary>
+            Gets the name of the graphics resource for this variety of tile.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.TileDefaultState.State">
+            <summary>
+            Gets the initial state for this variety of tile.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.TileDefaultState.CustomData">
+            <summary>
+            Gets a JSON object containing this variety's custom data.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Editor.TileDefaultState.#ctor(System.String,System.Int32,System.Int32,System.String,System.String,Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SMLimitless.Editor.TileDefaultState"/> class.
+            </summary>
+            <param name="typeName">The full type name of the tile for which this <see cref="T:SMLimitless.Editor.TileDefaultState"/> instance is a variety of.</param>
+            <param name="solidStates">An integer representing either a <see cref="T:SMLimitless.Sprites.TileRectSolidSides"/> or <see cref="T:SMLimitless.Sprites.TileTriSolidSides"/> enum instance, depending on what shape the tile has.</param>
+            <param name="collisionType">An integer representing the <see cref="T:SMLimitless.Sprites.TileCollisionType"/> enum instance for this variety.</param>
+            <param name="graphicsResource">The name of the graphics resource for this variety of tile.</param>
+            <param name="state">The initial state for this variety of tile.</param>
+            <param name="customData">A JSON object containing this variety's custom data.</param>
         </member>
         <member name="T:SMLimitless.Direction">
             <summary>
@@ -1430,17 +1601,17 @@
         </member>
         <member name="F:SMLimitless.Sprites.SpriteDirection.FacePlayer">
             <summary>
-            The sprite will always face the player.
+            The sprite will be loaded facing the player.
             </summary>
         </member>
         <member name="F:SMLimitless.Sprites.SpriteDirection.Left">
             <summary>
-            The sprite will always face left.
+            The sprite will be loaded facing left.
             </summary>
         </member>
         <member name="F:SMLimitless.Sprites.SpriteDirection.Right">
             <summary>
-            The sprite will always face right.
+            The sprite will be loaded facing right.
             </summary>
         </member>
         <member name="T:SMLimitless.Sprites.TileCollisionType">
@@ -1547,6 +1718,26 @@
         <member name="F:SMLimitless.Sprites.TileTriSolidSides.HorizontalLeg">
             <summary>
             The horizontal side is solid.
+            </summary>
+        </member>
+        <member name="T:SMLimitless.Sprites.TileAdjacencyFlags">
+            <summary>
+            An enumeration listing if there is a sloped tile on either side of a tile.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.TileAdjacencyFlags.NoAdjacentSlopes">
+            <summary>
+            There are no sloped tiles on either side of this tile.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.TileAdjacencyFlags.SlopeOnLeft">
+            <summary>
+            There is a sloped tile to the left of this tile.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.TileAdjacencyFlags.SlopeOnRight">
+            <summary>
+            There is a sloped tile to the right of this tile.
             </summary>
         </member>
         <member name="T:SMLimitless.Sprites.SpriteCollisionMode">
@@ -1990,12 +2181,127 @@
             </summary>
             <param name="json">A valid JSON string.</param>
         </member>
+        <member name="T:SMLimitless.Sprites.Collections.Layer">
+            <summary>
+            Represents a grid containing tiles, itself containing sprites.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Collections.Layer.IsMainLayer">
+            <summary>
+            Gets a value indicating whether this layer is the main layer in its owner section.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Collections.Layer.Bounds">
+            <summary>
+            Gets the bounds of this layer; the rectangle containing all tiles in the layer.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Collections.Layer.Position">
+            <summary>
+            Gets the position of the layer; the position of the top-left corner of the <see cref="P:SMLimitless.Sprites.Collections.Layer.Bounds"/>.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Collections.Layer.Index">
+            <summary>
+            Gets the numeric index of this layer in its owner section.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Collections.Layer.Name">
+            <summary>
+            Gets or sets the name of this layer.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Sprites.Collections.Layer.#ctor(SMLimitless.Sprites.Collections.Section,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SMLimitless.Sprites.Collections.Layer"/> class.
+            </summary>
+            <param name="cOwner">The section that owns this layer.</param>
+            <param name="isMainLayer">A value indicating whether this layer is the main layer in its owner section. Defaults to false.</param>
+        </member>
+        <member name="M:SMLimitless.Sprites.Collections.Layer.Initialize">
+            <summary>
+            Initializes the tiles and sprites in this layer.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Sprites.Collections.Layer.LoadContent">
+            <summary>
+            Loads the content of the tiles and sprites in this layer.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Sprites.Collections.Layer.Update">
+            <summary>
+            Updates the contents of this layer.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Sprites.Collections.Layer.Draw(Microsoft.Xna.Framework.Color)">
+            <summary>
+            Draws the outline of the <see cref="P:SMLimitless.Sprites.Collections.Layer.Bounds"/> of this layer.
+            </summary>
+            <param name="color">The color to draw the outline.</param>
+        </member>
+        <member name="M:SMLimitless.Sprites.Collections.Layer.AddTiles(System.Collections.Generic.IEnumerable{SMLimitless.Sprites.Tile})">
+            <summary>
+            Adds the tiles in an enumerable to this layer.
+            </summary>
+            <param name="tiles">An enumerable of zero or more tiles.</param>
+            <exception cref="T:System.ArgumentException">Thrown if any tile in the enumerable is not grid-aligned.</exception>
+        </member>
+        <member name="M:SMLimitless.Sprites.Collections.Layer.RemoveTile(SMLimitless.Sprites.Tile)">
+            <summary>
+            Removes a tile from this layer.
+            </summary>
+            <param name="tile">The tile to remove.</param>
+        </member>
+        <member name="M:SMLimitless.Sprites.Collections.Layer.GetCellNumberAtPosition(Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Gets the cell number at a given position.
+            </summary>
+            <param name="position">The given position.</param>
+            <returns>A <see cref="T:Microsoft.Xna.Framework.Vector2"/> containing the cell number at the position.</returns>
+            <remarks>Returns cell numbers for positions outside the <see cref="P:SMLimitless.Sprites.Collections.Layer.Bounds"/> of the layer.</remarks>
+        </member>
+        <member name="M:SMLimitless.Sprites.Collections.Layer.GetClampedCellNumberAtPosition(Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Gets the cell number at a given position, or the cell number along an edge or corner for out-of-bounds positions.
+            </summary>
+            <param name="position">The given position.</param>
+            <returns>A <see cref="T:Microsoft.Xna.Framework.Vector2"/> representing a cell number within the layer.</returns>
+        </member>
+        <member name="M:SMLimitless.Sprites.Collections.Layer.GetTile(System.Int32,System.Int32)">
+            <summary>
+            Gets a tile at a given cell number.
+            </summary>
+            <param name="x">The X number of the cell; the cells away from the left-most cell.</param>
+            <param name="y">The Y number of the cell; the cells below the top-most cell.</param>
+            <returns>A tile in the cell, or null if there is no tile there.</returns>
+        </member>
+        <member name="M:SMLimitless.Sprites.Collections.Layer.GetTile(Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Gets a tile at a given cell number.
+            </summary>
+            <param name="cellNumber">A <see cref="T:Microsoft.Xna.Framework.Vector2"/> containing the cell number.</param>
+            <returns>A tile in the cell, or null if there is no tile there.</returns>
+        </member>
         <member name="M:SMLimitless.Sprites.Collections.Layer.SafeGetTile(Microsoft.Xna.Framework.Vector2)">
             <summary>
             Gets a tile in a given cell, or null if there is no tile in that cell, or the given cell is out of bounds.
             </summary>
             <param name="cellNumber">The cell for which to get the tile.</param>
             <returns>A Tile or null.</returns>
+        </member>
+        <member name="M:SMLimitless.Sprites.Collections.Layer.Move(Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Moves this layer to a given position.
+            </summary>
+            <param name="position">The position to move the layer to.</param>
+            <exception cref="T:System.InvalidOperationException">Thrown when attempting to move the main layer. The main layer always has its position at the origin.</exception>
+        </member>
+        <member name="M:SMLimitless.Sprites.Collections.Layer.Translate(Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Moves the layer and its contents by a given distance.
+            </summary>
+            <param name="distance">The distance to move the layer.</param>
+            <exception cref="T:System.InvalidOperationException">Thrown when attempting to translate the main layer. The main layer always has its position at the origin.</exception>
         </member>
         <member name="T:SMLimitless.Sprites.Collections.Level">
             <summary>
@@ -2184,6 +2490,151 @@
             </summary>
             <param name="json">A valid JSON string.</param>
         </member>
+        <member name="T:SMLimitless.Sprites.Collections.Section">
+            <summary>
+            The main area of gameplay.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Collections.Section.IsLoaded">
+            <summary>
+            Gets a value indicating whether first-stage loading (deserialization and game object initialization) has completed.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Collections.Section.Background">
+            <summary>
+            Gets the <see cref="T:SMLimitless.Sprites.Collections.Background"/> for this section.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Collections.Section.Bounds">
+            <summary>
+            Gets the bounds of this section, the rectangular area to which the camera is restricted.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Collections.Section.Camera">
+            <summary>
+            Gets the camera viewing this section.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Collections.Section.CameraSystem">
+            <summary>
+            Gets the <see cref="T:SMLimitless.Physics.CameraSystem"/> instance tracking objects in this section.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Collections.Section.Index">
+            <summary>
+            Gets or sets the numeric index of this section within its level.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Collections.Section.Owner">
+            <summary>
+            Gets the <see cref="T:SMLimitless.Sprites.Collections.Level"/> that owns this section.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Collections.Section.AutoscrollSettings">
+            <summary>
+            Gets the settings used for automatic camera scrolling for this section.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Collections.Section.Name">
+            <summary>
+            Gets or sets the name of this section.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Collections.Section.EditorActive">
+            <summary>
+            Gets a value indicating whether the level editor is currently enabled for this section.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Collections.Section.MousePosition">
+            <summary>
+            Gets the current mouse position adjusted for the camera's position and zoom.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Sprites.Collections.Section.#ctor(SMLimitless.Sprites.Collections.Level)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SMLimitless.Sprites.Collections.Section"/> class.
+            </summary>
+            <param name="owner">The <see cref="T:SMLimitless.Sprites.Collections.Level"/> that owns this section.</param>
+        </member>
+        <member name="M:SMLimitless.Sprites.Collections.Section.Initialize">
+            <summary>
+            Initializes the game objects for this section.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Sprites.Collections.Section.LoadContent">
+            <summary>
+            Loads the content for the game objects in this section.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Sprites.Collections.Section.Update">
+            <summary>
+            Updates this section.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Sprites.Collections.Section.UpdatePhysics">
+            <summary>
+            Moves sprites according to their velocity and performs collision detection and resolution.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Sprites.Collections.Section.Draw">
+            <summary>
+            Draws the game objects in this section.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Sprites.Collections.Section.GetTileAtPosition(Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Gets the tile at a given position on the topmost layer.
+            </summary>
+            <param name="position">The position to get the tile at.</param>
+            <returns>A <see cref="T:SMLimitless.Sprites.Tile"/> instance, or null if there is no tile at <paramref name="position"/>.</returns>
+        </member>
+        <member name="M:SMLimitless.Sprites.Collections.Section.AddTile(SMLimitless.Sprites.Tile)">
+            <summary>
+            Adds a <see cref="T:SMLimitless.Sprites.Tile"/> to this section and to the main layer.
+            </summary>
+            <param name="tile">The tile to add.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="tile"/> reference is null.</exception>
+        </member>
+        <member name="M:SMLimitless.Sprites.Collections.Section.AddSprite(SMLimitless.Sprites.Sprite)">
+            <summary>
+            Adds a <see cref="T:SMLimitless.Sprites.Sprite"/> to this section.
+            </summary>
+            <param name="sprite">The sprite to add.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="sprite"/> reference is null.</exception>
+        </member>
+        <member name="M:SMLimitless.Sprites.Collections.Section.AddSpriteOnNextFrame(SMLimitless.Sprites.Sprite)">
+            <summary>
+            Sets a sprite to be added to the section on the next frame.
+            </summary>
+            <param name="sprite">The sprite to add.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="sprite"/> reference is null.</exception>
+        </member>
+        <member name="M:SMLimitless.Sprites.Collections.Section.RemoveTile(SMLimitless.Sprites.Tile)">
+            <summary>
+            Removes a tile from this section and all layers it may be in.
+            </summary>
+            <param name="tile">The tile to remove.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="tile"/> reference is null.</exception>
+        </member>
+        <member name="M:SMLimitless.Sprites.Collections.Section.RemoveSprite(SMLimitless.Sprites.Sprite)">
+            <summary>
+            Removes a sprite from this section.
+            </summary>
+            <param name="sprite">The sprite to remove.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="sprite"/> reference is null.</exception>
+        </member>
+        <member name="T:SMLimitless.Sprites.Collections.TestSectionGenerator">
+            <summary>
+            A class that generates a section for testing purposes.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Sprites.Collections.TestSectionGenerator.GenerateSection(SMLimitless.Sprites.Collections.Level)">
+            <summary>
+            Creates a test section.
+            </summary>
+            <param name="owner">The level that will own this section.</param>
+            <returns>A section consisting of randomly placed and sized rows of concrete blocks with a TestPlayer.</returns>
+        </member>
         <member name="T:SMLimitless.Sprites.Assemblies.AssemblyManager">
             <summary>
             Loads and manages assemblies containing custom sprites, tiles, and screens.
@@ -2363,6 +2814,41 @@
             <param name="key">The name of the key containing the UTF-16 string.</param>
             <returns>A UTF-16 string from the JToken.</returns>
         </member>
+        <member name="T:SMLimitless.Sprites.Components.WalkerComponent">
+            <summary>
+            A component which moves the sprite horizontally along a surface of tiles.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Components.WalkerComponent.StartingDirection">
+            <summary>
+            The initial direction (Left, Right, or FacePlayer) that the sprites starts out facing.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Components.WalkerComponent.InitialHorizontalVelocity">
+            <summary>
+            The initial velocity that the sprite has. 
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Sprites.Components.WalkerComponent.#ctor(SMLimitless.Sprites.Sprite,SMLimitless.Sprites.SpriteDirection,System.Single)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SMLimitless.Sprites.Components.WalkerComponent"/> class.
+            </summary>
+            <param name="owner">The sprite that owns this component.</param>
+            <param name="startingDirection">The initial direction (Left, Right, or FacePlayer) that the sprites starts out facing.</param>
+            <param name="initialHorizontalVelocity">The initial velocity that the sprite has. Provide a positive value; the sign is automatically determined based on initial direction.</param>
+        </member>
+        <member name="M:SMLimitless.Sprites.Components.WalkerComponent.Update">
+            <summary>
+            Update this component.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Sprites.Components.WalkerComponent.HandleTileCollision(SMLimitless.Sprites.Tile,Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Handle a collision between this component's owner sprite and a tile.
+            </summary>
+            <param name="collidingTile">The tile that the owner sprite has collided with.</param>
+            <param name="resolutionDistance">The distance by which the owner sprite was moved to resolve the collision.</param>
+        </member>
         <member name="T:SMLimitless.Sprites.Sprite">
             <summary>
             The base type for all sprites.
@@ -2376,6 +2862,16 @@
         <member name="F:SMLimitless.Sprites.Sprite.velocity">
             <summary>
             A backing field for the Velocity property.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.Sprite.MaximumGravitationalVelocity">
+            <summary>
+            A physics setting representing the maximum downward velocity a sprite can acquire through falling. Measured in pixels per second.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.Sprite.UpwardAccelerationDecay">
+            <summary>
+            A physics setting representing the rate that any upward acceleration is reduced to zero. Measured in pixels per second cubed.
             </summary>
         </member>
         <member name="P:SMLimitless.Sprites.Sprite.ID">
@@ -2447,6 +2943,22 @@
         <member name="P:SMLimitless.Sprites.Sprite.Acceleration">
             <summary>
             Gets or sets the acceleration of this sprite, measured in pixels per second per second.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Sprites.Sprite.GetCustomSerializableObjects">
+            <summary>
+            Gets an anonymous object containing objects that need to be saved to the level file.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:SMLimitless.Sprites.Sprite.HasMoved">
+            <summary>
+            Gets or sets a value indicating whether the sprite has moved during this frame.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Sprite.BreakOnCollision">
+            <summary>
+            Gets or sets a value indicating whether a collision between this sprite and a tile should break the debugger if collision debugging is enabled.
             </summary>
         </member>
         <member name="P:SMLimitless.Sprites.Sprite.CollisionMode">
@@ -2529,6 +3041,15 @@
             Draws this sprite.
             </summary>
         </member>
+        <member name="M:SMLimitless.Sprites.Sprite.GetSlopeHitbox(SMLimitless.Physics.RtSlopedSides)">
+            <summary>
+            Gets the hitbox of this sprite for collision with a slope.
+            </summary>
+            <param name="slopedSides">The sloped sides of the slope.</param>
+            <returns>The left half of the sprite's hitbox for TopLeft and BottomLeft slopes or the right half of the hitbox for TopRight and BottomRight slopes.</returns>
+            <exception cref="T:System.ArgumentException">Thrown if <paramref name="slopedSides"/> has a value of Default.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if <paramref name="slopedSides"/> does not have a valid value.</exception>
+        </member>
         <member name="M:SMLimitless.Sprites.Sprite.HandleTileCollision(SMLimitless.Sprites.Tile,Microsoft.Xna.Framework.Vector2)">
             <summary>
             Handles a collision between this sprite and a tile.
@@ -2580,16 +3101,96 @@
             A method called when the owner sprite collides with a tile.
             </summary>
             <param name="collidingTile">The tile that the owner sprite collided with.</param>
+            <param name="resolutionDistance">The distance by which the sprite was moved in order to resolve the tile collision.</param>
         </member>
         <member name="M:SMLimitless.Sprites.SpriteComponent.HandleSpriteCollision(SMLimitless.Sprites.Sprite,Microsoft.Xna.Framework.Vector2)">
             <summary>
             A method called when the owner sprite collides with another sprite.
             </summary>
             <param name="collidingSprite">The sprite that the owner sprite collided with.</param>
+            <param name="resolutionDistance">The distance by which the sprite was moved in order to resolve the sprite collision.</param>
+        </member>
+        <member name="T:SMLimitless.Sprites.Tile">
+            <summary>
+            A unit of terrain in <see cref="T:SMLimitless.Sprites.Collections.Section"/>. Sprites can collide with, slide down, and walk across these tiles.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Tile.TileShape">
+            <summary>
+            Gets a value indicating the shape of this tile.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Tile.InitialPosition">
+            <summary>
+            Gets the initial position of this tile in the section in pixels.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Tile.Position">
+            <summary>
+            Gets or sets the position of this tile in the section in pixels.
+            </summary>
+            <remarks>When this property is set, the HasMoved flag is set and the new position is corrected if it is very close to a pixel boundary.</remarks>
+        </member>
+        <member name="P:SMLimitless.Sprites.Tile.Size">
+            <summary>
+            Gets or sets the size of this tile in pixels.
+            </summary>
         </member>
         <member name="P:SMLimitless.Sprites.Tile.SurfaceFriction">
             <summary>
             Gets the surface friction of the tile - how much sprites not moving on their own decelerate in each frame. Measured in pixels per second squared.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Tile.HasMoved">
+            <summary>
+            Gets or sets a value indicating whether this tile has moved during this frame.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Sprites.Tile.GetCustomSerializableObjects">
+            <summary>
+            Gets an anonymous object containing other objects that need to be saved in the level file.
+            </summary>
+            <returns>An anonymous object containing objects to be saved in the level file.</returns>
+        </member>
+        <member name="P:SMLimitless.Sprites.Tile.Bounds">
+            <summary>
+            Gets a rectangle that totally contains this tile.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Tile.Hitbox">
+            <summary>
+            Gets the collidable hitbox for this tile.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Tile.RectSolidSides">
+            <summary>
+            Gets or sets a value indicating which sides of a rectangular tile are solid.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">Thrown in the getter if the internal SolidSides property has been set to an invalid value.</exception>
+            <exception cref="T:System.InvalidOperationException">Thrown in the setter if this tile is not a rectangle.</exception>
+            <exception cref="T:System.ArgumentException">Thrown in the setter if the provided value was invalid.</exception>
+        </member>
+        <member name="P:SMLimitless.Sprites.Tile.TriSolidSides">
+            <summary>
+            Gets or sets a value indicating which sides of a triangular tile are solid.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">Thrown in the getter if the value of the internal SolidSides property is invalid.</exception>
+            <exception cref="T:System.InvalidOperationException">Thrown in the setter if this tile is not a triangle.</exception>
+            <exception cref="T:System.ArgumentException">Thrown in the setter if the provided value is invalid.</exception>
+        </member>
+        <member name="P:SMLimitless.Sprites.Tile.AdjacencyFlags">
+            <summary>
+            Gets a value indicating if there are slopes on either side of this tile.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Tile.SlopedSides">
+            <summary>
+            Gets or sets a value indicating which two sides of this tile have been replaced by the sloped side.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Tile.Owner">
+            <summary>
+            Gets or sets the <see cref="T:SMLimitless.Sprites.Collections.Section"/> that owns this tile.
             </summary>
         </member>
         <member name="P:SMLimitless.Sprites.Tile.EditorCategory">
@@ -2601,6 +3202,26 @@
         <member name="P:SMLimitless.Sprites.Tile.EditorLabel">
             <summary>
             Gets or sets the name of this tile used in the level editor.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Tile.IsActive">
+            <summary>
+            Gets or sets a flag indicating whether this tile is active.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Tile.InitialState">
+            <summary>
+            Gets or sets a string indicating the initial state of this tile.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Tile.State">
+            <summary>
+            Gets or sets a string indicating the current state of this tile.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Tile.BreakOnCollision">
+            <summary>
+            Gets or sets a value indicating whether a collision between this tile and a sprite should break the debugger if the collision debugger is enabled.
             </summary>
         </member>
         <member name="P:SMLimitless.Sprites.Tile.Name">
@@ -2664,6 +3285,12 @@
             <param name="sprite">The sprite that has collided with this tile.</param>
             <param name="intersect">The depth of the intersection.</param>
         </member>
+        <member name="M:SMLimitless.Sprites.Tile.Clone">
+            <summary>
+            Creates a deep copy of this tile.
+            </summary>
+            <returns>A new tile instance with most of the same values as this tile.</returns>
+        </member>
         <member name="M:SMLimitless.Sprites.Tile.DeserializeCustomObjects(SMLimitless.Sprites.Assemblies.JsonHelper)">
             <summary>
             Loads key custom objects from the level file.
@@ -2710,6 +3337,36 @@
             The downward cardinal direction (positive Y).
             </summary>
         </member>
+        <member name="T:SMLimitless.Physics.FlaggedDirection">
+            <summary>
+            Enumerates the cardinal directions as a set of flags.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.FlaggedDirection.None">
+            <summary>
+            Represents no direction set.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.FlaggedDirection.Up">
+            <summary>
+            Represents the upward cardinal direction (negative Y).
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.FlaggedDirection.Down">
+            <summary>
+            Represents the downward cardinal direction (positive Y).
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.FlaggedDirection.Left">
+            <summary>
+            Represents the leftward cardinal direction (negative X).
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.FlaggedDirection.Right">
+            <summary>
+            Represents the rightward cardinal direction (positive X).
+            </summary>
+        </member>
         <member name="T:SMLimitless.Physics.CollidableShape">
             <summary>
             An enumeration of the collidable shapes that
@@ -2745,6 +3402,62 @@
         <member name="F:SMLimitless.Physics.ResolutionType.Slope">
             <summary>
             A resolution between a sprite and the sloped side of a sloped tile.
+            </summary>
+        </member>
+        <member name="T:SMLimitless.Physics.RectangularSpaceDivision">
+            <summary>
+            Enumerates the division of the space around a rectangle.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.RectangularSpaceDivision.None">
+            <summary>
+            The default/invalid value.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.RectangularSpaceDivision.Within">
+            <summary>
+            The area within the rectangle.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.RectangularSpaceDivision.Above">
+            <summary>
+            The area directly above the rectangle.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.RectangularSpaceDivision.Below">
+            <summary>
+            The area directly below the rectangle.
+            </summary>
+            
+        </member>
+        <member name="F:SMLimitless.Physics.RectangularSpaceDivision.Left">
+            <summary>
+            The area directly to the left of the rectangle.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.RectangularSpaceDivision.Right">
+            <summary>
+            The area directly to the right of the rectangle.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.RectangularSpaceDivision.AboveLeft">
+            <summary>
+            The area above and to the left of the rectangle.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.RectangularSpaceDivision.AboveRight">
+            <summary>
+            The area above and to the right of the rectangle.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.RectangularSpaceDivision.BelowLeft">
+            <summary>
+            The area below and to the left of the rectangle.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.RectangularSpaceDivision.BelowRight">
+            <summary>
+            The area below and to the right of the rectangle.
             </summary>
         </member>
         <member name="T:SMLimitless.Physics.BoundingRectangle">
@@ -3413,6 +4126,51 @@
             Gets the highest value the value can be.
             </summary>
         </member>
+        <member name="P:SMLimitless.Physics.PhysicsSetting`1.Type">
+            <summary>
+            Gets the type of value this setting has.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Physics.PhysicsSetting`1.#ctor(System.String,`0,`0,`0,SMLimitless.Physics.PhysicsSettingType)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SMLimitless.Physics.PhysicsSetting`1"/> class.
+            </summary>
+            <param name="name">The setting's name.</param>
+            <param name="minimum">The lowest value the value can be.</param>
+            <param name="maximum">The highest value the value can be.</param>
+            <param name="initialValue">The initial value of the setting.</param>
+            <param name="type">The type of value this setting has.</param>
+        </member>
+        <member name="M:SMLimitless.Physics.PhysicsSetting`1.Dispose">
+            <summary>
+            Unregisters this setting from the <see cref="T:SMLimitless.Forms.PhysicsSettingsEditorForm"/>.
+            </summary>
+        </member>
+        <member name="T:SMLimitless.Physics.PhysicsSettingType">
+            <summary>
+            Enumerates the types a physics setting can be.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.PhysicsSettingType.Integer">
+            <summary>
+            Represents a setting that is integral (a whole number).
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.PhysicsSettingType.FloatingPoint">
+            <summary>
+            Represents a setting that is a floating point number.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.PhysicsSettingType.Boolean">
+            <summary>
+            Represents a setting that is a Boolean true/false value.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.PhysicsSettingType.Other">
+            <summary>
+            Represents a setting that has another type not otherwise listed here.
+            </summary>
+        </member>
         <member name="T:SMLimitless.Physics.RightTriangle">
             <summary>
             Represents a right triangle, used for sloped tiles.
@@ -3499,6 +4257,15 @@
             </summary>
             <param name="x">The X-coordinate to solve for.</param>
             <returns>The point directly on the slope, or NaN if the point is not on the slope.</returns>
+        </member>
+        <member name="M:SMLimitless.Physics.RightTriangle.GetClampedPointOnSlope(System.Single)">
+            <summary>
+            For a given vertical line at an X coordinate,
+            returns the point of intersection between this line and the slope,
+            clamped to the left and right edges of the triangle.
+            </summary>
+            <param name="x">The X coordinate of the vertical line.</param>
+            <returns>A value between the left and right edges of the triangle.</returns>
         </member>
         <member name="M:SMLimitless.Physics.RightTriangle.GetPointOnLine(System.Single)">
             <summary>
@@ -3610,6 +4377,36 @@
             <summary>
             The bottom and right sides of the right triangle are sloped.
             </summary>
+        </member>
+        <member name="T:SMLimitless.Physics.SectionAutoscrollSettings">
+            <summary>
+            A structure containing data about how a section should automatically scroll.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.SectionAutoscrollSettings.ScrollType">
+            <summary>
+            Gets a value indicating how the section automatically scrolls.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.SectionAutoscrollSettings.Speed">
+            <summary>
+            Gets a value indicating how fast the section automatically scrolls.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">Thrown in the getter and setter if this section is not automatically scrolling.</exception>
+        </member>
+        <member name="P:SMLimitless.Physics.SectionAutoscrollSettings.PathName">
+            <summary>
+            Gets the name of the path that this section is automatically scrolling along.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">Thrown in the getter and setter if this section is not automatically scrolling along a path.</exception>
+        </member>
+        <member name="M:SMLimitless.Physics.SectionAutoscrollSettings.#ctor(SMLimitless.Sprites.Collections.CameraScrollType,Microsoft.Xna.Framework.Vector2,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SMLimitless.Physics.SectionAutoscrollSettings"/> struct.
+            </summary>
+            <param name="scrollType">A value indicating how the section automatically scrolls.</param>
+            <param name="speed">A value indicating how fast the section automatically scrolls.</param>
+            <param name="pathName">The name of the path that this section is automatically scrolling along.</param>
         </member>
         <member name="T:SMLimitless.Extensions.ColorExtensions">
             <summary>
@@ -3775,6 +4572,41 @@
             <param name="a">The first number of the range.</param>
             <param name="b">The second number of the range.</param>
             <returns></returns>
+        </member>
+        <member name="M:SMLimitless.Extensions.NumericExtensions.Clamp(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Given an integer and a range, returns the integer if it's in the range, or the minimum/maximum values if it's less/more, respectively.
+            </summary>
+            <param name="value">The integer.</param>
+            <param name="min">The minimum of the range.</param>
+            <param name="max">The maximum of the range.</param>
+            <returns>An integer between <paramref name="min"/> and <paramref name="max"/>.</returns>
+        </member>
+        <member name="T:SMLimitless.Extensions.PointExtensions">
+            <summary>
+            Contains extension methods for the <see cref="T:Microsoft.Xna.Framework.Point"/> struct.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Extensions.PointExtensions.SerializeCompact(System.Collections.Generic.IEnumerable{Microsoft.Xna.Framework.Point})">
+            <summary>
+            Converts an enumerable containing <see cref="T:Microsoft.Xna.Framework.Point"/> instances into a <see cref="T:System.String"/>
+            of form "x,y;x,y" with no trailing semicolon.
+            </summary>
+            <param name="points">An enumerable containing the points to be serialized.</param>
+            <returns>A string containing the point values.</returns>
+        </member>
+        <member name="M:SMLimitless.Extensions.PointExtensions.DeserializeCompact(System.String)">
+            <summary>
+            Converts a <see cref="T:System.String"/> with the form "x,y;x,y" into a <see cref="T:System.Collections.Generic.List`1"/> of <see cref="T:Microsoft.Xna.Framework.Point"/> instances.
+            </summary>
+            <param name="pointsString">A string of points.</param>
+            <returns>A list containing the points deserialized from the string.</returns>
+            <remarks>Handles empty entries ("x,y;;x,y") and trailing semicolons.</remarks>
+        </member>
+        <member name="T:SMLimitless.Extensions.PositionableExtensions">
+            <summary>
+            Contains extension methods for types implementing the <see cref="T:SMLimitless.Interfaces.IPositionable2"/> interface.
+            </summary>
         </member>
         <member name="M:SMLimitless.Extensions.PositionableExtensions.GetBoundsOfPositionables(System.Collections.Generic.IEnumerable{SMLimitless.Interfaces.IPositionable2})">
             <summary>
@@ -3994,6 +4826,13 @@
             <param name="type">The type to check.</param>
             <returns>True if the type is a screen.</returns>
         </member>
+        <member name="M:SMLimitless.Extensions.TypeExtensions.IsStatic(System.Type)">
+            <summary>
+            Determines if a given type is static.
+            </summary>
+            <param name="type">The type to check.</param>
+            <returns>True if the type is static, false if it is not.</returns>
+        </member>
         <member name="T:SMLimitless.Extensions.Vector2Extensions">
             <summary>
             Contains extension methods for the Vector2 structure.
@@ -4051,6 +4890,21 @@
             <param name="b">The second vector.</param>
             <returns>The angle between the vectors.</returns>
         </member>
+        <member name="M:SMLimitless.Extensions.Vector2Extensions.GetIntersectionDirection(Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Given a <see cref="T:Microsoft.Xna.Framework.Vector2"/> instance, returns a flagged <see cref="T:SMLimitless.Physics.FlaggedDirection"/> value indicating the direction of each component.
+            </summary>
+            <param name="intersect">The vector to get the directions of.</param>
+            <returns>A <see cref="T:SMLimitless.Physics.FlaggedDirection"/> instance. "Left" is set for X &lt; 0, "Right" is set for X &gt; 0, "Up" is set for Y &lt; 0, "Down" is set for Y &gt; 0, "None" is set for X = Y = 0.</returns>
+        </member>
+        <member name="M:SMLimitless.Extensions.Vector2Extensions.GetResolutionDirection(Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Given a resolution distance, gets the direction of the resolution.
+            </summary>
+            <param name="intersect">A <see cref="T:Microsoft.Xna.Framework.Vector2"/> instance with at least one component equal to zero.</param>
+            <returns>The direction in which a resolution occurs, or Direction.None if both components of <paramref name="intersect"/> are zero.</returns>
+            <exception cref="T:System.ArgumentException">Thrown if neither component of <paramref name="intersect"/> are zero.</exception>
+        </member>
         <member name="M:SMLimitless.Extensions.Vector2Extensions.GreaterThan(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2)">
             <summary>
             Compares the components of one vector to another.
@@ -4059,6 +4913,14 @@
             <param name="right">The second vector.</param>
             <returns>True if left is greater than right, false if otherwise.</returns>
         </member>
+        <member name="M:SMLimitless.Extensions.Vector2Extensions.GreaterThan(Microsoft.Xna.Framework.Vector2,System.Single)">
+            <summary>
+            Does a greater-than comparison on both components of two <see cref="T:Microsoft.Xna.Framework.Vector2"/> instances.
+            </summary>
+            <param name="left">The first vector to compare.</param>
+            <param name="right">The second vector to compare.</param>
+            <returns>True if both components of <paramref name="left"/> are greater than their corresponding components in <paramref name="right"/>.</returns>
+        </member>
         <member name="M:SMLimitless.Extensions.Vector2Extensions.GreaterThanOrEqualTo(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2)">
             <summary>
             Compares the components of one vector to another.
@@ -4066,6 +4928,14 @@
             <param name="left">The first vector.</param>
             <param name="right">The second vector.</param>
             <returns>True if left is greater than or equal to right, false if otherwise.</returns>
+        </member>
+        <member name="M:SMLimitless.Extensions.Vector2Extensions.GreaterThanOrEqualTo(Microsoft.Xna.Framework.Vector2,System.Single)">
+            <summary>
+            Determines if both components of one vector are greater than or equal to both components of another vector.
+            </summary>
+            <param name="left">The first vector to compare.</param>
+            <param name="right">The second vector to compare.</param>
+            <returns>True if both components of <paramref name="left"/> are greater than or equal to both components of <paramref name="right"/>.</returns>
         </member>
         <member name="M:SMLimitless.Extensions.Vector2Extensions.GreatestVectorByX(System.Collections.Generic.IEnumerable{Microsoft.Xna.Framework.Vector2})">
             <summary>
@@ -4170,6 +5040,13 @@
             <param name="values">The values to convert.</param>
             <returns>A string containing all values of the list expressed in "x,y" form.</returns>
         </member>
+        <member name="M:SMLimitless.Extensions.Vector2Extensions.ToPoint(Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Converts a <see cref="T:Microsoft.Xna.Framework.Vector2"/> instance to a <see cref="T:Microsoft.Xna.Framework.Point"/> instance.
+            </summary>
+            <param name="vector">The <see cref="T:Microsoft.Xna.Framework.Vector2"/> to convert to a <see cref="T:Microsoft.Xna.Framework.Point"/>.</param>
+            <returns>A point with components equal to the integral portion of each vector component.</returns>
+        </member>
         <member name="M:SMLimitless.Extensions.Vector2Extensions.ToRectangle(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2)">
             <summary>
             Converts this Vector2 and another Vector2 into a rectangle.
@@ -4235,11 +5112,6 @@
             Provides global access to game services.
             </summary>
         </member>
-        <member name="F:SMLimitless.GameServices.container">
-            <summary>
-            The field for the container.
-            </summary>
-        </member>
         <member name="P:SMLimitless.GameServices.Container">
             <summary>
             Gets the GameServicesContainer that stores references to the services added.
@@ -4265,9 +5137,14 @@
             Gets or sets the current camera.
             </summary>
         </member>
+        <member name="P:SMLimitless.GameServices.Effects">
+            <summary>
+            Gets or sets a dictionary containing <see cref="P:SMLimitless.GameServices.Effects"/> instances and their names.
+            </summary>
+        </member>
         <member name="P:SMLimitless.GameServices.ScreenSize">
             <summary>
-            Gets or sets the size of the window. Measured in pixels.
+            Gets or sets the size of the window in pixels.
             </summary>
         </member>
         <member name="P:SMLimitless.GameServices.DebugFont">
@@ -4278,6 +5155,11 @@
         <member name="P:SMLimitless.GameServices.DebugForm">
             <summary>
             Gets a debug form used for printing log messages and receiving debug commands.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.GameServices.PhysicsSettingsEditorForm">
+            <summary>
+            Gets a form used to edit global physics settings for game objects.
             </summary>
         </member>
         <member name="P:SMLimitless.GameServices.QuadTreeCellSize">
@@ -4342,7 +5224,7 @@
         </member>
         <member name="T:SMLimitless.GameSettings">
             <summary>
-            Loads the settings file.
+            Provides access to game settings.
             </summary>
         </member>
         <member name="F:SMLimitless.GameSettings.settingsReader">
@@ -4984,6 +5866,12 @@
             <summary>
             Loads the content for this object.
             </summary>
+        </member>
+        <member name="M:SMLimitless.Graphics.StaticGraphicsObject.GetEditorGraphics">
+            <summary>
+            Gets a single texture that can be used on a button in the editor.
+            </summary>
+            <returns>The texture of this graphics object.</returns>
         </member>
         <member name="M:SMLimitless.Graphics.StaticGraphicsObject.Update">
             <summary>
@@ -5693,6 +6581,11 @@
             may change without warning.
             </summary>
         </member>
+        <member name="M:SMLimitless.Screens.TestScreen.Update">
+            <summary>
+            Updates the screen.
+            </summary>
+        </member>
         <member name="M:SMLimitless.Screens.TestScreen.LoadContent">
             <summary>
             Loads the content for this screen.
@@ -5704,11 +6597,6 @@
             </summary>
             <param name="owner">The screen that is creating this one.</param>
             <param name="parameters">Parameters are unused.</param>
-        </member>
-        <member name="M:SMLimitless.Screens.TestScreen.Update">
-            <summary>
-            Updates the screen.
-            </summary>
         </member>
         <member name="M:SMLimitless.Screens.TestScreen.Draw">
             <summary>

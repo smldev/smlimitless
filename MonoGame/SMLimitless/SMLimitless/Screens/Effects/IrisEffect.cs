@@ -48,7 +48,7 @@ namespace SMLimitless.Screens.Effects
 				//GameServices.SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, null);
 				float r = color.R / 255f;
 				float g = color.G / 255f;
-				float b = color.B/ 255f;
+				float b = color.B / 255f;
 				float a = (color.A * currentFadeLevel) / 255f;
 
 				var irisEffect = GameServices.Effects["IrisEffect"];

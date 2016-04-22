@@ -22,9 +22,6 @@ namespace SMLimitless
     /// </summary>
     public static class GameServices
     {
-        /// <summary>
-        /// The field for the container.
-        /// </summary>
         private static GameServiceContainer container;
 
         /// <summary>
@@ -72,10 +69,13 @@ namespace SMLimitless
         /// </summary>
         public static Camera2D Camera { get; set; }
 
+		/// <summary>
+		/// Gets or sets a dictionary containing <see cref="Effects"/> instances and their names.
+		/// </summary>
 		public static Dictionary<string, Effect> Effects { get; set; } = new Dictionary<string, Effect>();
 
         /// <summary>
-        /// Gets or sets the size of the window. Measured in pixels.
+        /// Gets or sets the size of the window in pixels.
         /// </summary>
         public static Vector2 ScreenSize { get; set; }
 
@@ -89,6 +89,9 @@ namespace SMLimitless
 		/// </summary>
 		public static DebugForm DebugForm { get; private set; }
 
+		/// <summary>
+		/// Gets a form used to edit global physics settings for game objects.
+		/// </summary>
 		public static PhysicsSettingsEditorForm PhysicsSettingsEditorForm { get; private set; }
 
         /// <summary>

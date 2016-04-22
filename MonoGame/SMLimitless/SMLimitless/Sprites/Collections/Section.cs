@@ -14,29 +14,71 @@ using SMLimitless.Sprites.InternalSprites;
 
 namespace SMLimitless.Sprites.Collections
 {
+	/// <summary>
+	/// The main area of gameplay.
+	/// </summary>
 	public sealed class Section
 	{
 		private bool isContentLoaded;
 		private bool isDeserialized;
 		private bool isInitialized;
+
+		/// <summary>
+		/// Gets a value indicating whether first-stage loading (deserialization and game object initialization) has completed.
+		/// </summary>
 		public bool IsLoaded { get; internal set; }
 
 		private string debugText = "";
 		private Debug.DebugForm form = new Debug.DebugForm();
 
+		/// <summary>
+		/// Gets the <see cref="Sprites.Collections.Background"/> for this section.
+		/// </summary>
 		public Background Background { get; internal set; }
+
+		/// <summary>
+		/// Gets the bounds of this section, the rectangular area to which the camera is restricted.
+		/// </summary>
 		public BoundingRectangle Bounds { get; internal set; }
+
+		/// <summary>
+		/// Gets the camera viewing this section.
+		/// </summary>
 		public Camera2D Camera { get; private set; }
+
+		/// <summary>
+		/// Gets the <see cref="Physics.CameraSystem"/> instance tracking objects in this section.
+		/// </summary>
 		public CameraSystem CameraSystem { get; private set; }
+
+		/// <summary>
+		/// Gets or sets the numeric index of this section within its level.
+		/// </summary>
 		public int Index { get; set; }
 		private IrisEffect irisEffect;
+
+		/// <summary>
+		/// Gets the <see cref="Level"/> that owns this section.
+		/// </summary>
 		public Level Owner { get; private set; }
+
+		/// <summary>
+		/// Gets the settings used for automatic camera scrolling for this section.
+		/// </summary>
 		public SectionAutoscrollSettings AutoscrollSettings { get; internal set; }
+
+		/// <summary>
+		/// Gets or sets the name of this section.
+		/// </summary>
 		public string Name { get; set; }
 
 		internal EditorSelectedObject editorSelectedObject = new EditorSelectedObject();
 		private EditorCameraTrackingObject editorTrackingObject = null;
 		private EditorForm editorForm = null;
+
+		/// <summary>
+		/// Gets a value indicating whether the level editor is currently enabled for this section.
+		/// </summary>
 		public bool EditorActive { get; internal set; }
 
 		internal Layer MainLayer { get; set; }
@@ -47,6 +89,9 @@ namespace SMLimitless.Sprites.Collections
 		internal List<Tile> Tiles { get; private set; }
 		internal SparseCellGrid<Sprite> Sprites { get; set; }
 
+		/// <summary>
+		/// Gets the current mouse position adjusted for the camera's position and zoom.
+		/// </summary>
 		public Vector2 MousePosition
 		{
 			get
@@ -69,6 +114,10 @@ namespace SMLimitless.Sprites.Collections
 		private CollisionDebugSelectSprite selectorSprite = new CollisionDebugSelectSprite();
 		private List<Tile> collisionDebugCollidedTiles = new List<Tile>();
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Section"/> class.
+		/// </summary>
+		/// <param name="owner">The <see cref="Level"/> that owns this section.</param>
 		public Section(Level owner)
 		{
 			Camera = new Camera2D();
@@ -83,6 +132,9 @@ namespace SMLimitless.Sprites.Collections
 			GameServices.Camera = Camera;
 		}
 
+		/// <summary>
+		/// Initializes the game objects for this section.
+		/// </summary>
 		public void Initialize()
 		{
 			if (!isInitialized)
@@ -100,6 +152,9 @@ namespace SMLimitless.Sprites.Collections
 			}
 		}
 
+		/// <summary>
+		/// Loads the content for the game objects in this section.
+		/// </summary>
 		public void LoadContent()
 		{
 			if (!isContentLoaded)
@@ -126,6 +181,9 @@ namespace SMLimitless.Sprites.Collections
 			}
 		}
 
+		/// <summary>
+		/// Updates this section.
+		/// </summary>
 		public void Update()
 		{
 			System.Diagnostics.Stopwatch stopwatch = System.Diagnostics.Stopwatch.StartNew();
@@ -158,6 +216,9 @@ namespace SMLimitless.Sprites.Collections
 			stopwatch.Stop();
 		}
 
+		/// <summary>
+		/// Moves sprites according to their velocity and performs collision detection and resolution.
+		/// </summary>
 		private void UpdatePhysics()
 		{
 			collisionDebugCollidedTiles.Clear();
@@ -388,6 +449,9 @@ namespace SMLimitless.Sprites.Collections
 			if (GameServices.CollisionDebuggerActive) { GameServices.CollisionDebuggerForm.SetTileInfo(tileUnderCursor); }
 		}
 
+		/// <summary>
+		/// Draws the game objects in this section.
+		/// </summary>
 		public void Draw()
 		{
 			Background.Draw();
@@ -408,6 +472,11 @@ namespace SMLimitless.Sprites.Collections
 			irisEffect.Draw();
 		}
 
+		/// <summary>
+		/// Gets the tile at a given position on the topmost layer.
+		/// </summary>
+		/// <param name="position">The position to get the tile at.</param>
+		/// <returns>A <see cref="Tile"/> instance, or null if there is no tile at <paramref name="position"/>.</returns>
 		public Tile GetTileAtPosition(Vector2 position)
 		{
 			// Gets a tile from the topmost layer at the given position.
@@ -437,6 +506,11 @@ namespace SMLimitless.Sprites.Collections
 			}
 		}
 
+		/// <summary>
+		/// Adds a <see cref="Tile"/> to this section and to the main layer.
+		/// </summary>
+		/// <param name="tile">The tile to add.</param>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="tile"/> reference is null.</exception>
 		public void AddTile(Tile tile)
 		{
 			if (tile == null)
@@ -448,6 +522,11 @@ namespace SMLimitless.Sprites.Collections
 			MainLayer.AddTile(tile);
 		}
 
+		/// <summary>
+		/// Adds a <see cref="Sprite"/> to this section.
+		/// </summary>
+		/// <param name="sprite">The sprite to add.</param>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="sprite"/> reference is null.</exception>
 		public void AddSprite(Sprite sprite)
 		{
 			if (sprite == null)
@@ -459,6 +538,11 @@ namespace SMLimitless.Sprites.Collections
 			MainLayer.AddSprite(sprite);
 		}
 
+		/// <summary>
+		/// Sets a sprite to be added to the section on the next frame.
+		/// </summary>
+		/// <param name="sprite">The sprite to add.</param>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="sprite"/> reference is null.</exception>
 		public void AddSpriteOnNextFrame(Sprite sprite)
 		{
 			if (sprite == null)
@@ -478,14 +562,24 @@ namespace SMLimitless.Sprites.Collections
 			}
 		}
 
+		/// <summary>
+		/// Removes a tile from this section and all layers it may be in.
+		/// </summary>
+		/// <param name="tile">The tile to remove.</param>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="tile"/> reference is null.</exception>
 		public void RemoveTile(Tile tile)
 		{
-			if (tile == null) { throw new ArgumentNullException(nameof(tile), "The tile to remove from the section was not null."); }
+			if (tile == null) { throw new ArgumentNullException(nameof(tile), "The tile to remove from the section was null."); }
 
 			Tiles.Remove(tile);
 			Layers.ForEach(l => l.RemoveTile(tile));
 		}
 
+		/// <summary>
+		/// Removes a sprite from this section.
+		/// </summary>
+		/// <param name="sprite">The sprite to remove.</param>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="sprite"/> reference is null.</exception>
 		public void RemoveSprite(Sprite sprite)
 		{
 			if (sprite == null) { throw new ArgumentNullException(nameof(sprite), "The sprite to remove from the section was not null."); }

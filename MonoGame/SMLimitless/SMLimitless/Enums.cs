@@ -113,17 +113,17 @@ namespace SMLimitless.Sprites
     public enum SpriteDirection
     {
         /// <summary>
-        /// The sprite will always face the player.
+        /// The sprite will be loaded facing the player.
         /// </summary>
         FacePlayer,
 
         /// <summary>
-        /// The sprite will always face left.
+        /// The sprite will be loaded facing left.
         /// </summary>
         Left,
 
         /// <summary>
-        /// The sprite will always face right.
+        /// The sprite will be loaded facing right.
         /// </summary>
         Right
     }
@@ -520,13 +520,35 @@ namespace SMLimitless.Physics
         Down = 1
     }
 
+	/// <summary>
+	/// Enumerates the cardinal directions as a set of flags.
+	/// </summary>
 	[Flags]
 	public enum FlaggedDirection
 	{
+		/// <summary>
+		/// Represents no direction set.
+		/// </summary>
 		None = 0,
+
+		/// <summary>
+		/// Represents the upward cardinal direction (negative Y).
+		/// </summary>
 		Up = 1,
+
+		/// <summary>
+		/// Represents the downward cardinal direction (positive Y).
+		/// </summary>
 		Down = 2,
+
+		/// <summary>
+		/// Represents the leftward cardinal direction (negative X).
+		/// </summary>
 		Left = 4,
+
+		/// <summary>
+		/// Represents the rightward cardinal direction (positive X).
+		/// </summary>
 		Right = 8
 	}
 
@@ -569,17 +591,59 @@ namespace SMLimitless.Physics
         Slope
     }
 
+	/// <summary>
+	/// Enumerates the division of the space around a rectangle.
+	/// </summary>
 	public enum RectangularSpaceDivision
 	{
+		/// <summary>
+		/// The default/invalid value.
+		/// </summary>
 		None,
+
+		/// <summary>
+		/// The area within the rectangle.
+		/// </summary>
 		Within,
+
+		/// <summary>
+		/// The area directly above the rectangle.
+		/// </summary>
 		Above,
+
+		/// <summary>
+		/// The area directly below the rectangle.
+		/// </summary>
+		/// 
 		Below,
+		/// <summary>
+		/// The area directly to the left of the rectangle.
+		/// </summary>
 		Left,
+
+		/// <summary>
+		/// The area directly to the right of the rectangle.
+		/// </summary>
 		Right,
+
+		/// <summary>
+		/// The area above and to the left of the rectangle.
+		/// </summary>
 		AboveLeft,
+
+		/// <summary>
+		/// The area above and to the right of the rectangle.
+		/// </summary>
 		AboveRight,
+
+		/// <summary>
+		/// The area below and to the left of the rectangle.
+		/// </summary>
 		BelowLeft,
+
+		/// <summary>
+		/// The area below and to the right of the rectangle.
+		/// </summary>
 		BelowRight
 	}
 }

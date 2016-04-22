@@ -7,8 +7,17 @@ using Microsoft.Xna.Framework;
 
 namespace SMLimitless.Extensions
 {
+	/// <summary>
+	/// Contains extension methods for the <see cref="Point"/> struct.
+	/// </summary>
 	public static class PointExtensions
 	{
+		/// <summary>
+		/// Converts an enumerable containing <see cref="Point"/> instances into a <see cref="string"/>
+		/// of form "x,y;x,y" with no trailing semicolon.
+		/// </summary>
+		/// <param name="points">An enumerable containing the points to be serialized.</param>
+		/// <returns>A string containing the point values.</returns>
 		public static string SerializeCompact(this IEnumerable<Point> points)
 		{
 			StringBuilder resultBuilder = new StringBuilder();
@@ -22,6 +31,12 @@ namespace SMLimitless.Extensions
 			return resultBuilder.ToString();
 		}
 
+		/// <summary>
+		/// Converts a <see cref="string"/> with the form "x,y;x,y" into a <see cref="List{T}"/> of <see cref="Point"/> instances.
+		/// </summary>
+		/// <param name="pointsString">A string of points.</param>
+		/// <returns>A list containing the points deserialized from the string.</returns>
+		/// <remarks>Handles empty entries ("x,y;;x,y") and trailing semicolons.</remarks>
 		public static List<Point> DeserializeCompact(this string pointsString)
 		{
 			string[] points = pointsString.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);

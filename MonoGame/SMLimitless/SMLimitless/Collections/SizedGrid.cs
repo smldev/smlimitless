@@ -74,6 +74,9 @@ namespace SMLimitless.Collections
             }
         }
 
+		/// <summary>
+		/// Gets a rectangle that can completely contain this sized grid.
+		/// </summary>
 		public BoundingRectangle Bounds
 		{
 			get
@@ -178,6 +181,10 @@ namespace SMLimitless.Collections
 			}
 		}
 
+		/// <summary>
+		/// This method is not implemented.
+		/// </summary>
+		/// <param name="item">The item to add.</param>
 		public void AddWithResize(T item)
 		{
 			// we don't need this right now

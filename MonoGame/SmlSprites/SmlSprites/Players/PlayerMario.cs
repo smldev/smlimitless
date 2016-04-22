@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using SMLimitless;
 using SMLimitless.Content;
 using SMLimitless.Extensions;
@@ -18,8 +19,9 @@ namespace SmlSprites.Players
 {
 	public class PlayerMario : Sprite
 	{
-		private StaticGraphicsObject placeholderGraphics;
+		private ComplexGraphicsObject graphics;
 		private int sprintChargeTimer = 0;
+		private Direction direction = Direction.Left;
 
 		private static PhysicsSetting<float> MaximumWalkingSpeed = new PhysicsSetting<float>("Player: Max Walking Speed", 0f, 100f, 35f, PhysicsSettingType.FloatingPoint);
 		private static PhysicsSetting<float> MaximumRunningSpeed = new PhysicsSetting<float>("Player: Max Running Speed", 0f, 150f, 50f, PhysicsSettingType.FloatingPoint);
@@ -59,6 +61,14 @@ namespace SmlSprites.Players
 			}
 		}
 
+		protected virtual Direction Direction 
+		{
+			get
+			{
+				direction = (Velocity.X < 0f) ? Direction.Left : (Velocity.X == 0f) ? direction : Direction.Right;
+				return direction;
+			}
+		}
 		public PlayerMario() : base()
 		{
 			Size = new Vector2(16f);
@@ -66,7 +76,7 @@ namespace SmlSprites.Players
 
 		public override void Draw()
 		{
-			placeholderGraphics.Draw(Position.Floor(), Color.White);
+			graphics.Draw(Position.Floor(), Color.White, (Direction == Direction.Right) ? SpriteEffects.None : SpriteEffects.FlipHorizontally);
 		}
 
 		public override void Update()
@@ -109,42 +119,55 @@ namespace SmlSprites.Players
 			}
 
 			ApplyAccelerationToVelocity(delta);
+			graphics.Update();
 		}
 
 		protected virtual void ApplyAccelerationToVelocity(float delta)
 		{
 			Vector2 velocityAddend = Acceleration * delta;
 			Vector2 resultVelocity = Vector2.Zero;
-			bool xVelocityDiminishingTowardZero = Math.Abs(Velocity.X + velocityAddend.X) < Math.Abs(Velocity.X);
+			bool xVelocityDiminishingTowardZero = Math.Abs(Velocity.X + velocityAddend.X) < Math.Abs(Velocity.X);	// is the sprite's velocity reducing?
 			bool yVelocityDiminishingTowardZero = Math.Abs(Velocity.Y + velocityAddend.Y) < Math.Abs(Velocity.Y);
 
 			// X-axis checks
-			if (TargetVelocity.X <= 0f)
+			if (TargetVelocity.X < 0f)
 			{
 				// Assume that TargetVelocity and velocityDelta have the same sign
-				if (Velocity.X + velocityAddend.X >= TargetVelocity.X || xVelocityDiminishingTowardZero) { resultVelocity.X = Velocity.X + velocityAddend.X; }
+				if (Velocity.X + velocityAddend.X >= TargetVelocity.X) { resultVelocity.X = Velocity.X + velocityAddend.X; }
 				else if ((Velocity.X > TargetVelocity.X) && (Velocity.X + velocityAddend.X < TargetVelocity.X)) { resultVelocity.X = TargetVelocity.X; }
 				else if (Velocity.X <= TargetVelocity.X) { resultVelocity.X = Velocity.X; }
 			}
-			else if (TargetVelocity.X >= 0f)
+			else if (TargetVelocity.X > 0f)
 			{
-				if (Velocity.X + velocityAddend.X <= TargetVelocity.X || xVelocityDiminishingTowardZero) { resultVelocity.X = Velocity.X + velocityAddend.X; }
+				if (Velocity.X + velocityAddend.X <= TargetVelocity.X) { resultVelocity.X = Velocity.X + velocityAddend.X; }
 				else if ((Velocity.X < TargetVelocity.X) && (Velocity.X + velocityAddend.X > TargetVelocity.X)) { resultVelocity.X = TargetVelocity.X; }
 				else if (Velocity.X >= TargetVelocity.X) { resultVelocity.X = Velocity.X; }
 			}
+			else if (TargetVelocity.X == 0f)
+			{
+				if (Velocity.X > 0f && (Velocity.X + velocityAddend.X < 0f)) { resultVelocity.X = 0f; }
+				else if (Velocity.X < 0f && (Velocity.X - velocityAddend.X > 0f)) { resultVelocity.X = 0f; }
+				else { resultVelocity.X = Velocity.X + velocityAddend.X; }
+			}
 
 			// Y-axis checks
-			if (TargetVelocity.Y <= 0f)
+			if (TargetVelocity.Y < 0f)
 			{
-				if (Velocity.Y + velocityAddend.Y >= TargetVelocity.Y || yVelocityDiminishingTowardZero) { resultVelocity.Y = Velocity.Y + velocityAddend.Y; }
+				if (Velocity.Y + velocityAddend.Y >= TargetVelocity.Y) { resultVelocity.Y = Velocity.Y + velocityAddend.Y; }
 				else if ((Velocity.Y > TargetVelocity.Y) && (Velocity.Y + velocityAddend.Y < TargetVelocity.Y)) { resultVelocity.Y = TargetVelocity.Y; }
 				else if (Velocity.Y <= TargetVelocity.Y) { resultVelocity.Y = Velocity.Y; }
 			}
-			else if (TargetVelocity.Y >= 0f)
+			else if (TargetVelocity.Y > 0f)
 			{
-				if (Velocity.Y + velocityAddend.Y <= TargetVelocity.Y || yVelocityDiminishingTowardZero) { resultVelocity.Y = Velocity.Y + velocityAddend.Y; }
+				if (Velocity.Y + velocityAddend.Y <= TargetVelocity.Y) { resultVelocity.Y = Velocity.Y + velocityAddend.Y; }
 				else if ((Velocity.Y < TargetVelocity.Y) && (Velocity.Y + velocityAddend.Y > TargetVelocity.Y)) { resultVelocity.Y = TargetVelocity.Y; }
 				else if (Velocity.Y >= TargetVelocity.Y) { resultVelocity.Y = Velocity.Y; }
+			}
+			else if (TargetVelocity.Y == 0f)
+			{
+				if (Velocity.Y > 0f && (Velocity.Y + velocityAddend.Y < 0f)) { resultVelocity.Y = 0f; }
+				else if (Velocity.Y < 0f && (Velocity.Y - velocityAddend.Y > 0f)) { resultVelocity.Y = 0f; }
+				else { resultVelocity.Y = Velocity.Y + velocityAddend.Y; }
 			}
 
 			Velocity = resultVelocity;
@@ -174,23 +197,15 @@ namespace SmlSprites.Players
 
 		protected virtual void DetermineHorizontalAcceleration()
 		{
-			float absTargetVelocityX = Math.Abs(TargetVelocity.X);
-			float absCurrentVelocityX = Math.Abs(Velocity.X);
-			
-			if (absCurrentVelocityX < absTargetVelocityX)
+			if (TargetVelocity.X < 0f)
 			{
-				// The player is moving slower than they need to be. Accelerate them.
-				Acceleration = new Vector2((TargetVelocity.X >= 0f) ? MovementAcceleration.Value : -MovementAcceleration.Value, Acceleration.Y);
+				if (Velocity.X <= TargetVelocity.X) { Acceleration = new Vector2(0f, Acceleration.Y); }
+				else { Acceleration = new Vector2(-MovementAcceleration.Value, Acceleration.Y); }
 			}
-			else if (absCurrentVelocityX > absTargetVelocityX)
+			else if (TargetVelocity.X >= 0f)
 			{
-				// The player is moving more quickly than they need to be. Slow them down if they're standing on a tile.
-				ApplyTileSurfaceFriction();
-			}
-			else if (absCurrentVelocityX == absTargetVelocityX)
-			{
-				// The player is moving exactly as fast as they need to be.
-				Acceleration = new Vector2(0f, Acceleration.Y);
+				if (Velocity.X >= TargetVelocity.X) { Acceleration = new Vector2(0f, Acceleration.Y); }
+				else { Acceleration = new Vector2(MovementAcceleration.Value, Acceleration.Y); }
 			}
 		}
 
@@ -234,7 +249,7 @@ namespace SmlSprites.Players
 			{
 				float tileSurfaceFrictionDelta = tileBeneathPlayer.SurfaceFriction * GameServices.GameTime.GetElapsedSeconds();
 				
-				if (Velocity.X > -0.1f && Velocity.X < 0.1f)
+				if (Velocity.X > -0.5f && Velocity.X < 0.5f)
 				{
 					Velocity = new Vector2(0f, Velocity.Y);
 				}
@@ -271,7 +286,7 @@ namespace SmlSprites.Players
 			if (Velocity.X == 0f /* && IsOnGround */) { SetPlayerGraphicsObject("standing"); }
 			if (Velocity.X != 0f /* && IsOnGround */)
 			{
-				if (Math.Sign(Velocity.X) != Math.Sign(Acceleration.X) && IsPlayerMoving) { SetPlayerGraphicsObject("skidding"); }
+				if (Acceleration.X != 0f && Math.Sign(Velocity.X) != Math.Sign(Acceleration.X) && IsPlayerMoving) { SetPlayerGraphicsObject("skidding"); }
 				else
 				{
 					if (Velocity.X < MaximumSprintingSpeed.Value) { SetPlayerGraphicsObject("walking"); }
@@ -284,11 +299,12 @@ namespace SmlSprites.Players
 		{
 			// TODO: implement
 			DebugGraphicsName = objectName;
+			graphics.CurrentObjectName = objectName;
 		}
 
 		public override void Initialize(Section owner)
 		{
-			placeholderGraphics = (StaticGraphicsObject)ContentPackageManager.GetGraphicsResource("SMB3PlayerPlaceholder");
+			graphics = (ComplexGraphicsObject)ContentPackageManager.GetGraphicsResource("SMB3PlayerMarioSmall");
 			base.Initialize(owner);
 		}
 
@@ -305,7 +321,7 @@ namespace SmlSprites.Players
 
 		public override void LoadContent()
 		{
-			placeholderGraphics.LoadContent();
+			graphics.LoadContent();
 		}
 
 		public override void HandleTileCollision(Tile tile, Vector2 resolutionDistance)

@@ -15,6 +15,10 @@ namespace SMLimitless.Editor
 	{
 		private EditorSelectedObject selectedObject;
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="PropertyForm"/> class.
+		/// </summary>
+		/// <param name="selectedObject">An <see cref="EditorSelectedObject"/> instance currently in use by the level editor.</param>
 		public PropertyForm(EditorSelectedObject selectedObject)
 		{
 			this.selectedObject = selectedObject;

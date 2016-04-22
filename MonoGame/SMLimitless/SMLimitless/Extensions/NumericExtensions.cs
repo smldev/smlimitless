@@ -168,6 +168,13 @@ namespace SMLimitless.Extensions
 			return false;
 		}
 
+		/// <summary>
+		/// Given an integer and a range, returns the integer if it's in the range, or the minimum/maximum values if it's less/more, respectively.
+		/// </summary>
+		/// <param name="value">The integer.</param>
+		/// <param name="min">The minimum of the range.</param>
+		/// <param name="max">The maximum of the range.</param>
+		/// <returns>An integer between <paramref name="min"/> and <paramref name="max"/>.</returns>
 		public static int Clamp(this int value, int min, int max)
 		{
 			if (value < min) { return min; }

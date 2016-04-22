@@ -8,6 +8,9 @@ using SMLimitless.Physics;
 
 namespace SMLimitless.Extensions
 {
+	/// <summary>
+	/// Contains extension methods for types implementing the <see cref="IPositionable2"/> interface.
+	/// </summary>
 	public static class PositionableExtensions
 	{
 		/// <summary>

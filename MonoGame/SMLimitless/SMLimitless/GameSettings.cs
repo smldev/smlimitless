@@ -13,7 +13,7 @@ using SMLimitless.IO;
 namespace SMLimitless
 {
     /// <summary>
-    /// Loads the settings file.
+    /// Provides access to game settings.
     /// </summary>
     public static class GameSettings
     {

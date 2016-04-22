@@ -131,6 +131,10 @@ namespace SMLimitless.Sprites
 		/// </summary>
 		public Vector2 Acceleration { get; set; }
 
+		/// <summary>
+		/// Gets an anonymous object containing objects that need to be saved to the level file.
+		/// </summary>
+		/// <returns></returns>
 		public abstract object GetCustomSerializableObjects();
 
 		/// <summary>
@@ -141,6 +145,9 @@ namespace SMLimitless.Sprites
 			get; set;
 		}
 
+		/// <summary>
+		/// Gets or sets a value indicating whether a collision between this sprite and a tile should break the debugger if collision debugging is enabled.
+		/// </summary>
 		public bool BreakOnCollision { get; set; }
 		#endregion
 

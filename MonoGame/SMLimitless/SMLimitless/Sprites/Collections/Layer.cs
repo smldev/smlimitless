@@ -11,8 +11,14 @@ using SMLimitless.Physics;
 
 namespace SMLimitless.Sprites.Collections
 {
+	/// <summary>
+	/// Represents a grid containing tiles, itself containing sprites.
+	/// </summary>
 	public sealed class Layer : IName
 	{
+		/// <summary>
+		/// Gets a value indicating whether this layer is the main layer in its owner section.
+		/// </summary>
 		public bool IsMainLayer { get; internal set; }
 		private bool isInitialized;
 		private bool isContentLoaded;
@@ -23,14 +29,33 @@ namespace SMLimitless.Sprites.Collections
 		internal SizedGrid<Tile> Tiles { get; set; }
 		private List<Sprite> sprites = new List<Sprite>();
 
+		/// <summary>
+		/// Gets the bounds of this layer; the rectangle containing all tiles in the layer.
+		/// </summary>
 		public BoundingRectangle Bounds { get; private set; } = BoundingRectangle.NaN;
+
+		/// <summary>
+		/// Gets the position of the layer; the position of the top-left corner of the <see cref="Bounds"/>.
+		/// </summary>
 		public Vector2 Position { get; private set; } = new Vector2(float.NaN);
+
+		/// <summary>
+		/// Gets the numeric index of this layer in its owner section.
+		/// </summary>
 		public int Index { get; internal set; }
 		private Vector2 velocity = Vector2.Zero;
 
+		/// <summary>
+		/// Gets or sets the name of this layer.
+		/// </summary>
 		[DefaultValue(""), Description("The name of this layer to be used in event scripting. This field is optional.")]
 		public string Name { get; set; }
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Layer"/> class.
+		/// </summary>
+		/// <param name="cOwner">The section that owns this layer.</param>
+		/// <param name="isMainLayer">A value indicating whether this layer is the main layer in its owner section. Defaults to false.</param>
 		public Layer(Section cOwner, bool isMainLayer = false)
 		{
 			Owner = cOwner;
@@ -42,6 +67,9 @@ namespace SMLimitless.Sprites.Collections
 			Bounds = Tiles.Bounds;
 		}
 
+		/// <summary>
+		/// Initializes the tiles and sprites in this layer.
+		/// </summary>
 		public void Initialize()
 		{
 			if (!isInitialized)
@@ -53,6 +81,9 @@ namespace SMLimitless.Sprites.Collections
 			}
 		}
 
+		/// <summary>
+		/// Loads the content of the tiles and sprites in this layer.
+		/// </summary>
 		public void LoadContent()
 		{
 			if (!isContentLoaded)
@@ -64,6 +95,9 @@ namespace SMLimitless.Sprites.Collections
 			}
 		}
 
+		/// <summary>
+		/// Updates the contents of this layer.
+		/// </summary>
 		public void Update()
 		{
 			// TODO: change this method to account for active/inactive layers, tiles and sprites
@@ -71,11 +105,20 @@ namespace SMLimitless.Sprites.Collections
 			sprites.ForEach(s => s.Update());
 		}
 
+		/// <summary>
+		/// Draws the outline of the <see cref="Bounds"/> of this layer.
+		/// </summary>
+		/// <param name="color">The color to draw the outline.</param>
 		public void Draw(Color color)
 		{
 			Bounds.DrawOutline(color);
 		}
 
+		/// <summary>
+		/// Adds the tiles in an enumerable to this layer.
+		/// </summary>
+		/// <param name="tiles">An enumerable of zero or more tiles.</param>
+		/// <exception cref="ArgumentException">Thrown if any tile in the enumerable is not grid-aligned.</exception>
 		internal void AddTiles(IEnumerable<Tile> tiles)
 		{
 			// The sized grid, being a 2D array, suffers from the same un-resizability that the Array does.
@@ -139,6 +182,10 @@ namespace SMLimitless.Sprites.Collections
 			AddTiles(new[] { tile });
 		}
 
+		/// <summary>
+		/// Removes a tile from this layer.
+		/// </summary>
+		/// <param name="tile">The tile to remove.</param>
 		public void RemoveTile(Tile tile)
 		{
 			// Unlike when adding tiles, removing a tile doesn't shrink the grid even if the grid could shrink
@@ -151,12 +198,23 @@ namespace SMLimitless.Sprites.Collections
 			sprites.Add(sprite);
 		}
 
+		/// <summary>
+		/// Gets the cell number at a given position.
+		/// </summary>
+		/// <param name="position">The given position.</param>
+		/// <returns>A <see cref="Vector2"/> containing the cell number at the position.</returns>
+		/// <remarks>Returns cell numbers for positions outside the <see cref="Bounds"/> of the layer.</remarks>
 		public Vector2 GetCellNumberAtPosition(Vector2 position)
 		{
 			Vector2 adjustedPosition = position - this.Position;
 			return new Vector2((adjustedPosition.X / Tiles.CellWidth), (adjustedPosition.Y / Tiles.CellHeight)).Floor();
 		}
 
+		/// <summary>
+		/// Gets the cell number at a given position, or the cell number along an edge or corner for out-of-bounds positions.
+		/// </summary>
+		/// <param name="position">The given position.</param>
+		/// <returns>A <see cref="Vector2"/> representing a cell number within the layer.</returns>
 		public Vector2 GetClampedCellNumberAtPosition(Vector2 position)
 		{
 			Vector2 cellNumber = GetCellNumberAtPosition(position);
@@ -165,11 +223,22 @@ namespace SMLimitless.Sprites.Collections
 			return cellNumber;
 		}
 
+		/// <summary>
+		/// Gets a tile at a given cell number.
+		/// </summary>
+		/// <param name="x">The X number of the cell; the cells away from the left-most cell.</param>
+		/// <param name="y">The Y number of the cell; the cells below the top-most cell.</param>
+		/// <returns>A tile in the cell, or null if there is no tile there.</returns>
 		public Tile GetTile(int x, int y)
 		{
 			return Tiles[x, y];
 		}
 		
+		/// <summary>
+		/// Gets a tile at a given cell number.
+		/// </summary>
+		/// <param name="cellNumber">A <see cref="Vector2"/> containing the cell number.</param>
+		/// <returns>A tile in the cell, or null if there is no tile there.</returns>
 		public Tile GetTile(Vector2 cellNumber)
 		{
 			return GetTile((int)cellNumber.X, (int)cellNumber.Y);
@@ -206,6 +275,11 @@ namespace SMLimitless.Sprites.Collections
 			Owner.Layers.Insert(0, this);
 		}
 
+		/// <summary>
+		/// Moves this layer to a given position.
+		/// </summary>
+		/// <param name="position">The position to move the layer to.</param>
+		/// <exception cref="InvalidOperationException">Thrown when attempting to move the main layer. The main layer always has its position at the origin.</exception>
 		public void Move(Vector2 position)
 		{
 			if (IsMainLayer) { throw new InvalidOperationException("Cannot move the main layer."); }
@@ -214,6 +288,11 @@ namespace SMLimitless.Sprites.Collections
 			Translate(distance);
 		}
 
+		/// <summary>
+		/// Moves the layer and its contents by a given distance.
+		/// </summary>
+		/// <param name="distance">The distance to move the layer.</param>
+		/// <exception cref="InvalidOperationException">Thrown when attempting to translate the main layer. The main layer always has its position at the origin.</exception>
 		public void Translate(Vector2 distance)
 		{
 			if (IsMainLayer) { throw new InvalidOperationException("Cannot translate the main layer."); }

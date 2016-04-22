@@ -233,6 +233,13 @@ namespace SMLimitless.Physics
             return new Vector2(x, (-y));
         }
 
+		/// <summary>
+		/// For a given vertical line at an X coordinate,
+		/// returns the point of intersection between this line and the slope,
+		/// clamped to the left and right edges of the triangle.
+		/// </summary>
+		/// <param name="x">The X coordinate of the vertical line.</param>
+		/// <returns>A value between the left and right edges of the triangle.</returns>
 		public Vector2 GetClampedPointOnSlope(float x)
 		{
 			x = MathHelper.Clamp(x, Bounds.Left, Bounds.Right);
