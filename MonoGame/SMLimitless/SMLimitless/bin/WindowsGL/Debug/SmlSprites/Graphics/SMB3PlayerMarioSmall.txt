@@ -1,6 +1,6 @@
 [Complex]
 FrameSize = 16,16
-TotalGraphicsObjects = 11
+TotalGraphicsObjects = 12
 StartingObject = standing
 
 [Object0]
@@ -71,3 +71,13 @@ Frame1 = 192,0
 Frame2 = 208,0
 Frame3 = 224,0
 CycleLength = 0.25
+
+[Object11]
+Name = spinJump
+Type = animated
+Frames = 4
+Frame0 = 0,0
+Frame1 = 240,0
+Frame2 = 272,0
+Frame3 = 256,0
+CycleLength = 0.11667

@@ -14,6 +14,7 @@ using SMLimitless.Physics;
 using SMLimitless.Sprites;
 using SMLimitless.Sprites.Assemblies;
 using SMLimitless.Sprites.Collections;
+using SMLimitless.Sounds;
 
 namespace SmlSprites.Players
 {
@@ -30,12 +31,18 @@ namespace SmlSprites.Players
 		private static PhysicsSetting<int> FramesToSprintingAllowed = new PhysicsSetting<int>("Player: Frames to Sprinting Allowed", 1, 120, 60, PhysicsSettingType.Integer);
 		private static PhysicsSetting<float> MaximumJumpImpulseAddend = new PhysicsSetting<float>("Player: Maximum Additional Jump Impulse", 0f, 100f, 10f, PhysicsSettingType.FloatingPoint);
 
-		private static PhysicsSetting<float> JumpImpulse = new PhysicsSetting<float>("Player: Jump Impulse", 5f, 5000f, 77f, PhysicsSettingType.FloatingPoint);
+		private static PhysicsSetting<float> JumpImpulse = new PhysicsSetting<float>("Player: Jump Impulse", 5f, 500f, 100f, PhysicsSettingType.FloatingPoint);
 		private static PhysicsSetting<float> JumpGravityMultiplier = new PhysicsSetting<float>("Player: Jump Gravity Multiplier", 0.01f, 1f, 0.5f, PhysicsSettingType.FloatingPoint);
+		private static PhysicsSetting<float> SpinJumpImpulse = new PhysicsSetting<float>("Player: Spin Jump Impulse", 5f, 500f, 100f, PhysicsSettingType.FloatingPoint);
 
 		public string DebugGraphicsName { get; protected set; } = "";
 		protected virtual Vector2 TargetVelocity { get; set; }
 		protected virtual bool IsJumping { get; set; }
+		protected virtual bool IsSpinJumping { get; set; }
+
+		private CachedSound jumpSound;
+		private CachedSound spinJumpSound;
+		private bool jumpSoundPlaying = false;
 
 		public override string EditorCategory
 		{
@@ -72,6 +79,10 @@ namespace SmlSprites.Players
 		public PlayerMario() : base()
 		{
 			Size = new Vector2(16f);
+			IsActive = true;
+
+			jumpSound = new CachedSound(ContentPackageManager.GetAbsoluteFilePath("nsmbwiiJump"));
+			spinJumpSound = new CachedSound(ContentPackageManager.GetAbsoluteFilePath("nsmbwiiSpinJump"));
 		}
 
 		public override void Draw()
@@ -86,6 +97,7 @@ namespace SmlSprites.Players
 			SprintIfAllowed();
 
 			CheckForJumpInput();
+			CheckForSpinJumpInput();
 
 			ApplyTileSurfaceFriction();
 			DeterminePlayerGraphicsObject();
@@ -239,10 +251,7 @@ namespace SmlSprites.Players
 			bool isLeftDown = InputManager.IsCurrentActionPress(InputAction.Left);
 			bool isRightDown = InputManager.IsCurrentActionPress(InputAction.Right);
 
-			Vector2 checkPosition = Hitbox.BottomCenter;
-			checkPosition.Y += GameServices.GameObjectSize.Y / 2f;
-
-			Tile tileBeneathPlayer = Owner.GetTileAtPosition(checkPosition);
+			Tile tileBeneathPlayer = GetTileBeneathPlayer();
 			if (tileBeneathPlayer == null) { return; }
 
 			if (!IsPlayerMoving || (IsPlayerMoving && !IsRunning && Math.Abs(Velocity.X) > MaximumWalkingSpeed.Value))
@@ -268,10 +277,23 @@ namespace SmlSprites.Players
 		{
 			bool isJumpDown = InputManager.IsNewActionPress(InputAction.Jump);
 
-			if (isJumpDown && !IsJumping)
+			if (isJumpDown && !IsJumping && !IsSpinJumping)
 			{
 				Velocity = new Vector2(Velocity.X, -GetJumpImpulse());
 				IsJumping = true;
+				PlayJumpSound();
+			}
+		}
+
+		protected virtual void CheckForSpinJumpInput()
+		{
+			bool isSpinJumpDown = InputManager.IsNewActionPress(InputAction.SpinJump);
+
+			if (isSpinJumpDown && !IsJumping && !IsSpinJumping)
+			{
+				Velocity = new Vector2(Velocity.X, -GetSpinJumpImpulse());
+				IsSpinJumping = true;
+				PlaySpinJumpSound();
 			}
 		}
 
@@ -281,16 +303,45 @@ namespace SmlSprites.Players
 			return JumpImpulse.Value + (ratioBetweenAddendAndMaxSprintSpeed * Math.Abs(Velocity.X));
 		}
 
+		protected virtual float GetSpinJumpImpulse()
+		{
+			float ratioBetweenAddendAndMaxSprintSpeed = MaximumJumpImpulseAddend.Value / MaximumSprintingSpeed.Value;
+			return SpinJumpImpulse.Value + (ratioBetweenAddendAndMaxSprintSpeed * Math.Abs(Velocity.X));
+		}
+
+		protected virtual void PlayJumpSound()
+		{
+			AudioPlaybackEngine.Instance.PlaySound(jumpSound, (sender, e) => { jumpSoundPlaying = false; });
+			jumpSoundPlaying = true;
+		}
+
+		protected virtual void PlaySpinJumpSound()
+		{
+			AudioPlaybackEngine.Instance.PlaySound(spinJumpSound, (sender, e) => { });
+		}
+
 		protected virtual void DeterminePlayerGraphicsObject()
 		{
-			if (Velocity.X == 0f /* && IsOnGround */) { SetPlayerGraphicsObject("standing"); }
-			if (Velocity.X != 0f /* && IsOnGround */)
+			if (IsJumping)
+			{ 
+				if (Math.Abs(Velocity.X) < MaximumSprintingSpeed.Value) { SetPlayerGraphicsObject("jumping"); }
+				else { SetPlayerGraphicsObject("sprintingJump"); }
+			}
+			else if (IsSpinJumping)
 			{
-				if (Acceleration.X != 0f && Math.Sign(Velocity.X) != Math.Sign(Acceleration.X) && IsPlayerMoving) { SetPlayerGraphicsObject("skidding"); }
-				else
+				SetPlayerGraphicsObject("spinJump");
+			}
+			else
+			{
+				if (Velocity.X == 0f /* && IsOnGround */) { SetPlayerGraphicsObject("standing"); }
+				if (Velocity.X != 0f /* && IsOnGround */)
 				{
-					if (Velocity.X < MaximumSprintingSpeed.Value) { SetPlayerGraphicsObject("walking"); }
-					else { SetPlayerGraphicsObject("sprinting"); }
+					if (Acceleration.X != 0f && Math.Sign(Velocity.X) != Math.Sign(Acceleration.X) && IsPlayerMoving) { SetPlayerGraphicsObject("skidding"); }
+					else
+					{
+						if (Math.Abs(Velocity.X) < MaximumSprintingSpeed.Value) { SetPlayerGraphicsObject("walking"); }
+						else { SetPlayerGraphicsObject("sprinting"); }
+					}
 				}
 			}
 		}
@@ -302,14 +353,35 @@ namespace SmlSprites.Players
 			graphics.CurrentObjectName = objectName;
 		}
 
+		private Tile GetTileBeneathPlayer()
+		{
+			Vector2 checkPointA = Hitbox.BottomLeft;
+			Vector2 checkPointB = Hitbox.BottomCenter;
+			Vector2 checkPointC = Hitbox.BottomRight;
+
+			checkPointA.Y += 1f;
+			checkPointB.Y += 1f;
+			checkPointC.Y += 1f;
+
+			Tile tileAtCheckPoint = Owner.GetTileAtPosition(checkPointA);
+			if (tileAtCheckPoint != null) { return tileAtCheckPoint; }
+
+			tileAtCheckPoint = Owner.GetTileAtPosition(checkPointB);
+			if (tileAtCheckPoint != null) { return tileAtCheckPoint; }
+
+			tileAtCheckPoint = Owner.GetTileAtPosition(checkPointC);
+			if (tileAtCheckPoint != null) { return tileAtCheckPoint; }
+
+			return null;
+		}
+
+		#region Internal/Loading Code
 		public override void Initialize(Section owner)
 		{
 			graphics = (ComplexGraphicsObject)ContentPackageManager.GetGraphicsResource("SMB3PlayerMarioSmall");
 			base.Initialize(owner);
 		}
 
-
-		#region Internal/Loading Code
 		public override void DeserializeCustomObjects(JsonHelper customObjects)
 		{
 		}
@@ -326,7 +398,11 @@ namespace SmlSprites.Players
 
 		public override void HandleTileCollision(Tile tile, Vector2 resolutionDistance)
 		{
-			if (resolutionDistance.Y < 0f) { IsJumping = false; }
+			if (resolutionDistance.Y < 0f)
+			{
+				IsJumping = false;
+				IsSpinJumping = false;
+			}
 		}
 		#endregion
 	}

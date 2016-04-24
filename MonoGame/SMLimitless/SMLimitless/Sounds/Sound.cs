@@ -57,7 +57,7 @@ namespace SMLimitless.Sounds
 		/// </summary>
 		public void Play()
         {
-			AudioPlaybackEngine.Instance.PlaySound(soundData);
+			AudioPlaybackEngine.Instance.PlaySound(soundData, (sender, e) => { });
         }
 
         /// <summary>

@@ -167,6 +167,7 @@
     <Compile Include="Sounds\AutoDisposeFileReader.cs" />
     <Compile Include="Sounds\CachedSound.cs" />
     <Compile Include="Sounds\CachedSoundSampleProvider.cs" />
+    <Compile Include="Sounds\FadeInFadeOutSampleProvider.cs" />
     <Compile Include="Sounds\Sound.cs" />
     <Compile Include="Sounds\SoundManager.cs" />
     <Compile Include="Sprites\Assemblies\AssemblyManager.cs" />

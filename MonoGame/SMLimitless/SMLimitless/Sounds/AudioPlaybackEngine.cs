@@ -12,6 +12,8 @@ namespace SMLimitless.Sounds
 	{
 		// Credit to Mark Heath (NAudio author)
 		// http://mark-dot-net.blogspot.com/2014/02/fire-and-forget-audio-playback-with.html
+		private const int DesiredLatencyMs = 150;
+
 
 		private readonly IWavePlayer outputDevice;
 		private readonly MixingSampleProvider mixer;
@@ -22,22 +24,48 @@ namespace SMLimitless.Sounds
 
 		public AudioPlaybackEngine(int sampleRate = 44100, int channelCount = 2)
 		{
-			outputDevice = new WaveOutEvent() { DesiredLatency = 150 };
+			outputDevice = new WaveOutEvent() { DesiredLatency = DesiredLatencyMs };
 			mixer = new MixingSampleProvider(WaveFormat.CreateIeeeFloatWaveFormat(sampleRate, channelCount));
 			mixer.ReadFully = true;
 			outputDevice.Init(mixer);
 			outputDevice.Play();
 		}
 
-		public void PlaySound(string fileName)
+		public void PlaySound(string fileName, EventHandler additionalOnPlaybackEndedHandler)
 		{
 			if (!playingSoundFileNames.Contains(fileName))
 			{
 				var input = new AudioFileReader(fileName);
 				var reader = new AutoDisposeFileReader(input);
 				reader.PlaybackEndedEvent += (sender, e) => playingSoundFileNames.Remove(fileName);
+				reader.PlaybackEndedEvent += additionalOnPlaybackEndedHandler;
 				AddMixerInput(reader);
 				playingSoundFileNames.Add(fileName);
+			}
+		}
+
+		public void PlayFadeableSound(string fileName, EventHandler additionalOnPlaybackEndedHandler, out Action<double> beginFadeInAction, out Action<double> beginFadeOutAction)
+		{
+			if (!playingSoundFileNames.Contains(fileName))
+			{
+				var input = new AudioFileReader(fileName);
+				var reader = new AutoDisposeFileReader(input);
+				reader.PlaybackEndedEvent += (sender, e) => playingSoundFileNames.Remove(fileName);
+				reader.PlaybackEndedEvent += additionalOnPlaybackEndedHandler;
+
+				FadeInFadeOutSampleProvider fadeSampleProvider = new FadeInFadeOutSampleProvider(reader);
+				beginFadeInAction = fadeSampleProvider.BeginFadeIn;
+				beginFadeOutAction = fadeSampleProvider.BeginFadeOut;
+
+				AddMixerInput(fadeSampleProvider);
+				playingSoundFileNames.Add(fileName);
+			}
+			else
+			{
+				// If the sound's already playing, we don't need to do anything,
+				// but beginFadeInAction and beginFadeOutAction both need to be assigned,
+				// so we give them both an empty lambda.
+				beginFadeInAction = beginFadeOutAction = (value) => { };
 			}
 		}
 
@@ -56,14 +84,36 @@ namespace SMLimitless.Sounds
 			throw new NotImplementedException($"Cannot convert a sound from {input.WaveFormat.Channels} channel(s) to {mixer.WaveFormat.Channels} channel(s).");
 		}
 
-		public void PlaySound(CachedSound sound)
+		public void PlaySound(CachedSound sound, EventHandler additionalOnPlaybackEndedHandler)
+		{
+			//if (!playingSoundFileNames.Contains(sound.Name))
+			//{
+				CachedSoundSampleProvider provider = new CachedSoundSampleProvider(sound);
+				playingSoundFileNames.Add(sound.Name);
+				provider.PlaybackEndedEvent += (sender, e) => playingSoundFileNames.Remove(sound.Name);
+				provider.PlaybackEndedEvent += additionalOnPlaybackEndedHandler;
+				AddMixerInput(provider);
+			//}
+		}
+
+		public void PlayFadeableSound(CachedSound sound, EventHandler additionalOnPlaybackEndedHandler, out Action<double> beginFadeInAction, out Action<double> beginFadeOutAction)
 		{
 			if (!playingSoundFileNames.Contains(sound.Name))
 			{
 				CachedSoundSampleProvider provider = new CachedSoundSampleProvider(sound);
 				playingSoundFileNames.Add(sound.Name);
 				provider.PlaybackEndedEvent += (sender, e) => playingSoundFileNames.Remove(sound.Name);
-				AddMixerInput(provider);
+				provider.PlaybackEndedEvent += additionalOnPlaybackEndedHandler;
+
+				FadeInFadeOutSampleProvider fadeSampleProvider = new FadeInFadeOutSampleProvider(provider);
+				beginFadeInAction = fadeSampleProvider.BeginFadeIn;
+				beginFadeOutAction = fadeSampleProvider.BeginFadeOut;
+
+				AddMixerInput(fadeSampleProvider);
+			}
+			else
+			{
+				beginFadeInAction = beginFadeOutAction = (value) => { };
 			}
 		}
 
