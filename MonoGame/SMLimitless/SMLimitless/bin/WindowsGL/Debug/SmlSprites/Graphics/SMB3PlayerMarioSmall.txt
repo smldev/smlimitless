@@ -1,6 +1,6 @@
 [Complex]
 FrameSize = 16,16
-TotalGraphicsObjects = 12
+TotalGraphicsObjects = 15
 StartingObject = standing
 
 [Object0]
@@ -81,3 +81,33 @@ Frame1 = 240,0
 Frame2 = 272,0
 Frame3 = 256,0
 CycleLength = 0.11667
+
+[Object12]
+Name = groundPoundSpin
+Type = animated
+Frames = 8
+Frame0 = 112,0
+Frame1 = 288,0
+Frame2 = 304,0
+Frame3 = 320,0
+Frame4 = 336,0
+Frame5 = 352,0
+Frame6 = 368,0
+Frame7 = 384,0
+Frame8 = 112,0
+CycleLength = 0.4702
+
+[Object13]
+Name = groundPoundDrop
+Type = static
+Frame = 112,0
+
+[Object14]
+Name = inAirSpin
+Type = animated
+Frames = 4
+Frame0 = 400,0
+Frame1 = 432,0
+Frame2 = 416,0
+Frame3 = 48,0
+CycleLength = 0.34

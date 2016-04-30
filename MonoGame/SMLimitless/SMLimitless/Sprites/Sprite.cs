@@ -82,6 +82,11 @@ namespace SMLimitless.Sprites
 		public bool IsEmbedded { get; set; }
 
 		/// <summary>
+		/// Gets or sets a value indicating whether this sprite is resting on the ground.
+		/// </summary>
+		public bool IsOnGround { get; internal set; }
+
+		/// <summary>
 		/// Gets or sets a value indicating whether this sprite should be removed from its owner section on the next frame.
 		/// </summary>
 		public bool RemoveOnNextFrame { get; set; }

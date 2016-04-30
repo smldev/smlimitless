@@ -58,6 +58,7 @@ namespace SMLimitless.Forms
 			resultBuilder.AppendLine($"Embedded? {((SelectedSprite.IsEmbedded) ? "Yes" : "No")}");
 			resultBuilder.AppendLine($"Total offset: {totalOffset.X.ToString("F1")}, {totalOffset.Y.ToString("F1")}");
 			resultBuilder.AppendLine($"Colliding with {numberOfCollidingTiles} tiles.");
+			resultBuilder.AppendLine($"Sprite is {(SelectedSprite.IsOnGround ? "on ground" : "not on ground")}");
 			resultBuilder.AppendLine($"Slope collisions? {((slopeCollisionOccurred) ? "Yes" : "No" )}");
 
 			return resultBuilder.ToString();

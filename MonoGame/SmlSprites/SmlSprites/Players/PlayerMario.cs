@@ -24,6 +24,12 @@ namespace SmlSprites.Players
 		private int sprintChargeTimer = 0;
 		private Direction direction = Direction.Left;
 
+		private bool isGroundPounding;
+		private int groundPoundSpinTimer = 0;
+		private bool perfomingInAirSpin;
+		private int inAirSpinTimer = 0;
+		private int inAirSpinTimeout = 0;
+
 		private static PhysicsSetting<float> MaximumWalkingSpeed = new PhysicsSetting<float>("Player: Max Walking Speed", 0f, 100f, 35f, PhysicsSettingType.FloatingPoint);
 		private static PhysicsSetting<float> MaximumRunningSpeed = new PhysicsSetting<float>("Player: Max Running Speed", 0f, 150f, 50f, PhysicsSettingType.FloatingPoint);
 		private static PhysicsSetting<float> MaximumSprintingSpeed = new PhysicsSetting<float>("Player: Max Sprinting Speed", 0f, 150f, 65f, PhysicsSettingType.FloatingPoint);
@@ -35,6 +41,14 @@ namespace SmlSprites.Players
 		private static PhysicsSetting<float> JumpGravityMultiplier = new PhysicsSetting<float>("Player: Jump Gravity Multiplier", 0.01f, 1f, 0.5f, PhysicsSettingType.FloatingPoint);
 		private static PhysicsSetting<float> SpinJumpImpulse = new PhysicsSetting<float>("Player: Spin Jump Impulse", 5f, 500f, 100f, PhysicsSettingType.FloatingPoint);
 
+		private static PhysicsSetting<int> GroundPoundSpinTimer = new PhysicsSetting<int>("Player: Ground Pound Spin Timer", 1, 50, 26, PhysicsSettingType.Integer);
+		private static PhysicsSetting<float> GroundPoundVelocity = new PhysicsSetting<float>("Player: Ground Pound Velocity", 5f, 500f, 250f, PhysicsSettingType.FloatingPoint);
+		private static PhysicsSetting<float> GroundPoundHorizontalMovementMultiplier = new PhysicsSetting<float>("Player: Ground Pound Horizontal Speed Multiplier", 0.001f, 1f, 0.1f, PhysicsSettingType.FloatingPoint);
+
+		private static PhysicsSetting<int> InAirSpinDuration = new PhysicsSetting<int>("Player: In-Air Spin Duration", 1, 100, 20, PhysicsSettingType.Integer);
+		private static PhysicsSetting<float> InAirSpinGravityMultiplier = new PhysicsSetting<float>("Player: In-Air Spin Gravity Multiplier", 0.001f, 1.0f, 0.1f, PhysicsSettingType.FloatingPoint);
+		private static PhysicsSetting<int> InAirSpinTimeout = new PhysicsSetting<int>("Player: In-Air Spin Timeout", 1, 100, 15, PhysicsSettingType.Integer);
+
 		public string DebugGraphicsName { get; protected set; } = "";
 		protected virtual Vector2 TargetVelocity { get; set; }
 		protected virtual bool IsJumping { get; set; }
@@ -42,7 +56,9 @@ namespace SmlSprites.Players
 
 		private CachedSound jumpSound;
 		private CachedSound spinJumpSound;
-		private bool jumpSoundPlaying = false;
+		private CachedSound groundPoundDropSound;
+		private CachedSound groundPoundHitSound;
+		private CachedSound inAirSpinSound;
 
 		public override string EditorCategory
 		{
@@ -68,7 +84,7 @@ namespace SmlSprites.Players
 			}
 		}
 
-		protected virtual Direction Direction 
+		protected virtual Direction Direction
 		{
 			get
 			{
@@ -81,8 +97,7 @@ namespace SmlSprites.Players
 			Size = new Vector2(16f);
 			IsActive = true;
 
-			jumpSound = new CachedSound(ContentPackageManager.GetAbsoluteFilePath("nsmbwiiJump"));
-			spinJumpSound = new CachedSound(ContentPackageManager.GetAbsoluteFilePath("nsmbwiiSpinJump"));
+			InitializeSounds();
 		}
 
 		public override void Draw()
@@ -98,6 +113,8 @@ namespace SmlSprites.Players
 
 			CheckForJumpInput();
 			CheckForSpinJumpInput();
+			CheckForGroundPoundInput();
+			CheckForInAirSpinInput();
 
 			ApplyTileSurfaceFriction();
 			DeterminePlayerGraphicsObject();
@@ -123,6 +140,10 @@ namespace SmlSprites.Players
 				{
 					Acceleration = new Vector2(Acceleration.X, Level.GravityAcceleration.Value * JumpGravityMultiplier.Value);
 				}
+				else if (isGroundPounding && groundPoundSpinTimer < GroundPoundSpinTimer.Value)
+				{
+					Acceleration = new Vector2(Acceleration.X, 0f);
+				}
 				else
 				{
 					Acceleration = new Vector2(Acceleration.X, Level.GravityAcceleration.Value);
@@ -138,7 +159,7 @@ namespace SmlSprites.Players
 		{
 			Vector2 velocityAddend = Acceleration * delta;
 			Vector2 resultVelocity = Vector2.Zero;
-			bool xVelocityDiminishingTowardZero = Math.Abs(Velocity.X + velocityAddend.X) < Math.Abs(Velocity.X);	// is the sprite's velocity reducing?
+			bool xVelocityDiminishingTowardZero = Math.Abs(Velocity.X + velocityAddend.X) < Math.Abs(Velocity.X);   // is the sprite's velocity reducing?
 			bool yVelocityDiminishingTowardZero = Math.Abs(Velocity.Y + velocityAddend.Y) < Math.Abs(Velocity.Y);
 
 			// X-axis checks
@@ -182,7 +203,8 @@ namespace SmlSprites.Players
 				else { resultVelocity.Y = Velocity.Y + velocityAddend.Y; }
 			}
 
-			Velocity = resultVelocity;
+			if (!perfomingInAirSpin) { Velocity = resultVelocity; }
+			else { Velocity = new Vector2(resultVelocity.X, resultVelocity.Y * InAirSpinGravityMultiplier.Value); }
 		}
 
 		protected virtual void CheckForWalkRunInput()
@@ -198,11 +220,13 @@ namespace SmlSprites.Players
 			else if (isLeftDown)
 			{
 				float targetVelocityX = (sprintChargeTimer == FramesToSprintingAllowed.Value) ? -MaximumSprintingSpeed.Value : (IsRunning) ? -MaximumRunningSpeed.Value : -MaximumWalkingSpeed.Value;
+				if (isGroundPounding && groundPoundSpinTimer >= GroundPoundSpinTimer.Value) { targetVelocityX *= GroundPoundHorizontalMovementMultiplier.Value; }
 				TargetVelocity = new Vector2(targetVelocityX, TargetVelocity.Y);
 			}
 			else if (isRightDown)
 			{
 				float targetVelocityX = (sprintChargeTimer == FramesToSprintingAllowed.Value) ? MaximumSprintingSpeed.Value : (IsRunning) ? MaximumRunningSpeed.Value : MaximumWalkingSpeed.Value;
+				if (isGroundPounding && groundPoundSpinTimer >= GroundPoundSpinTimer.Value) { targetVelocityX *= GroundPoundHorizontalMovementMultiplier.Value; }
 				TargetVelocity = new Vector2(targetVelocityX, TargetVelocity.Y);
 			}
 		}
@@ -257,7 +281,7 @@ namespace SmlSprites.Players
 			if (!IsPlayerMoving || (IsPlayerMoving && !IsRunning && Math.Abs(Velocity.X) > MaximumWalkingSpeed.Value))
 			{
 				float tileSurfaceFrictionDelta = tileBeneathPlayer.SurfaceFriction * GameServices.GameTime.GetElapsedSeconds();
-				
+
 				if (Velocity.X > -0.5f && Velocity.X < 0.5f)
 				{
 					Velocity = new Vector2(0f, Velocity.Y);
@@ -281,7 +305,7 @@ namespace SmlSprites.Players
 			{
 				Velocity = new Vector2(Velocity.X, -GetJumpImpulse());
 				IsJumping = true;
-				PlayJumpSound();
+				PlaySound(jumpSound, (sender, e) => { });
 			}
 		}
 
@@ -293,7 +317,7 @@ namespace SmlSprites.Players
 			{
 				Velocity = new Vector2(Velocity.X, -GetSpinJumpImpulse());
 				IsSpinJumping = true;
-				PlaySpinJumpSound();
+				PlaySound(spinJumpSound, (sender, e) => { });
 			}
 		}
 
@@ -309,21 +333,81 @@ namespace SmlSprites.Players
 			return SpinJumpImpulse.Value + (ratioBetweenAddendAndMaxSprintSpeed * Math.Abs(Velocity.X));
 		}
 
-		protected virtual void PlayJumpSound()
+		protected virtual void CheckForGroundPoundInput()
 		{
-			AudioPlaybackEngine.Instance.PlaySound(jumpSound, (sender, e) => { jumpSoundPlaying = false; });
-			jumpSoundPlaying = true;
+			if (!IsOnGround && !isGroundPounding && InputManager.IsNewActionPress(InputAction.Down))
+			{
+				// Start a ground pound.
+				isGroundPounding = true;
+				Velocity = TargetVelocity = Vector2.Zero;
+				PlaySound(groundPoundDropSound, (sender, e) => { });
+				SetPlayerGraphicsObject("groundPoundSpin");
+			}
+			else if (isGroundPounding && groundPoundSpinTimer < GroundPoundSpinTimer.Value)
+			{
+				groundPoundSpinTimer++;
+			}
+			else if (isGroundPounding && IsOnGround)
+			{
+				PlaySound(groundPoundHitSound, (sender, e) => { });
+				isGroundPounding = false;
+				groundPoundSpinTimer = 0;
+			}
+			else if (isGroundPounding && groundPoundSpinTimer == GroundPoundSpinTimer.Value)
+			{
+				Velocity = new Vector2(0, GroundPoundVelocity.Value);
+			}
 		}
 
-		protected virtual void PlaySpinJumpSound()
+		protected virtual void CheckForInAirSpinInput()
 		{
-			AudioPlaybackEngine.Instance.PlaySound(spinJumpSound, (sender, e) => { });
+			if (!IsOnGround && Velocity.Y > 0f && !IsSpinJumping && InputManager.IsNewActionPress(InputAction.SpinJump) && !perfomingInAirSpin && inAirSpinTimeout == 0)
+			{
+				perfomingInAirSpin = true;
+				inAirSpinTimer = InAirSpinDuration.Value;
+				PlaySound(inAirSpinSound, (sender, e) => { });
+				SetPlayerGraphicsObject("inAirSpin");
+			}
+			else if (perfomingInAirSpin)
+			{
+				inAirSpinTimer--;
+
+				if (inAirSpinTimer == 0)
+				{
+					inAirSpinTimeout = InAirSpinTimeout.Value;
+					perfomingInAirSpin = false;
+				}
+			}
+			else if (inAirSpinTimeout > 0)
+			{
+				if (IsOnGround)
+				{
+					inAirSpinTimeout = 0;
+				}
+				else
+				{
+					inAirSpinTimeout--;
+				}
+			}
+		}
+
+		protected virtual void PlaySound(CachedSound sound, EventHandler additionalOnPlaybackEndedHandler)
+		{
+			AudioPlaybackEngine.Instance.PlaySound(sound, additionalOnPlaybackEndedHandler);
 		}
 
 		protected virtual void DeterminePlayerGraphicsObject()
 		{
-			if (IsJumping)
-			{ 
+			if (isGroundPounding)
+			{
+				if (groundPoundSpinTimer >= GroundPoundSpinTimer.Value)
+				{
+					SetPlayerGraphicsObject("groundPoundDrop");
+				}
+			}
+			else if (perfomingInAirSpin) { return; }
+			else if (IsJumping)
+			{
 				if (Math.Abs(Velocity.X) < MaximumSprintingSpeed.Value) { SetPlayerGraphicsObject("jumping"); }
 				else { SetPlayerGraphicsObject("sprintingJump"); }
 			}
@@ -380,6 +464,15 @@ namespace SmlSprites.Players
 		{
 			graphics = (ComplexGraphicsObject)ContentPackageManager.GetGraphicsResource("SMB3PlayerMarioSmall");
 			base.Initialize(owner);
+		}
+
+		protected virtual void InitializeSounds()
+		{
+			jumpSound = new CachedSound(ContentPackageManager.GetAbsoluteFilePath("nsmbwiiJump"));
+			spinJumpSound = new CachedSound(ContentPackageManager.GetAbsoluteFilePath("nsmbwiiSpinJump"));
+			groundPoundDropSound = new CachedSound(ContentPackageManager.GetAbsoluteFilePath("nsmbwiiGroundPound"));
+			groundPoundHitSound = new CachedSound(ContentPackageManager.GetAbsoluteFilePath("nsmbwiiGroundPoundHit"));
+			inAirSpinSound = new CachedSound(ContentPackageManager.GetAbsoluteFilePath("nsmbwiiInAirSpin"));
 		}
 
 		public override void DeserializeCustomObjects(JsonHelper customObjects)

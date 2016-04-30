@@ -2910,6 +2910,11 @@
             Gets or sets a value indicating whether this sprite is embedded inside of a tile.
             </summary>
         </member>
+        <member name="P:SMLimitless.Sprites.Sprite.IsOnGround">
+            <summary>
+            Gets or sets a value indicating whether this sprite is resting on the ground.
+            </summary>
+        </member>
         <member name="P:SMLimitless.Sprites.Sprite.RemoveOnNextFrame">
             <summary>
             Gets or sets a value indicating whether this sprite should be removed from its owner section on the next frame.

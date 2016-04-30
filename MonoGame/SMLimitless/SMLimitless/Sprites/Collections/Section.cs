@@ -234,6 +234,7 @@ namespace SMLimitless.Sprites.Collections
 				float delta = GameServices.GameTime.GetElapsedSeconds();    // The number of seconds that have elapsed since the last Update call.
 				Point intSpritePosition = Point.Zero;
 				Vector2 spritePositionWithoutResolutions = sprite.Position;
+				sprite.IsOnGround = false;
 
 				int numberOfCollidingTiles = 0;
 				bool slopeCollisionOccurred = false;
@@ -283,6 +284,7 @@ namespace SMLimitless.Sprites.Collections
 									resolutionDirection = Math.Sign(resolutionDistance.Y);
 									slopeResolutionDirection = (tile.SlopedSides == RtSlopedSides.TopRight) ? -1 : 1;
 									sprite.Position = new Vector2(sprite.Position.X, (sprite.Position.Y + resolutionDistance.Y));
+									sprite.IsOnGround = (resolutionDistance.Y < 0f);
 									sprite.HandleTileCollision(tile, resolutionDistance);
 
 									numberOfCollidingTiles++;
@@ -377,6 +379,7 @@ namespace SMLimitless.Sprites.Collections
 								{
 									resolutionDirection = Math.Sign(resolutionDistance.Y);                                      // The resolution direction is equal to the sign of the resolution distance (up = negative, down = positive).
 									sprite.Position = new Vector2(sprite.Position.X, sprite.Position.Y + resolutionDistance.Y); // Move the sprite vertically by the resolution distance.
+									sprite.IsOnGround = (resolutionDistance.Y < 0f);
 									sprite.Velocity = new Vector2(sprite.Velocity.X, 0f);                                       // Stop the sprite's vertical movement.
 									sprite.HandleTileCollision(tile, resolutionDistance);
 
