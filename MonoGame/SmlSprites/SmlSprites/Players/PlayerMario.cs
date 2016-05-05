@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SMLimitless;
 using SMLimitless.Content;
+using SMLimitless.Components;
 using SMLimitless.Extensions;
 using SMLimitless.Graphics;
 using SMLimitless.Input;
@@ -23,12 +24,15 @@ namespace SmlSprites.Players
 		private ComplexGraphicsObject graphics;
 		private int sprintChargeTimer = 0;
 		private Direction direction = Direction.Left;
+		private ActionScheduler actionScheduler = new ActionScheduler();
 
 		private bool isGroundPounding;
+		private bool wasGroundPounding { get; set; }
 		private int groundPoundSpinTimer = 0;
 		private bool perfomingInAirSpin;
 		private int inAirSpinTimer = 0;
 		private int inAirSpinTimeout = 0;
+		private bool isSliding;
 
 		private static PhysicsSetting<float> MaximumWalkingSpeed = new PhysicsSetting<float>("Player: Max Walking Speed", 0f, 100f, 35f, PhysicsSettingType.FloatingPoint);
 		private static PhysicsSetting<float> MaximumRunningSpeed = new PhysicsSetting<float>("Player: Max Running Speed", 0f, 150f, 50f, PhysicsSettingType.FloatingPoint);
@@ -48,6 +52,8 @@ namespace SmlSprites.Players
 		private static PhysicsSetting<int> InAirSpinDuration = new PhysicsSetting<int>("Player: In-Air Spin Duration", 1, 100, 20, PhysicsSettingType.Integer);
 		private static PhysicsSetting<float> InAirSpinGravityMultiplier = new PhysicsSetting<float>("Player: In-Air Spin Gravity Multiplier", 0.001f, 1.0f, 0.1f, PhysicsSettingType.FloatingPoint);
 		private static PhysicsSetting<int> InAirSpinTimeout = new PhysicsSetting<int>("Player: In-Air Spin Timeout", 1, 100, 15, PhysicsSettingType.Integer);
+
+		private static PhysicsSetting<float> SlidingVelocity = new PhysicsSetting<float>("Player: Sliding Velocity", 10f, 400f, 100f, PhysicsSettingType.FloatingPoint);
 
 		public string DebugGraphicsName { get; protected set; } = "";
 		protected virtual Vector2 TargetVelocity { get; set; }
@@ -108,13 +114,14 @@ namespace SmlSprites.Players
 		public override void Update()
 		{
 			CheckForWalkRunInput();
-			DetermineHorizontalAcceleration();
 			SprintIfAllowed();
 
 			CheckForJumpInput();
 			CheckForSpinJumpInput();
 			CheckForGroundPoundInput();
 			CheckForInAirSpinInput();
+			CheckForSlideInput();
+			DetermineHorizontalAcceleration();
 
 			ApplyTileSurfaceFriction();
 			DeterminePlayerGraphicsObject();
@@ -153,6 +160,7 @@ namespace SmlSprites.Players
 
 			ApplyAccelerationToVelocity(delta);
 			graphics.Update();
+			actionScheduler.Update();
 		}
 
 		protected virtual void ApplyAccelerationToVelocity(float delta)
@@ -212,7 +220,9 @@ namespace SmlSprites.Players
 			bool isLeftDown = InputManager.IsCurrentActionPress(InputAction.Left);
 			bool isRightDown = InputManager.IsCurrentActionPress(InputAction.Right);
 
-			if ((isLeftDown && isRightDown) || (!isLeftDown && !isRightDown))
+			if (isLeftDown || isRightDown) { isSliding = false; }
+
+			if ((isLeftDown && isRightDown) || (!isLeftDown && !isRightDown) && !isSliding)
 			{
 				// If the user is holding both left and right down, we should cancel the acceleration and do nothing.
 				CancelHorizontalAcceleration();
@@ -272,6 +282,8 @@ namespace SmlSprites.Players
 
 		protected virtual void ApplyTileSurfaceFriction()
 		{
+			if (isSliding) { return; }
+
 			bool isLeftDown = InputManager.IsCurrentActionPress(InputAction.Left);
 			bool isRightDown = InputManager.IsCurrentActionPress(InputAction.Right);
 
@@ -305,6 +317,7 @@ namespace SmlSprites.Players
 			{
 				Velocity = new Vector2(Velocity.X, -GetJumpImpulse());
 				IsJumping = true;
+				isSliding = false;
 				PlaySound(jumpSound, (sender, e) => { });
 			}
 		}
@@ -317,6 +330,7 @@ namespace SmlSprites.Players
 			{
 				Velocity = new Vector2(Velocity.X, -GetSpinJumpImpulse());
 				IsSpinJumping = true;
+				isSliding = false;
 				PlaySound(spinJumpSound, (sender, e) => { });
 			}
 		}
@@ -352,10 +366,61 @@ namespace SmlSprites.Players
 				PlaySound(groundPoundHitSound, (sender, e) => { });
 				isGroundPounding = false;
 				groundPoundSpinTimer = 0;
+				actionScheduler.ScheduleAction(() => wasGroundPounding = false, 20);
 			}
 			else if (isGroundPounding && groundPoundSpinTimer == GroundPoundSpinTimer.Value)
 			{
 				Velocity = new Vector2(0, GroundPoundVelocity.Value);
+				wasGroundPounding = true;
+			}
+		}
+
+		protected virtual void CheckForSlideInput()
+		{
+			// Sliding down slopes:
+			// Is the player not sliding down a slope already?
+			//	1. Is the user pressing Down?
+			//	2. Is the player on the ground?
+			//	3. Is the player on a slope?
+			//	4. Is the player ground-pounding?
+			//		If yes, immediately impart the total sliding velocity on the player in the direction down the slope.
+			//		If no, set the target velocity to the sliding velocity.
+			// Is the player already sliding down a slope?
+			//	1. Is the player still on the ground?
+			//		If yes, check to see if the tile beneath them is a slope. Stop sliding if so.
+			//		If no, keep the isSliding flag set.
+			// Also, cancel all sliding if the user presses Left, Right, Jump, or Spin Jump.
+
+			Vector2 tileBeneathPlayerCheckPoint = Hitbox.BottomCenter;
+			tileBeneathPlayerCheckPoint.Y += 1f;
+			Tile tileBeneathPlayer = Owner.GetTileAtPosition(tileBeneathPlayerCheckPoint);
+
+			if (!isSliding)
+			{
+				if ((InputManager.IsNewActionPress(InputAction.Down) && IsOnGround) || wasGroundPounding)
+				{
+					if (tileBeneathPlayer != null && tileBeneathPlayer.TileShape == CollidableShape.RightTriangle)
+					{
+						float slideDirection = (float)((RightTriangle)tileBeneathPlayer.Hitbox).HorizontalSlopedSide;
+						if (wasGroundPounding)
+						{
+							Velocity = new Vector2(SlidingVelocity.Value * slideDirection, Velocity.Y);
+							TargetVelocity = new Vector2(SlidingVelocity.Value * slideDirection, Velocity.Y);
+						}
+						else
+						{
+							TargetVelocity = new Vector2(SlidingVelocity.Value * slideDirection, Velocity.Y);
+						}
+						isSliding = true;
+					}
+				}
+				else
+				{
+					if (tileBeneathPlayer != null && tileBeneathPlayer.TileShape == CollidableShape.Rectangle)
+					{
+						isSliding = false;
+					}
+				}
 			}
 		}
 
@@ -415,6 +480,10 @@ namespace SmlSprites.Players
 			{
 				SetPlayerGraphicsObject("spinJump");
 			}
+			else if (isSliding)
+			{
+				SetPlayerGraphicsObject("sliding");
+			}
 			else
 			{
 				if (Velocity.X == 0f /* && IsOnGround */) { SetPlayerGraphicsObject("standing"); }
@@ -433,8 +502,8 @@ namespace SmlSprites.Players
 		protected virtual void SetPlayerGraphicsObject(string objectName)
 		{
 			// TODO: implement
-			DebugGraphicsName = objectName;
-			graphics.CurrentObjectName = objectName;
+			DebugGraphicsName = $"{objectName}; Was ground pounding: {wasGroundPounding}";
+            graphics.CurrentObjectName = objectName;
 		}
 
 		private Tile GetTileBeneathPlayer()
