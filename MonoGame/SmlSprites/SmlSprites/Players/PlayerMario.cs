@@ -416,9 +416,16 @@ namespace SmlSprites.Players
 				}
 				else
 				{
-					if (tileBeneathPlayer != null && tileBeneathPlayer.TileShape == CollidableShape.Rectangle)
+					if (tileBeneathPlayer != null)
 					{
-						isSliding = false;
+						if (tileBeneathPlayer.TileShape == CollidableShape.Rectangle)
+						{
+							isSliding = false;
+						}
+						else
+						{
+							TargetVelocity = new Vector2((float)((RightTriangle)tileBeneathPlayer.Hitbox).HorizontalSlopedSide, Velocity.Y);
+						}
 					}
 				}
 			}
