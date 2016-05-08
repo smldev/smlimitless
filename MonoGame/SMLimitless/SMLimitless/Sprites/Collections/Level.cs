@@ -70,7 +70,7 @@ namespace SMLimitless.Sprites.Collections
 		/// <summary>
 		/// The acceleration caused by gravity, measured in pixels per second per second.
 		/// </summary>
-		public static PhysicsSetting<float> GravityAcceleration = new PhysicsSetting<float>("Gravity Acceleration (pixels/s²)", 0f, 1000f, 250f, PhysicsSettingType.FloatingPoint);
+		public static PhysicsSetting<float> GravityAcceleration = new PhysicsSetting<float>("Gravity Acceleration (px/sec²)", 0f, 1000f, 700f, PhysicsSettingType.FloatingPoint);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Level"/> class.

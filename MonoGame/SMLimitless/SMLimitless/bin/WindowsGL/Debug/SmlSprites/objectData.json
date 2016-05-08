@@ -228,7 +228,7 @@
 					"graphicsResource": "SMBSlope2_1TopLeft",
 					"state": null,
 					"customData": {
-						"widthInGridCells": 1,
+						"widthInGridCells": 2,
 						"heightInGridCells": 1,
 						"slopedSides": 1
 					}
@@ -239,7 +239,7 @@
 					"graphicsResource": "SMBSlope2_1TopRight",
 					"state": null,
 					"customData": {
-						"widthInGridCells": 1,
+						"widthInGridCells": 2,
 						"heightInGridCells": 1,
 						"slopedSides": 2
 					}
@@ -250,7 +250,7 @@
 					"graphicsResource": "SMBSlope2_1BottomLeft",
 					"state": null,
 					"customData": {
-						"widthInGridCells": 1,
+						"widthInGridCells": 2,
 						"heightInGridCells": 1,
 						"slopedSides": 3
 					}
@@ -261,7 +261,7 @@
 					"graphicsResource": "SMBSlope2_1BottomRight",
 					"state": null,
 					"customData": {
-						"widthInGridCells": 1,
+						"widthInGridCells": 2,
 						"heightInGridCells": 1,
 						"slopedSides": 4
 					}

@@ -37,7 +37,7 @@ namespace SMLimitless.Sprites.Collections
 		/// <summary>
 		/// Gets the position of the layer; the position of the top-left corner of the <see cref="Bounds"/>.
 		/// </summary>
-		public Vector2 Position { get; private set; } = new Vector2(float.NaN);
+		public Vector2 Position { get; internal set; } = new Vector2(float.NaN);
 
 		/// <summary>
 		/// Gets the numeric index of this layer in its owner section.
@@ -61,10 +61,6 @@ namespace SMLimitless.Sprites.Collections
 			Owner = cOwner;
 			IsMainLayer = isMainLayer;
 			if (IsMainLayer) { Owner.MainLayer = this; }
-
-			// temporary
-			Tiles = new SizedGrid<Tile>(Vector2.Zero, (int)GameServices.GameObjectSize.X, (int)GameServices.GameObjectSize.Y, 1, 1);
-			Bounds = Tiles.Bounds;
 		}
 
 		/// <summary>

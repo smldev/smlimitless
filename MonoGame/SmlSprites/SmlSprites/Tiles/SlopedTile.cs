@@ -15,7 +15,7 @@ namespace SmlSprites.Tiles
 {
 	public sealed class SlopedTile : Tile
 	{
-		private static PhysicsSetting<float> SurfaceFrictionSetting = new PhysicsSetting<float>("Sloped Tile: Surface Friction", 0f, 500f, 12f, PhysicsSettingType.FloatingPoint);
+		private static PhysicsSetting<float> SurfaceFrictionSetting = new PhysicsSetting<float>("Sloped Tile: Surface Friction", 0f, 8000f, 4500f, PhysicsSettingType.FloatingPoint);
 		private IGraphicsObject graphics;
 
 		private int widthInGridCells;

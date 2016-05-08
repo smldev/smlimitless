@@ -1,6 +1,6 @@
 [Complex]
 FrameSize = 16,16
-TotalGraphicsObjects = 15
+TotalGraphicsObjects = 16
 StartingObject = standing
 
 [Object0]
@@ -111,3 +111,8 @@ Frame1 = 432,0
 Frame2 = 416,0
 Frame3 = 48,0
 CycleLength = 0.34
+
+[Object15]
+Name = slidingDownWall
+Type = static
+Frame = 448,0

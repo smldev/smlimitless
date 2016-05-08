@@ -521,8 +521,11 @@ namespace SMLimitless.Sprites.Collections
 				throw new ArgumentNullException(nameof(tile), "The tile to add to the section was null.");
 			}
 
-			Tiles.Add(tile);
-			MainLayer.AddTile(tile);
+			if (!tile.Position.IsNaN() && MainLayer.GetTile(MainLayer.GetCellNumberAtPosition(tile.Position)) == null)
+			{
+				Tiles.Add(tile);
+				MainLayer.AddTile(tile);
+			}
 		}
 
 		/// <summary>

@@ -92,7 +92,7 @@ namespace SMLimitless.Sprites.InternalSprites
 			if (selectedTile != null) { selectedTile.Position = newPosition; }
 			else if (selectedSprite != null) { selectedSprite.Position = newPosition; }
 
-			if (InputManager.IsNewMousePress(MouseButtons.LeftButton))
+			if (InputManager.IsCurrentMousePress(MouseButtons.LeftButton))
 			{
 				OnLeftClick();
 			}

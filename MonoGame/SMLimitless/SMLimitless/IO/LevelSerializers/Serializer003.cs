@@ -363,6 +363,7 @@ namespace SMLimitless.IO.LevelSerializers
 				Vector2 gridSize = new Vector2((int)entry["gridWidth"], (int)entry["gridHeight"]);
 				Vector2 position = entry["position"].ToVector2();
 				layer.Tiles = new SizedGrid<Tile>(position, (int)GameServices.GameObjectSize.X, (int)GameServices.GameObjectSize.Y, (int)gridSize.X, (int)gridSize.Y);
+				layer.Position = position;
 				var uniqueTiles = DeserializeTileSaveData(tileDataArray);
 				var tilePositions = DeserializeTilePositionClouds(positionsArray);
 				LayerTileSaveData layerTileData = LayerTileSaveData.Merge(uniqueTiles, tilePositions);
