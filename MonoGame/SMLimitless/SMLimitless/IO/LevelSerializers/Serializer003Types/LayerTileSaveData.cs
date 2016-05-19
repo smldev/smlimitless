@@ -38,6 +38,9 @@ namespace SMLimitless.IO.LevelSerializers.Serializer003Types
 					id++;
 				}
 
+				Vector2 storedPosition = new Vector2(gridCellWithTile.Item1 * GameServices.GameObjectSize.X, gridCellWithTile.Item2 * GameServices.GameObjectSize.Y);
+				if (gridCellWithTile.Item3.Position != storedPosition) { System.Diagnostics.Debugger.Break(); }
+
 				Tiles[saveData].CellNumbers.Add(new Point(x: gridCellWithTile.Item1, y: gridCellWithTile.Item2));
 			}
 		}
@@ -100,7 +103,6 @@ namespace SMLimitless.IO.LevelSerializers.Serializer003Types
 
 					resultTile.Initialize(layer.Owner);
 					tilesToAdd.Add(resultTile);
-					layer.Owner.AddTile(resultTile);
 				}
 
 				layer.AddTiles(tilesToAdd);

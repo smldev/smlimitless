@@ -43,6 +43,10 @@ namespace SMLimitless
         {
 			graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "InternalContent";
+			
+			#if ALTGFX
+			Window.Title = "SMLimitless";
+			#endif
 
 			IsMouseVisible = true;
         }
@@ -61,7 +65,7 @@ namespace SMLimitless
             string contentPackageSettingsPath = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), @"TestPackage\settings.txt");
             // SMLimitless.Content.ContentPackageManager.AddPackage(contentPackageSettingsPath);
             //GameServices.Camera = new Physics.Camera2D(); // NOTE: comment out this line and the above if loading a LevelScreen.
-            ScreenManager.SetRootScreen(new LevelScreen(), System.IO.Directory.GetCurrentDirectory() + @"\testLevel3.lvl");
+            ScreenManager.SetRootScreen(new LevelScreen(), System.IO.Directory.GetCurrentDirectory() + @"\test_003.lvl");
             base.Initialize();
 
 			stopwatch.Stop();

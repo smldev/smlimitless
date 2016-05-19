@@ -1,0 +1,43 @@
+[Complex]
+FrameSize = 16,16
+TotalGraphicsObjects = 6
+StartingObject = walking_OW
+
+[Object0]
+Name = walking_OW
+Type = animated
+Frames = 2
+Frame0 = 0,0
+Frame1 = 16,0
+CycleLength = 0.5
+
+[Object1]
+Name = flattened_OW
+Type = static
+Frame = 32,0
+
+[Object2]
+Name = walking_cave
+Type = animated
+Frames = 2
+Frame0 = 0,16
+Frame1 = 16,16
+CycleLength = 0.5
+
+[Object3]
+Name = flattened_cave
+Type = static
+Frame = 32,16
+
+[Object4]
+Name = walking_castle
+Type = animated
+Frames = 2
+Frame0 = 0,32
+Frame1 = 16,32
+CycleLength = 0.5
+
+[Object5]
+Name = flattened_castle
+Type = static
+Frame = 32,32

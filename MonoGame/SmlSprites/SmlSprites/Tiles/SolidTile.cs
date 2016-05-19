@@ -15,7 +15,13 @@ namespace SmlSprites.Tiles
 {
 	public sealed class SolidTile : Tile
 	{
-		private IGraphicsObject graphics;
+		private bool graphicsLoaded;
+		private IGraphicsObject _graphics;
+		private IGraphicsObject graphics
+		{
+			get { return _graphics; }
+			set { graphicsLoaded = true; _graphics = value; }
+		}
 
 		private int widthInGridCells;
 		private int heightInGridCells;
@@ -60,6 +66,7 @@ namespace SmlSprites.Tiles
 
 		public override void Draw()
 		{
+			//if (graphics == null) { return; }
 			graphics.Draw(Position, Color.White);
 		}
 
@@ -71,8 +78,8 @@ namespace SmlSprites.Tiles
 		{
 			return new
 			{
-				heightInGridCells = heightInGridCells,
-				widthInGridCells = widthInGridCells
+				widthInGridCells = (int)(this.Size.X / GameServices.GameObjectSize.X),
+				heightInGridCells = (int)(this.Size.Y / GameServices.GameObjectSize.Y)
 			};
 		}
 

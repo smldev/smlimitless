@@ -168,14 +168,14 @@ namespace SMLimitless.Sprites.Collections
 				irisEffect.Start(90, EffectDirection.Forward, Vector2.Zero, Color.Black);
 
 				// TEMPORARY: Code to add a test player; remove when player support is a bit better
-				Vector2 createPlayerAt = Tiles.First(t => GetTileAtPosition(new Vector2(t.Position.X, t.Position.Y - 8f)) == null).Position;
-				createPlayerAt.Y -= 16f;
-				Sprite playerSprite = Assemblies.AssemblyManager.GetSpriteByFullName("SmlSprites.Players.PlayerMario");
-				playerSprite.Initialize(this);
-				playerSprite.LoadContent();
-				playerSprite.Position = createPlayerAt;
-				Sprites.Add(playerSprite);
-				CameraSystem.TrackingObjects.Add(playerSprite);
+				//Vector2 createPlayerAt = Tiles.First(t => GetTileAtPosition(new Vector2(t.Position.X, t.Position.Y - 8f)) == null).Position;
+				//createPlayerAt.Y -= 16f;
+				//Sprite playerSprite = Assemblies.AssemblyManager.GetSpriteByFullName("SmlSprites.Players.PlayerMario");
+				//playerSprite.Initialize(this);
+				//playerSprite.LoadContent();
+				//playerSprite.Position = createPlayerAt;
+				//Sprites.Add(playerSprite);
+				//CameraSystem.TrackingObjects.Add(playerSprite);
 
 				isContentLoaded = true;
 			}
@@ -524,7 +524,7 @@ namespace SMLimitless.Sprites.Collections
 			if (!tile.Position.IsNaN() && MainLayer.GetTile(MainLayer.GetCellNumberAtPosition(tile.Position)) == null)
 			{
 				Tiles.Add(tile);
-				MainLayer.AddTile(tile);
+				if (!MainLayer.Tiles.Contains(tile)) { MainLayer.AddTile(tile); }
 			}
 		}
 

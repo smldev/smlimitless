@@ -5,10 +5,12 @@
 //-----------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json.Linq;
+using SMLimitless.Content;
 using SMLimitless.Interfaces;
 using SMLimitless.Physics;
 
@@ -28,6 +30,11 @@ namespace SMLimitless.Sprites.Collections
 		/// Gets the name of the author who created this level.
 		/// </summary>
 		public string Author { get; internal set; }
+
+		/// <summary>
+		/// Gets the absolute path to the file this level was loaded from.
+		/// </summary>
+		public string Path { get; internal set; }
 
 		/// <summary>
 		/// Gets or sets a collection of all the paths to the content package folders used in this level.
@@ -70,7 +77,7 @@ namespace SMLimitless.Sprites.Collections
 		/// <summary>
 		/// The acceleration caused by gravity, measured in pixels per second per second.
 		/// </summary>
-		public static PhysicsSetting<float> GravityAcceleration = new PhysicsSetting<float>("Gravity Acceleration (px/sec²)", 0f, 1000f, 700f, PhysicsSettingType.FloatingPoint);
+		public static PhysicsSetting<float> GravityAcceleration = new PhysicsSetting<float>("Gravity Acceleration (px/sec²)", 0f, 10000f, 700f, PhysicsSettingType.FloatingPoint);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Level"/> class.
@@ -87,8 +94,25 @@ namespace SMLimitless.Sprites.Collections
         /// </summary>
         public void Initialize() 
 		{
+			LoadOverrides();
 			Sections.ForEach(s => s.Initialize());
 			// ContentFolderPaths.ForEach(f => Content.ContentPackageManager.AddPackageFromFolder(f));
+		}
+
+		private void LoadOverrides()
+		{
+			string levelFolderAbsolutePath = System.IO.Path.GetDirectoryName(Path);
+			string levelFileNameWithoutExt = System.IO.Path.GetFileNameWithoutExtension(Path);
+			string pathToOverridesFile = Directory.GetFiles(levelFolderAbsolutePath, "overrides.txt", SearchOption.TopDirectoryOnly).FirstOrDefault();
+			if (pathToOverridesFile == null) { return; }
+
+			var contentOverrides = OverrideReader.GetOverridesFromFile(pathToOverridesFile);
+			if (!contentOverrides.ContainsKey(levelFileNameWithoutExt)) { return; }
+			foreach (string overrideFolder in contentOverrides[levelFileNameWithoutExt])
+			{
+				string absoluteOverrideFolderPath = System.IO.Path.Combine(levelFolderAbsolutePath, overrideFolder);
+				ContentPackageManager.AddOverrideFolder(absoluteOverrideFolderPath);
+			}
 		}
 
         /// <summary>

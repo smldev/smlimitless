@@ -364,16 +364,16 @@ namespace SmlSprites.Players
 
 		protected virtual void CheckForJumpInput()
 		{
-			bool isJumpDown = InputManager.IsNewActionPress(InputAction.Jump);
+			bool isNewJumpPress = InputManager.IsNewActionPress(InputAction.Jump);
 
-			if (isJumpDown && IsOnGround && !IsJumping && !IsSpinJumping)
+			if (isNewJumpPress && IsOnGround && !IsJumping && !IsSpinJumping)
 			{
 				Velocity = new Vector2(Velocity.X, -GetJumpImpulse());
 				IsJumping = true;
 				isSliding = false;
 				PlaySound(jumpSound, (sender, e) => { });
 			}
-			else if (isJumpDown && IsSlidingDownWall && !IsSpinJumping)
+			else if (isNewJumpPress && IsSlidingDownWall && !IsSpinJumping)
 			{
 				Velocity = new Vector2((FacingDirection == SMLimitless.Direction.Right) ? -WallJumpHorizontalImpulse.Value : WallJumpHorizontalImpulse.Value, -WallJumpVerticalImpulse.Value);
 				IsJumping = true;
@@ -632,7 +632,7 @@ namespace SmlSprites.Players
 
 		public override void HandleTileCollision(Tile tile, Vector2 resolutionDistance)
 		{
-			if (resolutionDistance.Y < 0f)
+			if (resolutionDistance.Y != 0f)
 			{
 				IsJumping = false;
 				IsSpinJumping = false;

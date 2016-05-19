@@ -36,6 +36,7 @@ namespace SMLimitless.Screens
 			// temporary
 			// level.ContentFolderPaths = new List<string>() { System.IO.Directory.GetCurrentDirectory() + @"\TestPackage" };
 			level = new IO.LevelSerializers.Serializer003().Deserialize(System.IO.File.ReadAllText(parameters));
+			level.Path = parameters;
 			level.Initialize();
         }
 

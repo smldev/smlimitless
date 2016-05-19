@@ -1,0 +1,15 @@
+Gravity Acceleration: 700
+Walk Speed: 50
+Run Speed: 75
+Sprint Speed: 100
+Jump Impulse: 245
+Additional Impulse: 60
+Jump Gravity Multiplier: 0.65
+Spin Jump Impulse: 245
+Ground Pound Spin Timer: 20
+Ground Pound Velocity: 300
+Ground Pound Horizontal Multiplier: 0.25
+In-Air Spin Gravity Multiplier: 0.6
+Slide Down Wall Velocity: 75
+Wall Jump Vertical Impulse: 200
+Wall Jump Horizontal Impulse: 100

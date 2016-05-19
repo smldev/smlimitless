@@ -151,10 +151,11 @@ namespace SMLimitless.IO.LevelSerializers
 				result.Add(new
 				{
 					id = positionCloud.TileSaveID,
-					positions = positionCloud.CellNumbers.SerializeCompact()
+					positions = positionCloud.CellNumbers.SerializeCompact(sorted: true)
 				});
 			}
 
+			
 			return result;
 		}
 

@@ -731,6 +731,11 @@
             A collection of the loaded packages.
             </summary>
         </member>
+        <member name="F:SMLimitless.Content.ContentPackageManager.contentOverrides">
+            <summary>
+            A collection of folder names for folders containing content overrides.
+            </summary>
+        </member>
         <member name="M:SMLimitless.Content.ContentPackageManager.#cctor">
             <summary>
             Initializes static members of the <see cref="T:SMLimitless.Content.ContentPackageManager"/> class.
@@ -771,6 +776,17 @@
             </summary>
             <param name="resourceName">The name of the resource.</param>
             <returns>The resource's absolute file path.</returns>
+        </member>
+        <member name="M:SMLimitless.Content.ContentPackageManager.AddOverrideFolder(System.String)">
+            <summary>
+            Adds an override folder to the content override folders.
+            </summary>
+            <param name="absoluteFolderPath">The absolute path to the folder.</param>
+        </member>
+        <member name="M:SMLimitless.Content.ContentPackageManager.ClearOverrideFolders">
+            <summary>
+            Clears all loaded content override folders.
+            </summary>
         </member>
         <member name="T:SMLimitless.Content.ContentPackageResourceSearcher">
             <summary>
@@ -2316,6 +2332,11 @@
         <member name="P:SMLimitless.Sprites.Collections.Level.Author">
             <summary>
             Gets the name of the author who created this level.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Collections.Level.Path">
+            <summary>
+            Gets the absolute path to the file this level was loaded from.
             </summary>
         </member>
         <member name="P:SMLimitless.Sprites.Collections.Level.ContentFolderPaths">
@@ -4592,7 +4613,7 @@
             Contains extension methods for the <see cref="T:Microsoft.Xna.Framework.Point"/> struct.
             </summary>
         </member>
-        <member name="M:SMLimitless.Extensions.PointExtensions.SerializeCompact(System.Collections.Generic.IEnumerable{Microsoft.Xna.Framework.Point})">
+        <member name="M:SMLimitless.Extensions.PointExtensions.SerializeCompact(System.Collections.Generic.IEnumerable{Microsoft.Xna.Framework.Point},System.Boolean)">
             <summary>
             Converts an enumerable containing <see cref="T:Microsoft.Xna.Framework.Point"/> instances into a <see cref="T:System.String"/>
             of form "x,y;x,y" with no trailing semicolon.

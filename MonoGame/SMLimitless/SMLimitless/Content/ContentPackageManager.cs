@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using SMLimitless.Graphics;
@@ -22,12 +23,18 @@ namespace SMLimitless.Content
         /// </summary>
         private static List<ContentPackage> loadedPackages;
 
+		/// <summary>
+		/// A collection of folder names for folders containing content overrides.
+		/// </summary>
+		private static Dictionary<string, string[]> contentOverrides;
+
         /// <summary>
         /// Initializes static members of the <see cref="ContentPackageManager"/> class.
         /// </summary>
         static ContentPackageManager()
         {
             ContentPackageManager.loadedPackages = new List<ContentPackage>();
+			contentOverrides = new Dictionary<string, string[]>();
         }
 
         /// <summary>
@@ -51,7 +58,6 @@ namespace SMLimitless.Content
             package.LoadFromFolder(settingsFolder);
             loadedPackages.Add(package);
         }
-
         /// <summary>
         /// Returns a loaded graphics object from a content package
         /// given a resource name. This method will do a file search
@@ -64,6 +70,12 @@ namespace SMLimitless.Content
         {
             string resourcePath = "";
             int i = 0;
+
+			foreach (KeyValuePair<string, string[]> contentOverride in contentOverrides.Reverse())
+			{
+				resourcePath = SearchOverrideForResource(contentOverride.Key, resourceName);
+				if (resourcePath != "") { break; }
+			}
 
             while (resourcePath == "")
             {
@@ -83,7 +95,6 @@ namespace SMLimitless.Content
 
             return GraphicsManager.LoadGraphicsObject(resourcePath);
         }
-
         /// <summary>
         /// Gets a loaded sound resource given its name.
         /// </summary>
@@ -134,6 +145,43 @@ namespace SMLimitless.Content
             }
 
             return resourcePath;
-        }
+		}
+
+		/// <summary>
+		/// Adds an override folder to the content override folders.
+		/// </summary>
+		/// <param name="absoluteFolderPath">The absolute path to the folder.</param>
+		public static void AddOverrideFolder(string absoluteFolderPath)
+		{
+			if (!Directory.Exists(absoluteFolderPath)) { throw new IOException($"Tried to add an override folder to the content package manager, but the folder doesn't exist or the path is invalid (Path: {absoluteFolderPath})"); }
+
+			string[] filePathsInFolder = Directory.GetFiles(absoluteFolderPath, "*", SearchOption.AllDirectories).Where(p => !p.ToLowerInvariant().EndsWith(".txt")).ToArray();
+			contentOverrides.Add(absoluteFolderPath, filePathsInFolder);
+		}
+
+		/// <summary>
+		/// Clears all loaded content override folders.
+		/// </summary>
+		public static void ClearOverrideFolders()
+		{
+			contentOverrides.Clear();
+		}
+
+		private static string SearchOverrideForResource(string overrideFolderPath, string resourceName)
+		{
+			string[] filePaths = contentOverrides[overrideFolderPath];
+
+			Func<string, bool> searchFunc = (s) =>
+			{
+				string fileName = Path.GetFileNameWithoutExtension(s);
+				return fileName.ToLowerInvariant().Equals(resourceName.ToLowerInvariant(), StringComparison.InvariantCultureIgnoreCase);
+			};
+
+			var matchingFilePaths = filePaths.Where(searchFunc);
+			int matchingFileCount = matchingFilePaths.Count();
+			if (matchingFileCount > 1) { throw new ArgumentException($"Multiple files in a content override named {resourceName}."); }
+			else if (matchingFileCount == 0) { return ""; }
+			else { return matchingFilePaths.First(); }
+		}
     }
 }

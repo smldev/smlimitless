@@ -171,6 +171,8 @@ namespace SMLimitless.Sprites.Collections
 
 			this.Tiles = newGrid;
 			Bounds = this.Tiles.Bounds;
+
+			tiles.ForEach(t => Owner.Tiles.Add(t));
 		}
 
 		internal void AddTile(Tile tile)

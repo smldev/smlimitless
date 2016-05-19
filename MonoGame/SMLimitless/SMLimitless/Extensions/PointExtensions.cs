@@ -18,8 +18,10 @@ namespace SMLimitless.Extensions
 		/// </summary>
 		/// <param name="points">An enumerable containing the points to be serialized.</param>
 		/// <returns>A string containing the point values.</returns>
-		public static string SerializeCompact(this IEnumerable<Point> points)
+		public static string SerializeCompact(this IEnumerable<Point> points, bool sorted = false)
 		{
+			if (sorted) { points = points.OrderBy(p => p.X); }
+
 			StringBuilder resultBuilder = new StringBuilder();
 			
 			foreach (Point point in points)
@@ -27,7 +29,7 @@ namespace SMLimitless.Extensions
 				resultBuilder.Append($"{point.X},{point.Y};");
 			}
 
-			resultBuilder.Remove(resultBuilder.Length - 2, 1);  // remove trailing semicolon
+			resultBuilder.Remove(resultBuilder.Length - 1, 1);  // remove trailing semicolon
 			return resultBuilder.ToString();
 		}
 

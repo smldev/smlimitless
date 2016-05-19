@@ -60,6 +60,7 @@ namespace SmlSprites.Tiles
 
 		public override void Draw()
 		{
+			//if (graphics == null) { return; }
 			graphics.Draw(Position, Color.White);
 		}
 
@@ -71,8 +72,8 @@ namespace SmlSprites.Tiles
 		{
 			return new
 			{
-				widthInGridCells = this.widthInGridCells,
-				heightInGridCells = this.heightInGridCells,
+				widthInGridCells = (int)(this.Size.X / GameServices.GameObjectSize.X),
+				heightInGridCells = (int)(this.Size.Y / GameServices.GameObjectSize.Y),
 				slopedSides = this.SlopedSides
 			};
 		}

@@ -49,7 +49,7 @@ namespace SMLimitless.Content
             if (!filePaths.ContainsKey(resourceName))
             {
                 string packagePath = owner.BaseFolderPath;
-                string[] matchingFilePaths = Directory.GetFiles(packagePath, string.Concat(resourceName, ".*"), SearchOption.AllDirectories).Where(s => !s.EndsWith(".txt")).ToArray(); // we need to exclude TXT configuration files
+                string[] matchingFilePaths = Directory.GetFiles(packagePath, string.Concat(resourceName, ".*"), SearchOption.AllDirectories).Where(s => !s.ToLowerInvariant().EndsWith(".txt")).ToArray(); // we need to exclude TXT configuration files
 
                 if (matchingFilePaths.Length > 1)
                 {
