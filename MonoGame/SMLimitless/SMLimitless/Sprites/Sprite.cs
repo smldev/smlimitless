@@ -33,6 +33,11 @@ namespace SMLimitless.Sprites
         private Vector2 velocity;
 
 		/// <summary>
+		/// A backing field for the Hitbox property.
+		/// </summary>
+		private BoundingRectangle hitbox;
+
+		/// <summary>
 		/// A physics setting representing the maximum downward velocity a sprite can acquire through falling. Measured in pixels per second.
 		/// </summary>
 		public static PhysicsSetting<float> MaximumGravitationalVelocity = new PhysicsSetting<float>("Max Gravitational Velocity", 0f, 1000f, 350f, PhysicsSettingType.FloatingPoint);
@@ -123,6 +128,9 @@ namespace SMLimitless.Sprites
 
 				// Round values to nearest integer in case of really small precision errors.
 				position = new Vector2(value.X.CorrectPrecision(), value.Y.CorrectPrecision());
+
+				// Rebuild the hitbox
+				hitbox = new BoundingRectangle(position, position + Size);
 			}
 		}
 
@@ -170,7 +178,7 @@ namespace SMLimitless.Sprites
         {
             get
             {
-                return new BoundingRectangle(Position, Size + Position);
+				return hitbox;
             }
         }
 		#endregion

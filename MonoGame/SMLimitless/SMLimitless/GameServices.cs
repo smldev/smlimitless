@@ -101,7 +101,7 @@ namespace SMLimitless
         {
             get
             {
-                return new Vector2(64f, 64f);
+				return new Vector2(64f, 64f);
             }
         }
 

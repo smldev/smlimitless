@@ -181,17 +181,16 @@ namespace SMLimitless.Collections
 		{
 			SparseCellRange range = GetCellsItemIsIn(item);
 
-			for (int y = range.TopLeft.Y; y <= range.BottomRight.Y; y++)
+			return ItemsInCells(range);
+		}
+
+		internal IEnumerable<T> ItemsInCells(SparseCellRange range)
+		{
+			foreach (T item in items)
 			{
-				for (int x = range.TopLeft.X; x <= range.BottomRight.X; x++)
+				if (GetCellsItemIsIn(item).Equals(range))
 				{
-					if (Cells.ContainsKey(new Point(x, y)))
-					{
-						foreach (T itemInCell in Cells[new Point(x, y)].Items)
-						{
-							if (!ReferenceEquals(item, itemInCell)) { yield return itemInCell; }
-						}
-					}
+					yield return item;
 				}
 			}
 		}
@@ -242,7 +241,7 @@ namespace SMLimitless.Collections
 		/// <summary>
 		/// Draws each cell as white rectangular edges with their cell number printed in the corner.
 		/// </summary>
-		public void Draw()
+		public void DrawCells()
 		{
 			foreach (KeyValuePair<Point, SparseCell<T>> cellPair in cells)
 			{

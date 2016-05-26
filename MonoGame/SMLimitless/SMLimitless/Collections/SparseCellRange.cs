@@ -33,5 +33,20 @@ namespace SMLimitless.Collections
 			TopLeft = topLeft;
 			BottomRight = bottomRight;
 		}
+
+		public override bool Equals(object obj)
+		{
+			if (!(obj is SparseCellRange)) { return false; }
+			else
+			{
+				SparseCellRange range = (SparseCellRange)obj;
+				return TopLeft == range.TopLeft && BottomRight == range.BottomRight;
+			}
+		}
+
+		public bool Equals(SparseCellRange range)
+		{
+			return TopLeft == range.TopLeft && BottomRight == range.BottomRight;
+		}
 	}
 }

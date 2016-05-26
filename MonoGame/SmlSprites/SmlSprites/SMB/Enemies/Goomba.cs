@@ -70,7 +70,7 @@ namespace SmlSprites.SMB.Enemies
 			ChangePalette();
 
 			Components.Add(new WalkerComponent(this, ResolveDirection(this, Direction, owner), 32f));
-			Components.Add(new HealthComponent(1, new string[] { }));
+			Components.Add(new HealthComponent(1, 1, new string[] { }));
 
 			// TODO: Add damage and death handlers
 		}

@@ -222,6 +222,7 @@ namespace SMLimitless.Sprites.Collections
 		private void UpdatePhysics()
 		{
 			collisionDebugCollidedTiles.Clear();
+			float delta = GameServices.GameTime.GetElapsedSeconds();    // The number of seconds that have elapsed since the last Update call.
 
 			foreach (Sprite sprite in Sprites)
 			{
@@ -231,8 +232,6 @@ namespace SMLimitless.Sprites.Collections
 				int resolutionDirection = 0;                                // Stores the direction of the last resolution.
 				int slopeResolutionDirection = 0;                           // Stores the direction of the last slope resolution, if there was one.
 				Vector2 adjacentCell = new Vector2(float.NaN);              // Stores the grid cell number of the cell adjacent to the current cell.
-				float delta = GameServices.GameTime.GetElapsedSeconds();    // The number of seconds that have elapsed since the last Update call.
-				Point intSpritePosition = Point.Zero;
 				Vector2 spritePositionWithoutResolutions = sprite.Position;
 				sprite.IsOnGround = false;
 
@@ -241,7 +240,6 @@ namespace SMLimitless.Sprites.Collections
 
 				// Resolution with the sloped side of a sloped tile
 				sprite.Position = new Vector2((sprite.Position.X + sprite.Velocity.X * delta), sprite.Position.Y);  // Move the sprite horizontally by its horizontal velocity.
-				intSpritePosition = sprite.Position.ToPoint();
 				spritePositionWithoutResolutions.X += (sprite.Velocity.X * delta);
 				foreach (Layer layer in GetLayersIntersectingRectangle(sprite.Hitbox))                              // For every layer this sprite intersects...
 				{
@@ -405,12 +403,17 @@ namespace SMLimitless.Sprites.Collections
 
 				foreach (var collidableSprite in Sprites.GetItemsNearItem(sprite))
 				{
-					form.AddToLogText($"Processed {collidableSprite.GetType().FullName}");
+					if (Object.ReferenceEquals(collidableSprite, sprite)) { continue; }
+					
+					//form.AddToLogText($"Processed {collidableSprite.GetType().FullName}");
 
-					Vector2 intersectA = sprite.Hitbox.GetIntersectionDepth(collidableSprite.Hitbox);
-					Vector2 intersectB = collidableSprite.Hitbox.GetIntersectionDepth(sprite.Hitbox);
+					BoundingRectangle hitboxA = sprite.Hitbox;
+					BoundingRectangle hitboxB = collidableSprite.Hitbox;
 
-					if (sprite.Hitbox.Intersects(collidableSprite.Hitbox))
+					Vector2 intersectA = hitboxA.GetIntersectionDepth(hitboxB);
+					Vector2 intersectB = hitboxB.GetIntersectionDepth(hitboxA);
+
+					if (!intersectA.IsNaN() && !intersectB.IsNaN())
 					{
 						sprite.HandleSpriteCollision(collidableSprite, intersectA);
 						collidableSprite.HandleSpriteCollision(sprite, intersectB);
@@ -419,7 +422,6 @@ namespace SMLimitless.Sprites.Collections
 
 			}
 			Sprite playerSprite = Sprites.First(s => s.GetType().FullName.Contains("PlayerMario"));
-			debugText = $"Player Sprite GFX Name: {playerSprite.GetType().GetProperty("DebugGraphicsName").GetValue(playerSprite)}";
 		}
 
 		private void TempUpdate()
@@ -468,6 +470,7 @@ namespace SMLimitless.Sprites.Collections
 				sprite.Draw();
 				if (GameServices.CollisionDebuggerActive && sprite.BreakOnCollision) { GameServices.SpriteBatch.DrawRectangleEdges(sprite.Hitbox.ToRectangle(), Color.DarkRed); }
 			}
+
 			editorSelectedObject.Draw();
 			CameraSystem.Draw(debug: false);
 			GameServices.DebugFont.DrawString(debugText, new Vector2(280f, 16f), 1f);

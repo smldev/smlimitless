@@ -543,7 +543,7 @@
             Removes any empty cells.
             </summary>
         </member>
-        <member name="M:SMLimitless.Collections.SparseCellGrid`1.Draw">
+        <member name="M:SMLimitless.Collections.SparseCellGrid`1.DrawCells">
             <summary>
             Draws each cell as white rectangular edges with their cell number printed in the corner.
             </summary>
@@ -2835,6 +2835,72 @@
             <param name="key">The name of the key containing the UTF-16 string.</param>
             <returns>A UTF-16 string from the JToken.</returns>
         </member>
+        <member name="T:SMLimitless.Sprites.Components.HealthComponent">
+            <summary>
+            A component for a sprite that has health and can be damaged.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.Components.HealthComponent.StartingHitPoints">
+            <summary>
+            The number of hit points that this sprite starts with.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.Components.HealthComponent.MaximumHitPoints">
+            <summary>
+            The maximum number of hit points that this sprite can have.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.Components.HealthComponent.ImmuneTo">
+            <summary>
+            A collection of damage type names that this sprite is immune to.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Components.HealthComponent.HitPoints">
+            <summary>
+            Gets the current number of hit points this sprite has.
+            </summary>
+        </member>
+        <member name="E:SMLimitless.Sprites.Components.HealthComponent.SpriteDamage">
+            <summary>
+            An event that is raised when this sprite is damaged.
+            </summary>
+        </member>
+        <member name="E:SMLimitless.Sprites.Components.HealthComponent.SpriteKilled">
+            <summary>
+            An event that is raised when this sprite is killed (hit points become 0).
+            </summary>
+        </member>
+        <member name="E:SMLimitless.Sprites.Components.HealthComponent.SpriteHealed">
+            <summary>
+            An event that is raised when this sprite is healed.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Sprites.Components.HealthComponent.#ctor(System.Int32,System.Int32,System.String[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:SMLimitless.Sprites.Components.HealthComponent"/> class.
+            </summary>
+            <param name="maximumHP">The maximum number of hit points that this sprite can have.</param>
+            <param name="startingHP">The number of hit points that this sprite should start with.</param>
+            <param name="immuneTo">A collection of damage type names that this sprite is immune to.</param>
+        </member>
+        <member name="M:SMLimitless.Sprites.Components.HealthComponent.Update">
+            <summary>
+            Updates this component.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Sprites.Components.HealthComponent.Damage(System.Int32,System.String)">
+            <summary>
+            Damages this sprite.
+            </summary>
+            <param name="hpAmount">The amount of hit points to remove from the sprite.</param>
+            <param name="damageType">The name of the damage type.</param>
+        </member>
+        <member name="M:SMLimitless.Sprites.Components.HealthComponent.Heal(System.Int32)">
+            <summary>
+            Heals this sprite, restoring hit points.
+            </summary>
+            <param name="hpAmount"></param>
+        </member>
         <member name="T:SMLimitless.Sprites.Components.WalkerComponent">
             <summary>
             A component which moves the sprite horizontally along a surface of tiles.
@@ -2883,6 +2949,11 @@
         <member name="F:SMLimitless.Sprites.Sprite.velocity">
             <summary>
             A backing field for the Velocity property.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.Sprite.hitbox">
+            <summary>
+            A backing field for the Hitbox property.
             </summary>
         </member>
         <member name="F:SMLimitless.Sprites.Sprite.MaximumGravitationalVelocity">

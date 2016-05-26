@@ -176,14 +176,17 @@ namespace SMLimitless.Sprites.InternalSprites
 					Owner.AddTile(tile);
 					break;
 				case EditorSelectedObjectType.Sprite:
-					Sprite sprite = AssemblyManager.GetSpriteByFullName(selectedSprite.GetType().FullName);
-					sprite.CollisionMode = selectedSprite.CollisionMode;
-					sprite.State = sprite.InitialState = selectedSprite.InitialState;
-					sprite.DeserializeCustomObjects(new JsonHelper(JObject.FromObject(selectedSprite.GetCustomSerializableObjects())));
-					sprite.Initialize(Owner);
-					sprite.LoadContent();
-					sprite.Position = Position;
-					Owner.AddSpriteOnNextFrame(sprite);
+					if (spriteUnderCursor == null)	// only add a sprite if the LMB click is new
+					{
+						Sprite sprite = AssemblyManager.GetSpriteByFullName(selectedSprite.GetType().FullName);
+						sprite.CollisionMode = selectedSprite.CollisionMode;
+						sprite.State = sprite.InitialState = selectedSprite.InitialState;
+						sprite.DeserializeCustomObjects(new JsonHelper(JObject.FromObject(selectedSprite.GetCustomSerializableObjects())));
+						sprite.Initialize(Owner);
+						sprite.LoadContent();
+						sprite.Position = Position;
+						Owner.AddSpriteOnNextFrame(sprite);
+					}
 					break;
 				default:
 					break;
