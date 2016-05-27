@@ -221,6 +221,11 @@ namespace SMLimitless.Sprites.Collections
 			return cellNumber;
 		}
 
+		public bool CellWithinBounds(Vector2 cellNumber)
+		{
+			return cellNumber.X >= 0f && cellNumber.X < Tiles.Width && cellNumber.Y >= 0f && cellNumber.Y < Tiles.Height;
+		}
+
 		/// <summary>
 		/// Gets a tile at a given cell number.
 		/// </summary>

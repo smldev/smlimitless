@@ -228,214 +228,270 @@ namespace SMLimitless.Sprites.Collections
 		{
 			collisionDebugCollidedTiles.Clear();
 			float delta = GameServices.GameTime.GetElapsedSeconds();    // The number of seconds that have elapsed since the last Update call.
-
+			
 			foreach (Sprite sprite in Sprites)
 			{
-				if (sprite.CollisionMode == SpriteCollisionMode.NoCollision) { continue; }
+				if (sprite.TileCollisionMode == SpriteCollisionMode.NoCollision) { continue; }
 
-				// -1: up/left, 0: none, 1: down/right
-				int resolutionDirection = 0;                                // Stores the direction of the last resolution.
-				int slopeResolutionDirection = 0;                           // Stores the direction of the last slope resolution, if there was one.
-				Vector2 adjacentCell = new Vector2(float.NaN);              // Stores the grid cell number of the cell adjacent to the current cell.
 				Vector2 spritePositionWithoutResolutions = sprite.Position;
+				Vector2 initialSpritePosition = sprite.Position;
 				sprite.IsOnGround = false;
 
 				int numberOfCollidingTiles = 0;
 				bool slopeCollisionOccurred = false;
 
-				// Resolution with the sloped side of a sloped tile
-				sprite.Position = new Vector2((sprite.Position.X + sprite.Velocity.X * delta), sprite.Position.Y);  // Move the sprite horizontally by its horizontal velocity.
-				spritePositionWithoutResolutions.X += (sprite.Velocity.X * delta);
-				foreach (Layer layer in GetLayersIntersectingRectangle(sprite.Hitbox))                              // For every layer this sprite intersects...
-				{
-					Vector2 cellRangeTopLeft = layer.GetClampedCellNumberAtPosition(sprite.Position);                   // The leftmost and topmost grid cell the sprite's in, or {0, 0} if the sprite's top-left edge is outside the grid.
-					Vector2 cellRangeBottomRight = layer.GetClampedCellNumberAtPosition(sprite.Hitbox.BottomRight);     // The rightmost and bottommost grid cell the sprite's in, or the rightmost and bottommost grid cell of the grid if the sprite's bottom-right edge is outside the grid.
-
-					for (int y = (int)cellRangeTopLeft.Y; y <= (int)cellRangeBottomRight.Y; y++)
-					{
-						for (int x = (int)cellRangeTopLeft.X; x <= (int)cellRangeBottomRight.X; x++)
-						{
-							Tile tile = layer.SafeGetTile(new Vector2(x, y));
-							if (tile != null && tile.TileShape == CollidableShape.RightTriangle)
-							{
-								HorizontalDirection tileSlopeDirection = tile.SlopedSides.GetHorizontalDirection();
-								HorizontalDirection adjacentDirection = (tileSlopeDirection == HorizontalDirection.Left) ? HorizontalDirection.Right : HorizontalDirection.Left;
-								adjacentCell = new Vector2(x + (int)adjacentDirection, y);
-								var adjacentTile = layer.SafeGetTile(adjacentCell);
-
-								if (adjacentTile != null)
-								{
-									if (adjacentTile.TileShape == CollidableShape.RightTriangle && adjacentTile.SlopedSides.GetHorizontalDirection().IsOppositeDirection(tileSlopeDirection))
-									{
-										continue;
-									}
-								}
-
-								Vector2 resolutionDistance = tile.GetCollisionResolution(sprite);
-								if (resolutionDistance.Y == 0f || resolutionDistance.IsNaN())
-								{
-									// Skip to the next cell. If this is a collision with the normal sides of a sloped tile, we'll get it in the horizontal/vertical collision handlers below.
-									continue;
-								}
-								else
-								{
-									if (tile.BreakOnCollision && sprite.BreakOnCollision) { System.Diagnostics.Debugger.Break(); }
-								}
-
-								if (resolutionDirection == 0 || Math.Sign(resolutionDirection) == Math.Sign(resolutionDistance.Y))
-								{
-									resolutionDirection = Math.Sign(resolutionDistance.Y);
-									slopeResolutionDirection = (tile.SlopedSides == RtSlopedSides.TopRight) ? -1 : 1;
-									sprite.Position = new Vector2(sprite.Position.X, (sprite.Position.Y + resolutionDistance.Y));
-									sprite.IsOnGround = (resolutionDistance.Y < 0f);
-									sprite.HandleTileCollision(tile, resolutionDistance);
-
-									numberOfCollidingTiles++;
-									collisionDebugCollidedTiles.Add(tile);
-									slopeCollisionOccurred = true;
-								}
-								else
-								{
-									sprite.IsEmbedded = true;
-									continue;
-								}
-							}
-						}
-					}
-
-					cellRangeTopLeft = layer.GetClampedCellNumberAtPosition(sprite.Position);
-					cellRangeBottomRight = layer.GetClampedCellNumberAtPosition(sprite.Hitbox.BottomRight);
-
-					// Horizontal resolution
-					for (int y = (int)cellRangeTopLeft.Y; y <= (int)cellRangeBottomRight.Y; y++)    // For each row of tiles in the cells intersected by the sprite...
-					{
-						for (int x = (int)cellRangeTopLeft.X; x <= (int)cellRangeBottomRight.X; x++)    // For each cell intersected by the sprite...
-						{
-							Tile tile = layer.SafeGetTile(new Vector2(x, y));   // Get the tile in the cell.
-							if (tile != null) // && tile.TileShape == CollidableShape.Rectangle)					// If there's a rectangular tile here...
-							{
-								Vector2 resolutionDistance = tile.GetCollisionResolution(sprite);                                                                           // Get the resolution distance between this tile and the sprite.
-
-								if (resolutionDistance.X == 0f || resolutionDistance.IsNaN() || !tile.CollisionOnSolidSide(resolutionDistance)) { continue; }                                              // If there is no horizontal collision, or if this side of the tile is not solid, continue to the next cell.
-								else
-								{
-									if (tile.BreakOnCollision && sprite.BreakOnCollision) { System.Diagnostics.Debugger.Break(); }
-								}
-								HorizontalDirection horizontalResolutionDirection = (HorizontalDirection)Math.Sign(resolutionDistance.X);
-								// The horizontal resolution direction is equal to the sign of the resolution distance.
-
-								if (resolutionDistance.X < 0f && (tile.AdjacencyFlags & TileAdjacencyFlags.SlopeOnLeft) == TileAdjacencyFlags.SlopeOnLeft) { continue; }
-								else if (resolutionDistance.X > 0f && (tile.AdjacencyFlags & TileAdjacencyFlags.SlopeOnRight) == TileAdjacencyFlags.SlopeOnRight) { continue; }
-
-								if (resolutionDirection == 0 || Math.Sign(resolutionDistance.X) == Math.Sign(resolutionDirection))  // If there has been no other horizontal resolution this frame, or if the last horizontal resolution was in the same direction as this one...
-								{
-									resolutionDirection = Math.Sign(resolutionDistance.X);                                          // The resolution direction is equal to the sign of the resolution distance.
-									sprite.Position = new Vector2((sprite.Position.X + resolutionDistance.X), sprite.Position.Y);   // Move the sprite to resolve the collision.
-									sprite.Velocity = new Vector2(0f, sprite.Velocity.Y);
-									sprite.Acceleration = new Vector2(0f, sprite.Acceleration.Y);
-									sprite.HandleTileCollision(tile, resolutionDistance);
-
-									numberOfCollidingTiles++;
-									collisionDebugCollidedTiles.Add(tile);
-								}
-								else
-								{
-									sprite.IsEmbedded = true;   // The sprite is embedded.
-									goto nextSprite;            // Continue to the next sprite.
-								}
-							}
-						}
-					}
-				}
-
-				// Vertical resolution
-				resolutionDirection = 0;
-				// Move the sprite by its Y velocity (upwards or downwards).
-				sprite.Position = new Vector2(sprite.Position.X, (sprite.Position.Y + sprite.Velocity.Y * delta));  // Move the sprite vertically by (Velocity.Y * delta).
-				spritePositionWithoutResolutions.Y += sprite.Velocity.Y * delta;
-				foreach (Layer layer in GetLayersIntersectingRectangle(sprite.Hitbox))  // For every layer the sprite intersects...
-				{
-					Vector2 cellRangeTopLeft = layer.GetClampedCellNumberAtPosition(sprite.Position);               // The leftmost and topmost grid cell the sprite's in, or {0, 0} if the sprite's top-left edge is outside the grid.
-					Vector2 cellRangeBottomRight = layer.GetClampedCellNumberAtPosition(sprite.Hitbox.BottomRight); // The rightmost and bottommost grid cell the sprite's in, or the rightmost and bottommost grid cell of the grid if the sprite's bottom-right edge is outside the grid.
-
-					for (int y = (int)cellRangeTopLeft.Y; y <= (int)cellRangeBottomRight.Y; y++)    // For every row of cells the sprite intersects...
-					{
-						for (int x = (int)cellRangeTopLeft.X; x <= (int)cellRangeBottomRight.X; x++)    // For every cell the sprite intersects...
-						{
-							Tile tile = layer.SafeGetTile(new Vector2(x, y));    // Get the tile inside the cell.
-							if (tile != null)                   // If there's a tile here...
-							{
-								Vector2 resolutionDistance = tile.GetCollisionResolution(sprite);                           // Determine the resolution distance between this tile and the sprite.
-								if (resolutionDistance.Y == 0f || resolutionDistance.IsNaN() || !tile.CollisionOnSolidSide(resolutionDistance)) continue; // If there's no vertical collision here, or if we collided on a non-solid edge, continue to the next cell.
-								else
-								{
-									if (tile.BreakOnCollision && sprite.BreakOnCollision) { System.Diagnostics.Debugger.Break(); }
-								}
-								if ((tile.AdjacencyFlags & TileAdjacencyFlags.SlopeOnLeft) == TileAdjacencyFlags.SlopeOnLeft && sprite.Hitbox.Center.X < tile.Hitbox.Bounds.Left) continue;
-								else if ((tile.AdjacencyFlags & TileAdjacencyFlags.SlopeOnRight) == TileAdjacencyFlags.SlopeOnRight && sprite.Hitbox.Center.X > tile.Hitbox.Bounds.Right)
-								{
-									continue;
-								}
-
-
-								if (resolutionDirection == 0 || Math.Sign(resolutionDirection) == Math.Sign(resolutionDistance.Y))  // If there has been no other vertical collision, or the last vertical resolution was in the same direction as this one...
-								{
-									resolutionDirection = Math.Sign(resolutionDistance.Y);                                      // The resolution direction is equal to the sign of the resolution distance (up = negative, down = positive).
-									sprite.Position = new Vector2(sprite.Position.X, sprite.Position.Y + resolutionDistance.Y); // Move the sprite vertically by the resolution distance.
-									sprite.IsOnGround = (resolutionDistance.Y < 0f);
-									sprite.Velocity = new Vector2(sprite.Velocity.X, 0f);                                       // Stop the sprite's vertical movement.
-									sprite.HandleTileCollision(tile, resolutionDistance);
-
-									numberOfCollidingTiles++;
-									collisionDebugCollidedTiles.Add(tile);
-								}
-								else  // ...but if the last vertical resolution was in the opposite direction...
-								{
-									sprite.IsEmbedded = true;   // ...the sprite is embedded (up and down resolutions in the same frame).
-									goto nextSprite;            // Continue to the next sprite.
-								}
-							}
-						}
-					}
-				}
-
-				nextSprite:
-				if (sprite == CollisionDebugSelectedSprite && GameServices.CollisionDebuggerActive)
-				{
-					Vector2 totalOffset = sprite.Position - spritePositionWithoutResolutions;
-					GameServices.CollisionDebuggerForm.Update(numberOfCollidingTiles, slopeCollisionOccurred, totalOffset);
-				}
-
+				ResolveSpriteCollisionWithSlopes(sprite, delta, ref spritePositionWithoutResolutions, ref numberOfCollidingTiles, out slopeCollisionOccurred);
+				ResolveSpriteHorizontalCollision(sprite, delta, ref spritePositionWithoutResolutions, ref numberOfCollidingTiles, slopeCollisionOccurred);
+				ResolveSpriteVerticalCollision(sprite, delta, ref spritePositionWithoutResolutions, ref numberOfCollidingTiles, slopeCollisionOccurred);
+				SnapToGround(sprite);
+				
 				var spritesNear = Sprites.GetItemsNearItem(sprite).ToList();
 				spritesNearSpriteCount += spritesNear.Count;
-				foreach (var collidableSprite in spritesNear)
-				{
-					if (Object.ReferenceEquals(collidableSprite, sprite)) { continue; }
-					
-					//form.AddToLogText($"Processed {collidableSprite.GetType().FullName}");
-
-					BoundingRectangle hitboxA = sprite.Hitbox;
-					BoundingRectangle hitboxB = collidableSprite.Hitbox;
-
-					Vector2 intersectA = hitboxA.GetIntersectionDepth(hitboxB);
-					Vector2 intersectB = hitboxB.GetIntersectionDepth(hitboxA);
-					intersectionDepthCalls += 2;
-
-					if (!intersectA.IsNaN() && !intersectB.IsNaN() && !sprite.SpritesCollidedWithThisFrame.Contains(collidableSprite) && !collidableSprite.SpritesCollidedWithThisFrame.Contains(sprite))
-					{
-						sprite.HandleSpriteCollision(collidableSprite, intersectA);
-						collidableSprite.HandleSpriteCollision(sprite, intersectB);
-						spriteCollisionCallsMade += 2;
-
-						sprite.SpritesCollidedWithThisFrame.Add(collidableSprite);
-						collidableSprite.SpritesCollidedWithThisFrame.Add(sprite);
-					}
-				}
-
+				ResolveSpriteSpriteCollisions(sprite, spritesNear, sprite.Position - initialSpritePosition);
 			}
-			Sprite playerSprite = Sprites.First(s => s.GetType().FullName.Contains("PlayerMario"));
 
 			debugText = $"Intersect Calls: {intersectionDepthCalls}, Sprite Collision Calls: {spriteCollisionCallsMade}, Near: {spritesNearSpriteCount}, Sprites: {Sprites.Count()}";
+		}
+
+		private void ResolveSpriteCollisionWithSlopes(Sprite sprite, float delta, ref Vector2 spritePositionWithoutResolutions, ref int numberOfCollidingTiles, out bool slopeCollisionOccurred)
+		{
+			int resolutionDirection = 0;
+			int slopeResolutionDirection = 0;
+			Vector2 adjacentCell = new Vector2(float.NaN);
+			slopeCollisionOccurred = false;
+
+			float xMovement = sprite.Velocity.X * delta;
+			sprite.Position = new Vector2((sprite.Position.X + xMovement), sprite.Position.Y);
+			spritePositionWithoutResolutions.X += xMovement;
+
+			foreach (Layer layer in GetLayersIntersectingRectangle(sprite.Hitbox))
+			{
+				Vector2 cellRangeTopLeft = layer.GetClampedCellNumberAtPosition(sprite.Position);
+				Vector2 cellRangeBottomRight = layer.GetClampedCellNumberAtPosition(sprite.Hitbox.BottomRight);
+
+				for (int y = (int)cellRangeTopLeft.Y; y <= (int)cellRangeBottomRight.Y; y++)
+				{
+					for (int x = (int)cellRangeTopLeft.X; x <= (int)cellRangeBottomRight.X; x++)
+					{
+						Tile tile = layer.SafeGetTile(new Vector2(x, y));
+						if (tile != null && tile.TileShape == CollidableShape.RightTriangle)
+						{
+							HorizontalDirection tileSlopeDirection = tile.SlopedSides.GetHorizontalDirection();
+							HorizontalDirection adjacentDirection = (tileSlopeDirection == HorizontalDirection.Left) ? HorizontalDirection.Right : HorizontalDirection.Left;
+							var adjacentTile = layer.SafeGetTile(adjacentCell);
+
+							if (adjacentTile != null)
+							{
+								if (adjacentTile.TileShape == CollidableShape.RightTriangle && adjacentTile.SlopedSides.GetHorizontalDirection().IsOppositeDirection(tileSlopeDirection))
+								{
+									continue;
+								}
+							}
+
+							Vector2 resolutionDistance = tile.GetCollisionResolution(sprite);
+							if (resolutionDistance.Y == 0f || resolutionDistance.IsNaN())
+							{
+								continue;
+							}
+							else
+							{
+								if (tile.BreakOnCollision && sprite.BreakOnCollision) { System.Diagnostics.Debugger.Break(); }
+							}
+
+							if (resolutionDirection == 0 || Math.Sign(resolutionDirection) == Math.Sign(resolutionDistance.Y))
+							{
+								resolutionDirection = Math.Sign(resolutionDistance.Y);
+								slopeResolutionDirection = (tile.SlopedSides == RtSlopedSides.TopRight) ? -1 : 1;
+								sprite.Position = new Vector2(sprite.Position.X, (sprite.Position.Y + resolutionDistance.Y));
+								sprite.IsOnGround = (resolutionDistance.Y < 0f);
+								sprite.HandleTileCollision(tile, resolutionDistance);
+
+								numberOfCollidingTiles++;
+								collisionDebugCollidedTiles.Add(tile);
+								slopeCollisionOccurred = true;
+							}
+							else
+							{
+								sprite.IsEmbedded = true;
+								continue;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		private void ResolveSpriteHorizontalCollision(Sprite sprite, float delta, ref Vector2 spritePositionWithoutResolutions, ref int numberOfCollidingTiles, bool slopeCollisionOccurred)
+		{
+			int resolutionDirection = 0;
+
+			foreach (var layer in GetLayersIntersectingRectangle(sprite.Hitbox))
+			{
+				Vector2 cellRangeTopLeft = layer.GetClampedCellNumberAtPosition(sprite.Position);
+				Vector2 cellRangeBottomRight = layer.GetClampedCellNumberAtPosition(sprite.Hitbox.BottomRight);
+
+				for (int y = (int)cellRangeTopLeft.Y; y <= (int)cellRangeBottomRight.Y; y++)    // For each row of tiles in the cells intersected by the sprite...
+				{
+					for (int x = (int)cellRangeTopLeft.X; x <= (int)cellRangeBottomRight.X; x++)    // For each cell intersected by the sprite...
+					{
+						Tile tile = layer.SafeGetTile(new Vector2(x, y));   // Get the tile in the cell.
+						if (tile != null) // && tile.TileShape == CollidableShape.Rectangle)					// If there's a rectangular tile here...
+						{
+							Vector2 resolutionDistance = tile.GetCollisionResolution(sprite);                                                                           // Get the resolution distance between this tile and the sprite.
+
+							if (resolutionDistance.X == 0f || resolutionDistance.IsNaN() || !tile.CollisionOnSolidSide(resolutionDistance)) { continue; }                                              // If there is no horizontal collision, or if this side of the tile is not solid, continue to the next cell.
+							else
+							{
+								if (tile.BreakOnCollision && sprite.BreakOnCollision) { System.Diagnostics.Debugger.Break(); }
+							}
+							HorizontalDirection horizontalResolutionDirection = (HorizontalDirection)Math.Sign(resolutionDistance.X);
+							// The horizontal resolution direction is equal to the sign of the resolution distance.
+
+							if (resolutionDistance.X < 0f && (tile.AdjacencyFlags & TileAdjacencyFlags.SlopeOnLeft) == TileAdjacencyFlags.SlopeOnLeft) { continue; }
+							else if (resolutionDistance.X > 0f && (tile.AdjacencyFlags & TileAdjacencyFlags.SlopeOnRight) == TileAdjacencyFlags.SlopeOnRight) { continue; }
+
+							if (resolutionDirection == 0 || Math.Sign(resolutionDistance.X) == Math.Sign(resolutionDirection))  // If there has been no other horizontal resolution this frame, or if the last horizontal resolution was in the same direction as this one...
+							{
+								resolutionDirection = Math.Sign(resolutionDistance.X);                                          // The resolution direction is equal to the sign of the resolution distance.
+								sprite.Position = new Vector2((sprite.Position.X + resolutionDistance.X), sprite.Position.Y);   // Move the sprite to resolve the collision.
+								sprite.Velocity = new Vector2(0f, sprite.Velocity.Y);
+								sprite.Acceleration = new Vector2(0f, sprite.Acceleration.Y);
+								sprite.HandleTileCollision(tile, resolutionDistance);
+
+								numberOfCollidingTiles++;
+								collisionDebugCollidedTiles.Add(tile);
+							}
+							else
+							{
+								sprite.IsEmbedded = true;   // The sprite is embedded.
+								UpdateCollisionDebuggerInfo(sprite, numberOfCollidingTiles, slopeCollisionOccurred, sprite.Position - spritePositionWithoutResolutions);
+								return;
+							}
+						}
+					}
+				}
+			}	
+		}
+
+		private void ResolveSpriteVerticalCollision(Sprite sprite, float delta, ref Vector2 spritePositionWithoutResolutions, ref int numberOfCollidingTiles, bool slopeCollisionOccurred)
+		{
+			int resolutionDirection = 0;
+
+			sprite.Position = new Vector2(sprite.Position.X, (sprite.Position.Y + sprite.Velocity.Y * delta));
+			spritePositionWithoutResolutions.Y += sprite.Velocity.Y * delta;
+
+			foreach (Layer layer in GetLayersIntersectingRectangle(sprite.Hitbox))  // For every layer the sprite intersects...
+			{
+				Vector2 cellRangeTopLeft = layer.GetClampedCellNumberAtPosition(sprite.Position);               // The leftmost and topmost grid cell the sprite's in, or {0, 0} if the sprite's top-left edge is outside the grid.
+				Vector2 cellRangeBottomRight = layer.GetClampedCellNumberAtPosition(sprite.Hitbox.BottomRight); // The rightmost and bottommost grid cell the sprite's in, or the rightmost and bottommost grid cell of the grid if the sprite's bottom-right edge is outside the grid.
+
+				for (int y = (int)cellRangeTopLeft.Y; y <= (int)cellRangeBottomRight.Y; y++)    // For every row of cells the sprite intersects...
+				{
+					for (int x = (int)cellRangeTopLeft.X; x <= (int)cellRangeBottomRight.X; x++)    // For every cell the sprite intersects...
+					{
+						Tile tile = layer.SafeGetTile(new Vector2(x, y));    // Get the tile inside the cell.
+						if (tile != null)                   // If there's a tile here...
+						{
+							Vector2 resolutionDistance = tile.GetCollisionResolution(sprite);                           // Determine the resolution distance between this tile and the sprite.
+							if (resolutionDistance.Y == 0f || resolutionDistance.IsNaN() || !tile.CollisionOnSolidSide(resolutionDistance)) continue; // If there's no vertical collision here, or if we collided on a non-solid edge, continue to the next cell.
+							else
+							{
+								if (tile.BreakOnCollision && sprite.BreakOnCollision) { System.Diagnostics.Debugger.Break(); }
+							}
+							if ((tile.AdjacencyFlags & TileAdjacencyFlags.SlopeOnLeft) == TileAdjacencyFlags.SlopeOnLeft && sprite.Hitbox.Center.X < tile.Hitbox.Bounds.Left) continue;
+							else if ((tile.AdjacencyFlags & TileAdjacencyFlags.SlopeOnRight) == TileAdjacencyFlags.SlopeOnRight && sprite.Hitbox.Center.X > tile.Hitbox.Bounds.Right)
+							{
+								continue;
+							}
+
+
+							if (resolutionDirection == 0 || Math.Sign(resolutionDirection) == Math.Sign(resolutionDistance.Y))  // If there has been no other vertical collision, or the last vertical resolution was in the same direction as this one...
+							{
+								resolutionDirection = Math.Sign(resolutionDistance.Y);                                      // The resolution direction is equal to the sign of the resolution distance (up = negative, down = positive).
+								sprite.Position = new Vector2(sprite.Position.X, sprite.Position.Y + resolutionDistance.Y); // Move the sprite vertically by the resolution distance.
+								sprite.IsOnGround = (resolutionDistance.Y < 0f);
+								sprite.Velocity = new Vector2(sprite.Velocity.X, 0f);                                       // Stop the sprite's vertical movement.
+								sprite.HandleTileCollision(tile, resolutionDistance);
+
+								numberOfCollidingTiles++;
+								collisionDebugCollidedTiles.Add(tile);
+							}
+							else  // ...but if the last vertical resolution was in the opposite direction...
+							{
+								sprite.IsEmbedded = true;   // ...the sprite is embedded (up and down resolutions in the same frame).
+								UpdateCollisionDebuggerInfo(sprite, numberOfCollidingTiles, slopeCollisionOccurred, sprite.Position - spritePositionWithoutResolutions);
+								return;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		private void ResolveSpriteSpriteCollisions(Sprite sprite, IEnumerable<Sprite> nearbySprites, Vector2 tileCollisionOffset)
+		{
+			if (sprite.SpriteCollisionMode == SpriteCollisionMode.NoCollision) { return; }
+
+			foreach (Sprite collidableSprite in nearbySprites)
+			{
+				if (collidableSprite.SpriteCollisionMode == SpriteCollisionMode.NoCollision) { continue; }
+
+				BoundingRectangle hitboxA = sprite.Hitbox;
+				BoundingRectangle hitboxB = collidableSprite.Hitbox;
+
+				Vector2 intersectA = hitboxA.GetIntersectionDepth(hitboxB);
+				Vector2 intersectB = hitboxB.GetIntersectionDepth(hitboxA);
+				intersectionDepthCalls += 2;
+
+				if (!intersectA.IsNaN() && !intersectB.IsNaN() && !sprite.SpritesCollidedWithThisFrame.Contains(collidableSprite) && !collidableSprite.SpritesCollidedWithThisFrame.Contains(sprite))
+				{
+					Vector2 resolutionDistance = hitboxA.GetCollisionResolution(intersectA);
+
+					// Move the sprite out of the other sprite if we don't move it into a tile.
+					if (sprite.SpriteCollisionMode == SpriteCollisionMode.OffsetNotify || sprite.SpriteCollisionMode == SpriteCollisionMode.OffsetOnly)
+					{
+						//if (Math.Sign(resolutionDistance.X) == Math.Sign(tileCollisionOffset.X)) { sprite.Position = new Vector2((sprite.Position.X + resolutionDistance.X), sprite.Position.Y); }
+						//if (Math.Sign(resolutionDistance.Y) == Math.Sign(tileCollisionOffset.Y)) { sprite.Position = new Vector2(sprite.Position.X, (sprite.Position.Y + resolutionDistance.Y)); }
+						sprite.SpritesCollidedWithThisFrame.Add(collidableSprite);
+					}
+
+					if (sprite.SpriteCollisionMode == SpriteCollisionMode.OffsetNotify || sprite.SpriteCollisionMode == SpriteCollisionMode.NotifyOnly)
+					{
+						sprite.HandleSpriteCollision(collidableSprite, intersectA);
+						spriteCollisionCallsMade++;
+					}
+
+					if (collidableSprite.SpriteCollisionMode == SpriteCollisionMode.OffsetNotify || collidableSprite.SpriteCollisionMode == SpriteCollisionMode.NotifyOnly)
+					{
+						collidableSprite.HandleSpriteCollision(sprite, intersectB);
+						spriteCollisionCallsMade++;
+					}
+
+					collidableSprite.SpritesCollidedWithThisFrame.Add(sprite);
+				}
+			}
+		}
+
+		private void SnapToGround(Sprite sprite)
+		{
+			//if (!sprite.IsOnGround) { return; }
+
+			//Vector2 checkPoint = sprite.Hitbox.BottomCenter;
+			//checkPoint.Y += GameServices.GameObjectSize.Y / 4f;
+			//Tile tileAtCheckPoint = GetTileAtPosition(checkPoint);
+
+			//if (tileAtCheckPoint != null)
+			//{
+			//	sprite.Position = new Vector2(sprite.Position.X, (tileAtCheckPoint.Hitbox.GetTopPoint(sprite.Hitbox.Center.X).Y - sprite.Hitbox.Height));
+			//}
+		}
+
+		private void UpdateCollisionDebuggerInfo(Sprite sprite, int numberOfCollidingTiles, bool slopeCollisionOccurred, Vector2 totalOffset)
+		{
+			if (sprite == CollisionDebugSelectedSprite && GameServices.CollisionDebuggerActive)
+			{
+				GameServices.CollisionDebuggerForm.Update(numberOfCollidingTiles, slopeCollisionOccurred, totalOffset);
+			}
 		}
 
 		private void TempUpdate()

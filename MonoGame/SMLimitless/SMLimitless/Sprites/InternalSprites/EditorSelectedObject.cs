@@ -137,7 +137,7 @@ namespace SMLimitless.Sprites.InternalSprites
 			Sprite sprite = AssemblyManager.GetSpriteByFullName(spriteData.TypeName);
 
 			sprite.State = sprite.InitialState = (SpriteState)spriteData.State;
-			sprite.CollisionMode = (SpriteCollisionMode)spriteData.Collision;
+			sprite.TileCollisionMode = (SpriteCollisionMode)spriteData.Collision;
 			sprite.DeserializeCustomObjects(new JsonHelper(spriteData.CustomData));
 
 			sprite.Initialize(Owner);
@@ -179,7 +179,7 @@ namespace SMLimitless.Sprites.InternalSprites
 					if (spriteUnderCursor == null)	// only add a sprite if the LMB click is new
 					{
 						Sprite sprite = AssemblyManager.GetSpriteByFullName(selectedSprite.GetType().FullName);
-						sprite.CollisionMode = selectedSprite.CollisionMode;
+						sprite.TileCollisionMode = selectedSprite.TileCollisionMode;
 						sprite.State = sprite.InitialState = selectedSprite.InitialState;
 						sprite.DeserializeCustomObjects(new JsonHelper(JObject.FromObject(selectedSprite.GetCustomSerializableObjects())));
 						sprite.Initialize(Owner);

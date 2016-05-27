@@ -269,7 +269,7 @@ namespace SMLimitless.Sprites
     public enum SpriteCollisionMode
     {
         /// <summary>
-        /// Sprites that are colliding with solid tiles
+        /// Sprites that are colliding with solid tiles or other sprites
         /// are offset such that they are moved out of the tile(s).
         /// Then, collision handler methods are called on both
         /// the sprite and the tile.
@@ -277,7 +277,7 @@ namespace SMLimitless.Sprites
         OffsetNotify,
 
         /// <summary>
-        /// Sprites that are colliding with solid tiles
+        /// Sprites that are colliding with solid tiles or other sprites
         /// are offset such that they are moved out of the tile(s).
         /// No collision handlers are run.
         /// </summary>

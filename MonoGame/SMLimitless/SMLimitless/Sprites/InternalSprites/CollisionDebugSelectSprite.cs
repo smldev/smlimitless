@@ -27,7 +27,7 @@ namespace SMLimitless.Sprites.InternalSprites
 		public CollisionDebugSelectSprite()
 		{
 			Size = new Vector2(16f);
-			CollisionMode = SpriteCollisionMode.NoCollision;
+			TileCollisionMode = SpriteCollisionMode.NoCollision;
 		}
 
 		public override void Draw()

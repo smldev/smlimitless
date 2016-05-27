@@ -171,7 +171,7 @@ namespace SMLimitless.IO.LevelSerializers
 					position = sprite.InitialPosition.Serialize(),
 					isActive = sprite.IsActive,
 					state = (int)sprite.InitialState,
-					collision = (int)sprite.CollisionMode,
+					collision = (int)sprite.TileCollisionMode,
 					name = sprite.Name,
 					message = sprite.Message,
 					isHostile = sprite.IsHostile,
@@ -427,7 +427,7 @@ namespace SMLimitless.IO.LevelSerializers
 				sprite.InitialPosition = sprite.Position = entry["position"].ToVector2();
 				sprite.IsActive = (bool)entry["isActive"];
 				sprite.InitialState = sprite.State = (SpriteState)(int)entry["state"];
-				sprite.CollisionMode = (SpriteCollisionMode)(int)entry["collision"];
+				sprite.TileCollisionMode = (SpriteCollisionMode)(int)entry["collision"];
 				sprite.Name = (string)entry["name"];
 				sprite.Message = (string)entry["message"];
 				sprite.IsHostile = (bool)entry["isHostile"];

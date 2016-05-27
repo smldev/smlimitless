@@ -169,7 +169,12 @@ namespace SMLimitless.Sprites
         /// Gets or sets the current collision mode of this sprite. Please see the SpriteCollisionMode documentation for
         /// more information.
         /// </summary>
-        public SpriteCollisionMode CollisionMode { get; protected internal set; }
+        public SpriteCollisionMode TileCollisionMode { get; protected internal set; }
+
+		/// <summary>
+		/// Gets or sets the current collision mode of this sprite for other sprites.
+		/// </summary>
+		public SpriteCollisionMode SpriteCollisionMode { get; protected internal set; }
 
         /// <summary>
         /// Gets a rectangle representing this sprite's hitbox.

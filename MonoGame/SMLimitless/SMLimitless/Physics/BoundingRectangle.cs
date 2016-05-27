@@ -514,19 +514,31 @@ namespace SMLimitless.Physics
         {
             Vector2 intersection = GetIntersectionDepth(that);
 
-            if (intersection.IsNaN())
-            {
-                return new Vector2(float.NaN, float.NaN);
-            }
-            else if (Math.Abs(intersection.X) < Math.Abs(intersection.Y))
-            {
-                return new Vector2(intersection.X, 0f);
-            }
-            else
-            {
-                return new Vector2(0f, intersection.Y);
-            }
+			return GetCollisionResolution(intersection);
         }
+
+		/// <summary>
+		/// Returns the distance to move a given rectangle
+		/// in order to properly resolve a collision.
+		/// </summary>
+		/// <param name="intersect">The intersection depth for the other rectangle.</param>
+		/// <returns>A value that can be applied to the position of the rectangle
+		/// to move it the minimum distance such that it won't be intersecting this one.</returns>
+		public Vector2 GetCollisionResolution(Vector2 intersect)
+		{
+			if (intersect.IsNaN())
+			{
+				return new Vector2(float.NaN, float.NaN);
+			}
+			else if (Math.Abs(intersect.X) < Math.Abs(intersect.Y))
+			{
+				return new Vector2(intersect.X, 0f);
+			}
+			else
+			{
+				return new Vector2(0f, intersect.Y);
+			}
+		}
 
         /// <summary>
         /// Gets the Y-coordinate of the top of this rectangle.
