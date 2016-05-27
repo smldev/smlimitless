@@ -181,6 +181,8 @@ namespace SMLimitless.Sprites
 				return hitbox;
             }
         }
+
+		internal HashSet<Sprite> SpritesCollidedWithThisFrame { get; set; } = new HashSet<Sprite>();
 		#endregion
 
 		#region Editor Properties (category, label, name, message, hostility, moving, direction)

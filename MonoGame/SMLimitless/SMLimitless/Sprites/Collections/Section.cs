@@ -19,6 +19,10 @@ namespace SMLimitless.Sprites.Collections
 	/// </summary>
 	public sealed class Section
 	{
+		private int intersectionDepthCalls = 0;
+		private int spriteCollisionCallsMade = 0;
+		private int spritesNearSpriteCount = 0;
+
 		private bool isContentLoaded;
 		private bool isDeserialized;
 		private bool isInitialized;
@@ -200,6 +204,7 @@ namespace SMLimitless.Sprites.Collections
 				Sprites.ForEach(s => s.Update());
 				Sprites.Update();
 				UpdatePhysics();
+				Sprites.ForEach(s => s.SpritesCollidedWithThisFrame.Clear());
 				Sprites.Update();
 			}
 			else
@@ -401,7 +406,9 @@ namespace SMLimitless.Sprites.Collections
 					GameServices.CollisionDebuggerForm.Update(numberOfCollidingTiles, slopeCollisionOccurred, totalOffset);
 				}
 
-				foreach (var collidableSprite in Sprites.GetItemsNearItem(sprite))
+				var spritesNear = Sprites.GetItemsNearItem(sprite).ToList();
+				spritesNearSpriteCount += spritesNear.Count;
+				foreach (var collidableSprite in spritesNear)
 				{
 					if (Object.ReferenceEquals(collidableSprite, sprite)) { continue; }
 					
@@ -412,16 +419,23 @@ namespace SMLimitless.Sprites.Collections
 
 					Vector2 intersectA = hitboxA.GetIntersectionDepth(hitboxB);
 					Vector2 intersectB = hitboxB.GetIntersectionDepth(hitboxA);
+					intersectionDepthCalls += 2;
 
-					if (!intersectA.IsNaN() && !intersectB.IsNaN())
+					if (!intersectA.IsNaN() && !intersectB.IsNaN() && !sprite.SpritesCollidedWithThisFrame.Contains(collidableSprite) && !collidableSprite.SpritesCollidedWithThisFrame.Contains(sprite))
 					{
 						sprite.HandleSpriteCollision(collidableSprite, intersectA);
 						collidableSprite.HandleSpriteCollision(sprite, intersectB);
+						spriteCollisionCallsMade += 2;
+
+						sprite.SpritesCollidedWithThisFrame.Add(collidableSprite);
+						collidableSprite.SpritesCollidedWithThisFrame.Add(sprite);
 					}
 				}
 
 			}
 			Sprite playerSprite = Sprites.First(s => s.GetType().FullName.Contains("PlayerMario"));
+
+			debugText = $"Intersect Calls: {intersectionDepthCalls}, Sprite Collision Calls: {spriteCollisionCallsMade}, Near: {spritesNearSpriteCount}, Sprites: {Sprites.Count()}";
 		}
 
 		private void TempUpdate()
@@ -473,7 +487,9 @@ namespace SMLimitless.Sprites.Collections
 
 			editorSelectedObject.Draw();
 			CameraSystem.Draw(debug: false);
-			GameServices.DebugFont.DrawString(debugText, new Vector2(280f, 16f), 1f);
+			//Sprites.DrawCells();
+			GameServices.DebugFont.DrawString(debugText, new Vector2(120f, 16f), 1f);
+			intersectionDepthCalls = spriteCollisionCallsMade = spritesNearSpriteCount = 0;
 			DrawCollisionDebug();
 			irisEffect.Draw();
 		}

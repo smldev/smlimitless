@@ -181,18 +181,28 @@ namespace SMLimitless.Collections
 		{
 			SparseCellRange range = GetCellsItemIsIn(item);
 
-			return ItemsInCells(range);
+			HashSet<T> itemsProcessedSoFar = new HashSet<T>();
+			itemsProcessedSoFar.Add(item);
+
+			for (int y = range.TopLeft.Y; y <= range.BottomRight.Y; y++)
+			{
+				for (int x = range.TopLeft.X; x <= range.BottomRight.X; x++)
+				{
+					Point cellNumber = new Point(x, y);
+
+					if (!cells.ContainsKey(cellNumber)) { continue; }
+
+					foreach (T cellItem in cells[cellNumber].Items)
+					{
+						if (itemsProcessedSoFar.Add(cellItem)) { yield return cellItem; }
+					}
+				}
+			}
 		}
 
 		internal IEnumerable<T> ItemsInCells(SparseCellRange range)
 		{
-			foreach (T item in items)
-			{
-				if (GetCellsItemIsIn(item).Equals(range))
-				{
-					yield return item;
-				}
-			}
+			throw new NotImplementedException();
 		}
 
 		/// <summary>
@@ -254,7 +264,9 @@ namespace SMLimitless.Collections
 				if (debugFont != null)
 				{
 					Vector2 drawStringPosition = new Vector2(cellBounds.Position.X + 3f, cellBounds.Position.Y + 3f);
+					Vector2 drawCountPosition = new Vector2(cellBounds.Right - 11f, cellBounds.Top + 3f);
 					debugFont.DrawString($"{cellNumber.X},{cellNumber.Y}", drawStringPosition);
+					debugFont.DrawString($"{cellPair.Value.Items.Count}", drawCountPosition);
 				}
 			}
 		}
