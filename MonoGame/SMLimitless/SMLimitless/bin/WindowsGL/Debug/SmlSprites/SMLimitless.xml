@@ -543,7 +543,7 @@
             Removes any empty cells.
             </summary>
         </member>
-        <member name="M:SMLimitless.Collections.SparseCellGrid`1.Draw">
+        <member name="M:SMLimitless.Collections.SparseCellGrid`1.DrawCells">
             <summary>
             Draws each cell as white rectangular edges with their cell number printed in the corner.
             </summary>
@@ -1764,7 +1764,7 @@
         </member>
         <member name="F:SMLimitless.Sprites.SpriteCollisionMode.OffsetNotify">
             <summary>
-            Sprites that are colliding with solid tiles
+            Sprites that are colliding with solid tiles or other sprites
             are offset such that they are moved out of the tile(s).
             Then, collision handler methods are called on both
             the sprite and the tile.
@@ -1772,7 +1772,7 @@
         </member>
         <member name="F:SMLimitless.Sprites.SpriteCollisionMode.OffsetOnly">
             <summary>
-            Sprites that are colliding with solid tiles
+            Sprites that are colliding with solid tiles or other sprites
             are offset such that they are moved out of the tile(s).
             No collision handlers are run.
             </summary>
@@ -2951,6 +2951,11 @@
             A backing field for the Velocity property.
             </summary>
         </member>
+        <member name="F:SMLimitless.Sprites.Sprite.hitbox">
+            <summary>
+            A backing field for the Hitbox property.
+            </summary>
+        </member>
         <member name="F:SMLimitless.Sprites.Sprite.MaximumGravitationalVelocity">
             <summary>
             A physics setting representing the maximum downward velocity a sprite can acquire through falling. Measured in pixels per second.
@@ -3053,10 +3058,15 @@
             Gets or sets a value indicating whether a collision between this sprite and a tile should break the debugger if collision debugging is enabled.
             </summary>
         </member>
-        <member name="P:SMLimitless.Sprites.Sprite.CollisionMode">
+        <member name="P:SMLimitless.Sprites.Sprite.TileCollisionMode">
             <summary>
             Gets or sets the current collision mode of this sprite. Please see the SpriteCollisionMode documentation for
             more information.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Sprite.SpriteCollisionMode">
+            <summary>
+            Gets or sets the current collision mode of this sprite for other sprites.
             </summary>
         </member>
         <member name="P:SMLimitless.Sprites.Sprite.Hitbox">
@@ -3774,6 +3784,15 @@
             the intersection depth. It then determines which of the two axes has the smallest absolute
             value and zeroes out the other. This way of collision resolution is called the "shallowest edge"
             method, and it allows quick determination of which axis to resolve along.</remarks>
+        </member>
+        <member name="M:SMLimitless.Physics.BoundingRectangle.GetCollisionResolution(Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Returns the distance to move a given rectangle
+            in order to properly resolve a collision.
+            </summary>
+            <param name="intersect">The intersection depth for the other rectangle.</param>
+            <returns>A value that can be applied to the position of the rectangle
+            to move it the minimum distance such that it won't be intersecting this one.</returns>
         </member>
         <member name="M:SMLimitless.Physics.BoundingRectangle.GetTopPoint(System.Single)">
             <summary>

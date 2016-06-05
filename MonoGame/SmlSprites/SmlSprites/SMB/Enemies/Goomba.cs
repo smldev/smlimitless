@@ -111,6 +111,7 @@ namespace SmlSprites.SMB.Enemies
 		public override void HandleSpriteCollision(Sprite sprite, Vector2 resolutionDistance)
 		{
 			// TODO: Add interaction-with-player code here; add sprite attributes
+			base.HandleSpriteCollision(sprite, resolutionDistance);
 		}
 	}
 

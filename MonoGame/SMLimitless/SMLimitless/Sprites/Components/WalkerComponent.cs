@@ -14,6 +14,7 @@ namespace SMLimitless.Sprites.Components
 	public sealed class WalkerComponent : SpriteComponent
 	{
 		private Direction direction;
+		private bool spriteCollisionOnLastFrame;
 
 		private float currentVelocity;
 		private float CurrentVelocity
@@ -88,6 +89,20 @@ namespace SMLimitless.Sprites.Components
 			{
 				direction = Direction.Left;
 				CurrentVelocity = -CurrentVelocity;
+			}
+		}
+
+		public override void HandleSpriteCollision(Sprite collidingSprite, Vector2 resolutionDistance)
+		{
+			if (collidingSprite.Hitbox.Right > Owner.Hitbox.Left && collidingSprite.Hitbox.Left <= Owner.Hitbox.Left)
+			{
+				direction = Direction.Right;
+				CurrentVelocity = (CurrentVelocity > 0f) ? CurrentVelocity : -CurrentVelocity;
+			}
+			else if (collidingSprite.Hitbox.Left < Owner.Hitbox.Right && collidingSprite.Hitbox.Right >= Owner.Hitbox.Right)
+			{
+				direction = Direction.Left;
+				CurrentVelocity = (CurrentVelocity < 0f) ? CurrentVelocity : -CurrentVelocity;
 			}
 		}
 	}

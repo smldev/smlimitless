@@ -50,6 +50,10 @@ namespace SMLimitless.Sprites.InternalSprites
 		{
 		}
 
+		public EditorSelectedObject()
+		{
+			Size = new Vector2(16f);
+		}
 
 		public override void Draw()
 		{
@@ -151,7 +155,7 @@ namespace SMLimitless.Sprites.InternalSprites
 		private void OnLeftClick()
 		{
 			Tile tileUnderCursor = Owner.GetTileAtPosition(Position);
-			Sprite spriteUnderCursor = Owner.Sprites.FirstOrDefault(s => s.Hitbox.Within(Position, true));
+			Sprite spriteUnderCursor = Owner.SpritesGrid.FirstOrDefault(s => s.Hitbox.Within(Hitbox.Center, adjacentPointsAreWithin: true));
 			switch (SelectedObjectType)
 			{
 				case EditorSelectedObjectType.Nothing:

@@ -188,6 +188,8 @@ namespace SMLimitless.Sprites
         }
 
 		internal HashSet<Sprite> SpritesCollidedWithThisFrame { get; set; } = new HashSet<Sprite>();
+
+		internal SpriteCollisionData CollisionData { get; private set; }
 		#endregion
 
 		#region Editor Properties (category, label, name, message, hostility, moving, direction)
@@ -270,6 +272,7 @@ namespace SMLimitless.Sprites
         public virtual void Initialize(Section owner)
         {
 			Owner = owner;
+			CollisionData = new SpriteCollisionData(this);
 			//// Initialize all the properties
 			////this.IsActive = true;
 			////this.IsHostile = true;

@@ -163,7 +163,7 @@ namespace SMLimitless.IO.LevelSerializers
 		{
 			var result = new List<object>();
 
-			foreach (var sprite in section.Sprites)
+			foreach (var sprite in section.SpritesGrid)
 			{
 				result.Add(new
 				{
@@ -290,8 +290,12 @@ namespace SMLimitless.IO.LevelSerializers
 				JArray spritesData = (JArray)entry["sprites"];
 				JArray pathsData = (JArray)entry["paths"];
 
+				List<Sprite> sectionSprites;
+				SparseCellGrid<Sprite> sectionSpriteGrid = DeserializeSprites(spritesData, out sectionSprites);
+
 				section.Layers = DeserializeLayers(layersData, section);
-				section.Sprites = DeserializeSprites(spritesData);
+				section.SpritesGrid = sectionSpriteGrid;
+				section.Sprites = sectionSprites;
 				section.Paths = DeserializePaths(pathsData);
 
 				section.IsLoaded = true;
@@ -415,9 +419,10 @@ namespace SMLimitless.IO.LevelSerializers
 			return result;
 		}
 
-		internal SparseCellGrid<Sprite> DeserializeSprites(JArray spriteObjects)
+		internal SparseCellGrid<Sprite> DeserializeSprites(JArray spriteObjects, out List<Sprite> spriteList)
 		{
 			SparseCellGrid<Sprite> result = new SparseCellGrid<Sprite>(new Microsoft.Xna.Framework.Vector2(64f));
+			spriteList = new List<Sprite>();
 
 			foreach (var entry in spriteObjects)
 			{
@@ -436,6 +441,7 @@ namespace SMLimitless.IO.LevelSerializers
 				sprite.DeserializeCustomObjects(new JsonHelper(entry["customObjects"]));
 
 				result.Add(sprite);
+				spriteList.Add(sprite);
 			}
 
 			return result;

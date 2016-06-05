@@ -191,6 +191,7 @@
     <Compile Include="Sprites\InternalSprites\EditorSelectedObject.cs" />
     <Compile Include="Sprites\Sprite.cs" />
     <Compile Include="Sprites\SpriteComponent.cs" />
+    <Compile Include="Sprites\SpriteCollisionData.cs" />
     <Compile Include="Sprites\Tile.cs" />
     <Compile Include="Testing.cs" />
   </ItemGroup>

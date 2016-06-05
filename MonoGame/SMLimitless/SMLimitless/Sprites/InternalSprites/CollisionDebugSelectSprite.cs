@@ -50,13 +50,13 @@ namespace SMLimitless.Sprites.InternalSprites
 			
 			if (InputManager.IsNewMousePress(MouseButtons.LeftButton) && (Owner.CollisionDebugSelectedSprite == null || Owner.CollisionDebugSelectedSprite == this))
 			{
-				Sprite sprite = Owner.Sprites.FirstOrDefault(s => s.Hitbox.Within(Position, true));
+				Sprite sprite = Owner.SpritesGrid.FirstOrDefault(s => s.Hitbox.Within(Position, true));
 				if (sprite != null) { Owner.CollisionDebugSelectSprite(sprite); }
 			}
 
 			if (InputManager.IsNewMousePress(MouseButtons.RightButton))
 			{
-				Sprite sprite = Owner.Sprites.FirstOrDefault(s => s.Hitbox.Within(Position, true));
+				Sprite sprite = Owner.SpritesGrid.FirstOrDefault(s => s.Hitbox.Within(Position, true));
 				if (sprite != null && !sprite.GetType().FullName.Contains("Debug")) { sprite.BreakOnCollision = !sprite.BreakOnCollision; }
 				else
 				{

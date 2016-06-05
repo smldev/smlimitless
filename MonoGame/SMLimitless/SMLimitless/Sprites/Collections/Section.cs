@@ -91,7 +91,8 @@ namespace SMLimitless.Sprites.Collections
 		internal List<Sprite> Players { get; set; } = new List<Sprite>();
 		internal List<Sprite> SpritesToAddOnNextFrame { get; } = new List<Sprite>();
 		internal List<Tile> Tiles { get; private set; }
-		internal SparseCellGrid<Sprite> Sprites { get; set; }
+		internal List<Sprite> Sprites { get; set; } = new List<Sprite>();
+		internal SparseCellGrid<Sprite> SpritesGrid { get; set; }
 
 		/// <summary>
 		/// Gets the current mouse position adjusted for the camera's position and zoom.
@@ -126,7 +127,7 @@ namespace SMLimitless.Sprites.Collections
 		{
 			Camera = new Camera2D();
 			Owner = owner;
-			Sprites = new SparseCellGrid<Sprite>(GameServices.GameObjectSize * new Vector2(4f));
+			SpritesGrid = new SparseCellGrid<Sprite>(GameServices.GameObjectSize * new Vector2(4f));
 			Layers = new List<Layer>();
 			Tiles = new List<Tile>();
 			Paths = new List<Path>();
@@ -145,7 +146,7 @@ namespace SMLimitless.Sprites.Collections
 			{
 				Background.Initialize();
 				Layers.ForEach(l => l.Initialize());
-				Sprites.ForEach(s => s.Initialize(this));
+				SpritesGrid.ForEach(s => s.Initialize(this));
 				editorSelectedObject.Initialize(this);
 				selectorSprite.Initialize(this);
 
@@ -165,7 +166,7 @@ namespace SMLimitless.Sprites.Collections
 			{
 				Background.LoadContent();
 				Layers.ForEach(l => l.LoadContent());
-				Sprites.ForEach(s => s.LoadContent());
+				SpritesGrid.ForEach(s => s.LoadContent());
 				editorSelectedObject.LoadContent();
 
 				irisEffect.LoadContent();
@@ -201,11 +202,11 @@ namespace SMLimitless.Sprites.Collections
 				else if (!GameServices.CollisionDebuggerActive && isCollisionDebuggingInitialized) { UninitializeCollisionDebugging(); }
 
 				Tiles.ForEach(t => t.Update());
-				Sprites.ForEach(s => s.Update());
-				Sprites.Update();
+				SpritesGrid.ForEach(s => s.Update());
+				SpritesGrid.Update();
 				UpdatePhysics();
-				Sprites.ForEach(s => s.SpritesCollidedWithThisFrame.Clear());
-				Sprites.Update();
+				SpritesGrid.ForEach(s => s.SpritesCollidedWithThisFrame.Clear());
+				SpritesGrid.Update();
 			}
 			else
 			{
@@ -213,7 +214,7 @@ namespace SMLimitless.Sprites.Collections
 				editorSelectedObject.Update();
 			}
 
-			Sprites.RemoveAllWhere(s => s.RemoveOnNextFrame);
+			SpritesGrid.RemoveAllWhere(s => s.RemoveOnNextFrame);
 			CameraSystem.Update();
 			Background.Update();
 			TempUpdate();
@@ -228,7 +229,7 @@ namespace SMLimitless.Sprites.Collections
 		{
 			collisionDebugCollidedTiles.Clear();
 			float delta = GameServices.GameTime.GetElapsedSeconds();    // The number of seconds that have elapsed since the last Update call.
-			
+
 			foreach (Sprite sprite in Sprites)
 			{
 				if (sprite.TileCollisionMode == SpriteCollisionMode.NoCollision) { continue; }
@@ -244,9 +245,9 @@ namespace SMLimitless.Sprites.Collections
 				ResolveSpriteHorizontalCollision(sprite, delta, ref spritePositionWithoutResolutions, ref numberOfCollidingTiles, slopeCollisionOccurred);
 				ResolveSpriteVerticalCollision(sprite, delta, ref spritePositionWithoutResolutions, ref numberOfCollidingTiles, slopeCollisionOccurred);
 				SnapToGround(sprite);
-				
-				var spritesNear = Sprites.GetItemsNearItem(sprite).ToList();
-				spritesNearSpriteCount += spritesNear.Count;
+
+				var spritesNear = SpritesGrid.GetItemsNearItem(sprite).ToList();
+				spritesNearSpriteCount += spritesNear.Count();
 				ResolveSpriteSpriteCollisions(sprite, spritesNear, sprite.Position - initialSpritePosition);
 			}
 
@@ -370,7 +371,7 @@ namespace SMLimitless.Sprites.Collections
 						}
 					}
 				}
-			}	
+			}
 		}
 
 		private void ResolveSpriteVerticalCollision(Sprite sprite, float delta, ref Vector2 spritePositionWithoutResolutions, ref int numberOfCollidingTiles, bool slopeCollisionOccurred)
@@ -439,13 +440,13 @@ namespace SMLimitless.Sprites.Collections
 				BoundingRectangle hitboxA = sprite.Hitbox;
 				BoundingRectangle hitboxB = collidableSprite.Hitbox;
 
-				Vector2 intersectA = hitboxA.GetIntersectionDepth(hitboxB);
-				Vector2 intersectB = hitboxB.GetIntersectionDepth(hitboxA);
+				Vector2 resolutionA = hitboxA.GetCollisionResolution(hitboxB);
+				Vector2 resolutionB = hitboxB.GetCollisionResolution(hitboxA);
 				intersectionDepthCalls += 2;
 
-				if (!intersectA.IsNaN() && !intersectB.IsNaN() && !sprite.SpritesCollidedWithThisFrame.Contains(collidableSprite) && !collidableSprite.SpritesCollidedWithThisFrame.Contains(sprite))
+				if (!resolutionA.IsNaN() && !resolutionB.IsNaN() && !sprite.SpritesCollidedWithThisFrame.Contains(collidableSprite) && !collidableSprite.SpritesCollidedWithThisFrame.Contains(sprite))
 				{
-					Vector2 resolutionDistance = hitboxA.GetCollisionResolution(intersectA);
+					Vector2 resolutionDistance = hitboxA.GetCollisionResolution(resolutionA);
 
 					// Move the sprite out of the other sprite if we don't move it into a tile.
 					if (sprite.SpriteCollisionMode == SpriteCollisionMode.OffsetNotify || sprite.SpriteCollisionMode == SpriteCollisionMode.OffsetOnly)
@@ -457,13 +458,13 @@ namespace SMLimitless.Sprites.Collections
 
 					if (sprite.SpriteCollisionMode == SpriteCollisionMode.OffsetNotify || sprite.SpriteCollisionMode == SpriteCollisionMode.NotifyOnly)
 					{
-						sprite.HandleSpriteCollision(collidableSprite, intersectA);
+						sprite.HandleSpriteCollision(collidableSprite, resolutionA);
 						spriteCollisionCallsMade++;
 					}
 
 					if (collidableSprite.SpriteCollisionMode == SpriteCollisionMode.OffsetNotify || collidableSprite.SpriteCollisionMode == SpriteCollisionMode.NotifyOnly)
 					{
-						collidableSprite.HandleSpriteCollision(sprite, intersectB);
+						collidableSprite.HandleSpriteCollision(sprite, resolutionB);
 						spriteCollisionCallsMade++;
 					}
 
@@ -535,7 +536,7 @@ namespace SMLimitless.Sprites.Collections
 				tile.Draw();
 				if (GameServices.CollisionDebuggerActive && tile.BreakOnCollision) { GameServices.SpriteBatch.DrawRectangle(tile.Hitbox.Bounds.ToRectangle(), Color.Red); }
 			}
-			foreach (Sprite sprite in Sprites)
+			foreach (Sprite sprite in SpritesGrid)
 			{
 				sprite.Draw();
 				if (GameServices.CollisionDebuggerActive && sprite.BreakOnCollision) { GameServices.SpriteBatch.DrawRectangleEdges(sprite.Hitbox.ToRectangle(), Color.DarkRed); }
@@ -545,7 +546,6 @@ namespace SMLimitless.Sprites.Collections
 			CameraSystem.Draw(debug: false);
 			//Sprites.DrawCells();
 			GameServices.DebugFont.DrawString(debugText, new Vector2(120f, 16f), 1f);
-			intersectionDepthCalls = spriteCollisionCallsMade = spritesNearSpriteCount = 0;
 			DrawCollisionDebug();
 			irisEffect.Draw();
 		}
@@ -616,6 +616,7 @@ namespace SMLimitless.Sprites.Collections
 			}
 
 			Sprites.Add(sprite);
+			SpritesGrid.Add(sprite);
 			MainLayer.AddSprite(sprite);
 		}
 
@@ -666,6 +667,7 @@ namespace SMLimitless.Sprites.Collections
 			if (sprite == null) { throw new ArgumentNullException(nameof(sprite), "The sprite to remove from the section was not null."); }
 
 			Sprites.Remove(sprite);
+			SpritesGrid.Remove(sprite);
 		}
 
 		private void ToggleEditor()
@@ -706,7 +708,7 @@ namespace SMLimitless.Sprites.Collections
 		private void InitializeCollisionDebugging()
 		{
 			GameServices.CollisionDebuggerForm.Section = this;
-			Sprites.Add(selectorSprite);
+			SpritesGrid.Add(selectorSprite);
 			isCollisionDebuggingInitialized = true;
 		}
 
