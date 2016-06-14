@@ -21,21 +21,21 @@ namespace SMLimitless.Collections
     /// <typeparam name="T">A type that derives from the <see cref="IPositionable"/> interface.</typeparam>
     public sealed class SizedGrid<T> : IEnumerable<T> where T : IPositionable2
     {
-        /*
+		/*
          * The sized grid is a generic collection composed of cells.
          * Each cell is of a certain size (usually pixels), and each
          * cell holds a reference to an object. Objects are required
-         * to implement the IPositionable interface. If an object is
+         * to implement the IPositionable2 interface. If an object is
          * larger than a grid cell, the object is placed within multiple
          * grid cells, with each cell holding a reference to the object.
-         * If the object is smaller, the cell can still only hold one reference
-         * to it.
+         * If the object is smaller, the cell can still only hold one
+         * reference to it.
          */
 
-        /// <summary>
-        /// The internal grid.
-        /// </summary>
-        private Grid<T> grid;
+		/// <summary>
+		/// The internal grid.
+		/// </summary>
+		private Grid<T> grid;
 
 		/// <summary>
 		/// Gets the position of the top-left corner of this grid.

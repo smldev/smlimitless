@@ -35,7 +35,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\WindowsGL\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;CODE_ANALYSIS;WINDOWS;ALTGFX</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;CODE_ANALYSIS;CODE_ANALYSIS;WINDOWS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -183,6 +183,7 @@
     <Compile Include="Sprites\Collections\ScreenExit.cs" />
     <Compile Include="Sprites\Collections\Section.cs" />
     <Compile Include="Sprites\Collections\TestSectionGenerator.cs" />
+    <Compile Include="Sprites\Components\DamageComponent.cs" />
     <Compile Include="Sprites\Components\HealthComponent.cs" />
     <Compile Include="Sprites\Components\WalkerComponent.cs" />
     <Compile Include="Sprites\InternalSprites\CollisionDebugSelectSprite.cs" />
@@ -192,6 +193,7 @@
     <Compile Include="Sprites\Sprite.cs" />
     <Compile Include="Sprites\SpriteComponent.cs" />
     <Compile Include="Sprites\SpriteCollisionData.cs" />
+    <Compile Include="Sprites\SpriteDamageTypes.cs" />
     <Compile Include="Sprites\Tile.cs" />
     <Compile Include="Testing.cs" />
   </ItemGroup>

@@ -23,6 +23,8 @@ namespace SMLimitless.Content
         /// </summary>
         private static List<ContentPackage> loadedPackages;
 
+		// Key: string - The name of a level file.
+		// Value: string[] - An array of folder names that override the content for the level.
 		/// <summary>
 		/// A collection of folder names for folders containing content overrides.
 		/// </summary>
@@ -33,7 +35,7 @@ namespace SMLimitless.Content
         /// </summary>
         static ContentPackageManager()
         {
-            ContentPackageManager.loadedPackages = new List<ContentPackage>();
+            loadedPackages = new List<ContentPackage>();
 			contentOverrides = new Dictionary<string, string[]>();
         }
 
@@ -71,12 +73,17 @@ namespace SMLimitless.Content
             string resourcePath = "";
             int i = 0;
 
+			// First, search for the resource in all loaded overrides, in reverse order.
+			// The enumeration is in reversed order because content overrides for a level,
+			// for instance, must override content overrides for a world, and so forth.
 			foreach (KeyValuePair<string, string[]> contentOverride in contentOverrides.Reverse())
 			{
 				resourcePath = SearchOverrideForResource(contentOverride.Key, resourceName);
 				if (resourcePath != "") { break; }
 			}
 
+			// If there are no content overrides, or if the resource wasn't in the overrides,
+			// check the content package itself.
             while (resourcePath == "")
             {
                 resourcePath = loadedPackages[i].GetResourcePath(resourceName);
@@ -104,6 +111,8 @@ namespace SMLimitless.Content
         {
             string resourcePath = "";
             int i = 0;
+
+			// TODO: Add content override support
 
             while (resourcePath == "")
             {
@@ -133,6 +142,8 @@ namespace SMLimitless.Content
         {
             string resourcePath = "";
             int i = 0;
+
+			// TODO: add content override support
 
             while (resourcePath == "")
             {

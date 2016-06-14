@@ -35,11 +35,21 @@ namespace SMLimitless.Forms
 			TimeScale = float.Parse(TextTimeScale.Text);
 		}
 
+		/// <summary>
+		/// Updates the <see cref="TextCollisionInfo"/> textbox.
+		/// </summary>
+		/// <param name="numberOfCollidingTiles">The number of tiles the selected sprite has collided with this frame.</param>
+		/// <param name="slopeCollisionOccurred">A parameter indicating whether a collision between the selected sprite and the sloped side of a sloped tile occurred.</param>
+		/// <param name="totalOffset">The total distance the selected sprite was moved through collision resolutions.</param>
 		public void Update(int numberOfCollidingTiles, bool slopeCollisionOccurred, Vector2 totalOffset)
 		{
 			TextCollisionInfo.Text = GetCollisionInformation(numberOfCollidingTiles, slopeCollisionOccurred, totalOffset);
 		}
 
+		/// <summary>
+		/// Sets the <see cref="TextTileInfo"/> textbox.
+		/// </summary>
+		/// <param name="tile">The tile whose information to use.</param>
 		public void SetTileInfo(Tile tile)
 		{
 			TextTileInfo.Text = GetTileInformation(tile);

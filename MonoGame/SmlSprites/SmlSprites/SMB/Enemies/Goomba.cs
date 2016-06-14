@@ -35,7 +35,10 @@ namespace SmlSprites.SMB.Enemies
 			set
 			{
 				palette = value;
-				ChangePalette();
+				if (graphics != null)
+				{
+					graphics.CurrentObjectName = AppendPaletteNameSuffix(graphics.CurrentObjectName.Split('_')[0]);
+				}
 			}
 		}
 
@@ -67,22 +70,36 @@ namespace SmlSprites.SMB.Enemies
 			base.Initialize(owner);
 			graphics = (ComplexGraphicsObject)ContentPackageManager.GetGraphicsResource("SMBGoomba");
 
-			ChangePalette();
+			graphics.CurrentObjectName = AppendPaletteNameSuffix("walking");
+
+			HealthComponent healthComponent = new HealthComponent(1, 1, new string[] { });
+			healthComponent.SpriteKilled += HealthComponent_SpriteKilled;
 
 			Components.Add(new WalkerComponent(this, ResolveDirection(this, Direction, owner), 32f));
-			Components.Add(new HealthComponent(1, 1, new string[] { }));
-
-			// TODO: Add damage and death handlers
+			Components.Add(healthComponent);
+			Components.Add(new DamageComponent());
 		}
 
-		private void ChangePalette()
+		private void HealthComponent_SpriteKilled(object sender, SpriteDamagedEventArgs e)
 		{
-			if (graphics == null) { return; }
+			Vector2 flipVelocity = new Vector2(500f, -500f);
 
-			if (Palette == GoombaPalette.Overworld) { graphics.CurrentObjectName = "walking_OW"; }
-			else if (Palette == GoombaPalette.Cave) { graphics.CurrentObjectName = "walking_cave"; }
-			else if (Palette == GoombaPalette.Castle) { graphics.CurrentObjectName = "walking_castle"; }
-			else { throw new ArgumentException($"The provided goomba palette number {(int)Palette} doesn't match any palettes."); }
+			if (e.DamageType == SpriteDamageTypes.PlayerStomp)
+			{
+				Velocity = Vector2.Zero;
+				graphics.CurrentObjectName = AppendPaletteNameSuffix("flattened");
+				SpriteCollisionMode = SpriteCollisionMode.NoCollision;
+				Components.RemoveAll(c => c is WalkerComponent);
+				SMLimitless.Components.ActionScheduler.Instance.ScheduleAction(() => Owner.RemoveSprite(this), 120);
+			}
+			else
+			{
+				isFlippedOver = true;
+				Velocity = flipVelocity;
+				TileCollisionMode = SpriteCollisionMode.NoCollision;
+				SpriteCollisionMode = SpriteCollisionMode.NoCollision;
+				Components.RemoveAll(c => c is WalkerComponent);
+			}
 		}
 
 		public override void Draw()
@@ -93,6 +110,7 @@ namespace SmlSprites.SMB.Enemies
 		public override void Update()
 		{
 			base.Update();
+			graphics.Update();
 		}
 
 		public override object GetCustomSerializableObjects()
@@ -110,8 +128,33 @@ namespace SmlSprites.SMB.Enemies
 
 		public override void HandleSpriteCollision(Sprite sprite, Vector2 resolutionDistance)
 		{
-			// TODO: Add interaction-with-player code here; add sprite attributes
+			if (sprite is Players.PlayerMario)
+			{
+				Players.PlayerMario playerMario = (Players.PlayerMario)sprite;
+				if (!(playerMario.Hitbox.Bottom < Hitbox.Center.Y && playerMario.Velocity.Y >= 0f))
+				{
+					// The player has contacted the goomba, but hasn't stomped on it
+					var damageComponent = GetComponent<DamageComponent>();
+					damageComponent.PerformDamage(playerMario, SpriteDamageTypes.General, 1);
+				}
+			}
+
 			base.HandleSpriteCollision(sprite, resolutionDistance);
+		}
+
+		private string AppendPaletteNameSuffix(string graphicsObjectName)
+		{
+			switch (Palette)
+			{
+				case GoombaPalette.Overworld:
+					return graphicsObjectName + "_OW";
+				case GoombaPalette.Cave:
+					return graphicsObjectName + "_cave";
+				case GoombaPalette.Castle:
+					return graphicsObjectName + "_castle";
+				default:
+					throw new InvalidOperationException();
+			}
 		}
 	}
 

@@ -52,6 +52,11 @@ namespace SMLimitless.Debug
 		/// <param name="e">Arguments for this event.</param>
 		private void ButtonSubmit_Click(object sender, EventArgs e)
 		{
+			SubmitCommand();
+		}
+
+		private void SubmitCommand()
+		{
 			string fullCommand = TextCommand.Text;
 			string[] commandWords = fullCommand.Split(' ');
 			string command = commandWords[0];
@@ -74,6 +79,10 @@ namespace SMLimitless.Debug
 			else if (e.KeyCode == Keys.Down)
 			{
 				SeekCommand(Direction.Down);
+			}
+			else if (e.KeyCode == Keys.Enter)
+			{
+				SubmitCommand();
 			}
 			else
 			{

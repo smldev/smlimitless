@@ -32,6 +32,11 @@ namespace SMLimitless.Forms
 			InitializeComponent();
 		}
 
+		/// <summary>
+		/// Adds a new setting to the <see cref="PhysicsSettingsEditorForm"/>.
+		/// </summary>
+		/// <typeparam name="T">The type of the setting.</typeparam>
+		/// <param name="setting">The setting to add.</param>
 		internal void AddSetting<T>(PhysicsSetting<T> setting) where T : struct, IComparable<T>
 		{
 			if (typeof(T) == typeof(int))
@@ -44,6 +49,10 @@ namespace SMLimitless.Forms
 			}
 		}
 
+		/// <summary>
+		/// Adds an integer setting.
+		/// </summary>
+		/// <param name="setting">The setting to add.</param>
 		internal void AddSetting(PhysicsSetting<int> setting)
 		{
 			TrackBar trackBar;
@@ -73,6 +82,11 @@ namespace SMLimitless.Forms
 			}; // seriously using lambdas as drop-in event handlers is so awesome
 		}
 
+		/// <summary>
+		/// Adds a floating point setting.
+		/// </summary>
+		/// <param name="setting">The setting to add.</param>
+		/// <remarks>The track bar used to set the value is gradated by a multiple of the <see cref="FloatingScaleFactor"/> constant.</remarks>
 		internal void AddSetting(PhysicsSetting<float> setting)
 		{
 			TrackBar trackBar;

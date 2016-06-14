@@ -43,7 +43,7 @@ namespace SMLimitless.Collections
 		}
 
 		/// <summary>
-		/// Gets the bounding rectangle encompassing this cell.
+		/// Gets the bounding rectangle enclosing this cell.
 		/// </summary>
 		public BoundingRectangle Bounds { get; }
 
@@ -107,11 +107,9 @@ namespace SMLimitless.Collections
 		/// Removes an item from this cell.
 		/// </summary>
 		/// <param name="item">The item to remove.</param>
-		public void Remove(T item)
+		public bool Remove(T item)
 		{
-			////if (!cellItems.Contains(item)) { throw new ArgumentException("Tried to remove an item from a sparse cell that wasn't in the sparse cell. Please validate the item's cell.", nameof(item)); }
-
-			cellItems.Remove(item);
+			return cellItems.Remove(item);
 		}
 
 		/// <summary>

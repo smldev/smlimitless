@@ -149,14 +149,14 @@ namespace SMLimitless.Input
         /// </summary>
         public static void ReloadBindings()
         {
-            InputManager.inputBindings = new Dictionary<InputAction, InputObject>();
+			inputBindings = new Dictionary<InputAction, InputObject>();
             var inputSettings = GameSettings.GetSection("[InputBindings]");
 
             foreach (var binding in inputSettings)
             {
                 InputAction action = (InputAction)Enum.Parse(typeof(InputAction), binding.Key);
                 InputObject inputObject = InputObject.Parse(binding.Value);
-                InputManager.inputBindings.Add(action, inputObject);
+				inputBindings.Add(action, inputObject);
             }
         }
 
@@ -203,6 +203,10 @@ namespace SMLimitless.Input
             return lastKeyboardState.IsKeyDown(key) && currentKeyboardState.IsKeyUp(key);
         }
 
+		/// <summary>
+		/// Returns a value indicating whether the mouse cursor is within the bounds of the window.
+		/// </summary>
+		/// <returns>True if the cursor is within the window, false if it is not.</returns>
 		public static bool IsMouseInWindow()
 		{
 			Vector2 screenSize = GameServices.ScreenSize;
@@ -294,12 +298,12 @@ namespace SMLimitless.Input
         /// <returns>True if this is a new action, false if otherwise.</returns>
         public static bool IsNewActionPress(InputAction action)
         {
-            if (!InputManager.inputBindings.ContainsKey(action))
+            if (!inputBindings.ContainsKey(action))
             {
                 throw new ArgumentException(string.Format("InputManager.IsNewActionPress(InputAction): The game settings file does not define an action named {0}.", action.ToString()), "action");
             }
 
-            InputObject inputObject = InputManager.inputBindings[action];
+            InputObject inputObject = inputBindings[action];
             return inputObject.IsUp(InputManager.LastKeyboardState, InputManager.LastMouseState) && inputObject.IsDown(InputManager.CurrentKeyboardState, InputManager.CurrentMouseState);
         }
 
@@ -310,12 +314,12 @@ namespace SMLimitless.Input
         /// <returns>True if this is a current action, false if otherwise.</returns>
         public static bool IsCurrentActionPress(InputAction action)
         {
-            if (!InputManager.inputBindings.ContainsKey(action))
+            if (!inputBindings.ContainsKey(action))
             {
                 throw new ArgumentException(string.Format("InputManager.IsCurrentActionPress(InputAction): The game settings file does not define an action named {0}.", action.ToString()), "action");
             }
 
-            InputObject inputObject = InputManager.inputBindings[action];
+            InputObject inputObject = inputBindings[action];
             return inputObject.IsDown(InputManager.LastKeyboardState, InputManager.LastMouseState) && inputObject.IsDown(InputManager.CurrentKeyboardState, InputManager.CurrentMouseState);
         }
 
@@ -326,12 +330,12 @@ namespace SMLimitless.Input
         /// <returns>True if this is an old action, false if otherwise.</returns>
         public static bool IsOldActionPress(InputAction action)
         {
-            if (!InputManager.inputBindings.ContainsKey(action))
+            if (!inputBindings.ContainsKey(action))
             {
                 throw new ArgumentException(string.Format("InputManager.IsOldActionPress(InputAction): The game settings file does not define an action named {0}.", action.ToString()), "action");
             }
 
-            InputObject inputObject = InputManager.inputBindings[action];
+            InputObject inputObject = inputBindings[action];
             return inputObject.IsDown(InputManager.LastKeyboardState, InputManager.LastMouseState) && inputObject.IsUp(InputManager.CurrentKeyboardState, InputManager.CurrentMouseState);
         }
 

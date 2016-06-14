@@ -113,11 +113,6 @@ namespace SMLimitless.Extensions
             }
         }
 
-        ////public static bool Equals(this float a, float b, float epsilon)
-        ////{
-
-        ////}
-
         /// <summary>
         /// Corrects the value of a single-precision float to the nearest integral value if the float is very close to that value.
         /// </summary>
@@ -125,16 +120,16 @@ namespace SMLimitless.Extensions
         /// <returns>A whole-number corrected value, or the value if it was not close enough to the nearest integers.</returns>
         public static float CorrectPrecision(this float value)
         {
-            float epsilon = 0.0001f;
+            const float Epsilon = 0.0001f;
 
             int ceiling = (int)(value + 1f);
             int floor = (int)value;
 
-            if (Math.Abs(ceiling - value) < epsilon)
+            if (Math.Abs(ceiling - value) < Epsilon)
             {
                 return ceiling;
             }
-            else if (Math.Abs(value - floor) < epsilon)
+            else if (Math.Abs(value - floor) < Epsilon)
             {
                 return floor;
             }
@@ -145,12 +140,12 @@ namespace SMLimitless.Extensions
         }
 
 		/// <summary>
-		/// Determines if a number if between two other numbers.
+		/// Determines if a number if between two other numbers, inclusive.
 		/// </summary>
 		/// <param name="x">The number to check.</param>
 		/// <param name="a">The first number of the range.</param>
 		/// <param name="b">The second number of the range.</param>
-		/// <returns></returns>
+		/// <returns>True if x is between a and b, inclusive.</returns>
 		public static bool BetweenInclusive(this float x, float a, float b)
 		{
 			if (a > b)

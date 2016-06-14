@@ -17,10 +17,14 @@ namespace SMLimitless.Extensions
 		/// of form "x,y;x,y" with no trailing semicolon.
 		/// </summary>
 		/// <param name="points">An enumerable containing the points to be serialized.</param>
+		/// <param name="sorted">A parameter that, if True, will sort the points by X value then Y value before serializing them.</param>
 		/// <returns>A string containing the point values.</returns>
 		public static string SerializeCompact(this IEnumerable<Point> points, bool sorted = false)
 		{
-			if (sorted) { points = points.OrderBy(p => p.X); }
+			if (sorted)
+			{
+				points = points.OrderBy(p => p.X).ThenBy(p => p.Y);
+			}
 
 			StringBuilder resultBuilder = new StringBuilder();
 			

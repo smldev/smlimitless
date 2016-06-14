@@ -16,6 +16,7 @@ using SMLimitless.Sprites;
 using SMLimitless.Sprites.Assemblies;
 using SMLimitless.Sprites.Collections;
 using SMLimitless.Sounds;
+using SMLimitless.Sprites.Components;
 
 namespace SmlSprites.Players
 {
@@ -26,6 +27,7 @@ namespace SmlSprites.Players
 		private Direction direction = SMLimitless.Direction.Left;
 		private ActionScheduler actionScheduler = new ActionScheduler();
 
+		private bool isDead;
 		private bool isGroundPounding;
 		private bool wasGroundPounding { get; set; }
 		private int groundPoundSpinTimer = 0;
@@ -149,6 +151,21 @@ namespace SmlSprites.Players
 			IsActive = true;
 
 			InitializeSounds();
+
+			HealthComponent healthComponent = new HealthComponent(1, 1, new string[] { });
+			healthComponent.SpriteKilled += HealthComponent_SpriteKilled;
+
+			Components.Add(healthComponent);
+			Components.Add(new DamageComponent());
+		}
+
+		private void HealthComponent_SpriteKilled(object sender, SpriteDamagedEventArgs e)
+		{
+			Owner.PlayerKilled(this);
+			isDead = true;
+			Velocity = new Vector2(0f, -100f);
+			TileCollisionMode = SpriteCollisionMode.NoCollision;
+			SpriteCollisionMode = SpriteCollisionMode.NoCollision;
 		}
 
 		public override void Draw()
@@ -158,17 +175,21 @@ namespace SmlSprites.Players
 
 		public override void Update()
 		{
-			CheckForWalkRunInput();
-			SprintIfAllowed();
+			if (!isDead)
+			{
+				CheckForWalkRunInput();
+				SprintIfAllowed();
 
-			CheckForJumpInput();
-			CheckForSpinJumpInput();
-			CheckForGroundPoundInput();
-			CheckForInAirSpinInput();
-			CheckForSlideInput();
-			DetermineHorizontalAcceleration();
+				CheckForJumpInput();
+				CheckForSpinJumpInput();
+				CheckForGroundPoundInput();
+				CheckForInAirSpinInput();
+				CheckForSlideInput();
+				DetermineHorizontalAcceleration();
 
-			ApplyTileSurfaceFriction();
+				ApplyTileSurfaceFriction();
+			}
+
 			DeterminePlayerGraphicsObject();
 			BaseUpdate();
 		}
@@ -531,7 +552,11 @@ namespace SmlSprites.Players
 
 		protected virtual void DeterminePlayerGraphicsObject()
 		{
-			if (isGroundPounding)
+			if (isDead)
+			{
+				SetPlayerGraphicsObject("dead");
+			}
+			else if (isGroundPounding)
 			{
 				if (groundPoundSpinTimer >= GroundPoundSpinTimer.Value)
 				{
@@ -642,6 +667,25 @@ namespace SmlSprites.Players
 			{
 				Velocity = new Vector2(0f, Velocity.Y);
 			}
+		}
+
+		public override void HandleSpriteCollision(Sprite sprite, Vector2 resolutionDistance)
+		{
+			if (Hitbox.Bottom < sprite.Hitbox.Center.Y && Velocity.Y >= 0f)
+			{
+				var damageComponent = GetComponent<DamageComponent>();
+				damageComponent.PerformDamage(sprite, SpriteDamageTypes.PlayerStomp, 1);
+
+				if (InputManager.IsCurrentActionPress(InputAction.Jump) || InputManager.IsCurrentActionPress(InputAction.SpinJump))
+				{
+					Velocity = new Vector2(Velocity.X, -(JumpImpulse.Value + MaximumJumpImpulseAddend.Value));
+				}
+				else
+				{
+					Velocity = new Vector2(Velocity.X, -JumpImpulse.Value);
+				}
+			}
+			base.HandleSpriteCollision(sprite, resolutionDistance);
 		}
 		#endregion
 	}

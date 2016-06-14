@@ -95,6 +95,7 @@ namespace SMLimitless.Collections
 			Width = width;
 			Height = height;
         }
+
         /// <summary>
         /// Returns a portion of this grid.
         /// </summary>
@@ -147,6 +148,11 @@ namespace SMLimitless.Collections
             return (x >= 0 && x < Width) && (y >= 0 && y < Height);
         }
 
+		/// <summary>
+		/// Gets the enumerator for the items of this grid.
+		/// </summary>
+		/// <returns>An enumerator for the items of this grid.</returns>
+		/// <remarks>There is no guaranteed order.</remarks>
 		[DebuggerStepThrough]
 		public IEnumerator<T> GetEnumerator()
 		{

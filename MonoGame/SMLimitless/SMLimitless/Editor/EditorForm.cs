@@ -25,11 +25,20 @@ namespace SMLimitless.Editor
 		private Dictionary<int, TileDefaultState> buttonTileDataMapping = new Dictionary<int, TileDefaultState>();
 		private Dictionary<int, SpriteData> buttonSpriteDataMapping = new Dictionary<int, SpriteData>();
 
+		/// <summary>
+		/// Gets the state of the level editor.
+		/// </summary>
 		public EditorState EditorState { get; private set; } = EditorState.Cursor;
 		private EditorSelectedObject selectedObject;
 
 		private PropertyForm propertyForm;
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="EditorForm"/> class.
+		/// </summary>
+		/// <param name="level">The level being edited.</param>
+		/// <param name="section">The section being edited.</param>
+		/// <param name="selectedObject">An <see cref="EditorSelectedObject"/> instance in the section.</param>
 		public EditorForm(Level level, Section section, EditorSelectedObject selectedObject)
 		{
 			InitializeComponent();
@@ -51,6 +60,7 @@ namespace SMLimitless.Editor
 			const int DefaultControlPadding = 4;
 			const int DefaultButtonSize = 24;
 
+			// Set up some local fields.
 			var objectDataLists = AssemblyManager.GetAllObjectData();
 			int tileButtonX = DefaultControlPadding;
 			int tileButtonY = DefaultControlPadding;
@@ -146,10 +156,24 @@ namespace SMLimitless.Editor
 		}
 	}
 
+	/// <summary>
+	/// An enumeration of states that the level editor can be in.
+	/// </summary>
 	public enum EditorState
 	{
+		/// <summary>
+		/// An object is selected and can be placed in the section.
+		/// </summary>
 		ObjectSelected,
+
+		/// <summary>
+		/// No object is selected, but an object can be selected by clicking it.
+		/// </summary>
 		Cursor,
+
+		/// <summary>
+		/// Any object clicked on will be removed from the section.
+		/// </summary>
 		Delete
 	}
 }

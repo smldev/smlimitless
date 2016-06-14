@@ -19,21 +19,23 @@ namespace SMLimitless.Sprites.Collections
 	/// </summary>
 	public sealed class Section
 	{
-		private int intersectionDepthCalls = 0;
-		private int spriteCollisionCallsMade = 0;
-		private int spritesNearSpriteCount = 0;
-
+		internal EditorSelectedObject editorSelectedObject = new EditorSelectedObject();
+		private List<Tile> collisionDebugCollidedTiles = new List<Tile>();
+		private string debugText = "";
+		private EditorForm editorForm = null;
+		private EditorCameraTrackingObject editorTrackingObject = null;
+		private Debug.DebugForm form = new Debug.DebugForm();
+		private IrisEffect irisEffect;
+		private bool isCollisionDebuggingInitialized = false;
 		private bool isContentLoaded;
 		private bool isDeserialized;
 		private bool isInitialized;
+		private CollisionDebugSelectSprite selectorSprite = new CollisionDebugSelectSprite();
 
 		/// <summary>
-		/// Gets a value indicating whether first-stage loading (deserialization and game object initialization) has completed.
+		/// Gets the settings used for automatic camera scrolling for this section.
 		/// </summary>
-		public bool IsLoaded { get; internal set; }
-
-		private string debugText = "";
-		private Debug.DebugForm form = new Debug.DebugForm();
+		public SectionAutoscrollSettings AutoscrollSettings { get; internal set; }
 
 		/// <summary>
 		/// Gets the <see cref="Sprites.Collections.Background"/> for this section.
@@ -56,43 +58,19 @@ namespace SMLimitless.Sprites.Collections
 		public CameraSystem CameraSystem { get; private set; }
 
 		/// <summary>
-		/// Gets or sets the numeric index of this section within its level.
-		/// </summary>
-		public int Index { get; set; }
-		private IrisEffect irisEffect;
-
-		/// <summary>
-		/// Gets the <see cref="Level"/> that owns this section.
-		/// </summary>
-		public Level Owner { get; private set; }
-
-		/// <summary>
-		/// Gets the settings used for automatic camera scrolling for this section.
-		/// </summary>
-		public SectionAutoscrollSettings AutoscrollSettings { get; internal set; }
-
-		/// <summary>
-		/// Gets or sets the name of this section.
-		/// </summary>
-		public string Name { get; set; }
-
-		internal EditorSelectedObject editorSelectedObject = new EditorSelectedObject();
-		private EditorCameraTrackingObject editorTrackingObject = null;
-		private EditorForm editorForm = null;
-
-		/// <summary>
 		/// Gets a value indicating whether the level editor is currently enabled for this section.
 		/// </summary>
 		public bool EditorActive { get; internal set; }
 
-		internal Layer MainLayer { get; set; }
-		internal List<Layer> Layers { get; set; }
-		internal List<Path> Paths { get; set; }
-		internal List<Sprite> Players { get; set; } = new List<Sprite>();
-		internal List<Sprite> SpritesToAddOnNextFrame { get; } = new List<Sprite>();
-		internal List<Tile> Tiles { get; private set; }
-		internal List<Sprite> Sprites { get; set; } = new List<Sprite>();
-		internal SparseCellGrid<Sprite> SpritesGrid { get; set; }
+		/// <summary>
+		/// Gets or sets the numeric index of this section within its level.
+		/// </summary>
+		public int Index { get; set; }
+
+		/// <summary>
+		/// Gets a value indicating whether first-stage loading (deserialization and game object initialization) has completed.
+		/// </summary>
+		public bool IsLoaded { get; internal set; }
 
 		/// <summary>
 		/// Gets the current mouse position adjusted for the camera's position and zoom.
@@ -114,10 +92,33 @@ namespace SMLimitless.Sprites.Collections
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the name of this section.
+		/// </summary>
+		public string Name { get; set; }
+
+		/// <summary>
+		/// Gets the <see cref="Level"/> that owns this section.
+		/// </summary>
+		public Level Owner { get; private set; }
+
 		internal Sprite CollisionDebugSelectedSprite { get; set; }
-		private bool isCollisionDebuggingInitialized = false;
-		private CollisionDebugSelectSprite selectorSprite = new CollisionDebugSelectSprite();
-		private List<Tile> collisionDebugCollidedTiles = new List<Tile>();
+
+		internal List<Layer> Layers { get; set; }
+
+		internal Layer MainLayer { get; set; }
+
+		internal List<Path> Paths { get; set; }
+
+		internal List<Sprite> Players { get; set; } = new List<Sprite>();
+
+		internal List<Sprite> Sprites { get; set; } = new List<Sprite>();
+
+		internal SparseCellGrid<Sprite> SpritesGrid { get; set; }
+
+		internal List<Sprite> SpritesToAddOnNextFrame { get; } = new List<Sprite>();
+
+		internal List<Tile> Tiles { get; private set; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Section"/> class.
@@ -135,6 +136,104 @@ namespace SMLimitless.Sprites.Collections
 
 			// temporary
 			GameServices.Camera = Camera;
+		}
+
+		/// <summary>
+		/// Adds a <see cref="Sprite"/> to this section.
+		/// </summary>
+		/// <param name="sprite">The sprite to add.</param>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="sprite"/> reference is null.</exception>
+		public void AddSprite(Sprite sprite)
+		{
+			if (sprite == null)
+			{
+				throw new ArgumentNullException(nameof(sprite), "The sprite to add to the section was null.");
+			}
+
+			Sprites.Add(sprite);
+			SpritesGrid.Add(sprite);
+			MainLayer.AddSprite(sprite);
+		}
+
+		/// <summary>
+		/// Sets a sprite to be added to the section on the next frame.
+		/// </summary>
+		/// <param name="sprite">The sprite to add.</param>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="sprite"/> reference is null.</exception>
+		public void AddSpriteOnNextFrame(Sprite sprite)
+		{
+			if (sprite == null)
+			{
+				throw new ArgumentNullException(nameof(sprite), "The sprite to add to the section was null.");
+			}
+
+			SpritesToAddOnNextFrame.Add(sprite);
+		}
+
+		/// <summary>
+		/// Adds a <see cref="Tile"/> to this section and to the main layer.
+		/// </summary>
+		/// <param name="tile">The tile to add.</param>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="tile"/> reference is null.</exception>
+		public void AddTile(Tile tile)
+		{
+			if (tile == null)
+			{
+				throw new ArgumentNullException(nameof(tile), "The tile to add to the section was null.");
+			}
+
+			if (!tile.Position.IsNaN() && MainLayer.GetTile(MainLayer.GetCellNumberAtPosition(tile.Position)) == null)
+			{
+				Tiles.Add(tile);
+				if (!MainLayer.Tiles.Contains(tile)) { MainLayer.AddTile(tile); }
+			}
+		}
+
+		/// <summary>
+		/// Draws the game objects in this section.
+		/// </summary>
+		public void Draw()
+		{
+			Background.Draw();
+			foreach (Tile tile in Tiles)
+			{
+				tile.Draw();
+				if (GameServices.CollisionDebuggerActive && tile.BreakOnCollision) { GameServices.SpriteBatch.DrawRectangle(tile.Hitbox.Bounds.ToRectangle(), Color.Red); }
+			}
+			foreach (Sprite sprite in SpritesGrid)
+			{
+				sprite.Draw();
+				if (GameServices.CollisionDebuggerActive && sprite.BreakOnCollision) { GameServices.SpriteBatch.DrawRectangleEdges(sprite.Hitbox.ToRectangle(), Color.DarkRed); }
+			}
+
+			editorSelectedObject.Draw();
+			CameraSystem.Draw(debug: false);
+			GameServices.DebugFont.DrawString(debugText, new Vector2(120f, 16f), 1f);
+			DrawCollisionDebug();
+			irisEffect.Draw();
+		}
+
+		/// <summary>
+		/// Gets the tile at a given position on the topmost layer.
+		/// </summary>
+		/// <param name="position">The position to get the tile at.</param>
+		/// <returns>A <see cref="Tile"/> instance, or null if there is no tile at <paramref name="position"/>.</returns>
+		public Tile GetTileAtPosition(Vector2 position)
+		{
+			// Gets a tile from the topmost layer at the given position.
+			// One layer is above another if its index within the Layers list is higher.
+			// The MainLayer is always the lowest layer.
+
+			int highestIndex = Layers.Count - 1;
+			for (int i = highestIndex; i >= 0; i--)
+			{
+				Layer layer = Layers[i];
+				if (!layer.Bounds.IntersectsIncludingEdges(position)) { continue; }
+				Tile tile = layer.GetTile(layer.GetCellNumberAtPosition(position));
+				if (tile != null) { return tile; }
+			}
+
+			return null;
 		}
 
 		/// <summary>
@@ -172,18 +271,52 @@ namespace SMLimitless.Sprites.Collections
 				irisEffect.LoadContent();
 				irisEffect.Start(90, EffectDirection.Forward, Vector2.Zero, Color.Black);
 
-				// TEMPORARY: Code to add a test player; remove when player support is a bit better
-				//Vector2 createPlayerAt = Tiles.First(t => GetTileAtPosition(new Vector2(t.Position.X, t.Position.Y - 8f)) == null).Position;
-				//createPlayerAt.Y -= 16f;
-				//Sprite playerSprite = Assemblies.AssemblyManager.GetSpriteByFullName("SmlSprites.Players.PlayerMario");
-				//playerSprite.Initialize(this);
-				//playerSprite.LoadContent();
-				//playerSprite.Position = createPlayerAt;
-				//Sprites.Add(playerSprite);
-				//CameraSystem.TrackingObjects.Add(playerSprite);
-
 				isContentLoaded = true;
 			}
+		}
+
+		/// <summary>
+		/// Handles the death of a player.
+		/// </summary>
+		/// <param name="player">The player that died.</param>
+		public void PlayerKilled(Sprite player)
+		{
+			// TODO: add code to check if all players are dead
+
+			Vector2 createPlayerAt = Tiles.First(t => GetTileAtPosition(new Vector2(t.Position.X, t.Position.Y - 8f)) == null).Position;
+			createPlayerAt.Y -= 16f;
+			Sprite playerSprite = Assemblies.AssemblyManager.GetSpriteByFullName("SmlSprites.Players.PlayerMario");
+			playerSprite.Initialize(this);
+			playerSprite.LoadContent();
+			playerSprite.Position = createPlayerAt;
+			SpritesToAddOnNextFrame.Add(playerSprite);
+			CameraSystem.TrackingObjects.Add(playerSprite);
+		}
+
+		/// <summary>
+		/// Removes a sprite from this section.
+		/// </summary>
+		/// <param name="sprite">The sprite to remove.</param>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="sprite"/> reference is null.</exception>
+		public void RemoveSprite(Sprite sprite)
+		{
+			if (sprite == null) { throw new ArgumentNullException(nameof(sprite), "The sprite to remove from the section was not null."); }
+
+			Sprites.Remove(sprite);
+			SpritesGrid.Remove(sprite);
+		}
+
+		/// <summary>
+		/// Removes a tile from this section and all layers it may be in.
+		/// </summary>
+		/// <param name="tile">The tile to remove.</param>
+		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="tile"/> reference is null.</exception>
+		public void RemoveTile(Tile tile)
+		{
+			if (tile == null) { throw new ArgumentNullException(nameof(tile), "The tile to remove from the section was null."); }
+
+			Tiles.Remove(tile);
+			Layers.ForEach(l => l.RemoveTile(tile));
 		}
 
 		/// <summary>
@@ -221,37 +354,62 @@ namespace SMLimitless.Sprites.Collections
 
 			stopwatch.Stop();
 		}
-
-		/// <summary>
-		/// Moves sprites according to their velocity and performs collision detection and resolution.
-		/// </summary>
-		private void UpdatePhysics()
+		internal void CollisionDebugSelectSprite(Sprite sprite)
 		{
-			collisionDebugCollidedTiles.Clear();
-			float delta = GameServices.GameTime.GetElapsedSeconds();    // The number of seconds that have elapsed since the last Update call.
+			if (sprite == null) { throw new ArgumentNullException(nameof(sprite), "The sprite to select for collision debugging was null."); }
 
-			foreach (Sprite sprite in Sprites)
+			CollisionDebugSelectedSprite = sprite;
+			CameraSystem.TrackingObjects.Clear();
+			CameraSystem.TrackingObjects.Add(sprite);
+			GameServices.CollisionDebuggerForm.SelectedSprite = sprite;
+		}
+		private void AddSpritesToAddOnNextFrame()
+		{
+			if (SpritesToAddOnNextFrame.Any())
 			{
-				if (sprite.TileCollisionMode == SpriteCollisionMode.NoCollision) { continue; }
-
-				Vector2 spritePositionWithoutResolutions = sprite.Position;
-				Vector2 initialSpritePosition = sprite.Position;
-				sprite.IsOnGround = false;
-
-				int numberOfCollidingTiles = 0;
-				bool slopeCollisionOccurred = false;
-
-				ResolveSpriteCollisionWithSlopes(sprite, delta, ref spritePositionWithoutResolutions, ref numberOfCollidingTiles, out slopeCollisionOccurred);
-				ResolveSpriteHorizontalCollision(sprite, delta, ref spritePositionWithoutResolutions, ref numberOfCollidingTiles, slopeCollisionOccurred);
-				ResolveSpriteVerticalCollision(sprite, delta, ref spritePositionWithoutResolutions, ref numberOfCollidingTiles, slopeCollisionOccurred);
-				SnapToGround(sprite);
-
-				var spritesNear = SpritesGrid.GetItemsNearItem(sprite).ToList();
-				spritesNearSpriteCount += spritesNear.Count();
-				ResolveSpriteSpriteCollisions(sprite, spritesNear, sprite.Position - initialSpritePosition);
+				SpritesToAddOnNextFrame.ForEach(s => AddSprite(s));
+				SpritesToAddOnNextFrame.Clear();
 			}
+		}
 
-			debugText = $"Intersect Calls: {intersectionDepthCalls}, Sprite Collision Calls: {spriteCollisionCallsMade}, Near: {spritesNearSpriteCount}, Sprites: {Sprites.Count()}";
+		private void DrawCollisionDebug()
+		{
+			if (GameServices.CollisionDebuggerActive && CollisionDebugSelectedSprite != null)
+			{
+				// Draw a rectangle outline around the selected sprite.
+				GameServices.SpriteBatch.DrawRectangleEdges(CollisionDebugSelectedSprite.Hitbox.ToRectangle(), Color.Red);
+
+				// Draw the hitbox of every collided tile.
+				foreach (Tile tile in collisionDebugCollidedTiles)
+				{
+					if (tile.TileShape == CollidableShape.Rectangle)
+					{
+						GameServices.SpriteBatch.DrawRectangleEdges(((BoundingRectangle)tile.Hitbox).ToRectangle(), Color.LimeGreen);
+					}
+					else if (tile.TileShape == CollidableShape.RightTriangle)
+					{
+						((RightTriangle)tile.Hitbox).Draw(false);
+					}
+				}
+			}
+		}
+
+		private IEnumerable<Layer> GetLayersIntersectingRectangle(BoundingRectangle rectangle)
+		{
+			foreach (Layer layer in Layers)
+			{
+				if (rectangle.IntersectsIncludingEdges(layer.Bounds))
+				{
+					yield return layer;
+				}
+			}
+		}
+
+		private void InitializeCollisionDebugging()
+		{
+			GameServices.CollisionDebuggerForm.Section = this;
+			SpritesGrid.Add(selectorSprite);
+			isCollisionDebuggingInitialized = true;
 		}
 
 		private void ResolveSpriteCollisionWithSlopes(Sprite sprite, float delta, ref Vector2 spritePositionWithoutResolutions, ref int numberOfCollidingTiles, out bool slopeCollisionOccurred)
@@ -374,6 +532,47 @@ namespace SMLimitless.Sprites.Collections
 			}
 		}
 
+		private void ResolveSpriteSpriteCollisions(Sprite sprite, IEnumerable<Sprite> nearbySprites, Vector2 tileCollisionOffset)
+		{
+			if (sprite.SpriteCollisionMode == SpriteCollisionMode.NoCollision) { return; }
+
+			foreach (Sprite collidableSprite in nearbySprites)
+			{
+				if (collidableSprite.SpriteCollisionMode == SpriteCollisionMode.NoCollision) { continue; }
+
+				BoundingRectangle hitboxA = sprite.Hitbox;
+				BoundingRectangle hitboxB = collidableSprite.Hitbox;
+
+				Vector2 resolutionA = hitboxA.GetCollisionResolution(hitboxB);
+				Vector2 resolutionB = hitboxB.GetCollisionResolution(hitboxA);
+
+				if (!resolutionA.IsNaN() && !resolutionB.IsNaN() && !sprite.SpritesCollidedWithThisFrame.Contains(collidableSprite) && !collidableSprite.SpritesCollidedWithThisFrame.Contains(sprite))
+				{
+					Vector2 resolutionDistance = hitboxA.GetCollisionResolution(resolutionA);
+
+					// Move the sprite out of the other sprite if we don't move it into a tile.
+					if (sprite.SpriteCollisionMode == SpriteCollisionMode.OffsetNotify || sprite.SpriteCollisionMode == SpriteCollisionMode.OffsetOnly)
+					{
+						//if (Math.Sign(resolutionDistance.X) == Math.Sign(tileCollisionOffset.X)) { sprite.Position = new Vector2((sprite.Position.X + resolutionDistance.X), sprite.Position.Y); }
+						//if (Math.Sign(resolutionDistance.Y) == Math.Sign(tileCollisionOffset.Y)) { sprite.Position = new Vector2(sprite.Position.X, (sprite.Position.Y + resolutionDistance.Y)); }
+						sprite.SpritesCollidedWithThisFrame.Add(collidableSprite);
+					}
+
+					if (sprite.SpriteCollisionMode == SpriteCollisionMode.OffsetNotify || sprite.SpriteCollisionMode == SpriteCollisionMode.NotifyOnly)
+					{
+						sprite.HandleSpriteCollision(collidableSprite, resolutionA);
+					}
+
+					if (collidableSprite.SpriteCollisionMode == SpriteCollisionMode.OffsetNotify || collidableSprite.SpriteCollisionMode == SpriteCollisionMode.NotifyOnly)
+					{
+						collidableSprite.HandleSpriteCollision(sprite, resolutionB);
+					}
+
+					collidableSprite.SpritesCollidedWithThisFrame.Add(sprite);
+				}
+			}
+		}
+
 		private void ResolveSpriteVerticalCollision(Sprite sprite, float delta, ref Vector2 spritePositionWithoutResolutions, ref int numberOfCollidingTiles, bool slopeCollisionOccurred)
 		{
 			int resolutionDirection = 0;
@@ -405,7 +604,6 @@ namespace SMLimitless.Sprites.Collections
 								continue;
 							}
 
-
 							if (resolutionDirection == 0 || Math.Sign(resolutionDirection) == Math.Sign(resolutionDistance.Y))  // If there has been no other vertical collision, or the last vertical resolution was in the same direction as this one...
 							{
 								resolutionDirection = Math.Sign(resolutionDistance.Y);                                      // The resolution direction is equal to the sign of the resolution distance (up = negative, down = positive).
@@ -429,50 +627,6 @@ namespace SMLimitless.Sprites.Collections
 			}
 		}
 
-		private void ResolveSpriteSpriteCollisions(Sprite sprite, IEnumerable<Sprite> nearbySprites, Vector2 tileCollisionOffset)
-		{
-			if (sprite.SpriteCollisionMode == SpriteCollisionMode.NoCollision) { return; }
-
-			foreach (Sprite collidableSprite in nearbySprites)
-			{
-				if (collidableSprite.SpriteCollisionMode == SpriteCollisionMode.NoCollision) { continue; }
-
-				BoundingRectangle hitboxA = sprite.Hitbox;
-				BoundingRectangle hitboxB = collidableSprite.Hitbox;
-
-				Vector2 resolutionA = hitboxA.GetCollisionResolution(hitboxB);
-				Vector2 resolutionB = hitboxB.GetCollisionResolution(hitboxA);
-				intersectionDepthCalls += 2;
-
-				if (!resolutionA.IsNaN() && !resolutionB.IsNaN() && !sprite.SpritesCollidedWithThisFrame.Contains(collidableSprite) && !collidableSprite.SpritesCollidedWithThisFrame.Contains(sprite))
-				{
-					Vector2 resolutionDistance = hitboxA.GetCollisionResolution(resolutionA);
-
-					// Move the sprite out of the other sprite if we don't move it into a tile.
-					if (sprite.SpriteCollisionMode == SpriteCollisionMode.OffsetNotify || sprite.SpriteCollisionMode == SpriteCollisionMode.OffsetOnly)
-					{
-						//if (Math.Sign(resolutionDistance.X) == Math.Sign(tileCollisionOffset.X)) { sprite.Position = new Vector2((sprite.Position.X + resolutionDistance.X), sprite.Position.Y); }
-						//if (Math.Sign(resolutionDistance.Y) == Math.Sign(tileCollisionOffset.Y)) { sprite.Position = new Vector2(sprite.Position.X, (sprite.Position.Y + resolutionDistance.Y)); }
-						sprite.SpritesCollidedWithThisFrame.Add(collidableSprite);
-					}
-
-					if (sprite.SpriteCollisionMode == SpriteCollisionMode.OffsetNotify || sprite.SpriteCollisionMode == SpriteCollisionMode.NotifyOnly)
-					{
-						sprite.HandleSpriteCollision(collidableSprite, resolutionA);
-						spriteCollisionCallsMade++;
-					}
-
-					if (collidableSprite.SpriteCollisionMode == SpriteCollisionMode.OffsetNotify || collidableSprite.SpriteCollisionMode == SpriteCollisionMode.NotifyOnly)
-					{
-						collidableSprite.HandleSpriteCollision(sprite, resolutionB);
-						spriteCollisionCallsMade++;
-					}
-
-					collidableSprite.SpritesCollidedWithThisFrame.Add(sprite);
-				}
-			}
-		}
-
 		private void SnapToGround(Sprite sprite)
 		{
 			//if (!sprite.IsOnGround) { return; }
@@ -487,16 +641,8 @@ namespace SMLimitless.Sprites.Collections
 			//}
 		}
 
-		private void UpdateCollisionDebuggerInfo(Sprite sprite, int numberOfCollidingTiles, bool slopeCollisionOccurred, Vector2 totalOffset)
-		{
-			if (sprite == CollisionDebugSelectedSprite && GameServices.CollisionDebuggerActive)
-			{
-				GameServices.CollisionDebuggerForm.Update(numberOfCollidingTiles, slopeCollisionOccurred, totalOffset);
-			}
-		}
-
 		private void TempUpdate()
-		{ 
+		{
 			if (InputManager.IsNewKeyPress(Keys.OemTilde))
 			{
 				if (!GameServices.DebugForm.Visible) { GameServices.DebugForm.Show(); }
@@ -523,151 +669,6 @@ namespace SMLimitless.Sprites.Collections
 			// debugText = $"{MousePosition.X}, {MousePosition.Y}";
 			Tile tileUnderCursor = (!MousePosition.IsNaN()) ? GetTileAtPosition(MousePosition) : null;
 			if (GameServices.CollisionDebuggerActive) { GameServices.CollisionDebuggerForm.SetTileInfo(tileUnderCursor); }
-		}
-
-		/// <summary>
-		/// Draws the game objects in this section.
-		/// </summary>
-		public void Draw()
-		{
-			Background.Draw();
-			foreach (Tile tile in Tiles)
-			{
-				tile.Draw();
-				if (GameServices.CollisionDebuggerActive && tile.BreakOnCollision) { GameServices.SpriteBatch.DrawRectangle(tile.Hitbox.Bounds.ToRectangle(), Color.Red); }
-			}
-			foreach (Sprite sprite in SpritesGrid)
-			{
-				sprite.Draw();
-				if (GameServices.CollisionDebuggerActive && sprite.BreakOnCollision) { GameServices.SpriteBatch.DrawRectangleEdges(sprite.Hitbox.ToRectangle(), Color.DarkRed); }
-			}
-
-			editorSelectedObject.Draw();
-			CameraSystem.Draw(debug: false);
-			//Sprites.DrawCells();
-			GameServices.DebugFont.DrawString(debugText, new Vector2(120f, 16f), 1f);
-			DrawCollisionDebug();
-			irisEffect.Draw();
-		}
-
-		/// <summary>
-		/// Gets the tile at a given position on the topmost layer.
-		/// </summary>
-		/// <param name="position">The position to get the tile at.</param>
-		/// <returns>A <see cref="Tile"/> instance, or null if there is no tile at <paramref name="position"/>.</returns>
-		public Tile GetTileAtPosition(Vector2 position)
-		{
-			// Gets a tile from the topmost layer at the given position.
-			// One layer is above another if its index within the Layers list is higher.
-			// The MainLayer is always the lowest layer.
-
-			int highestIndex = Layers.Count - 1;
-			for (int i = highestIndex; i >= 0; i--)
-			{
-				Layer layer = Layers[i];
-				if (!layer.Bounds.IntersectsIncludingEdges(position)) { continue; }
-				Tile tile = layer.GetTile(layer.GetCellNumberAtPosition(position));
-				if (tile != null) { return tile; }
-			}
-
-			return null;
-		}
-
-		private IEnumerable<Layer> GetLayersIntersectingRectangle(BoundingRectangle rectangle)
-		{
-			foreach (Layer layer in Layers)
-			{
-				if (rectangle.IntersectsIncludingEdges(layer.Bounds))
-				{
-					yield return layer;
-				}
-			}
-		}
-
-		/// <summary>
-		/// Adds a <see cref="Tile"/> to this section and to the main layer.
-		/// </summary>
-		/// <param name="tile">The tile to add.</param>
-		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="tile"/> reference is null.</exception>
-		public void AddTile(Tile tile)
-		{
-			if (tile == null)
-			{
-				throw new ArgumentNullException(nameof(tile), "The tile to add to the section was null.");
-			}
-
-			if (!tile.Position.IsNaN() && MainLayer.GetTile(MainLayer.GetCellNumberAtPosition(tile.Position)) == null)
-			{
-				Tiles.Add(tile);
-				if (!MainLayer.Tiles.Contains(tile)) { MainLayer.AddTile(tile); }
-			}
-		}
-
-		/// <summary>
-		/// Adds a <see cref="Sprite"/> to this section.
-		/// </summary>
-		/// <param name="sprite">The sprite to add.</param>
-		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="sprite"/> reference is null.</exception>
-		public void AddSprite(Sprite sprite)
-		{
-			if (sprite == null)
-			{
-				throw new ArgumentNullException(nameof(sprite), "The sprite to add to the section was null.");
-			}
-
-			Sprites.Add(sprite);
-			SpritesGrid.Add(sprite);
-			MainLayer.AddSprite(sprite);
-		}
-
-		/// <summary>
-		/// Sets a sprite to be added to the section on the next frame.
-		/// </summary>
-		/// <param name="sprite">The sprite to add.</param>
-		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="sprite"/> reference is null.</exception>
-		public void AddSpriteOnNextFrame(Sprite sprite)
-		{
-			if (sprite == null)
-			{
-				throw new ArgumentNullException(nameof(sprite), "The sprite to add to the section was null.");
-			}
-
-			SpritesToAddOnNextFrame.Add(sprite);
-		}
-
-		private void AddSpritesToAddOnNextFrame()
-		{
-			if (SpritesToAddOnNextFrame.Any())
-			{
-				SpritesToAddOnNextFrame.ForEach(s => AddSprite(s));
-				SpritesToAddOnNextFrame.Clear();
-			}
-		}
-
-		/// <summary>
-		/// Removes a tile from this section and all layers it may be in.
-		/// </summary>
-		/// <param name="tile">The tile to remove.</param>
-		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="tile"/> reference is null.</exception>
-		public void RemoveTile(Tile tile)
-		{
-			if (tile == null) { throw new ArgumentNullException(nameof(tile), "The tile to remove from the section was null."); }
-
-			Tiles.Remove(tile);
-			Layers.ForEach(l => l.RemoveTile(tile));
-		}
-
-		/// <summary>
-		/// Removes a sprite from this section.
-		/// </summary>
-		/// <param name="sprite">The sprite to remove.</param>
-		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="sprite"/> reference is null.</exception>
-		public void RemoveSprite(Sprite sprite)
-		{
-			if (sprite == null) { throw new ArgumentNullException(nameof(sprite), "The sprite to remove from the section was not null."); }
-
-			Sprites.Remove(sprite);
-			SpritesGrid.Remove(sprite);
 		}
 
 		private void ToggleEditor()
@@ -705,13 +706,6 @@ namespace SMLimitless.Sprites.Collections
 			}
 		}
 
-		private void InitializeCollisionDebugging()
-		{
-			GameServices.CollisionDebuggerForm.Section = this;
-			SpritesGrid.Add(selectorSprite);
-			isCollisionDebuggingInitialized = true;
-		}
-
 		private void UninitializeCollisionDebugging()
 		{
 			selectorSprite.RemoveOnNextFrame = true;
@@ -722,40 +716,50 @@ namespace SMLimitless.Sprites.Collections
 		{
 			if (GameServices.CollisionDebuggerActive)
 			{
-				
 			}
 		}
 
-		private void DrawCollisionDebug()
+		private void UpdateCollisionDebuggerInfo(Sprite sprite, int numberOfCollidingTiles, bool slopeCollisionOccurred, Vector2 totalOffset)
 		{
-			if (GameServices.CollisionDebuggerActive && CollisionDebugSelectedSprite != null)
+			if (sprite == CollisionDebugSelectedSprite && GameServices.CollisionDebuggerActive)
 			{
-				// Draw a rectangle outline around the selected sprite.
-				GameServices.SpriteBatch.DrawRectangleEdges(CollisionDebugSelectedSprite.Hitbox.ToRectangle(), Color.Red);
-
-				// Draw the hitbox of every collided tile.
-				foreach (Tile tile in collisionDebugCollidedTiles)
-				{
-					if (tile.TileShape == CollidableShape.Rectangle)
-					{
-						GameServices.SpriteBatch.DrawRectangleEdges(((BoundingRectangle)tile.Hitbox).ToRectangle(), Color.LimeGreen);
-					}
-					else if (tile.TileShape == CollidableShape.RightTriangle)
-					{
-						((RightTriangle)tile.Hitbox).Draw(false);
-					}
-				}
+				GameServices.CollisionDebuggerForm.Update(numberOfCollidingTiles, slopeCollisionOccurred, totalOffset);
 			}
 		}
 
-		internal void CollisionDebugSelectSprite(Sprite sprite)
+		/// <summary>
+		/// Moves sprites according to their velocity and performs collision detection and resolution.
+		/// </summary>
+		private void UpdatePhysics()
 		{
-			if (sprite == null) { throw new ArgumentNullException(nameof(sprite), "The sprite to select for collision debugging was null."); }
+			collisionDebugCollidedTiles.Clear();
+			float delta = GameServices.GameTime.GetElapsedSeconds();    // The number of seconds that have elapsed since the last Update call.
 
-			CollisionDebugSelectedSprite = sprite;
-			CameraSystem.TrackingObjects.Clear();
-			CameraSystem.TrackingObjects.Add(sprite);
-			GameServices.CollisionDebuggerForm.SelectedSprite = sprite;
+			foreach (Sprite sprite in Sprites)
+			{
+				if (sprite.TileCollisionMode == SpriteCollisionMode.NoCollision)
+				{
+					sprite.Position += sprite.Velocity * delta;
+					continue;
+				}
+
+				Vector2 spritePositionWithoutResolutions = sprite.Position;
+				Vector2 initialSpritePosition = sprite.Position;
+				sprite.IsOnGround = false;
+
+				int numberOfCollidingTiles = 0;
+				bool slopeCollisionOccurred = false;
+
+				ResolveSpriteCollisionWithSlopes(sprite, delta, ref spritePositionWithoutResolutions, ref numberOfCollidingTiles, out slopeCollisionOccurred);
+				ResolveSpriteHorizontalCollision(sprite, delta, ref spritePositionWithoutResolutions, ref numberOfCollidingTiles, slopeCollisionOccurred);
+				ResolveSpriteVerticalCollision(sprite, delta, ref spritePositionWithoutResolutions, ref numberOfCollidingTiles, slopeCollisionOccurred);
+				SnapToGround(sprite);
+
+				var spritesNear = SpritesGrid.GetItemsNearItem(sprite).ToList();
+				ResolveSpriteSpriteCollisions(sprite, spritesNear, sprite.Position - initialSpritePosition);
+			}
+
+			debugText = $"";
 		}
 	}
 }

@@ -29,7 +29,7 @@ namespace SMLimitless.Content
         /// </summary>
         public ResourceNotFoundException() : base()
         {
-            this.LoadedPackagesStrings = new ReadOnlyCollection<string>(new List<string> { });
+			LoadedPackagesStrings = new ReadOnlyCollection<string>(new List<string> { });
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace SMLimitless.Content
         /// <param name="message">The error message that explains the reason for the exception.</param>
         public ResourceNotFoundException(string message) : base(message)
         {
-            this.LoadedPackagesStrings = new ReadOnlyCollection<string>(new List<string> { });
+			LoadedPackagesStrings = new ReadOnlyCollection<string>(new List<string> { });
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace SMLimitless.Content
         /// (Nothing in Visual Basic) if no inner exception is specified.</param>
         public ResourceNotFoundException(string message, Exception innerException) : base(message, innerException)
         {
-            this.LoadedPackagesStrings = new ReadOnlyCollection<string>(new List<string> { });
+			LoadedPackagesStrings = new ReadOnlyCollection<string>(new List<string> { });
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace SMLimitless.Content
                 packageStrings.Add(package.ToString());
             }
 
-            this.LoadedPackagesStrings = new ReadOnlyCollection<string>(packageStrings);
+			LoadedPackagesStrings = new ReadOnlyCollection<string>(packageStrings);
         }
 
         /// <summary>

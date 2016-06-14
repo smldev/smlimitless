@@ -34,12 +34,12 @@ namespace SMLimitless.Sprites.Components
 		/// <summary>
 		/// An event that is raised when this sprite is damaged.
 		/// </summary>
-		public event EventHandler<int> SpriteDamage;
+		public event EventHandler<SpriteDamagedEventArgs> SpriteDamage;
 
 		/// <summary>
 		/// An event that is raised when this sprite is killed (hit points become 0).
 		/// </summary>
-		public event EventHandler<int> SpriteKilled;
+		public event EventHandler<SpriteDamagedEventArgs> SpriteKilled;
 
 		/// <summary>
 		/// An event that is raised when this sprite is healed.
@@ -82,12 +82,12 @@ namespace SMLimitless.Sprites.Components
 			if (hpAmount >= HitPoints)
 			{
 				HitPoints = 0;
-				OnSpriteDeath();
+				OnSpriteDeath(damageType);
 			}
 			else
 			{
 				HitPoints -= hpAmount;
-				OnSpriteDamaged();
+				OnSpriteDamaged(damageType);
 			}
 		}
 
@@ -110,19 +110,19 @@ namespace SMLimitless.Sprites.Components
 			OnSpriteHealed();
 		}
 
-		private void OnSpriteDamaged()
+		private void OnSpriteDamaged(string damageType)
 		{
 			if (SpriteDamage != null)
 			{
-				SpriteDamage(this, HitPoints);
+				SpriteDamage(this, new SpriteDamagedEventArgs(damageType, HitPoints));
 			}
 		}
 
-		private void OnSpriteDeath()
+		private void OnSpriteDeath(string damageType)
 		{
 			if (SpriteKilled != null)
 			{
-				SpriteKilled(this, 0);
+				SpriteKilled(this, new SpriteDamagedEventArgs(damageType, 0));
 			}
 		}
 
@@ -132,6 +132,18 @@ namespace SMLimitless.Sprites.Components
 			{
 				SpriteHealed(this, HitPoints);
 			}
+		}
+	}
+
+	public sealed class SpriteDamagedEventArgs : EventArgs
+	{
+		public string DamageType { get; private set; }
+		public int RemainingHitPoints { get; private set; }
+
+		public SpriteDamagedEventArgs(string damageType, int remainingHitPoints)
+		{
+			DamageType = damageType;
+			RemainingHitPoints = remainingHitPoints;
 		}
 	}
 }

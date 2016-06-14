@@ -28,12 +28,17 @@ namespace SMLimitless.Collections
 		/// <param name="bottomRight">The two-dimensional, zero-based index of the bottom-right corner of the range's cells.</param>
 		public SparseCellRange(Point topLeft, Point bottomRight)
 		{
-			// TODO: add parameter validation
+			// TODO: add parameter validation.
 
 			TopLeft = topLeft;
 			BottomRight = bottomRight;
 		}
 
+		/// <summary>
+		/// Determines if a given object is equal to this object.
+		/// </summary>
+		/// <param name="obj">The object to compare.</param>
+		/// <returns>True if the object is a <see cref="SparseCellRange"/> and all properties are equal. False if otherwise.</returns>
 		public override bool Equals(object obj)
 		{
 			if (!(obj is SparseCellRange)) { return false; }
@@ -44,6 +49,11 @@ namespace SMLimitless.Collections
 			}
 		}
 
+		/// <summary>
+		/// Determines if a given <see cref="SparseCellRange"/> is equal to this range.
+		/// </summary>
+		/// <param name="range">The range to compare.</param>
+		/// <returns>True if all properties are equal, false if otherwise.</returns>
 		public bool Equals(SparseCellRange range)
 		{
 			return TopLeft == range.TopLeft && BottomRight == range.BottomRight;

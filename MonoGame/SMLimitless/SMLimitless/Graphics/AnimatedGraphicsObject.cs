@@ -82,17 +82,6 @@ namespace SMLimitless.Graphics
         /// The field containing the animation cycle length.
         /// </summary>
         private decimal animationCycleLength;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AnimatedGraphicsObject"/> class.
-        /// </summary>
-        public AnimatedGraphicsObject()
-        {
-            this.textures = new List<Texture2D>();
-            this.CgoSourceRects = new List<Rectangle>();
-            this.IsRunning = true;
-        }
-
         /// <summary>
         /// Gets or sets a value indicating whether the object runs through the textures.
         /// </summary>
@@ -113,18 +102,18 @@ namespace SMLimitless.Graphics
         {
             get
             {
-                return this.animationCycleLength;
+                return animationCycleLength;
             }
 
             set
             {
-                if (value < ((1m / 60m) * this.textures.Count))
+                if (value < ((1m / 60m) * textures.Count))
                 {
-                    this.animationCycleLength = (1m / 60m) * this.textures.Count;
+					animationCycleLength = (1m / 60m) * textures.Count;
                 }
                 else
                 {
-                    this.animationCycleLength = value;
+					animationCycleLength = value;
                 }
             }
         }
@@ -143,15 +132,25 @@ namespace SMLimitless.Graphics
         {
             get
             {
-                if (this.textures == null || this.textures.Count == 0)
+                if (textures == null || textures.Count == 0)
                 {
                     return 0;
                 }
                 else
                 {
-                    return (int)(this.AnimationCycleLength * 60m) / this.textures.Count;
+                    return (int)(AnimationCycleLength * 60m) / textures.Count;
                 }
             }
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AnimatedGraphicsObject"/> class.
+		/// </summary>
+		public AnimatedGraphicsObject()
+        {
+			textures = new List<Texture2D>();
+			CgoSourceRects = new List<Rectangle>();
+			IsRunning = true;
         }
 
         /// <summary>
@@ -172,10 +171,10 @@ namespace SMLimitless.Graphics
         /// <param name="config">A DataReader containing the configuration for this file.</param>
         public void Load(string filePath, DataReader config)
         {
-            if (!this.isLoaded)
+            if (!isLoaded)
             {
                 this.filePath = filePath;
-                this.configFilePath = config.FilePath;
+				configFilePath = config.FilePath;
 
                 if (config[0] != "[Animated]" && config[0] != "[Animated_RunOnce]")
                 {
@@ -190,13 +189,13 @@ namespace SMLimitless.Graphics
                 else
                 {
                     data = config.ReadFullSection("[Animated_RunOnce]");
-                    this.IsRunOnce = true;
+					IsRunOnce = true;
                 }
 
-                this.frameWidth = int.Parse(data["FrameWidth"]);
-                this.AnimationCycleLength = decimal.Parse(data["CycleLength"]);
+				frameWidth = int.Parse(data["FrameWidth"]);
+				AnimationCycleLength = decimal.Parse(data["CycleLength"]);
 
-                this.isLoaded = true;
+				isLoaded = true;
             }
         }
 
@@ -205,26 +204,30 @@ namespace SMLimitless.Graphics
         /// </summary>
         public void LoadContent()
         {
-            if (this.isLoaded && !this.isContentLoaded)
+            if (isLoaded && !isContentLoaded)
             {
-                Texture2D fullTexture = GraphicsManager.LoadTextureFromFile(this.filePath);
+                Texture2D fullTexture = GraphicsManager.LoadTextureFromFile(filePath);
                 int frameHeight = fullTexture.Height;
 
-                if (fullTexture.Width % this.frameWidth != 0)
+                if (fullTexture.Width % frameWidth != 0)
                 {
-                    throw new InvalidDataException(string.Format("AnimatedGraphicsObject.LoadContent(): The specified frame width for this texture is invalid. Expected texture with width divisble by {0}, got texture of width {1}.", this.frameWidth, fullTexture.Width));
+                    throw new InvalidDataException(string.Format("AnimatedGraphicsObject.LoadContent(): The specified frame width for this texture is invalid. Expected texture with width divisble by {0}, got texture of width {1}.", frameWidth, fullTexture.Width));
                 }
 
-                for (int x = 0; x < fullTexture.Width; x += this.frameWidth)
+                for (int x = 0; x < fullTexture.Width; x += frameWidth)
                 {
-                    this.textures.Add(GraphicsManager.Crop(fullTexture, new Rectangle(x, 0, this.frameWidth, frameHeight)));
-                    this.frameCount++;
+					textures.Add(GraphicsManager.Crop(fullTexture, new Rectangle(x, 0, frameWidth, frameHeight)));
+					frameCount++;
                 }
 
-                this.isContentLoaded = true;
+				isContentLoaded = true;
             }
         }
 
+		/// <summary>
+		/// Gets the graphics for this object to be displayed on editor buttons.
+		/// </summary>
+		/// <returns>A <see cref="Texture2D"/> instance of the first frame of the object.</returns>
 		public Texture2D GetEditorGraphics()
 		{
 			return textures[0];
@@ -235,29 +238,29 @@ namespace SMLimitless.Graphics
         /// </summary>
         public void Update()
         {
-            if (this.IsRunning)
+            if (IsRunning)
             {
-                this.renderedFramesElapsed++;
-                if (this.renderedFramesElapsed == this.FrameTime)
+				renderedFramesElapsed++;
+                if (renderedFramesElapsed == FrameTime)
                 {
-                    if (this.frameIndex == this.frameCount)
+                    if (frameIndex == frameCount)
                     {
-                        if (this.IsRunOnce)
+                        if (IsRunOnce)
                         {
-                            this.IsRunning = false;
+							IsRunning = false;
                             return;
                         }
                         else
                         {
-                            this.frameIndex = 0;
+							frameIndex = 0;
                         }
                     }
                     else
                     {
-                        this.frameIndex++;
+						frameIndex++;
                     }
 
-                    this.renderedFramesElapsed = 0;
+					renderedFramesElapsed = 0;
                 }
             }
         }
@@ -269,7 +272,7 @@ namespace SMLimitless.Graphics
         /// <param name="color">The color to shade this object. Use Color.White for no shading.</param>
         public void Draw(Vector2 position, Color color)
         {
-            GameServices.SpriteBatch.Draw(this.textures[this.frameIndex], position, color);
+            GameServices.SpriteBatch.Draw(textures[frameIndex], position, color);
         }
 
         /// <summary>
@@ -280,7 +283,7 @@ namespace SMLimitless.Graphics
         /// <param name="spriteEffects">How to mirror this object.</param>
         public void Draw(Vector2 position, Color color, SpriteEffects spriteEffects)
         {
-            GameServices.SpriteBatch.Draw(this.textures[this.frameIndex], position, color, spriteEffects);
+            GameServices.SpriteBatch.Draw(textures[frameIndex], position, color, spriteEffects);
         }
 
         /// <summary>
@@ -291,10 +294,10 @@ namespace SMLimitless.Graphics
         /// <param name="debug">If true, the frame index will be drawn in the top-left corner of the sprite.</param>
         public void Draw(Vector2 position, Color color, bool debug)
         {
-            this.Draw(position, color);
+			Draw(position, color);
             if (debug)
             {
-                GameServices.DebugFont.DrawString(this.frameIndex.ToString(), position);
+                GameServices.DebugFont.DrawString(frameIndex.ToString(), position);
             }
         }
 
@@ -307,10 +310,10 @@ namespace SMLimitless.Graphics
         /// /// <param name="debug">If true, the frame index will be drawn in the top-left corner of the sprite.</param>
         public void Draw(Vector2 position, Color color, SpriteEffects spriteEffects, bool debug)
         {
-            this.Draw(position, color, spriteEffects);
+			Draw(position, color, spriteEffects);
             if (debug)
             {
-                GameServices.DebugFont.DrawString(this.frameIndex.ToString(), position);
+                GameServices.DebugFont.DrawString(frameIndex.ToString(), position);
             }
         }
 
@@ -321,8 +324,8 @@ namespace SMLimitless.Graphics
         /// <param name="newCycleLength">The time, in seconds, each loop takes.</param>
         public void SetSpeed(decimal newCycleLength)
         {
-            this.AnimationCycleLength = newCycleLength;
-            this.renderedFramesElapsed = 0;
+			AnimationCycleLength = newCycleLength;
+			renderedFramesElapsed = 0;
         }
 
         /// <summary>
@@ -332,8 +335,8 @@ namespace SMLimitless.Graphics
         /// <param name="newFrameTime">How many rendered frames each frame is shown for.</param>
         public void SetSpeed(int newFrameTime)
         {
-            this.AnimationCycleLength = 60m / this.textures.Count;
-            this.renderedFramesElapsed = 0;
+			AnimationCycleLength = 60m / textures.Count;
+			renderedFramesElapsed = 0;
         }
 
         /// <summary>
@@ -345,14 +348,14 @@ namespace SMLimitless.Graphics
         public void AdjustSpeed(float percentage)
         {
             percentage /= 100f;
-            decimal addend = this.AnimationCycleLength * (decimal)percentage;
-            this.AnimationCycleLength += addend;
-            this.renderedFramesElapsed = 0;
+            decimal addend = AnimationCycleLength * (decimal)percentage;
+			AnimationCycleLength += addend;
+			renderedFramesElapsed = 0;
 
             // Round it to the nearest frame boundary if necessary.
-            if ((this.AnimationCycleLength * 60m) % 1 != 0)
+            if ((AnimationCycleLength * 60m) % 1 != 0)
             {
-                decimal cycleInFrames = this.AnimationCycleLength * 60m;
+                decimal cycleInFrames = AnimationCycleLength * 60m;
                 if (percentage > 0f) 
                 {
                     // If we're slowing down
@@ -369,7 +372,7 @@ namespace SMLimitless.Graphics
                     return;
                 }
 
-                this.AnimationCycleLength = cycleInFrames / 60m;
+				AnimationCycleLength = cycleInFrames / 60m;
             }
         }
 
@@ -381,11 +384,11 @@ namespace SMLimitless.Graphics
         /// <param name="startRunning">If true, the object will restart.</param>
         public void Reset(bool startRunning)
         {
-            this.renderedFramesElapsed = 0;
-            this.frameIndex = 0;
+			renderedFramesElapsed = 0;
+			frameIndex = 0;
             if (startRunning)
             {
-                this.IsRunning = true;
+				IsRunning = true;
             }
         }
 
@@ -397,15 +400,15 @@ namespace SMLimitless.Graphics
         public IGraphicsObject Clone()
         {
             var clone = new AnimatedGraphicsObject();
-            clone.filePath = this.filePath;
-            clone.configFilePath = this.configFilePath;
-            clone.textures = this.textures;
-            clone.frameCount = this.frameCount;
-            clone.frameWidth = this.frameWidth;
-            clone.AnimationCycleLength = this.AnimationCycleLength;
-            clone.IsRunOnce = this.IsRunOnce;
-            clone.isLoaded = this.isLoaded;
-            clone.isContentLoaded = this.isContentLoaded;
+            clone.filePath = filePath;
+            clone.configFilePath = configFilePath;
+            clone.textures = textures;
+            clone.frameCount = frameCount;
+            clone.frameWidth = frameWidth;
+            clone.AnimationCycleLength = AnimationCycleLength;
+            clone.IsRunOnce = IsRunOnce;
+            clone.isLoaded = isLoaded;
+            clone.isContentLoaded = isContentLoaded;
             return clone;
         }
 
@@ -416,25 +419,25 @@ namespace SMLimitless.Graphics
         /// <param name="owner">The CGO that owns this object.</param>
         internal void Load(Dictionary<string, string> section, ComplexGraphicsObject owner)
         {
-            if (!this.isLoaded)
+            if (!isLoaded)
             {
                 int frames = int.Parse(section["Frames"]);
                 Vector2 frameSize = owner.FrameSize;
-                this.filePath = owner.FilePath;
+				filePath = owner.FilePath;
                 for (int i = 0; i < frames; i++)
                 {
-                    this.CgoSourceRects.Add(Vector2Extensions.Parse(section[string.Concat("Frame", i)]).ToRectangle(frameSize));
+					CgoSourceRects.Add(Vector2Extensions.Parse(section[string.Concat("Frame", i)]).ToRectangle(frameSize));
                 }
 
                 if (section["Type"] == "animated_runonce")
                 {
-                    this.IsRunOnce = true;
+					IsRunOnce = true;
                 }
 
-                this.AnimationCycleLength = decimal.Parse(section["CycleLength"]);
-                this.cgoOwner = owner;
-                this.frameCount = frames - 1;
-                this.isLoaded = true;
+				AnimationCycleLength = decimal.Parse(section["CycleLength"]);
+				cgoOwner = owner;
+				frameCount = frames - 1;
+				isLoaded = true;
             }
         }
 
@@ -444,14 +447,14 @@ namespace SMLimitless.Graphics
         /// <param name="fileTexture">The texture of the ComplexGraphicsObject to take the textures from.</param>
         internal void LoadContentCGO(Texture2D fileTexture)
         {
-            if (this.isLoaded && !this.isContentLoaded && this.CgoSourceRects.Any())
+            if (isLoaded && !isContentLoaded && CgoSourceRects.Any())
             {
-                foreach (Rectangle sourceRect in this.CgoSourceRects)
+                foreach (Rectangle sourceRect in CgoSourceRects)
                 {
-                    this.textures.Add(fileTexture.Crop(sourceRect));
+					textures.Add(fileTexture.Crop(sourceRect));
                 }
 
-                this.isContentLoaded = true;
+				isContentLoaded = true;
             }
         }
 
@@ -461,9 +464,9 @@ namespace SMLimitless.Graphics
         /// <returns>The size of the object.</returns>
         public Vector2 GetSize()
         {
-            if (this.isContentLoaded)
+            if (isContentLoaded)
             {
-                return new Vector2(this.textures[0].Width, this.textures[0].Height);
+                return new Vector2(textures[0].Width, textures[0].Height);
             }
             else
             {

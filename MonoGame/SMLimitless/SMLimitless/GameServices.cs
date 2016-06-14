@@ -5,8 +5,6 @@
 //-----------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -14,20 +12,20 @@ using SMLimitless.Debug;
 using SMLimitless.Forms;
 using SMLimitless.Graphics;
 using SMLimitless.Physics;
-    
+
 namespace SMLimitless
 {
-    /// <summary>
-    /// Provides global access to game services.
-    /// </summary>
-    public static class GameServices
+	/// <summary>
+	/// Provides global access to game services.
+	/// </summary>
+	public static class GameServices
     {
         private static GameServiceContainer container;
 
         /// <summary>
         /// Gets the GameServicesContainer that stores references to the services added.
         /// </summary>
-        public static GameServiceContainer Container
+        internal static GameServiceContainer Container
         {
             get
             {

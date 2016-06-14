@@ -264,6 +264,22 @@ namespace SMLimitless.Sprites
 			}
 		}
 
+		/// <summary>
+		/// Gets the component of a certain type.
+		/// </summary>
+		/// <typeparam name="T">The type of component to return.</typeparam>
+		/// <param name="componentType">The type of component to return</param>
+		/// <returns>The component of the given type, or null if there is no such component.</returns>
+		public T GetComponent<T>() where T : SpriteComponent
+		{
+			SpriteComponent result = Components.FirstOrDefault(c => c.GetType() == typeof(T));
+			if (result != null)
+			{
+				return (T)result;
+			}
+			return null;
+		}
+
 		#region Core Gameobject Methods
         /// <summary>
         /// Initializes this sprite.

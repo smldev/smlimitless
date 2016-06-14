@@ -8,8 +8,16 @@ using SMLimitless.IO;
 
 namespace SMLimitless.Content
 {
+	/// <summary>
+	/// Provides support for reading content override description files.
+	/// </summary>
 	internal static class OverrideReader
 	{
+		/// <summary>
+		/// Reads a list of overrides from a content override description file.
+		/// </summary>
+		/// <param name="overridesFilePath">The path to the content override description file.</param>
+		/// <returns>A dictionary mapping level filenames to lists of folder names.</returns>
 		public static Dictionary<string, List<string>> GetOverridesFromFile(string overridesFilePath)
 		{
 			if (!File.Exists(overridesFilePath)) { throw new FileNotFoundException($"Tried to load a content overrides file, but it doesn't exist or the path is invalid. (Path: {overridesFilePath})"); }

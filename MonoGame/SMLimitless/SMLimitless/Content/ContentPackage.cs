@@ -43,12 +43,12 @@ namespace SMLimitless.Content
         public string Name { get; private set; }
 
         /// <summary>
-        /// Gets the path to the folder of this content package.
+        /// Gets the absolute path to the folder of this content package.
         /// </summary>
         internal string BaseFolderPath { get; private set; }
 
         /// <summary>
-        /// Gets the path to the custom content assembly file.
+        /// Gets the absolute path to the custom content assembly file.
         /// </summary>
         internal string AssemblyPath { get; private set; }
 

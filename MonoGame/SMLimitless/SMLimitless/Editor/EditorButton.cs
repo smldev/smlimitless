@@ -24,6 +24,19 @@ namespace SMLimitless.Editor
 	[Obsolete]
     public struct EditorButton
     {
+		/// <summary>
+		/// The texture on which the button's image is present.
+		/// </summary>
+		private Texture2D buttonSourceTexture;
+
+		/// <summary>
+		/// The part of the texture containing the button's image.
+		/// </summary>
+		private XnaRect textureSourceRectangle;
+
+		/// <summary>
+		/// Gets the button that this <see cref="EditorButton"/> describes.
+		/// </summary>
 		public Button Button { get; private set; }
 		
         /// <summary>
@@ -75,17 +88,6 @@ namespace SMLimitless.Editor
         /// Gets the image displayed on the button.
         /// </summary>
         public Image ButtonImage { get; private set; }
-
-        /// <summary>
-        /// The texture on which the button's image is present.
-        /// </summary>
-        private Texture2D buttonSourceTexture;
-
-        /// <summary>
-        /// The part of the texture containing the button's image.
-        /// </summary>
-        private XnaRect textureSourceRectangle;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="EditorButton"/> struct.
         /// </summary>
@@ -95,9 +97,9 @@ namespace SMLimitless.Editor
         /// <param name="height">The height of the button in pixels.</param>
         public EditorButton(int x, int y, int width, int height) : this()
         {
-            this.X = x;
-            this.Y = y;
-			this.Size = new Size(width, height);
+			X = x;
+			Y = y;
+			Size = new Size(width, height);
         }
 
         /// <summary>
@@ -124,11 +126,11 @@ namespace SMLimitless.Editor
                 throw new ArgumentException("EditorButton.SetImage(source, sourceRectangle): Part or all of the source rectangle falls outside of the source texture. Please provide a rectangle within the source texture.", "sourceRectangle");
             }
 
-            this.buttonSourceTexture = source;
-            this.textureSourceRectangle = sourceRectangle;
+			buttonSourceTexture = source;
+			textureSourceRectangle = sourceRectangle;
 
-            Texture2D croppedTexture = source.Crop(this.textureSourceRectangle);
-            this.ButtonImage = croppedTexture.ToImage();
+            Texture2D croppedTexture = source.Crop(textureSourceRectangle);
+			ButtonImage = croppedTexture.ToImage();
         }
     }
 }
