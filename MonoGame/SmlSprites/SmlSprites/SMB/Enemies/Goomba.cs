@@ -82,7 +82,7 @@ namespace SmlSprites.SMB.Enemies
 
 		private void HealthComponent_SpriteKilled(object sender, SpriteDamagedEventArgs e)
 		{
-			Vector2 flipVelocity = new Vector2(500f, -500f);
+			Vector2 flipVelocity = new Vector2(40f, -100f);
 
 			if (e.DamageType == SpriteDamageTypes.PlayerStomp)
 			{

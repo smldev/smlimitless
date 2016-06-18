@@ -14,7 +14,7 @@ namespace SMLimitless.Components
 		/// <summary>
 		/// Represents an action to be executed in a certain number of frames.
 		/// </summary>
-		private class ScheduledAction
+		public class ScheduledAction
 		{
 			/// <summary>
 			/// The action to execute.
@@ -41,15 +41,38 @@ namespace SMLimitless.Components
 		public static ActionScheduler Instance { get; } = new ActionScheduler();
 
 		private List<ScheduledAction> scheduledActions = new List<ScheduledAction>();
+		private List<ScheduledAction> actionsToScheduleNextFrame = new List<ScheduledAction>();
 
 		/// <summary>
 		/// Schedules an action to occur in a certain number of frames.
 		/// </summary>
 		/// <param name="action">The action to execute.</param>
 		/// <param name="framesUntilExecution">The number of frames until the action is executed.</param>
-		public void ScheduleAction(Action action, int framesUntilExecution)
+		public ScheduledAction ScheduleAction(Action action, int framesUntilExecution)
 		{
-			scheduledActions.Add(new ScheduledAction(action, framesUntilExecution));
+			var result = new ScheduledAction(action, framesUntilExecution);
+			scheduledActions.Add(result);
+			return result;
+		}
+
+		public ScheduledAction ScheduleActionOnNextFrame(Action action, int framesUntilExecution)
+		{
+			var result = new ScheduledAction(action, framesUntilExecution);
+			actionsToScheduleNextFrame.Add(result);
+			return result;
+		}
+
+		public bool CancelScheduledAction(ScheduledAction action)
+		{
+			if (scheduledActions.Contains(action))
+			{
+				scheduledActions.Remove(action);
+				return true;
+			}
+			else
+			{
+				return actionsToScheduleNextFrame.Remove(action);
+			}
 		}
 
 		/// <summary>
@@ -68,6 +91,8 @@ namespace SMLimitless.Components
 			}
 
 			scheduledActions.RemoveAll(s => s.FramesUntilExecution == 0);
+			scheduledActions.AddRange(actionsToScheduleNextFrame);
+			actionsToScheduleNextFrame.Clear();
 		}
 	}
 }

@@ -3044,13 +3044,19 @@
             The initial velocity that the sprite has. 
             </summary>
         </member>
-        <member name="M:SMLimitless.Sprites.Components.WalkerComponent.#ctor(SMLimitless.Sprites.Sprite,SMLimitless.Sprites.SpriteDirection,System.Single)">
+        <member name="P:SMLimitless.Sprites.Components.WalkerComponent.TurnOnEdges">
+            <summary>
+            Gets a flag indicating whether this sprite turns when it crosses an edge.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Sprites.Components.WalkerComponent.#ctor(SMLimitless.Sprites.Sprite,SMLimitless.Sprites.SpriteDirection,System.Single,System.Boolean)">
             <summary>
             Initializes a new instance of the <see cref="T:SMLimitless.Sprites.Components.WalkerComponent"/> class.
             </summary>
             <param name="owner">The sprite that owns this component.</param>
             <param name="startingDirection">The initial direction (Left, Right, or FacePlayer) that the sprites starts out facing.</param>
             <param name="initialHorizontalVelocity">The initial velocity that the sprite has. Provide a positive value; the sign is automatically determined based on initial direction.</param>
+            <param name="turnOnEdges">A flag indicating whether this sprite turns when it crosses an edge.</param>
         </member>
         <member name="M:SMLimitless.Sprites.Components.WalkerComponent.Update">
             <summary>
@@ -3361,6 +3367,11 @@
         <member name="F:SMLimitless.Sprites.SpriteDamageTypes.PlayerStomp">
             <summary>
             The name of the PlayerStomp damage type.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.SpriteDamageTypes.ShellSpinning">
+            <summary>
+            The name of the ShellSpinning damage type.
             </summary>
         </member>
         <member name="T:SMLimitless.Sprites.Tile">

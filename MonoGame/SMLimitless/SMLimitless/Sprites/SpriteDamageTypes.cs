@@ -25,5 +25,10 @@ namespace SMLimitless.Sprites
 		/// The name of the PlayerStomp damage type.
 		/// </summary>
 		public const string PlayerStomp = "playerStomp";
+
+		/// <summary>
+		/// The name of the ShellSpinning damage type.
+		/// </summary>
+		public const string ShellSpinning = "shellSpinning";
 	}
 }

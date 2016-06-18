@@ -91,6 +91,30 @@ namespace SMLimitless.Sprites
 		/// </summary>
 		public bool IsOnGround { get; internal set; }
 
+		public Tile TileBeneathSprite
+		{
+			get
+			{
+				Vector2 checkPoint = Hitbox.BottomCenter;
+				checkPoint.Y += 1f;
+				Tile result = Owner.GetTileAtPosition(checkPoint);
+
+				if (result != null) { return result; }
+
+				checkPoint = Hitbox.BottomLeft;
+				checkPoint.Y += 1f;
+				result = Owner.GetTileAtPosition(checkPoint);
+
+				if (result != null) { return result; }
+
+				checkPoint = Hitbox.BottomRight;
+				checkPoint.Y += 1f;
+				result = Owner.GetTileAtPosition(checkPoint);
+
+				return result;
+			}
+		}
+
 		/// <summary>
 		/// Gets or sets a value indicating whether this sprite should be removed from its owner section on the next frame.
 		/// </summary>

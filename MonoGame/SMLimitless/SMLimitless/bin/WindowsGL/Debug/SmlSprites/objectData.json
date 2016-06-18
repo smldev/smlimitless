@@ -279,6 +279,16 @@
 			"customObjects": {
 				"palette": 0
 			}
+		},
+		{
+			"typeName": "SmlSprites.SMB.Enemies.KoopaTroopa",
+			"editorResourceName": "SMBKoopaTroopa",
+			"editorTextureSourceRectangle": "0, 0, 16, 16",
+			"state": 0,
+			"collision": 0,
+			"customObjects": {
+				"type": 0
+			}
 		}
 	]
 }

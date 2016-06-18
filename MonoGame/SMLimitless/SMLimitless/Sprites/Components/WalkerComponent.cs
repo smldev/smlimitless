@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using SMLimitless.Extensions;
+using SMLimitless.Sprites.Collections;
 
 namespace SMLimitless.Sprites.Components
 {
@@ -14,7 +15,6 @@ namespace SMLimitless.Sprites.Components
 	public sealed class WalkerComponent : SpriteComponent
 	{
 		private Direction direction;
-		private bool spriteCollisionOnLastFrame;
 
 		private float currentVelocity;
 		private float CurrentVelocity
@@ -49,12 +49,18 @@ namespace SMLimitless.Sprites.Components
 		public float InitialHorizontalVelocity { get; }
 
 		/// <summary>
+		/// Gets a flag indicating whether this sprite turns when it crosses an edge.
+		/// </summary>
+		public bool TurnOnEdges { get; private set; }
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="WalkerComponent"/> class.
 		/// </summary>
 		/// <param name="owner">The sprite that owns this component.</param>
 		/// <param name="startingDirection">The initial direction (Left, Right, or FacePlayer) that the sprites starts out facing.</param>
 		/// <param name="initialHorizontalVelocity">The initial velocity that the sprite has. Provide a positive value; the sign is automatically determined based on initial direction.</param>
-		public WalkerComponent(Sprite owner, SpriteDirection startingDirection, float initialHorizontalVelocity)
+		/// <param name="turnOnEdges">A flag indicating whether this sprite turns when it crosses an edge.</param>
+		public WalkerComponent(Sprite owner, SpriteDirection startingDirection, float initialHorizontalVelocity, bool turnOnEdges = false)
 		{
 			Owner = owner;
 
@@ -63,6 +69,7 @@ namespace SMLimitless.Sprites.Components
 
 			direction = (StartingDirection == SpriteDirection.FacePlayer || StartingDirection == SpriteDirection.Left) ? Direction.Left : Direction.Right;
 			CurrentVelocity = initialHorizontalVelocity;
+			TurnOnEdges = turnOnEdges;
 		}
 
 		/// <summary>
@@ -70,7 +77,34 @@ namespace SMLimitless.Sprites.Components
 		/// </summary>
 		public override void Update()
 		{
-			
+			if (TurnOnEdges)
+			{
+				Section ownerSection = Owner.Owner;
+
+				Tile tileBeneathOwner = Owner.TileBeneathSprite;
+				if (tileBeneathOwner != null && (tileBeneathOwner.RectSolidSides & TileRectSolidSides.Top) != 0)
+				{
+					// There's a tile beneath this sprite. Check if we're near the edge.
+					int tileLeft = (int)tileBeneathOwner.Hitbox.Bounds.Left;
+					int tileRight = (int)tileBeneathOwner.Hitbox.Bounds.Right;
+
+					// Check to see if there's any other top-solid tile next to this tile
+					// in the direction we're travelling. If not, turn.
+					float checkPointX = (direction == Direction.Left) ? (tileLeft - 1f) : (tileRight + 1f);
+					Vector2 checkPoint = new Vector2(checkPointX, tileBeneathOwner.Hitbox.Bounds.Center.Y);
+					Tile tileBesideTile = ownerSection.GetTileAtPosition(checkPoint);
+					if (tileBesideTile == null || (tileBesideTile.RectSolidSides & TileRectSolidSides.Top) == 0)
+					{
+						int spriteCenter = (int)Owner.Hitbox.Center.X;
+						if ((direction == Direction.Left && tileLeft == spriteCenter) || 
+						(direction == Direction.Right && tileRight == spriteCenter))
+						{
+							if (direction == Direction.Left) { direction = Direction.Right; CurrentVelocity = -CurrentVelocity; }
+							else if (direction == Direction.Right) { direction = Direction.Left; CurrentVelocity = -CurrentVelocity; }
+						}
+					}
+				}
+			}
 		}
 
 		/// <summary>
@@ -94,6 +128,7 @@ namespace SMLimitless.Sprites.Components
 
 		public override void HandleSpriteCollision(Sprite collidingSprite, Vector2 resolutionDistance)
 		{
+			if (Owner.SpriteCollisionMode == SpriteCollisionMode.NoCollision || collidingSprite.SpriteCollisionMode == SpriteCollisionMode.NoCollision) { return; }
 			if (collidingSprite.Hitbox.Right > Owner.Hitbox.Left && collidingSprite.Hitbox.Left <= Owner.Hitbox.Left)
 			{
 				direction = Direction.Right;
