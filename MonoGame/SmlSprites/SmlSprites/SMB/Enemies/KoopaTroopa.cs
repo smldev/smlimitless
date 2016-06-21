@@ -28,66 +28,28 @@ namespace SmlSprites.SMB.Enemies
 		private ComplexGraphicsObject graphics;
 		private bool isFlippedOver = false;
 		private Direction facingDirection = SMLimitless.Direction.Left;
-		private KoopaType type;
-		private KoopaStatus status;
-		private ActionScheduler.ScheduledAction emergeAction = null;
+		private KoopaVariety variety;
 
-		private KoopaStatus Status
+		[DefaultValue(KoopaVariety.Green), Description("The color of this Koopa Troopa.")]
+		public KoopaVariety Variety
 		{
 			get
 			{
-				return status;
+				return variety;
 			}
 			set
 			{
-				if (value == KoopaStatus.Walking)
-				{
-					Components.Add(new WalkerComponent(this, (facingDirection == SMLimitless.Direction.Left) ? SpriteDirection.Left : SpriteDirection.Right, WalkingSpeed.Value, (Type == KoopaType.Red)));
-				}
-				else if (value == KoopaStatus.ShellSpinning)
-				{
-					Components.RemoveAll(c => c is WalkerComponent);
-					Components.Add(new WalkerComponent(this, (facingDirection == SMLimitless.Direction.Left) ? SpriteDirection.Left : SpriteDirection.Right, ShellSpinningSpeed.Value, false));
-				}
-				else
-				{
-					Components.RemoveAll(c => c is WalkerComponent);
-					Velocity = new Vector2(0f, Velocity.Y);
-				}
-				status = value;
-				SetGraphicsObject();
-			}
-		}
-
-		[DefaultValue(KoopaType.Green), Description("The color of this Koopa Troopa.")]
-		public KoopaType Type
-		{
-			get
-			{
-				return type;
-			}
-			set
-			{
-				type = value;
+				variety = value;
 				if (graphics != null)
 				{
 					graphics.CurrentObjectName = AppendTypeSuffix(graphics.CurrentObjectName.Split('_')[0]);
 				}
-
-				if (type == KoopaType.Red)
-				{
-					Components.RemoveAll(c => c is WalkerComponent);
-					Components.Add(new WalkerComponent(this, (facingDirection == SMLimitless.Direction.Left) ? SpriteDirection.Left : SpriteDirection.Right, WalkingSpeed.Value, true));
-				}
-				else
-				{
-					Components.RemoveAll(c => c is WalkerComponent); ;
-					Components.Add(new WalkerComponent(this, (facingDirection == SMLimitless.Direction.Left) ? SpriteDirection.Left : SpriteDirection.Right, WalkingSpeed.Value, false));
-				}
+				SetBehavior();
 			}
 		}
 
 		public override string EditorCategory => "Enemies";
+		public override bool IsPlayer => false;
 
 		static KoopaTroopa()
 		{
@@ -104,7 +66,7 @@ namespace SmlSprites.SMB.Enemies
 
 		public override void DeserializeCustomObjects(JsonHelper customObjects)
 		{
-			Type = (KoopaType)customObjects.GetInt("type");
+			Variety = (KoopaVariety)customObjects.GetInt("type");
 		}
 
 		public override void Initialize(Section owner)
@@ -122,6 +84,36 @@ namespace SmlSprites.SMB.Enemies
 			Components.Add(healthComponent);
 			Components.Add(new WalkerComponent(this, initialDirection, WalkingSpeed.Value));
 			Components.Add(new DamageComponent());
+
+			ChasePlayerComponent chasePlayer = new ChasePlayerComponent(this, 60);
+			chasePlayer.NearestPlayerDirectionUpdated += ChasePlayer_NearestPlayerDirectionUpdated;
+			Components.Add(chasePlayer);
+
+			ShelledEnemyComponent shelledEnemy = new ShelledEnemyComponent(this, WalkingSpeed.Value, ShellSpinningSpeed.Value, FramesUntilBeginEmerge.Value, FramesUntilEmerge.Value);
+			shelledEnemy.StateChanged += ShelledEnemy_StateChanged;
+			Components.Add(shelledEnemy);
+			SetBehavior();
+		}
+
+		private void ChasePlayer_NearestPlayerDirectionUpdated(object sender, EventArgs e)
+		{
+			ChasePlayerComponent chasePlayer = (ChasePlayerComponent)sender;
+			WalkerComponent walker = GetComponent<WalkerComponent>();
+			FlaggedDirection nearestPlayerDirection = chasePlayer.NearestPlayerDirection;
+
+			if ((nearestPlayerDirection & FlaggedDirection.Left) != 0)
+			{
+				facingDirection = walker.Direction = SMLimitless.Direction.Left;
+			}
+			else if ((nearestPlayerDirection & FlaggedDirection.Right) != 0)
+			{
+				facingDirection = walker.Direction = SMLimitless.Direction.Right;
+			}
+		}
+
+		private void ShelledEnemy_StateChanged(object sender, EventArgs e)
+		{
+			SetGraphicsObject();
 		}
 
 		private void HealthComponent_SpriteKilled(object sender, SpriteDamagedEventArgs e)
@@ -134,6 +126,28 @@ namespace SmlSprites.SMB.Enemies
 			SpriteCollisionMode = SpriteCollisionMode.NoCollision;
 			Components.Clear();
 			graphics.CurrentObjectName = AppendTypeSuffix("shell");
+		}
+
+		private void SetBehavior()
+		{
+			var shelledEnemyComponent = GetComponent<ShelledEnemyComponent>();
+			if (shelledEnemyComponent == null) { return; }
+
+			switch (Variety)
+			{
+				case KoopaVariety.Green:
+				case KoopaVariety.CaveGreen:
+					shelledEnemyComponent.Behavior = ShelledEnemyComponent.ShelledEnemyBehavior.DontTurnOnCliffs;
+					break;
+				case KoopaVariety.Red:
+					shelledEnemyComponent.Behavior = ShelledEnemyComponent.ShelledEnemyBehavior.TurnOnCliffs;
+					break;
+				case KoopaVariety.Yellow:
+					shelledEnemyComponent.Behavior = ShelledEnemyComponent.ShelledEnemyBehavior.ChasePlayer;
+					break;
+				default:
+					throw new InvalidOperationException();
+			}
 		}
 
 		public override void Draw()
@@ -155,10 +169,12 @@ namespace SmlSprites.SMB.Enemies
 			if (Velocity.X < 0f && facingDirection == SMLimitless.Direction.Right)
 			{
 				facingDirection = SMLimitless.Direction.Left;
+				GetComponent<WalkerComponent>().Direction = facingDirection;
 			}
 			else if (Velocity.X > 0f && facingDirection == SMLimitless.Direction.Left)
 			{
 				facingDirection = SMLimitless.Direction.Right;
+				GetComponent<WalkerComponent>().Direction = facingDirection;
 			}
 
 			graphics.Update();
@@ -168,89 +184,13 @@ namespace SmlSprites.SMB.Enemies
 		{
 			return new
 			{
-				type = (int)Type
+				type = (int)Variety
 			};
 		}
 
 		public override void HandleSpriteCollision(Sprite sprite, Vector2 resolutionDistance)
 		{
-			if (Status == KoopaStatus.Walking)
-			{
-				HandleSpriteCollisionWhileWalking(sprite, resolutionDistance);
-			}
-			else if (Status == KoopaStatus.Shell || Status == KoopaStatus.Emerging)
-			{
-				HandleSpriteCollisionWhileShell(sprite, resolutionDistance);
-			}
-			else if (Status == KoopaStatus.ShellSpinning)
-			{
-				HandleSpriteCollisionWhileShellSpinning(sprite, resolutionDistance);
-			}
-
 			base.HandleSpriteCollision(sprite, resolutionDistance);
-		}
-
-		private void HandleSpriteCollisionWhileWalking(Sprite sprite, Vector2 resolutionDistance)
-		{
-			if (sprite is Players.PlayerMario)
-			{
-				Players.PlayerMario playerMario = (Players.PlayerMario)sprite;
-				if (playerMario.Hitbox.Bottom < Hitbox.Center.Y && playerMario.Velocity.Y <= 0f)
-				{
-					GoToShell();
-				}
-			}
-		}
-
-		private void GoToShell()
-		{
-			// Player has stomped this koopa, so transition to Shell status
-			Status = KoopaStatus.Shell;
-			emergeAction = ActionScheduler.Instance.ScheduleAction(() =>
-			{
-				Status = KoopaStatus.Emerging;
-				emergeAction = ActionScheduler.Instance.ScheduleActionOnNextFrame(() =>
-				{
-					Status = KoopaStatus.Walking;
-					isFlippedOver = false;
-				}, FramesUntilEmerge.Value);
-			}, FramesUntilBeginEmerge.Value);
-		}
-
-		private void HandleSpriteCollisionWhileShell(Sprite sprite, Vector2 resolutionDistance)
-		{
-			if (sprite is Players.PlayerMario)
-			{
-				Players.PlayerMario playerMario = (Players.PlayerMario)sprite;
-
-				// If the player's center is to the right (or equal to) our center, go left
-				// Otherwise, go right
-				facingDirection = (playerMario.Hitbox.Center.X >= Hitbox.X) ? SMLimitless.Direction.Left : SMLimitless.Direction.Right;
-				Status = KoopaStatus.ShellSpinning;
-				ActionScheduler.Instance.CancelScheduledAction(emergeAction);
-			}
-		}
-
-		private void HandleSpriteCollisionWhileShellSpinning(Sprite sprite, Vector2 resolutionDistance)
-		{
-			if (sprite is Players.PlayerMario)
-			{
-				Players.PlayerMario playerMario = (Players.PlayerMario)sprite;
-				if (playerMario.Hitbox.Bottom < Hitbox.Center.Y && playerMario.Velocity.Y <= 0f)
-				{
-					GoToShell();
-				}
-				else
-				{
-					var damageComponent = GetComponent<DamageComponent>();
-					if (damageComponent != null) { damageComponent.PerformDamage(playerMario, SpriteDamageTypes.ShellSpinning, 1); }
-				}
-			}
-			else
-			{
-				var damageComponent = GetComponent<DamageComponent>();
-				if (damageComponent != null) { damageComponent.PerformDamage(sprite, SpriteDamageTypes.ShellSpinning, 1); }
-			}
 		}
 
 		public override void LoadContent()
@@ -260,18 +200,18 @@ namespace SmlSprites.SMB.Enemies
 
 		private void SetGraphicsObject()
 		{
-			switch (status)
+			switch (GetComponent<ShelledEnemyComponent>().State)
 			{
-				case KoopaStatus.Walking:
+				case ShelledEnemyComponent.ShelledEnemyState.Walking:
 					graphics.CurrentObjectName = AppendTypeSuffix("walking");
 					break;
-				case KoopaStatus.Shell:
+				case ShelledEnemyComponent.ShelledEnemyState.Shell:
 					graphics.CurrentObjectName = AppendTypeSuffix("shell");
 					break;
-				case KoopaStatus.Emerging:
+				case ShelledEnemyComponent.ShelledEnemyState.Emerging:
 					graphics.CurrentObjectName = AppendTypeSuffix("emerging");
 					break;
-				case KoopaStatus.ShellSpinning:
+				case ShelledEnemyComponent.ShelledEnemyState.ShellSpinning:
 					graphics.CurrentObjectName = AppendTypeSuffix("shellSpinning");
 					break;
 				default:
@@ -281,15 +221,15 @@ namespace SmlSprites.SMB.Enemies
 
 		private string AppendTypeSuffix(string graphicsName)
 		{
-			switch (Type)
+			switch (Variety)
 			{
-				case KoopaType.Green:
+				case KoopaVariety.Green:
 					return graphicsName + "_green";
-				case KoopaType.CaveGreen:
+				case KoopaVariety.CaveGreen:
 					return graphicsName + "_cave";
-				case KoopaType.Red:
+				case KoopaVariety.Red:
 					return graphicsName + "_red";
-				case KoopaType.Yellow:
+				case KoopaVariety.Yellow:
 					return graphicsName + "_yellow";
 				default:
 					throw new InvalidOperationException();
@@ -297,19 +237,11 @@ namespace SmlSprites.SMB.Enemies
 		}
 	}
 
-	public enum KoopaType
+	public enum KoopaVariety
 	{
 		Green = 0,
 		CaveGreen = 1,
 		Red = 2,
 		Yellow = 3
-	}
-
-	public enum KoopaStatus
-	{ 
-		Walking,
-		Shell,
-		Emerging,
-		ShellSpinning
 	}
 }

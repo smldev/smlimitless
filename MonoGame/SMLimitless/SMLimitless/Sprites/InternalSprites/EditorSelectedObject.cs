@@ -38,13 +38,8 @@ namespace SMLimitless.Sprites.InternalSprites
 
 		public event EventHandler SelectedObjectChanged;
 
-		public override string EditorCategory
-		{
-			get
-			{
-				return "Internal Sprites";
-			}
-		}
+		public override string EditorCategory => "Internal Sprites";
+		public override bool IsPlayer => false;
 
 		public override void DeserializeCustomObjects(JsonHelper customObjects)
 		{

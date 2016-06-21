@@ -57,7 +57,9 @@ namespace SMLimitless.Components
 
 		public ScheduledAction ScheduleActionOnNextFrame(Action action, int framesUntilExecution)
 		{
-			var result = new ScheduledAction(action, framesUntilExecution);
+			// Subtract one frame from the frames until execution because we
+			// have to wait until the next frame to actually schedule the action.
+			var result = new ScheduledAction(action, framesUntilExecution - 1);
 			actionsToScheduleNextFrame.Add(result);
 			return result;
 		}

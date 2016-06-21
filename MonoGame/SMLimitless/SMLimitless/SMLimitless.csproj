@@ -183,8 +183,10 @@
     <Compile Include="Sprites\Collections\ScreenExit.cs" />
     <Compile Include="Sprites\Collections\Section.cs" />
     <Compile Include="Sprites\Collections\TestSectionGenerator.cs" />
+    <Compile Include="Sprites\Components\ChasePlayerComponent.cs" />
     <Compile Include="Sprites\Components\DamageComponent.cs" />
     <Compile Include="Sprites\Components\HealthComponent.cs" />
+    <Compile Include="Sprites\Components\ShelledEnemyComponent.cs" />
     <Compile Include="Sprites\Components\WalkerComponent.cs" />
     <Compile Include="Sprites\InternalSprites\CollisionDebugSelectSprite.cs" />
     <Compile Include="Sprites\InternalSprites\CollisionMode.cs" />

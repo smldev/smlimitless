@@ -48,6 +48,20 @@ namespace SMLimitless.Extensions
 		}
 
 		/// <summary>
+		/// Gets the linear distance between any two points.
+		/// </summary>
+		/// <param name="a">The first point.</param>
+		/// <param name="b">The second point.</param>
+		/// <returns>The linear distance between any two points.</returns>
+		public static float GetDistance(this Vector2 a, Vector2 b)
+		{
+			float xDistance = (b.X - a.X) * (b.X - a.X);
+			float yDistance = (b.Y - a.Y) * (b.Y - a.Y);
+
+			return (float)Math.Sqrt(xDistance + yDistance);
+		}
+
+		/// <summary>
 		/// Floors both components of a Vector2.
 		/// </summary>
 		/// <param name="vector">The vector to floor.</param>

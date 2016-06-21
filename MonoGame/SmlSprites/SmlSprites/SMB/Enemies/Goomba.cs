@@ -42,13 +42,8 @@ namespace SmlSprites.SMB.Enemies
 			}
 		}
 
-		public override string EditorCategory
-		{
-			get
-			{
-				return "Enemies";
-			}
-		}
+		public override string EditorCategory => "Enemies";
+		public override bool IsPlayer => false;
 
 		static Goomba()
 		{

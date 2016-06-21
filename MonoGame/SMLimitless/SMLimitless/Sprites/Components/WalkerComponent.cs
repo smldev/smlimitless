@@ -14,27 +14,60 @@ namespace SMLimitless.Sprites.Components
 	/// </summary>
 	public sealed class WalkerComponent : SpriteComponent
 	{
+		private bool active;
 		private Direction direction;
 
 		private float currentVelocity;
-		private float CurrentVelocity
+		public float CurrentVelocity
 		{
 			get
 			{
-				return (direction == Direction.Right) ? currentVelocity : -currentVelocity;
+				return (Direction == Direction.Right) ? currentVelocity : -currentVelocity;
 			}
 			set
 			{
-				if (direction == Direction.Left)
-				{
-					currentVelocity = (value > 0f) ? -value : value;
-				}
-				else if (direction == Direction.Right)
-				{
-					currentVelocity = (value < 0f) ? -value : value;
-				}
+				UpdateOwnerVelocity(value);
+			}
+		}
 
-				Owner.Velocity = new Vector2(currentVelocity, Owner.Velocity.Y);
+		private void UpdateOwnerVelocity(float value)
+		{
+			if (Direction == Direction.Left)
+			{
+				currentVelocity = (value > 0f) ? -value : value;
+			}
+			else if (Direction == Direction.Right)
+			{
+				currentVelocity = (value < 0f) ? -value : value;
+			}
+
+			Owner.Velocity = new Vector2(currentVelocity, Owner.Velocity.Y);
+		}
+
+		public Direction Direction
+		{
+			get { return direction; }
+			set
+			{
+				direction = value;
+				UpdateOwnerVelocity(CurrentVelocity);
+			}
+		}
+
+		public bool IsActive
+		{
+			get { return active; }
+			set
+			{
+				active = value;
+				if (value)
+				{
+					Owner.Velocity = new Vector2(currentVelocity, Owner.Velocity.Y);
+				}
+				else
+				{
+					Owner.Velocity = new Vector2(0f, Owner.Velocity.Y);
+				}
 			}
 		}
 
@@ -51,7 +84,7 @@ namespace SMLimitless.Sprites.Components
 		/// <summary>
 		/// Gets a flag indicating whether this sprite turns when it crosses an edge.
 		/// </summary>
-		public bool TurnOnEdges { get; private set; }
+		public bool TurnOnCliffs { get; set; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="WalkerComponent"/> class.
@@ -67,9 +100,9 @@ namespace SMLimitless.Sprites.Components
 			StartingDirection = startingDirection;
 			InitialHorizontalVelocity = initialHorizontalVelocity;
 
-			direction = (StartingDirection == SpriteDirection.FacePlayer || StartingDirection == SpriteDirection.Left) ? Direction.Left : Direction.Right;
+			Direction = (StartingDirection == SpriteDirection.FacePlayer || StartingDirection == SpriteDirection.Left) ? Direction.Left : Direction.Right;
 			CurrentVelocity = initialHorizontalVelocity;
-			TurnOnEdges = turnOnEdges;
+			TurnOnCliffs = turnOnEdges;
 		}
 
 		/// <summary>
@@ -77,7 +110,7 @@ namespace SMLimitless.Sprites.Components
 		/// </summary>
 		public override void Update()
 		{
-			if (TurnOnEdges)
+			if (TurnOnCliffs)
 			{
 				Section ownerSection = Owner.Owner;
 
@@ -90,17 +123,17 @@ namespace SMLimitless.Sprites.Components
 
 					// Check to see if there's any other top-solid tile next to this tile
 					// in the direction we're travelling. If not, turn.
-					float checkPointX = (direction == Direction.Left) ? (tileLeft - 1f) : (tileRight + 1f);
+					float checkPointX = (Direction == Direction.Left) ? (tileLeft - 1f) : (tileRight + 1f);
 					Vector2 checkPoint = new Vector2(checkPointX, tileBeneathOwner.Hitbox.Bounds.Center.Y);
 					Tile tileBesideTile = ownerSection.GetTileAtPosition(checkPoint);
 					if (tileBesideTile == null || (tileBesideTile.RectSolidSides & TileRectSolidSides.Top) == 0)
 					{
 						int spriteCenter = (int)Owner.Hitbox.Center.X;
-						if ((direction == Direction.Left && tileLeft == spriteCenter) || 
-						(direction == Direction.Right && tileRight == spriteCenter))
+						if ((Direction == Direction.Left && tileLeft == spriteCenter) || 
+						(Direction == Direction.Right && tileRight == spriteCenter))
 						{
-							if (direction == Direction.Left) { direction = Direction.Right; CurrentVelocity = -CurrentVelocity; }
-							else if (direction == Direction.Right) { direction = Direction.Left; CurrentVelocity = -CurrentVelocity; }
+							if (Direction == Direction.Left) { Direction = Direction.Right; CurrentVelocity = -CurrentVelocity; }
+							else if (Direction == Direction.Right) { Direction = Direction.Left; CurrentVelocity = -CurrentVelocity; }
 						}
 					}
 				}
@@ -114,14 +147,14 @@ namespace SMLimitless.Sprites.Components
 		/// <param name="resolutionDistance">The distance by which the owner sprite was moved to resolve the collision.</param>
 		public override void HandleTileCollision(Tile collidingTile, Vector2 resolutionDistance)
 		{
-			if (resolutionDistance.GetResolutionDirection() == Direction.Right && direction == Direction.Left)
+			if (resolutionDistance.GetResolutionDirection() == Direction.Right && Direction == Direction.Left)
 			{
-				direction = Direction.Right;
+				Direction = Direction.Right;
 				CurrentVelocity = -CurrentVelocity;
 			}
-			else if (resolutionDistance.GetResolutionDirection() == Direction.Left && direction == Direction.Right)
+			else if (resolutionDistance.GetResolutionDirection() == Direction.Left && Direction == Direction.Right)
 			{
-				direction = Direction.Left;
+				Direction = Direction.Left;
 				CurrentVelocity = -CurrentVelocity;
 			}
 		}
@@ -131,12 +164,12 @@ namespace SMLimitless.Sprites.Components
 			if (Owner.SpriteCollisionMode == SpriteCollisionMode.NoCollision || collidingSprite.SpriteCollisionMode == SpriteCollisionMode.NoCollision) { return; }
 			if (collidingSprite.Hitbox.Right > Owner.Hitbox.Left && collidingSprite.Hitbox.Left <= Owner.Hitbox.Left)
 			{
-				direction = Direction.Right;
+				Direction = Direction.Right;
 				CurrentVelocity = (CurrentVelocity > 0f) ? CurrentVelocity : -CurrentVelocity;
 			}
 			else if (collidingSprite.Hitbox.Left < Owner.Hitbox.Right && collidingSprite.Hitbox.Right >= Owner.Hitbox.Right)
 			{
-				direction = Direction.Left;
+				Direction = Direction.Left;
 				CurrentVelocity = (CurrentVelocity < 0f) ? CurrentVelocity : -CurrentVelocity;
 			}
 		}

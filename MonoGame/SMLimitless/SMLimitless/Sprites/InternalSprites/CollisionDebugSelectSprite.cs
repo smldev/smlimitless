@@ -12,13 +12,8 @@ namespace SMLimitless.Sprites.InternalSprites
 {
 	public sealed class CollisionDebugSelectSprite : Sprite
 	{
-		public override string EditorCategory
-		{
-			get
-			{
-				return "Internal Sprite";
-			}
-		}
+		public override string EditorCategory => "Internal Sprites";
+		public override bool IsPlayer => false;
 
 		public override void DeserializeCustomObjects(JsonHelper customObjects)
 		{

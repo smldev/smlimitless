@@ -73,13 +73,8 @@ namespace SmlSprites.Players
 		private CachedSound inAirSpinSound;
 		private CachedSound wallJumpSound;
 
-		public override string EditorCategory
-		{
-			get
-			{
-				return "Players";
-			}
-		}
+		public override string EditorCategory => "Players";
+		public override bool IsPlayer => true;
 
 		protected virtual bool IsPlayerMoving
 		{

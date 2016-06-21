@@ -150,6 +150,8 @@ namespace SMLimitless.Sprites.Collections
 				throw new ArgumentNullException(nameof(sprite), "The sprite to add to the section was null.");
 			}
 
+			if (sprite.IsPlayer) { Players.Add(sprite); }
+
 			Sprites.Add(sprite);
 			SpritesGrid.Add(sprite);
 			MainLayer.AddSprite(sprite);
@@ -659,11 +661,11 @@ namespace SMLimitless.Sprites.Collections
 			}
 			else if (InputManager.IsNewKeyPress(Keys.H))
 			{
-				irisEffect.Start(60, Interfaces.EffectDirection.Forward, Vector2.Zero, Color.Black);
+				irisEffect.Start(30, Interfaces.EffectDirection.Forward, Vector2.Zero, Color.Black);
 			}
 			else if (InputManager.IsNewKeyPress(Keys.K))
 			{
-				irisEffect.Start(60, Interfaces.EffectDirection.Backward, Vector2.Zero, Color.Black);
+				irisEffect.Start(30, Interfaces.EffectDirection.Backward, Vector2.Zero, Color.Black);
 			}
 
 			// debugText = $"{MousePosition.X}, {MousePosition.Y}";

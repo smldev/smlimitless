@@ -2958,6 +2958,42 @@
             <param name="key">The name of the key containing the UTF-16 string.</param>
             <returns>A UTF-16 string from the JToken.</returns>
         </member>
+        <member name="T:SMLimitless.Sprites.Components.ChasePlayerComponent">
+            <summary>
+            A component that indicates in which direction the nearest player is to a sprite.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Components.ChasePlayerComponent.FramesBetweenDirectionChecks">
+            <summary>
+            Gets the number of frames between any two checks of the nearest player's direction.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Components.ChasePlayerComponent.NearestPlayerDirection">
+            <summary>
+            Gets a value which indicates the direction the nearest player is to a sprite.
+            </summary>
+        </member>
+        <member name="E:SMLimitless.Sprites.Components.ChasePlayerComponent.NearestPlayerDirectionUpdated">
+            <summary>
+            An event raised when the direction of the nearest player has been updated.
+            </summary>
+            <remarks>
+            This event is raised any time that <see cref="M:SMLimitless.Sprites.Components.ChasePlayerComponent.PerformDirectionCheck"/> is called,
+            even if the direction itself doesn't change.
+            </remarks>
+        </member>
+        <member name="M:SMLimitless.Sprites.Components.ChasePlayerComponent.#ctor(SMLimitless.Sprites.Sprite,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SMLimitless.Sprites.Components.ChasePlayerComponent"/> class.
+            </summary>
+            <param name="owner"></param>
+            <param name="framesBetweenChecks"></param>
+        </member>
+        <member name="M:SMLimitless.Sprites.Components.ChasePlayerComponent.Update">
+            <summary>
+            Updates this component.
+            </summary>
+        </member>
         <member name="T:SMLimitless.Sprites.Components.DamageComponent">
             <summary>
             A component for a sprite that can damage other sprites.
@@ -3029,6 +3065,65 @@
             </summary>
             <param name="hpAmount"></param>
         </member>
+        <member name="T:SMLimitless.Sprites.Components.ShelledEnemyComponent">
+            <summary>
+            A component for an enemy that is shelled (i.e. behaves like
+            a Koopa Troopa or Buzzy Beetle.)
+            </summary>
+        </member>
+        <member name="T:SMLimitless.Sprites.Components.ShelledEnemyComponent.ShelledEnemyBehavior">
+            <summary>
+            Enumerates the behaviors of this component.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.Components.ShelledEnemyComponent.ShelledEnemyBehavior.DontTurnOnCliffs">
+            <summary>
+            The enemy will not turn when it reaches a cliff (i.e. green Koopa).
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.Components.ShelledEnemyComponent.ShelledEnemyBehavior.TurnOnCliffs">
+            <summary>
+            The enemy will turn when it reaches a cliff (i.e. red Koopa).
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.Components.ShelledEnemyComponent.ShelledEnemyBehavior.ChasePlayer">
+            <summary>
+            The enemy will chase the nearest player (i.e. yellow Koopa).
+            </summary>
+        </member>
+        <member name="T:SMLimitless.Sprites.Components.ShelledEnemyComponent.ShelledEnemyState">
+            <summary>
+            Enumerates the states a shelled enemy can be in.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.Components.ShelledEnemyComponent.ShelledEnemyState.Walking">
+            <summary>
+            The default; the shelled enemy is walking.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.Components.ShelledEnemyComponent.ShelledEnemyState.Shell">
+            <summary>
+            The shelled enemy has retreated to its shell.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.Components.ShelledEnemyComponent.ShelledEnemyState.Emerging">
+            <summary>
+            The shelled enemy is emerging and will soon switch to the <see cref="F:SMLimitless.Sprites.Components.ShelledEnemyComponent.ShelledEnemyState.Walking"/> state.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.Components.ShelledEnemyComponent.ShelledEnemyState.ShellSpinning">
+            <summary>
+            The shelled enemy has retreated to its spinning shell, able to damage other sprites and players.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Sprites.Components.ShelledEnemyComponent.#ctor(SMLimitless.Sprites.Sprite,System.Single,System.Single,System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SMLimitless.Sprites.Components.ShelledEnemyComponent"/> sprite.
+            </summary>
+            <param name="owner">The sprite that owns this component.</param>
+            <param name="walkingVelocity">The horizontal velocity at which the owner will walk.</param>
+            <param name="shellSpinningVelocity">The horizontal velocity at which the owner will spin.</param>
+        </member>
         <member name="T:SMLimitless.Sprites.Components.WalkerComponent">
             <summary>
             A component which moves the sprite horizontally along a surface of tiles.
@@ -3044,7 +3139,7 @@
             The initial velocity that the sprite has. 
             </summary>
         </member>
-        <member name="P:SMLimitless.Sprites.Components.WalkerComponent.TurnOnEdges">
+        <member name="P:SMLimitless.Sprites.Components.WalkerComponent.TurnOnCliffs">
             <summary>
             Gets a flag indicating whether this sprite turns when it crosses an edge.
             </summary>
@@ -3238,6 +3333,11 @@
         <member name="P:SMLimitless.Sprites.Sprite.IsMoving">
             <summary>
             Gets or sets a value indicating whether this sprite is moving.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Sprite.IsPlayer">
+            <summary>
+            Gets a value indicating whether this sprite is a player sprite.
             </summary>
         </member>
         <member name="P:SMLimitless.Sprites.Sprite.Direction">
@@ -5146,6 +5246,14 @@
             </summary>
             <param name="value">The string containing the compact vectors.</param>
             <returns>A list of vectors.</returns>
+        </member>
+        <member name="M:SMLimitless.Extensions.Vector2Extensions.GetDistance(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Gets the linear distance between any two points.
+            </summary>
+            <param name="a">The first point.</param>
+            <param name="b">The second point.</param>
+            <returns>The linear distance between any two points.</returns>
         </member>
         <member name="M:SMLimitless.Extensions.Vector2Extensions.Floor(Microsoft.Xna.Framework.Vector2)">
             <summary>

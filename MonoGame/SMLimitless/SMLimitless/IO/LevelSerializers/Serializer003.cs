@@ -296,6 +296,7 @@ namespace SMLimitless.IO.LevelSerializers
 				section.Layers = DeserializeLayers(layersData, section);
 				section.SpritesGrid = sectionSpriteGrid;
 				section.Sprites = sectionSprites;
+				section.Players.AddRange(section.Sprites.Where(s => s.IsPlayer));
 				section.Paths = DeserializePaths(pathsData);
 
 				section.IsLoaded = true;

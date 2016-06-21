@@ -255,6 +255,11 @@ namespace SMLimitless.Sprites
         [DefaultValue(true), Description("Determines if the sprite is moving.")]
         public bool IsMoving { get; set; }
 
+		/// <summary>
+		/// Gets a value indicating whether this sprite is a player sprite.
+		/// </summary>
+		public abstract bool IsPlayer { get; }
+
         /// <summary>
         /// Gets or sets an editor property representing which direction this sprite is facing.
         /// </summary>
