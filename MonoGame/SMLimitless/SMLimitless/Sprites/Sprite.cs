@@ -137,6 +137,8 @@ namespace SMLimitless.Sprites
 		/// </summary>
 		public Vector2 PreviousPosition { get; protected set; }
 
+		public Vector2 PreviousVelocity { get; protected set; }
+
 		/// <summary>
 		/// Gets or sets the current position of this sprite, measured in pixels.
 		/// </summary>
@@ -161,7 +163,18 @@ namespace SMLimitless.Sprites
 		/// <summary>
 		/// Gets or sets the velocity of this sprite, measured in pixels per second.
 		/// </summary>
-		public Vector2 Velocity { get; set; }
+		public Vector2 Velocity 
+		{
+			get
+			{
+				return velocity;
+			}
+			set
+			{
+				PreviousVelocity = velocity;
+				velocity = value;
+			}
+		}
 
 		/// <summary>
 		/// Gets or sets the acceleration of this sprite, measured in pixels per second per second.
@@ -415,6 +428,44 @@ namespace SMLimitless.Sprites
         {
 			Components.ForEach(f => f.HandleSpriteCollision(sprite, resolutionDistance));
         }
+
+		/// <summary>
+		/// Determines if a sprite is stomping another sprite.
+		/// </summary>
+		/// <param name="a">The sprite that may be stomping.</param>
+		/// <param name="b">The sprite that may be being stomped.</param>
+		/// <returns>True if <paramref name="a"/> is stomping <paramref name="b"/>.</returns>
+		public static bool IsStomping(Sprite a, Sprite b)
+		{
+			BoundingRectangle aHitbox = a.Hitbox;
+			BoundingRectangle bHitbox = b.Hitbox;
+
+			// Condition 1: a's Hitbox must be between b.Left and b.Right
+			if (aHitbox.Right < bHitbox.Left || aHitbox.Left > bHitbox.Right)
+			{
+				return false;
+			}
+
+			// Condition 2: a's Bottom must be below or at b's Top
+			if (aHitbox.Bottom < bHitbox.Top)
+			{
+				return false;
+			}
+
+			// Condition 3: a's Center.Y must be above b's Center.Y
+			if (aHitbox.Center.Y >= bHitbox.Center.Y)
+			{
+				return false;
+			}
+
+			// Condition 4: a's PreviousVelocity must be downward
+			if (a.PreviousVelocity.Y <= 0f)
+			{
+				return false;
+			}
+
+			return true;
+		}
 		#endregion
 
         /// <summary>

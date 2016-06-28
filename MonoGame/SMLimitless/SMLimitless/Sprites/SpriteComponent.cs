@@ -16,6 +16,11 @@ namespace SMLimitless.Sprites
     /// </summary>
     public abstract class SpriteComponent
     {
+		/// <summary>
+		/// Gets or sets a value indicating whether this component is active.
+		/// </summary>
+		public virtual bool IsActive { get; set; }	
+
         /// <summary>
         /// Gets the sprite that's using this component.
         /// </summary>

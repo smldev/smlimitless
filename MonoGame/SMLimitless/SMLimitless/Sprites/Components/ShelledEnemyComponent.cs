@@ -61,6 +61,8 @@ namespace SMLimitless.Sprites.Components
 			ShellSpinning
 		}
 
+		private const int StateTransitionWaitTime = 5;	// 5 frames = 0.8333 seconds
+
 		private ShelledEnemyBehavior behavior;
 		private ShelledEnemyState state;
 		private float walkingVelocity;
@@ -68,6 +70,7 @@ namespace SMLimitless.Sprites.Components
 		private int framesFromShellToEmerging;
 		private int framesFromEmergingToWalking;
 		private ActionScheduler.ScheduledAction emergeAction;
+		private FrameTimer stateTransitionWaitTimer = new FrameTimer();
 
 		// The components below are NOT owned by this component;
 		// components cannot own other components. These components
@@ -98,15 +101,19 @@ namespace SMLimitless.Sprites.Components
 				{
 					spriteWalker.IsActive = true;
 					spriteWalker.CurrentVelocity = walkingVelocity;
+					spriteWalker.TurnOnSpriteCollisions = true;
+					spriteWalker.TurnOnCliffs = (Behavior == ShelledEnemyBehavior.TurnOnCliffs);
 				}
 				else if (value == ShelledEnemyState.ShellSpinning)
 				{
 					spriteWalker.IsActive = true;
 					spriteWalker.CurrentVelocity = shellSpinningVelocity;
+					spriteWalker.TurnOnCliffs = false;
 				}
 				else if (value == ShelledEnemyState.Shell || value == ShelledEnemyState.Emerging)
 				{
 					spriteWalker.IsActive = false;
+					spriteWalker.TurnOnSpriteCollisions = false;
 				}
 				OnStateChanged();
 			}
@@ -131,6 +138,7 @@ namespace SMLimitless.Sprites.Components
 				throw new ArgumentException("This component requires its owner to have WalkerComponent, DamageComponent, and ChasePlayerComponent instances before constructing this ShelledEnemyComponent.");
 			}
 
+			IsActive = true;
 			Owner = owner;
 			spriteWalker = walker;
 			spriteDamage = damage;
@@ -149,6 +157,8 @@ namespace SMLimitless.Sprites.Components
 
 		public override void HandleSpriteCollision(Sprite collidingSprite, Vector2 resolutionDistance)
 		{
+			if (!IsActive) { return; }
+
 			switch (State)
 			{
 				case ShelledEnemyState.Walking:
@@ -174,7 +184,7 @@ namespace SMLimitless.Sprites.Components
 				// and since the Player bounces off sprites, when we get here,
 				// the player has upward velocity. So a stomp doesn't look like a
 				// stomp.
-				if (sprite.Hitbox.Bottom < Owner.Hitbox.Center.Y && sprite.Velocity.Y <= 0f)
+				if (Sprite.IsStomping(sprite, Owner))
 				{
 					GoToShell();
 				}
@@ -198,7 +208,7 @@ namespace SMLimitless.Sprites.Components
 		{
 			if (sprite.IsPlayer)
 			{
-				if (sprite.Hitbox.Bottom < Owner.Hitbox.Center.Y && sprite.Velocity.Y <= 0f)
+				if (Sprite.IsStomping(sprite, Owner))
 				{
 					GoToShell();
 				}
@@ -209,7 +219,16 @@ namespace SMLimitless.Sprites.Components
 			}
 			else
 			{
-				spriteDamage.PerformDamage(sprite, SpriteDamageTypes.ShellSpinning, 1);
+				var shelledEnemy = sprite.GetComponent<ShelledEnemyComponent>();
+				if (shelledEnemy != null && shelledEnemy.State == ShelledEnemyState.ShellSpinning)
+				{
+					spriteDamage.PerformDamage(sprite, SpriteDamageTypes.ShellSpinning, 1);
+					spriteDamage.PerformDamage(Owner, SpriteDamageTypes.ShellSpinning, 1);
+				}
+				else
+				{
+					spriteDamage.PerformDamage(sprite, SpriteDamageTypes.ShellSpinning, 1);
+				}
 			}
 		}
 
@@ -230,6 +249,7 @@ namespace SMLimitless.Sprites.Components
 
 		public override void Update()
 		{
+			stateTransitionWaitTimer.Update();
 		}
 
 		private void OnStateChanged()

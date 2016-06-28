@@ -1,0 +1,27 @@
+[Complex]
+FrameSize = 16,16
+TotalGraphicsObjects = 3
+StartingObject = walking
+
+[Object0]
+Name = walking
+Type = animated
+Frames = 2
+Frame0 = 0,0
+Frame1 = 16,0
+CycleLength = 0.9230769 ; 65 cycles per minute
+
+[Object1]
+Name = shell
+Type = static
+Frame = 32,0
+
+[Object2]
+Name = shellSpinning
+Type = animated
+Frames = 4
+Frame0 = 48,0
+Frame1 = 64,0
+Frame2 = 80,0
+Frame3 = 32,0
+CycleLength = 0.45

@@ -289,6 +289,14 @@
 			"customObjects": {
 				"type": 0
 			}
+		},
+		{
+			"typeName": "SmlSprites.SMB.Enemies.BuzzyBeetle",
+			"editorResourceName": "SMBBuzzyBeetle",
+			"editorTextureSourceRectangle": "0, 0, 16, 16",
+			"state": 0,
+			"collision": 0,
+			"customObjects": {}
 		}
 	]
 }

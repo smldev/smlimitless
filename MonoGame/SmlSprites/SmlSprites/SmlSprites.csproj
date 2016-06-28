@@ -69,6 +69,7 @@
     <Compile Include="AssemblyMetadata.cs" />
     <Compile Include="Players\PlayerMario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SMB\Enemies\BuzzyBeetle.cs" />
     <Compile Include="SMB\Enemies\Goomba.cs" />
     <Compile Include="SMB\Enemies\KoopaTroopa.cs" />
     <Compile Include="Tiles\SlopedTile.cs" />

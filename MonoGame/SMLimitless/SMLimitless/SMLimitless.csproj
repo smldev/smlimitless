@@ -64,6 +64,7 @@
     <Compile Include="Collections\SparseCellGrid.cs" />
     <Compile Include="Collections\SparseCellRange.cs" />
     <Compile Include="Components\ActionScheduler.cs" />
+    <Compile Include="Components\FrameTimer.cs" />
     <Compile Include="Content\ContentPackage.cs" />
     <Compile Include="Content\ContentPackageManager.cs" />
     <Compile Include="Content\ContentPackageResourceSearcher.cs" />

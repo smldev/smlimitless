@@ -3144,7 +3144,12 @@
             Gets a flag indicating whether this sprite turns when it crosses an edge.
             </summary>
         </member>
-        <member name="M:SMLimitless.Sprites.Components.WalkerComponent.#ctor(SMLimitless.Sprites.Sprite,SMLimitless.Sprites.SpriteDirection,System.Single,System.Boolean)">
+        <member name="P:SMLimitless.Sprites.Components.WalkerComponent.TurnOnSpriteCollisions">
+            <summary>
+            Gets a flag indicating whether this sprite turns when it collides with another sprite.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Sprites.Components.WalkerComponent.#ctor(SMLimitless.Sprites.Sprite,SMLimitless.Sprites.SpriteDirection,System.Single,System.Boolean,System.Boolean)">
             <summary>
             Initializes a new instance of the <see cref="T:SMLimitless.Sprites.Components.WalkerComponent"/> class.
             </summary>
@@ -3408,6 +3413,14 @@
             <param name="sprite">The sprite that has collided with this one.</param>
             <param name="resolutionDistance">The depth of the intersection.</param>
         </member>
+        <member name="M:SMLimitless.Sprites.Sprite.IsStomping(SMLimitless.Sprites.Sprite,SMLimitless.Sprites.Sprite)">
+            <summary>
+            Determines if a sprite is stomping another sprite.
+            </summary>
+            <param name="a">The sprite that may be stomping.</param>
+            <param name="b">The sprite that may be being stomped.</param>
+            <returns>True if <paramref name="a"/> is stomping <paramref name="b"/>.</returns>
+        </member>
         <member name="M:SMLimitless.Sprites.Sprite.Damage">
             <summary>
             Performs an action for when this sprite takes damage.
@@ -3422,6 +3435,11 @@
         <member name="T:SMLimitless.Sprites.SpriteComponent">
             <summary>
             A base type for reusable objects that modify a sprite's behavior in a given way.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.SpriteComponent.IsActive">
+            <summary>
+            Gets or sets a value indicating whether this component is active.
             </summary>
         </member>
         <member name="P:SMLimitless.Sprites.SpriteComponent.Owner">
@@ -3467,6 +3485,11 @@
         <member name="F:SMLimitless.Sprites.SpriteDamageTypes.PlayerStomp">
             <summary>
             The name of the PlayerStomp damage type.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.SpriteDamageTypes.PlayerFireball">
+            <summary>
+            The name of the PlayerFireball damage type.
             </summary>
         </member>
         <member name="F:SMLimitless.Sprites.SpriteDamageTypes.ShellSpinning">

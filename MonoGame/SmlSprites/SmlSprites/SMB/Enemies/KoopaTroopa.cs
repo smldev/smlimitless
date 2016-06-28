@@ -124,7 +124,7 @@ namespace SmlSprites.SMB.Enemies
 			Velocity = flipVelocity;
 			TileCollisionMode = SpriteCollisionMode.NoCollision;
 			SpriteCollisionMode = SpriteCollisionMode.NoCollision;
-			Components.Clear();
+			Components.ForEach(c => c.IsActive = false);
 			graphics.CurrentObjectName = AppendTypeSuffix("shell");
 		}
 
@@ -169,12 +169,15 @@ namespace SmlSprites.SMB.Enemies
 			if (Velocity.X < 0f && facingDirection == SMLimitless.Direction.Right)
 			{
 				facingDirection = SMLimitless.Direction.Left;
-				GetComponent<WalkerComponent>().Direction = facingDirection;
+
+				var walker = GetComponent<WalkerComponent>();
+				if (walker != null) { walker.Direction = facingDirection; }
 			}
 			else if (Velocity.X > 0f && facingDirection == SMLimitless.Direction.Left)
 			{
 				facingDirection = SMLimitless.Direction.Right;
-				GetComponent<WalkerComponent>().Direction = facingDirection;
+				var walker = GetComponent<WalkerComponent>();
+				if (walker != null) { walker.Direction = facingDirection; }
 			}
 
 			graphics.Update();

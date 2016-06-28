@@ -54,7 +54,7 @@ namespace SMLimitless.Sprites.Components
 			}
 		}
 
-		public bool IsActive
+		public override bool IsActive
 		{
 			get { return active; }
 			set
@@ -87,13 +87,18 @@ namespace SMLimitless.Sprites.Components
 		public bool TurnOnCliffs { get; set; }
 
 		/// <summary>
+		/// Gets a flag indicating whether this sprite turns when it collides with another sprite.
+		/// </summary>
+		public bool TurnOnSpriteCollisions { get; set; }
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="WalkerComponent"/> class.
 		/// </summary>
 		/// <param name="owner">The sprite that owns this component.</param>
 		/// <param name="startingDirection">The initial direction (Left, Right, or FacePlayer) that the sprites starts out facing.</param>
 		/// <param name="initialHorizontalVelocity">The initial velocity that the sprite has. Provide a positive value; the sign is automatically determined based on initial direction.</param>
 		/// <param name="turnOnEdges">A flag indicating whether this sprite turns when it crosses an edge.</param>
-		public WalkerComponent(Sprite owner, SpriteDirection startingDirection, float initialHorizontalVelocity, bool turnOnEdges = false)
+		public WalkerComponent(Sprite owner, SpriteDirection startingDirection, float initialHorizontalVelocity, bool turnOnEdges = false, bool turnOnSpriteCollisions = true)
 		{
 			Owner = owner;
 
@@ -103,6 +108,7 @@ namespace SMLimitless.Sprites.Components
 			Direction = (StartingDirection == SpriteDirection.FacePlayer || StartingDirection == SpriteDirection.Left) ? Direction.Left : Direction.Right;
 			CurrentVelocity = initialHorizontalVelocity;
 			TurnOnCliffs = turnOnEdges;
+			TurnOnSpriteCollisions = turnOnSpriteCollisions;
 		}
 
 		/// <summary>
@@ -161,16 +167,18 @@ namespace SMLimitless.Sprites.Components
 
 		public override void HandleSpriteCollision(Sprite collidingSprite, Vector2 resolutionDistance)
 		{
+			if (!TurnOnSpriteCollisions) { return; }
+
 			if (Owner.SpriteCollisionMode == SpriteCollisionMode.NoCollision || collidingSprite.SpriteCollisionMode == SpriteCollisionMode.NoCollision) { return; }
 			if (collidingSprite.Hitbox.Right > Owner.Hitbox.Left && collidingSprite.Hitbox.Left <= Owner.Hitbox.Left)
 			{
 				Direction = Direction.Right;
-				CurrentVelocity = (CurrentVelocity > 0f) ? CurrentVelocity : -CurrentVelocity;
+				if (IsActive) { CurrentVelocity = (CurrentVelocity > 0f) ? CurrentVelocity : -CurrentVelocity; }
 			}
 			else if (collidingSprite.Hitbox.Left < Owner.Hitbox.Right && collidingSprite.Hitbox.Right >= Owner.Hitbox.Right)
 			{
 				Direction = Direction.Left;
-				CurrentVelocity = (CurrentVelocity < 0f) ? CurrentVelocity : -CurrentVelocity;
+				if (IsActive) { CurrentVelocity = (CurrentVelocity < 0f) ? CurrentVelocity : -CurrentVelocity; }
 			}
 		}
 	}
