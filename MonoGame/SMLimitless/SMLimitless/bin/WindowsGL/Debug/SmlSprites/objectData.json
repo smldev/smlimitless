@@ -297,6 +297,16 @@
 			"state": 0,
 			"collision": 0,
 			"customObjects": {}
+		},
+		{
+			"typeName": "SmlSprites.SMB.Enemies.Spiny",
+			"editorResourceName": "SMBSpiny",
+			"editorTextureSourceRectangle": "0, 0, 16, 16",
+			"state": 0,
+			"collision": 0,
+			"customObjects": {
+				"spinyState": 1
+			}
 		}
 	]
 }

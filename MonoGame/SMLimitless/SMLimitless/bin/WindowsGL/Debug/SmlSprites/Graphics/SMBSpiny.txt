@@ -1,0 +1,20 @@
+[Complex]
+FrameSize = 16,16
+TotalGraphicsObjects = 2
+StartingObject = walking
+
+[Object0]
+Name = walking
+Type = animated
+Frames = 2
+Frame0 = 0,0
+Frame1 = 16,0
+CycleLength = 0.45
+
+[Object1]
+Name = egg
+Type = animated
+Frames = 2
+Frame0 = 32,0
+Frame1 = 48,0
+CycleLength = 0.225

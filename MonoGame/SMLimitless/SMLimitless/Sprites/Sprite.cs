@@ -271,7 +271,7 @@ namespace SMLimitless.Sprites
 		/// <summary>
 		/// Gets a value indicating whether this sprite is a player sprite.
 		/// </summary>
-		public abstract bool IsPlayer { get; }
+		public virtual bool IsPlayer { get { return false; }}
 
         /// <summary>
         /// Gets or sets an editor property representing which direction this sprite is facing.
