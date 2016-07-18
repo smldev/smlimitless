@@ -172,6 +172,16 @@
 						"widthInGridCells": 2,
 						"heightInGridCells": 1
 					}
+				},
+				{
+					"solidSides": 15,
+					"collisionType": 0,
+					"graphicsResource": "SMBStaircase",
+					"state": null,
+					"customData": {
+						"widthInGridCells": 1,
+						"heightInGridCells": 1
+					}
 				}
 			]
 		},

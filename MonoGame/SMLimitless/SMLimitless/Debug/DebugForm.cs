@@ -108,7 +108,7 @@ namespace SMLimitless.Debug
 				displayedLines++;
 			}
 
-			TextLog.Text = string.Concat(TextLog.Text, text);
+			TextLog.AppendText(text);
 		}
 
 		private void ProcessCommand(string command, IEnumerable<string> arguments)

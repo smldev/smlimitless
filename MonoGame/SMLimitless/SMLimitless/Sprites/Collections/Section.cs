@@ -336,8 +336,10 @@ namespace SMLimitless.Sprites.Collections
 				if (GameServices.CollisionDebuggerActive && !isCollisionDebuggingInitialized) { InitializeCollisionDebugging(); }
 				else if (!GameServices.CollisionDebuggerActive && isCollisionDebuggingInitialized) { UninitializeCollisionDebugging(); }
 
-				Tiles.ForEach(t => t.Update());
-				SpritesGrid.ForEach(s => s.Update());
+				UpdateObjectActiveStates();
+
+				Tiles.Where(t => t.IsActive).ForEach(t => t.Update());
+				SpritesGrid.Where(s => s.IsActive).ForEach(s => s.Update());
 				SpritesGrid.Update();
 				UpdatePhysics();
 				SpritesGrid.ForEach(s => s.SpritesCollidedWithThisFrame.Clear());
@@ -356,6 +358,39 @@ namespace SMLimitless.Sprites.Collections
 
 			stopwatch.Stop();
 		}
+
+		private void UpdateObjectActiveStates()
+		{
+			// The only objects that need to be updated are those that are active;
+			// that is, those within the CameraSystem.ActiveBounds rectangle.
+
+			int updatedTiles = 0;
+			int updatedSprites = 0;
+
+			foreach (Tile tile in Tiles)
+			{
+				bool currentActiveState = tile.IsActive;
+				tile.IsActive = tile.Hitbox.Bounds.IntersectsIncludingEdges(CameraSystem.ActiveBounds);
+				if (tile.IsActive != currentActiveState)
+				{
+					updatedTiles++;
+				}
+			}
+
+			foreach (Sprite sprite in Sprites)
+			{
+				bool currentActiveState = sprite.IsActive;
+				sprite.IsActive = sprite.Hitbox.IntersectsIncludingEdges(CameraSystem.ActiveBounds);
+				if (sprite.IsActive != currentActiveState)
+				{
+					updatedSprites++;
+				}
+			}
+
+			if (updatedTiles > 0) { Debug.Logger.LogInfo($"{updatedTiles} tile{((updatedTiles > 1) ? "s" : "")} changed activity states this frame."); }
+			if (updatedSprites > 0) { Debug.Logger.LogInfo($"{updatedSprites} sprite{(updatedSprites > 1 ? "s" : "")} changed activity states this frame."); }
+		}
+
 		internal void CollisionDebugSelectSprite(Sprite sprite)
 		{
 			if (sprite == null) { throw new ArgumentNullException(nameof(sprite), "The sprite to select for collision debugging was null."); }
@@ -700,7 +735,7 @@ namespace SMLimitless.Sprites.Collections
 
 				CameraSystem.StayInBounds = true;
 				CameraSystem.TrackingObjects.Clear();
-				// TODO: call whatever gets the right tracking objects here
+				CameraSystem.TrackingObjects.AddRange(Players);
 
 				editorForm.Close();
 				editorForm.Dispose();

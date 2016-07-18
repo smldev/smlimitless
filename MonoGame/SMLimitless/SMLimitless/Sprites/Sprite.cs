@@ -131,6 +131,12 @@ namespace SMLimitless.Sprites
 		/// Gets or sets the position of this sprite when it was first loaded into the level, measured in pixels.
 		/// </summary>
 		public Vector2 InitialPosition { get; protected internal set; }
+		// TODO: To properly emulate sprite respawn behavior as it is in most Mario games,
+		// sprites need to completely despawn if offscreen (with exceptions like shells),
+		// and then respawn as if they were new when they move back into the active area.
+		// Exceptions include sprites that are truly killed (not just disabled).
+		// Clearly, sprite handling needs a lot of stages, so write a design document
+		// for every possible mode a sprite can be in.
 
 		/// <summary>
 		/// Gets or sets the last position of this sprite, measured in pixels.

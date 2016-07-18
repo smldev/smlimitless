@@ -193,6 +193,9 @@ namespace SMLimitless.Physics
 
 			// Move the camera.
 			camera.Position = newCameraOrigin;
+
+			// Update the ActiveBounds.
+			ActiveBounds = CreateActiveBounds(camera.Viewport);
 		}
 
 		public void Draw(bool debug)
