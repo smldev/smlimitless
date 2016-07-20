@@ -328,6 +328,10 @@ namespace SMLimitless.Sprites
 			return null;
 		}
 
+		public virtual void Activate() { }
+
+		public virtual void Deactivate() { }
+
 		#region Core Gameobject Methods
         /// <summary>
         /// Initializes this sprite.
