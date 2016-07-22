@@ -12,6 +12,9 @@ using SMLimitless.Interfaces;
 
 namespace SMLimitless.Screens.Effects
 {
+	/// <summary>
+	/// An iris wipe effect.
+	/// </summary>
 	public sealed class IrisEffect : IEffect
 	{
 		private float fadeDelta;
@@ -25,8 +28,15 @@ namespace SMLimitless.Screens.Effects
 		private Color color;
 		private QuadRenderer quadRenderer;
 
+		/// <summary>
+		/// An event raised when this effect has completed.
+		/// </summary>
 		public event EffectCompletedEventHandler EffectCompletedEvent;
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="IrisEffect"/> class.
+		/// </summary>
+		/// <param name="center">The point at which the iris should close to or open from.</param>
 		public IrisEffect(Vector2 center)
 		{
 			irisCenter = center;
@@ -39,6 +49,9 @@ namespace SMLimitless.Screens.Effects
 			isInitialized = true;
 		}
 		
+		/// <summary>
+		/// Draws this effect.
+		/// </summary>
 		public void Draw()
 		{
 			if (isInitialized && (isRunning || dir == EffectDirection.Backward))
@@ -60,6 +73,9 @@ namespace SMLimitless.Screens.Effects
 			}
 		}
 
+		/// <summary>
+		/// Loads the content for this effect.
+		/// </summary>
 		public void LoadContent()
 		{
 			GameServices.Effects.Add("IrisEffect", GameServices.GetService<ContentManager>().Load<Effect>("IrisEffect"));
@@ -67,6 +83,11 @@ namespace SMLimitless.Screens.Effects
 			
 		}
 
+		/// <summary>
+		/// Sets this effect to be completed in any direction.
+		/// </summary>
+		/// <param name="direction">The direction to be set to.</param>
+		/// <param name="color">The color of the effect.</param>
 		public void Set(EffectDirection direction, Color color)
 		{
 			this.color = color;
@@ -80,6 +101,13 @@ namespace SMLimitless.Screens.Effects
 			}
 		}
 
+		/// <summary>
+		/// Starts this effect.
+		/// </summary>
+		/// <param name="length">How many frames this effect should last.</param>
+		/// <param name="direction">The direction in which to run the effect (forward is iris in, backwards is iris out).</param>
+		/// <param name="position">The position at which the iris should close/open.</param>
+		/// <param name="color">The color of the background after the iris-in.</param>
 		public void Start(int length, EffectDirection direction, Vector2 position, Color color)
 		{
 			if ((direction == EffectDirection.Backward && currentFadeLevel == 1f) || (direction == EffectDirection.Forward && currentFadeLevel == 0f))
@@ -98,6 +126,9 @@ namespace SMLimitless.Screens.Effects
 			}
 		}
 
+		/// <summary>
+		/// Stops the effect, filling the screen with the color specified in the <see cref="Start(int, EffectDirection, Vector2, Color)"/> method.
+		/// </summary>
 		public void Stop()
 		{
 			isRunning = false;
@@ -105,6 +136,9 @@ namespace SMLimitless.Screens.Effects
 			fadeDelta = 0f;
 		}
 
+		/// <summary>
+		/// Updates this effect.
+		/// </summary>
 		public void Update()
 		{
 			if (isRunning && isInitialized)

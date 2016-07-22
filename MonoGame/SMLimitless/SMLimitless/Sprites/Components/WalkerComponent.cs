@@ -18,6 +18,10 @@ namespace SMLimitless.Sprites.Components
 		private Direction direction;
 
 		private float currentVelocity;
+
+		/// <summary>
+		/// Gets or sets the current velocity of this component.
+		/// </summary>
 		public float CurrentVelocity
 		{
 			get
@@ -44,6 +48,9 @@ namespace SMLimitless.Sprites.Components
 			Owner.Velocity = new Vector2(currentVelocity, Owner.Velocity.Y);
 		}
 
+		/// <summary>
+		/// Gets or sets the direction that the component has its owner walk in.
+		/// </summary>
 		public Direction Direction
 		{
 			get { return direction; }
@@ -54,6 +61,9 @@ namespace SMLimitless.Sprites.Components
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets a value indicating whether this component is active.
+		/// </summary>
 		public override bool IsActive
 		{
 			get { return active; }

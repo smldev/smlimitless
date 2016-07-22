@@ -8,6 +8,9 @@ using NAudio.Wave.SampleProviders;
 
 namespace SMLimitless.Sounds
 {
+	/// <summary>
+	/// A fire-and-forget audio player for music and sound effects.
+	/// </summary>
 	public sealed class AudioPlaybackEngine : IDisposable
 	{
 		// Credit to Mark Heath (NAudio author)
@@ -20,8 +23,16 @@ namespace SMLimitless.Sounds
 
 		private List<string> playingSoundFileNames = new List<string>();
 
+		/// <summary>
+		/// Gets an instance of the <see cref="AudioPlaybackEngine"/> for global usage.
+		/// </summary>
 		public static readonly AudioPlaybackEngine Instance = new AudioPlaybackEngine(44100, 2);
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AudioPlaybackEngine"/> class.
+		/// </summary>
+		/// <param name="sampleRate">How many samples should be played in a second.</param>
+		/// <param name="channelCount">How many channels of sound should be played.</param>
 		public AudioPlaybackEngine(int sampleRate = 44100, int channelCount = 2)
 		{
 			outputDevice = new WaveOutEvent() { DesiredLatency = DesiredLatencyMs };
@@ -31,6 +42,11 @@ namespace SMLimitless.Sounds
 			outputDevice.Play();
 		}
 
+		/// <summary>
+		/// Plays a sound given a filename.
+		/// </summary>
+		/// <param name="fileName">The name of the file to play.</param>
+		/// <param name="additionalOnPlaybackEndedHandler">An event handler raised when the playback ends.</param>
 		public void PlaySound(string fileName, EventHandler additionalOnPlaybackEndedHandler)
 		{
 			if (!playingSoundFileNames.Contains(fileName))
@@ -44,6 +60,13 @@ namespace SMLimitless.Sounds
 			}
 		}
 
+		/// <summary>
+		/// Plays a sound that fades in and/or out from a file.
+		/// </summary>
+		/// <param name="fileName">The name of the file to play.</param>
+		/// <param name="additionalOnPlaybackEndedHandler">An event handler raised when the playback ends.</param>
+		/// <param name="beginFadeInAction">An action called when the fade-in begins.</param>
+		/// <param name="beginFadeOutAction">An action called when the fade-out begins.</param>
 		public void PlayFadeableSound(string fileName, EventHandler additionalOnPlaybackEndedHandler, out Action<double> beginFadeInAction, out Action<double> beginFadeOutAction)
 		{
 			if (!playingSoundFileNames.Contains(fileName))
@@ -84,6 +107,11 @@ namespace SMLimitless.Sounds
 			throw new NotImplementedException($"Cannot convert a sound from {input.WaveFormat.Channels} channel(s) to {mixer.WaveFormat.Channels} channel(s).");
 		}
 
+		/// <summary>
+		/// Plays a <see cref="CachedSound"/> instance.
+		/// </summary>
+		/// <param name="sound">The sound to play.</param>
+		/// <param name="additionalOnPlaybackEndedHandler">An event handler raised when the playback ends.</param>
 		public void PlaySound(CachedSound sound, EventHandler additionalOnPlaybackEndedHandler)
 		{
 			//if (!playingSoundFileNames.Contains(sound.Name))
@@ -96,6 +124,13 @@ namespace SMLimitless.Sounds
 			//}
 		}
 
+		/// <summary>
+		/// Plays a <see cref="CachedSound"/> instance that fades in and/or out.
+		/// </summary>
+		/// <param name="sound">The sound to play.</param>
+		/// <param name="additionalOnPlaybackEndedHandler">An event handler raised when the playback ends.</param>
+		/// <param name="beginFadeInAction">An action called when the fade-in begins.</param>
+		/// <param name="beginFadeOutAction">An action called when the fade-out begins.</param>
 		public void PlayFadeableSound(CachedSound sound, EventHandler additionalOnPlaybackEndedHandler, out Action<double> beginFadeInAction, out Action<double> beginFadeOutAction)
 		{
 			if (!playingSoundFileNames.Contains(sound.Name))
@@ -122,6 +157,9 @@ namespace SMLimitless.Sounds
 			mixer.AddMixerInput(ConvertToRightChannelCount(input));
 		}
 
+		/// <summary>
+		/// Disposes the members of this class.
+		/// </summary>
 		public void Dispose()
 		{
 			outputDevice.Dispose();

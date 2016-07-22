@@ -135,11 +135,26 @@ namespace SMLimitless.Sprites.Components
 		}
 	}
 
+	/// <summary>
+	/// Contains event data for when a sprite or tile damages another sprite.
+	/// </summary>
 	public sealed class SpriteDamagedEventArgs : EventArgs
 	{
+		/// <summary>
+		/// The type of damage.
+		/// </summary>
 		public string DamageType { get; private set; }
+
+		/// <summary>
+		/// The number of remaining hit points on the damaged sprite.
+		/// </summary>
 		public int RemainingHitPoints { get; private set; }
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SpriteDamagedEventArgs"/> class.
+		/// </summary>
+		/// <param name="damageType">The type of damage.</param>
+		/// <param name="remainingHitPoints">The number of remaining hit points on the damaged sprite.</param>
 		public SpriteDamagedEventArgs(string damageType, int remainingHitPoints)
 		{
 			DamageType = damageType;

@@ -80,6 +80,9 @@ namespace SMLimitless.Sprites.Components
 		private DamageComponent spriteDamage;
 		private ChasePlayerComponent spriteChasePlayer;
 
+		/// <summary>
+		/// Gets or sets the behavior of this component.
+		/// </summary>
 		public ShelledEnemyBehavior Behavior
 		{
 			get { return behavior; }
@@ -91,6 +94,9 @@ namespace SMLimitless.Sprites.Components
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the state of this component.
+		/// </summary>
 		public ShelledEnemyState State
 		{
 			get { return state; }
@@ -119,6 +125,9 @@ namespace SMLimitless.Sprites.Components
 			}
 		}
 
+		/// <summary>
+		/// An event raised when this component's state changes.
+		/// </summary>
 		public event EventHandler StateChanged;
 
 		/// <summary>
@@ -127,6 +136,8 @@ namespace SMLimitless.Sprites.Components
 		/// <param name="owner">The sprite that owns this component.</param>
 		/// <param name="walkingVelocity">The horizontal velocity at which the owner will walk.</param>
 		/// <param name="shellSpinningVelocity">The horizontal velocity at which the owner will spin.</param>
+		/// <param name="framesFromShellToEmerging">The number of frames between entering the Shell state and entering the Emerging state.</param>
+		/// <param name="framesFromEmergingToWalking">The number of frames between entering the Emerging state and entering the Walking state.</param>
 		public ShelledEnemyComponent(Sprite owner, float walkingVelocity, float shellSpinningVelocity, int framesFromShellToEmerging, int framesFromEmergingToWalking)
 		{
 			WalkerComponent walker = owner.GetComponent<WalkerComponent>();
@@ -155,6 +166,11 @@ namespace SMLimitless.Sprites.Components
 			spriteWalker.CurrentVelocity = walkingVelocity;
 		}
 
+		/// <summary>
+		/// Handles a collision with another sprite.
+		/// </summary>
+		/// <param name="collidingSprite">The sprite that has collided with the owner sprite.</param>
+		/// <param name="resolutionDistance">The depth of the collision.</param>
 		public override void HandleSpriteCollision(Sprite collidingSprite, Vector2 resolutionDistance)
 		{
 			if (!IsActive) { return; }
@@ -247,6 +263,9 @@ namespace SMLimitless.Sprites.Components
 			}, framesFromShellToEmerging);
 		}
 
+		/// <summary>
+		/// Updates this component.
+		/// </summary>
 		public override void Update()
 		{
 			stateTransitionWaitTimer.Update();

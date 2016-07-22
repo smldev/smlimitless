@@ -12,11 +12,17 @@ using SMLimitless.Physics;
 
 namespace SMLimitless.IO
 {
+	/// <summary>
+	/// Contains information about game objects relevant to the level editor.
+	/// </summary>
 	public sealed class EditorObjectData
 	{
 		private List<TileData> tileData = new List<TileData>();
 		private List<SpriteData> spriteData = new List<SpriteData>();
 
+		/// <summary>
+		/// Gets a read-only list containing the information for all tiles in an assembly.
+		/// </summary>
 		public IReadOnlyList<TileData> TileData
 		{
 			get
@@ -25,6 +31,9 @@ namespace SMLimitless.IO
 			}
 		}
 
+		/// <summary>
+		/// Gets a read-only list containing the information for all sprites in an assembly.
+		/// </summary>
 		public IReadOnlyList<SpriteData> SpriteData
 		{
 			get
@@ -33,6 +42,10 @@ namespace SMLimitless.IO
 			}
 		}
 
+		/// <summary>
+		/// Reads information for game objects from a JSON file.
+		/// </summary>
+		/// <param name="jsonPath">The path to the JSON file.</param>
 		public void ReadData(string jsonPath)
 		{
 			string json = File.ReadAllText(jsonPath);

@@ -603,6 +603,12 @@
             <param name="range">The range to compare.</param>
             <returns>True if all properties are equal, false if otherwise.</returns>
         </member>
+        <member name="M:SMLimitless.Collections.SparseCellRange.GetHashCode">
+            <summary>
+            Gets a hash code for this <see cref="T:SMLimitless.Collections.SparseCellRange"/>.
+            </summary>
+            <returns>An <see cref="T:System.Int32"/> containing the hash code for this range.</returns>
+        </member>
         <member name="T:SMLimitless.Collections.Hierarchy`1">
             <summary>
             Provides a generic hierarchy collection.
@@ -696,6 +702,12 @@
             <param name="action">The action to execute.</param>
             <param name="framesUntilExecution">The number of frames until the action is executed.</param>
         </member>
+        <member name="P:SMLimitless.Components.ActionScheduler.Instance">
+            <summary>
+            A global instance that can be used if a specific <see cref="T:SMLimitless.Components.ActionScheduler"/>
+            instance is considered unnessecary.
+            </summary>
+        </member>
         <member name="M:SMLimitless.Components.ActionScheduler.ScheduleAction(System.Action,System.Int32)">
             <summary>
             Schedules an action to occur in a certain number of frames.
@@ -703,10 +715,74 @@
             <param name="action">The action to execute.</param>
             <param name="framesUntilExecution">The number of frames until the action is executed.</param>
         </member>
+        <member name="M:SMLimitless.Components.ActionScheduler.ScheduleActionOnNextFrame(System.Action,System.Int32)">
+            <summary>
+            On the next frame, an action is scheduled to execute.
+            </summary>
+            <param name="action">The action to execute.</param>
+            <param name="framesUntilExecution">The number of frames until the action executes.</param>
+            <returns>A <see cref="T:SMLimitless.Components.ActionScheduler.ScheduledAction"/> reference for the action to be executed.</returns>
+            <remarks>As this action is scheduled on the next frame, one frame is subtracted from the
+            <paramref name="framesUntilExecution"/> argument.</remarks>
+        </member>
+        <member name="M:SMLimitless.Components.ActionScheduler.CancelScheduledAction(SMLimitless.Components.ActionScheduler.ScheduledAction)">
+            <summary>
+            Cancels a scheduled action.
+            </summary>
+            <param name="action">The action to cancel.</param>
+            <returns>True if the action has been cancelled, false if the action wasn't scheduled at all.</returns>
+        </member>
         <member name="M:SMLimitless.Components.ActionScheduler.Update">
             <summary>
             Updates this action scheduler, decrementing the frames-left of all scheduled actions,
             and executing actions that have 0 frames left.
+            </summary>
+        </member>
+        <member name="T:SMLimitless.Components.FrameTimer">
+            <summary>
+            A timer that fires an event after a defined number of frames.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Components.FrameTimer.TimerExpired">
+            <summary>
+            Gets a value indicating whether the timer has expired.
+            </summary>
+        </member>
+        <member name="E:SMLimitless.Components.FrameTimer.TimerExpiredEvent">
+            <summary>
+            An event that is fired when the timer expires.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Components.FrameTimer.Start(System.Int32)">
+            <summary>
+            Starts the timer to expire in a certain number of frames.
+            </summary>
+            <param name="frames">The number of frames before the timer expires.</param>
+        </member>
+        <member name="M:SMLimitless.Components.FrameTimer.Pause">
+            <summary>
+            Pauses the timer so that it can be resumed from where it was later.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Components.FrameTimer.Cancel">
+            <summary>
+            Cancels the timer and removes any frames remaining.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Components.FrameTimer.Reset">
+            <summary>
+            Resets the timer.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Components.FrameTimer.Restart(System.Int32)">
+            <summary>
+            Restarts the timer with a new number of frames.
+            </summary>
+            <param name="frames">The number of frames until the timer expires.</param>
+        </member>
+        <member name="M:SMLimitless.Components.FrameTimer.Update">
+            <summary>
+            Updates this timer, decrementing one frame.
             </summary>
         </member>
         <member name="T:SMLimitless.Content.ContentPackage">
@@ -1138,6 +1214,11 @@
             <param name="source">The texture on which the image is.</param>
             <param name="sourceRectangle">The part of the texture where the image is.</param>
         </member>
+        <member name="T:SMLimitless.Editor.EditorForm">
+            <summary>
+            The form for the level editor's objects and properties.
+            </summary>
+        </member>
         <member name="P:SMLimitless.Editor.EditorForm.EditorState">
             <summary>
             Gets the state of the level editor.
@@ -1186,6 +1267,11 @@
         <member name="F:SMLimitless.Editor.EditorState.Delete">
             <summary>
             Any object clicked on will be removed from the section.
+            </summary>
+        </member>
+        <member name="T:SMLimitless.Editor.PropertyForm">
+            <summary>
+            A form that can display and modify properties for game objects.
             </summary>
         </member>
         <member name="M:SMLimitless.Editor.PropertyForm.#ctor(SMLimitless.Sprites.InternalSprites.EditorSelectedObject)">
@@ -5488,6 +5574,21 @@
             </summary>
             <param name="jsonEntry">A JSON token containing two comma-delimited numbers.</param>
             <returns>A Vector2 converted from the token.</returns>
+        </member>
+        <member name="T:SMLimitless.Forms.CollisionDebuggerForm">
+            <summary>
+            A form that displays information about collision detection and resolution.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Forms.CollisionDebuggerForm.TimeScale">
+            <summary>
+            Gets a value indicating the time scale applied to physics and collision.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Forms.CollisionDebuggerForm.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:SMLimitless.Forms.CollisionDebuggerForm"/> class.
+            </summary>
         </member>
         <member name="M:SMLimitless.Forms.CollisionDebuggerForm.Update(System.Int32,System.Boolean,Microsoft.Xna.Framework.Vector2)">
             <summary>

@@ -58,5 +58,17 @@ namespace SMLimitless.Collections
 		{
 			return TopLeft == range.TopLeft && BottomRight == range.BottomRight;
 		}
+
+		/// <summary>
+		/// Gets a hash code for this <see cref="SparseCellRange"/>.
+		/// </summary>
+		/// <returns>An <see cref="int"/> containing the hash code for this range.</returns>
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				return 137 * TopLeft.GetHashCode() * 17 * BottomRight.GetHashCode();
+			}
+		}
 	}
 }

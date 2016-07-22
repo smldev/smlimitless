@@ -13,12 +13,22 @@ using SMLimitless.Sprites.Collections;
 
 namespace SMLimitless.Forms
 {
+	/// <summary>
+	/// A form that displays information about collision detection and resolution.
+	/// </summary>
 	public partial class CollisionDebuggerForm : Form
 	{
 		internal Section Section { get; set; }
 		internal Sprite SelectedSprite { get; set; }
+
+		/// <summary>
+		/// Gets a value indicating the time scale applied to physics and collision.
+		/// </summary>
 		public float TimeScale { get; private set; }
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CollisionDebuggerForm"/> class.
+		/// </summary>
 		public CollisionDebuggerForm()
 		{
 			InitializeComponent();

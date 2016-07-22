@@ -21,6 +21,9 @@ namespace SMLimitless.Physics
     /// </summary>
     public struct BoundingRectangle : ICollidableShape
     {
+		/// <summary>
+		/// Debug; keeps track of how many times intersection methods have been called.
+		/// </summary>
 		public static int IntersectionCallCount = 0;
 
         /// <summary>
@@ -249,6 +252,9 @@ namespace SMLimitless.Physics
             }
         }
 
+		/// <summary>
+		/// Gets the position of the bottom-right point on this rectangle.
+		/// </summary>
 		public Vector2 BottomRight
 		{
 			get
@@ -257,10 +263,19 @@ namespace SMLimitless.Physics
 			}
 		}
 
+		/// <summary>
+		/// Gets the position of the top-right point on this rectangle.
+		/// </summary>
 		public Vector2 TopRight => new Vector2(Right, Top);
 
+		/// <summary>
+		/// Gets the position of the bottom-left point on this rectangle.
+		/// </summary>
 		public Vector2 BottomLeft => new Vector2(Left, Bottom);
 
+		/// <summary>
+		/// Gets the position of the top-left point on this rectangle.
+		/// </summary>
 		public Vector2 TopLeft => new Vector2(Left, Top);
 
 		/// <summary>
@@ -425,11 +440,21 @@ namespace SMLimitless.Physics
             }
         }
 
+		/// <summary>
+		/// Returns a value indicating whether a bounding rectangle is entirely contained within this rectangle.
+		/// </summary>
+		/// <param name="that">The other rectangle.</param>
+		/// <returns>True if the other rectangle is entirely contained within this one, false if otherwise.</returns>
 		public bool Within(BoundingRectangle that)
 		{
 			return (that.Left >= Left) && (that.Right <= Right) && (that.Top >= Top) && (that.Bottom <= Bottom);
 		}
 
+		/// <summary>
+		/// Returns a value indicating whether a point is above, below, to the left of, et cetera, of this rectangle.
+		/// </summary>
+		/// <param name="point">The point to check.</param>
+		/// <returns>A <see cref="RectangularSpaceDivision"/> instance indicating where the point is with relation to this rectangle.</returns>
 		public RectangularSpaceDivision GetPointRelation(Vector2 point)
 		{
 			if (IntersectsIncludingEdges(point)) { return RectangularSpaceDivision.Within; }

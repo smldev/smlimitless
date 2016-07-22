@@ -197,6 +197,10 @@ namespace SMLimitless.Graphics
             }
         }
 
+		/// <summary>
+		/// Gets a graphic suitable for display in the level editor's object selection window.
+		/// </summary>
+		/// <returns>A <see cref="Texture2D"/> instance containing the graphic to display.</returns>
 		public Texture2D GetEditorGraphics()
 		{
 			return graphicsObjects[CurrentObjectName].GetEditorGraphics();

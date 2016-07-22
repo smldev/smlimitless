@@ -11,6 +11,12 @@ namespace SMLimitless.Sprites.Components
 	/// </summary>
 	public sealed class DamageComponent : SpriteComponent
 	{
+		/// <summary>
+		/// Performs damage to sprite with a <see cref="HealthComponent"/> instance.
+		/// </summary>
+		/// <param name="sprite">The sprite to damage.</param>
+		/// <param name="damageType">The type of damage to perform.</param>
+		/// <param name="hpAmount">How many hit points to damage for.</param>
 		public void PerformDamage(Sprite sprite, string damageType, int hpAmount)
 		{
 			if (sprite == null) { throw new ArgumentNullException(nameof(sprite), "The provided sprite was null."); }
@@ -24,6 +30,9 @@ namespace SMLimitless.Sprites.Components
 			}
 		}
 
+		/// <summary>
+		/// Updates this component.
+		/// </summary>
 		public override void Update()
 		{
 		}

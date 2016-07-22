@@ -6,15 +6,28 @@ using System.Threading.Tasks;
 
 namespace SMLimitless.Components
 {
+	/// <summary>
+	/// A timer that fires an event after a defined number of frames.
+	/// </summary>
 	public sealed class FrameTimer
 	{
 		private bool isActive;
 		private int framesLeft;
 
+		/// <summary>
+		/// Gets a value indicating whether the timer has expired.
+		/// </summary>
 		public bool TimerExpired { get; private set; }
 
+		/// <summary>
+		/// An event that is fired when the timer expires.
+		/// </summary>
 		public event EventHandler TimerExpiredEvent;
 
+		/// <summary>
+		/// Starts the timer to expire in a certain number of frames.
+		/// </summary>
+		/// <param name="frames">The number of frames before the timer expires.</param>
 		public void Start(int frames)
 		{
 			if (!isActive)
@@ -29,6 +42,9 @@ namespace SMLimitless.Components
 			}
 		}
 
+		/// <summary>
+		/// Pauses the timer so that it can be resumed from where it was later.
+		/// </summary>
 		public void Pause()
 		{
 			if (isActive) { isActive = false; }
@@ -39,6 +55,9 @@ namespace SMLimitless.Components
 			}
 		}
 
+		/// <summary>
+		/// Cancels the timer and removes any frames remaining.
+		/// </summary>
 		public void Cancel()
 		{
 			if (isActive)
@@ -52,6 +71,9 @@ namespace SMLimitless.Components
 			}
 		}
 
+		/// <summary>
+		/// Resets the timer.
+		/// </summary>
 		public void Reset()
 		{
 			isActive = false;
@@ -59,6 +81,10 @@ namespace SMLimitless.Components
 			framesLeft = 0;
 		}
 
+		/// <summary>
+		/// Restarts the timer with a new number of frames.
+		/// </summary>
+		/// <param name="frames">The number of frames until the timer expires.</param>
 		public void Restart(int frames)
 		{
 			isActive = false;
@@ -66,6 +92,9 @@ namespace SMLimitless.Components
 			Start(frames);
 		}
 
+		/// <summary>
+		/// Updates this timer, decrementing one frame.
+		/// </summary>
 		public void Update()
 		{
 			if (!isActive) { return; }

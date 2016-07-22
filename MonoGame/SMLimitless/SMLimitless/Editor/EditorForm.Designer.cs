@@ -1,5 +1,8 @@
 ﻿namespace SMLimitless.Editor
 {
+	/// <summary>
+	/// The form for the level editor's objects and properties.
+	/// </summary>
 	partial class EditorForm
 	{
 		/// <summary>

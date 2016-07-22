@@ -38,6 +38,10 @@ namespace SMLimitless.Components
 			}
 		}
 
+		/// <summary>
+		/// A global instance that can be used if a specific <see cref="ActionScheduler"/>
+		/// instance is considered unnessecary.
+		/// </summary>
 		public static ActionScheduler Instance { get; } = new ActionScheduler();
 
 		private List<ScheduledAction> scheduledActions = new List<ScheduledAction>();
@@ -55,6 +59,14 @@ namespace SMLimitless.Components
 			return result;
 		}
 
+		/// <summary>
+		/// On the next frame, an action is scheduled to execute.
+		/// </summary>
+		/// <param name="action">The action to execute.</param>
+		/// <param name="framesUntilExecution">The number of frames until the action executes.</param>
+		/// <returns>A <see cref="ScheduledAction"/> reference for the action to be executed.</returns>
+		/// <remarks>As this action is scheduled on the next frame, one frame is subtracted from the
+		/// <paramref name="framesUntilExecution"/> argument.</remarks>
 		public ScheduledAction ScheduleActionOnNextFrame(Action action, int framesUntilExecution)
 		{
 			// Subtract one frame from the frames until execution because we
@@ -64,6 +76,11 @@ namespace SMLimitless.Components
 			return result;
 		}
 
+		/// <summary>
+		/// Cancels a scheduled action.
+		/// </summary>
+		/// <param name="action">The action to cancel.</param>
+		/// <returns>True if the action has been cancelled, false if the action wasn't scheduled at all.</returns>
 		public bool CancelScheduledAction(ScheduledAction action)
 		{
 			if (scheduledActions.Contains(action))

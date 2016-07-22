@@ -11,6 +11,9 @@ using SMLimitless.Sprites.InternalSprites;
 
 namespace SMLimitless.Editor
 {
+	/// <summary>
+	/// A form that can display and modify properties for game objects.
+	/// </summary>
 	public partial class PropertyForm : Form
 	{
 		private EditorSelectedObject selectedObject;

@@ -9,6 +9,9 @@ using SMLimitless.Interfaces;
 
 namespace SMLimitless.Physics
 {
+	/// <summary>
+	/// A system that moves a <see cref="Camera2D"/> instance around a <see cref="Sprites.Collections.Section"/> instance.
+	/// </summary>
 	public sealed class CameraSystem
 	{
 		private const float ActiveBoundsFactor = 1.2f;
@@ -29,6 +32,9 @@ namespace SMLimitless.Physics
 		public BoundingRectangle ActiveBounds { get; private set; }
 		internal List<IPositionable2> TrackingObjects { get; private set; }
 
+		/// <summary>
+		/// Gets or sets a value indicating whether the camera's viewport should stay within bounds.
+		/// </summary>
 		public bool StayInBounds { get; set; } = true;
 
 		static CameraSystem()
@@ -37,6 +43,12 @@ namespace SMLimitless.Physics
 			MaximumZoomFactor = new PhysicsSetting<float>("Camera: Maximum Zoom Factor", 1f, 2.5f, 1.5f, PhysicsSettingType.FloatingPoint);
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CameraSystem"/> class.
+		/// </summary>
+		/// <param name="camera">A camera for the system to move.</param>
+		/// <param name="totalBounds">The bounds of the <see cref="Sprites.Collections.Section"/> instance.</param>
+		/// <param name="trackingObjects">A collection of objects that the camera should follow.</param>
 		public CameraSystem(Camera2D camera, BoundingRectangle totalBounds, params IPositionable2[] trackingObjects)
 		{
 			if (camera == null) { throw new ArgumentNullException(nameof(camera), "Cannot create a camera system with a null camera."); }
@@ -132,6 +144,9 @@ namespace SMLimitless.Physics
 			return !objectOutsideOfZoomOutBoundary;
 		}
 
+		/// <summary>
+		/// Updates this camera system.
+		/// </summary>
 		public void Update()
 		{
 			float delta = GameServices.GameTime.GetElapsedSeconds();
@@ -198,6 +213,11 @@ namespace SMLimitless.Physics
 			ActiveBounds = CreateActiveBounds(camera.Viewport);
 		}
 
+		/// <summary>
+		/// Draws the total bounds of the camera system as a green rectangle,
+		/// plus optional debug information.
+		/// </summary>
+		/// <param name="debug">A value indicating whether debug information should be displayed.</param>
 		public void Draw(bool debug)
 		{
 			if (!StayInBounds)

@@ -7,6 +7,9 @@ using NAudio.Wave;
 
 namespace SMLimitless.Sounds
 {
+	/// <summary>
+	/// Provides samples for a sound that fades in or fades out.
+	/// </summary>
 	public sealed class FadeInFadeOutSampleProvider : ISampleProvider
 	{
 		// Credit to Mark Heath (http://stackoverflow.com/a/9471208/2709212)
@@ -25,12 +28,20 @@ namespace SMLimitless.Sounds
 		private int fadeSampleCount;
 		private FadeState fadeState;
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="FadeInFadeOutSampleProvider"/> class.
+		/// </summary>
+		/// <param name="source">A sample provider.</param>
 		public FadeInFadeOutSampleProvider(ISampleProvider source)
 		{
 			this.source = source;
 			fadeState = FadeState.FullVolume;
 		}
 
+		/// <summary>
+		/// Begins a fade-in.
+		/// </summary>
+		/// <param name="fadeDurationInMilliseconds">How long the fade should last, in milliseconds.</param>
 		public void BeginFadeIn(double fadeDurationInMilliseconds)
 		{
 			lock (lockObject)
@@ -41,6 +52,10 @@ namespace SMLimitless.Sounds
 			}
 		}
 
+		/// <summary>
+		/// Begins a fade-out.
+		/// </summary>
+		/// <param name="fadeDurationInMilliseconds">How long the fade should last, in milliseconds.</param>
 		public void BeginFadeOut(double fadeDurationInMilliseconds)
 		{
 			lock (lockObject)
@@ -51,6 +66,13 @@ namespace SMLimitless.Sounds
 			}
 		}
 
+		/// <summary>
+		/// Reads samples from this provider into a buffer.
+		/// </summary>
+		/// <param name="buffer">A buffer to write samples into.</param>
+		/// <param name="offset">How many samples in the sound to skip.</param>
+		/// <param name="count">The number of samples to read.</param>
+		/// <returns>The number of samples read.</returns>
 		public int Read(float[] buffer, int offset, int count)
 		{
 			int sourceSamplesRead = source.Read(buffer, offset, count);
@@ -120,6 +142,9 @@ namespace SMLimitless.Sounds
 			}
 		}
 
+		/// <summary>
+		/// Gets the <see cref="WaveFormat"/> for this provider.
+		/// </summary>
 		public WaveFormat WaveFormat
 		{
 			get { return source.WaveFormat; }

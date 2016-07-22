@@ -16,6 +16,9 @@ namespace SMLimitless.Sprites.Components
 		private int framesUntilNextCheck;
 		private List<float> distancesToPlayers = new List<float>();
 
+		/// <summary>
+		/// Gets or sets a value indicating whether this component should have the sprite chase the player.
+		/// </summary>
 		public bool IsActive { get; set; } = true;
 
 		/// <summary>
