@@ -603,6 +603,12 @@
             <param name="range">The range to compare.</param>
             <returns>True if all properties are equal, false if otherwise.</returns>
         </member>
+        <member name="M:SMLimitless.Collections.SparseCellRange.GetHashCode">
+            <summary>
+            Gets a hash code for this <see cref="T:SMLimitless.Collections.SparseCellRange"/>.
+            </summary>
+            <returns>An <see cref="T:System.Int32"/> containing the hash code for this range.</returns>
+        </member>
         <member name="T:SMLimitless.Collections.Hierarchy`1">
             <summary>
             Provides a generic hierarchy collection.
@@ -696,6 +702,12 @@
             <param name="action">The action to execute.</param>
             <param name="framesUntilExecution">The number of frames until the action is executed.</param>
         </member>
+        <member name="P:SMLimitless.Components.ActionScheduler.Instance">
+            <summary>
+            A global instance that can be used if a specific <see cref="T:SMLimitless.Components.ActionScheduler"/>
+            instance is considered unnessecary.
+            </summary>
+        </member>
         <member name="M:SMLimitless.Components.ActionScheduler.ScheduleAction(System.Action,System.Int32)">
             <summary>
             Schedules an action to occur in a certain number of frames.
@@ -703,10 +715,74 @@
             <param name="action">The action to execute.</param>
             <param name="framesUntilExecution">The number of frames until the action is executed.</param>
         </member>
+        <member name="M:SMLimitless.Components.ActionScheduler.ScheduleActionOnNextFrame(System.Action,System.Int32)">
+            <summary>
+            On the next frame, an action is scheduled to execute.
+            </summary>
+            <param name="action">The action to execute.</param>
+            <param name="framesUntilExecution">The number of frames until the action executes.</param>
+            <returns>A <see cref="T:SMLimitless.Components.ActionScheduler.ScheduledAction"/> reference for the action to be executed.</returns>
+            <remarks>As this action is scheduled on the next frame, one frame is subtracted from the
+            <paramref name="framesUntilExecution"/> argument.</remarks>
+        </member>
+        <member name="M:SMLimitless.Components.ActionScheduler.CancelScheduledAction(SMLimitless.Components.ActionScheduler.ScheduledAction)">
+            <summary>
+            Cancels a scheduled action.
+            </summary>
+            <param name="action">The action to cancel.</param>
+            <returns>True if the action has been cancelled, false if the action wasn't scheduled at all.</returns>
+        </member>
         <member name="M:SMLimitless.Components.ActionScheduler.Update">
             <summary>
             Updates this action scheduler, decrementing the frames-left of all scheduled actions,
             and executing actions that have 0 frames left.
+            </summary>
+        </member>
+        <member name="T:SMLimitless.Components.FrameTimer">
+            <summary>
+            A timer that fires an event after a defined number of frames.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Components.FrameTimer.TimerExpired">
+            <summary>
+            Gets a value indicating whether the timer has expired.
+            </summary>
+        </member>
+        <member name="E:SMLimitless.Components.FrameTimer.TimerExpiredEvent">
+            <summary>
+            An event that is fired when the timer expires.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Components.FrameTimer.Start(System.Int32)">
+            <summary>
+            Starts the timer to expire in a certain number of frames.
+            </summary>
+            <param name="frames">The number of frames before the timer expires.</param>
+        </member>
+        <member name="M:SMLimitless.Components.FrameTimer.Pause">
+            <summary>
+            Pauses the timer so that it can be resumed from where it was later.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Components.FrameTimer.Cancel">
+            <summary>
+            Cancels the timer and removes any frames remaining.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Components.FrameTimer.Reset">
+            <summary>
+            Resets the timer.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Components.FrameTimer.Restart(System.Int32)">
+            <summary>
+            Restarts the timer with a new number of frames.
+            </summary>
+            <param name="frames">The number of frames until the timer expires.</param>
+        </member>
+        <member name="M:SMLimitless.Components.FrameTimer.Update">
+            <summary>
+            Updates this timer, decrementing one frame.
             </summary>
         </member>
         <member name="T:SMLimitless.Content.ContentPackage">
@@ -1138,6 +1214,11 @@
             <param name="source">The texture on which the image is.</param>
             <param name="sourceRectangle">The part of the texture where the image is.</param>
         </member>
+        <member name="T:SMLimitless.Editor.EditorForm">
+            <summary>
+            The form for the level editor's objects and properties.
+            </summary>
+        </member>
         <member name="P:SMLimitless.Editor.EditorForm.EditorState">
             <summary>
             Gets the state of the level editor.
@@ -1188,11 +1269,16 @@
             Any object clicked on will be removed from the section.
             </summary>
         </member>
-        <member name="M:SMLimitless.Editor.PropertyForm.#ctor(SMLimitless.Sprites.InternalSprites.EditorSelectedObject)">
+        <member name="T:SMLimitless.Editor.PropertyForm">
+            <summary>
+            A form that can display and modify properties for game objects.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Editor.PropertyForm.#ctor(System.Object,System.Boolean)">
             <summary>
             Initializes a new instance of the <see cref="T:SMLimitless.Editor.PropertyForm"/> class.
             </summary>
-            <param name="selectedObject">An <see cref="T:SMLimitless.Sprites.InternalSprites.EditorSelectedObject"/> instance currently in use by the level editor.</param>
+            <param name="displayedObject">An <see cref="T:SMLimitless.Sprites.InternalSprites.EditorSelectedObject"/> instance currently in use by the level editor.</param>
         </member>
         <member name="F:SMLimitless.Editor.PropertyForm.components">
             <summary>
@@ -2963,6 +3049,11 @@
             A component that indicates in which direction the nearest player is to a sprite.
             </summary>
         </member>
+        <member name="P:SMLimitless.Sprites.Components.ChasePlayerComponent.IsActive">
+            <summary>
+            Gets or sets a value indicating whether this component should have the sprite chase the player.
+            </summary>
+        </member>
         <member name="P:SMLimitless.Sprites.Components.ChasePlayerComponent.FramesBetweenDirectionChecks">
             <summary>
             Gets the number of frames between any two checks of the nearest player's direction.
@@ -2997,6 +3088,19 @@
         <member name="T:SMLimitless.Sprites.Components.DamageComponent">
             <summary>
             A component for a sprite that can damage other sprites.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Sprites.Components.DamageComponent.PerformDamage(SMLimitless.Sprites.Sprite,System.String,System.Int32)">
+            <summary>
+            Performs damage to sprite with a <see cref="T:SMLimitless.Sprites.Components.HealthComponent"/> instance.
+            </summary>
+            <param name="sprite">The sprite to damage.</param>
+            <param name="damageType">The type of damage to perform.</param>
+            <param name="hpAmount">How many hit points to damage for.</param>
+        </member>
+        <member name="M:SMLimitless.Sprites.Components.DamageComponent.Update">
+            <summary>
+            Updates this component.
             </summary>
         </member>
         <member name="T:SMLimitless.Sprites.Components.HealthComponent">
@@ -3065,6 +3169,28 @@
             </summary>
             <param name="hpAmount"></param>
         </member>
+        <member name="T:SMLimitless.Sprites.Components.SpriteDamagedEventArgs">
+            <summary>
+            Contains event data for when a sprite or tile damages another sprite.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Components.SpriteDamagedEventArgs.DamageType">
+            <summary>
+            The type of damage.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Components.SpriteDamagedEventArgs.RemainingHitPoints">
+            <summary>
+            The number of remaining hit points on the damaged sprite.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Sprites.Components.SpriteDamagedEventArgs.#ctor(System.String,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SMLimitless.Sprites.Components.SpriteDamagedEventArgs"/> class.
+            </summary>
+            <param name="damageType">The type of damage.</param>
+            <param name="remainingHitPoints">The number of remaining hit points on the damaged sprite.</param>
+        </member>
         <member name="T:SMLimitless.Sprites.Components.ShelledEnemyComponent">
             <summary>
             A component for an enemy that is shelled (i.e. behaves like
@@ -3116,6 +3242,21 @@
             The shelled enemy has retreated to its spinning shell, able to damage other sprites and players.
             </summary>
         </member>
+        <member name="P:SMLimitless.Sprites.Components.ShelledEnemyComponent.Behavior">
+            <summary>
+            Gets or sets the behavior of this component.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Components.ShelledEnemyComponent.State">
+            <summary>
+            Gets or sets the state of this component.
+            </summary>
+        </member>
+        <member name="E:SMLimitless.Sprites.Components.ShelledEnemyComponent.StateChanged">
+            <summary>
+            An event raised when this component's state changes.
+            </summary>
+        </member>
         <member name="M:SMLimitless.Sprites.Components.ShelledEnemyComponent.#ctor(SMLimitless.Sprites.Sprite,System.Single,System.Single,System.Int32,System.Int32)">
             <summary>
             Initializes a new instance of the <see cref="T:SMLimitless.Sprites.Components.ShelledEnemyComponent"/> sprite.
@@ -3123,10 +3264,39 @@
             <param name="owner">The sprite that owns this component.</param>
             <param name="walkingVelocity">The horizontal velocity at which the owner will walk.</param>
             <param name="shellSpinningVelocity">The horizontal velocity at which the owner will spin.</param>
+            <param name="framesFromShellToEmerging">The number of frames between entering the Shell state and entering the Emerging state.</param>
+            <param name="framesFromEmergingToWalking">The number of frames between entering the Emerging state and entering the Walking state.</param>
+        </member>
+        <member name="M:SMLimitless.Sprites.Components.ShelledEnemyComponent.HandleSpriteCollision(SMLimitless.Sprites.Sprite,Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Handles a collision with another sprite.
+            </summary>
+            <param name="collidingSprite">The sprite that has collided with the owner sprite.</param>
+            <param name="resolutionDistance">The depth of the collision.</param>
+        </member>
+        <member name="M:SMLimitless.Sprites.Components.ShelledEnemyComponent.Update">
+            <summary>
+            Updates this component.
+            </summary>
         </member>
         <member name="T:SMLimitless.Sprites.Components.WalkerComponent">
             <summary>
             A component which moves the sprite horizontally along a surface of tiles.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Components.WalkerComponent.CurrentVelocity">
+            <summary>
+            Gets or sets the current velocity of this component.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Components.WalkerComponent.Direction">
+            <summary>
+            Gets or sets the direction that the component has its owner walk in.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Components.WalkerComponent.IsActive">
+            <summary>
+            Gets or sets a value indicating whether this component is active.
             </summary>
         </member>
         <member name="P:SMLimitless.Sprites.Components.WalkerComponent.StartingDirection">
@@ -3425,6 +3595,14 @@
             <summary>
             Performs an action for when this sprite takes damage.
             </summary>
+        </member>
+        <member name="M:SMLimitless.Sprites.Sprite.OnEditorDrop(SMLimitless.Sprites.Sprite)">
+            <summary>
+            Accepts a sprite that was dropped on this sprite by the level editor.
+            when the user left-clicked on it with a sprite selected.
+            </summary>
+            <param name="sprite">The sprite dropped on this sprite.</param>
+            <returns>True if this sprite supports dropping, false if otherwise.</returns>
         </member>
         <member name="M:SMLimitless.Sprites.Sprite.DeserializeCustomObjects(SMLimitless.Sprites.Assemblies.JsonHelper)">
             <summary>
@@ -3853,6 +4031,11 @@
             must round values to integers. This struct uses float for precision.
             </summary>
         </member>
+        <member name="F:SMLimitless.Physics.BoundingRectangle.IntersectionCallCount">
+            <summary>
+            Debug; keeps track of how many times intersection methods have been called.
+            </summary>
+        </member>
         <member name="F:SMLimitless.Physics.BoundingRectangle.min">
             <summary>
             The position of the top-left corner.
@@ -3981,6 +4164,26 @@
             </summary>
             <remarks>This member is required for the ICollidableShape interface.</remarks>
         </member>
+        <member name="P:SMLimitless.Physics.BoundingRectangle.BottomRight">
+            <summary>
+            Gets the position of the bottom-right point on this rectangle.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.BoundingRectangle.TopRight">
+            <summary>
+            Gets the position of the top-right point on this rectangle.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.BoundingRectangle.BottomLeft">
+            <summary>
+            Gets the position of the bottom-left point on this rectangle.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.BoundingRectangle.TopLeft">
+            <summary>
+            Gets the position of the top-left point on this rectangle.
+            </summary>
+        </member>
         <member name="M:SMLimitless.Physics.BoundingRectangle.FromSimpleString(System.String)">
             <summary>
             Returns a rectangle created from a simple string representation.
@@ -4042,6 +4245,20 @@
             <param name="point">The point to check.</param>
             <param name="adjacentPointsAreWithin">If true, any point on the edge of the shape will be considered within.</param>
             <returns>True if the point is within the shape, false if otherwise.</returns>
+        </member>
+        <member name="M:SMLimitless.Physics.BoundingRectangle.Within(SMLimitless.Physics.BoundingRectangle)">
+            <summary>
+            Returns a value indicating whether a bounding rectangle is entirely contained within this rectangle.
+            </summary>
+            <param name="that">The other rectangle.</param>
+            <returns>True if the other rectangle is entirely contained within this one, false if otherwise.</returns>
+        </member>
+        <member name="M:SMLimitless.Physics.BoundingRectangle.GetPointRelation(Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Returns a value indicating whether a point is above, below, to the left of, et cetera, of this rectangle.
+            </summary>
+            <param name="point">The point to check.</param>
+            <returns>A <see cref="T:SMLimitless.Physics.RectangularSpaceDivision"/> instance indicating where the point is with relation to this rectangle.</returns>
         </member>
         <member name="M:SMLimitless.Physics.BoundingRectangle.GetIntersectionDepth(SMLimitless.Physics.BoundingRectangle)">
             <summary>
@@ -4173,10 +4390,40 @@
             </summary>
             <returns>The matrix transformation.</returns>
         </member>
+        <member name="T:SMLimitless.Physics.CameraSystem">
+            <summary>
+            A system that moves a <see cref="T:SMLimitless.Physics.Camera2D"/> instance around a <see cref="T:SMLimitless.Sprites.Collections.Section"/> instance.
+            </summary>
+        </member>
         <member name="P:SMLimitless.Physics.CameraSystem.ActiveBounds">
             <summary>
             Gets a rectangle in which game objects such as tiles and sprites are active.
             </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.CameraSystem.StayInBounds">
+            <summary>
+            Gets or sets a value indicating whether the camera's viewport should stay within bounds.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Physics.CameraSystem.#ctor(SMLimitless.Physics.Camera2D,SMLimitless.Physics.BoundingRectangle,SMLimitless.Interfaces.IPositionable2[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:SMLimitless.Physics.CameraSystem"/> class.
+            </summary>
+            <param name="camera">A camera for the system to move.</param>
+            <param name="totalBounds">The bounds of the <see cref="T:SMLimitless.Sprites.Collections.Section"/> instance.</param>
+            <param name="trackingObjects">A collection of objects that the camera should follow.</param>
+        </member>
+        <member name="M:SMLimitless.Physics.CameraSystem.Update">
+            <summary>
+            Updates this camera system.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Physics.CameraSystem.Draw(System.Boolean)">
+            <summary>
+            Draws the total bounds of the camera system as a green rectangle,
+            plus optional debug information.
+            </summary>
+            <param name="debug">A value indicating whether debug information should be displayed.</param>
         </member>
         <member name="T:SMLimitless.Physics.InterpolatorScaleDelegate">
             <summary>
@@ -5489,6 +5736,21 @@
             <param name="jsonEntry">A JSON token containing two comma-delimited numbers.</param>
             <returns>A Vector2 converted from the token.</returns>
         </member>
+        <member name="T:SMLimitless.Forms.CollisionDebuggerForm">
+            <summary>
+            A form that displays information about collision detection and resolution.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Forms.CollisionDebuggerForm.TimeScale">
+            <summary>
+            Gets a value indicating the time scale applied to physics and collision.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Forms.CollisionDebuggerForm.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:SMLimitless.Forms.CollisionDebuggerForm"/> class.
+            </summary>
+        </member>
         <member name="M:SMLimitless.Forms.CollisionDebuggerForm.Update(System.Int32,System.Boolean,Microsoft.Xna.Framework.Vector2)">
             <summary>
             Updates the <see cref="F:SMLimitless.Forms.CollisionDebuggerForm.TextCollisionInfo"/> textbox.
@@ -6055,6 +6317,12 @@
             <summary>
             Loads the content for this object.
             </summary>
+        </member>
+        <member name="M:SMLimitless.Graphics.ComplexGraphicsObject.GetEditorGraphics">
+            <summary>
+            Gets a graphic suitable for display in the level editor's object selection window.
+            </summary>
+            <returns>A <see cref="T:Microsoft.Xna.Framework.Graphics.Texture2D"/> instance containing the graphic to display.</returns>
         </member>
         <member name="M:SMLimitless.Graphics.ComplexGraphicsObject.Update">
             <summary>
@@ -6726,6 +6994,27 @@
             <param name="value">The value to check.</param>
             <returns>True if the value is a full data entry, false if otherwise.</returns>
         </member>
+        <member name="T:SMLimitless.IO.EditorObjectData">
+            <summary>
+            Contains information about game objects relevant to the level editor.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.IO.EditorObjectData.TileData">
+            <summary>
+            Gets a read-only list containing the information for all tiles in an assembly.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.IO.EditorObjectData.SpriteData">
+            <summary>
+            Gets a read-only list containing the information for all sprites in an assembly.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.IO.EditorObjectData.ReadData(System.String)">
+            <summary>
+            Reads information for game objects from a JSON file.
+            </summary>
+            <param name="jsonPath">The path to the JSON file.</param>
+        </member>
         <member name="T:SMLimitless.Program">
             <summary>
             Contains the entry point to the program.
@@ -6851,6 +7140,58 @@
             <summary>
             Called when the effect is finished.
             Fires the EffectCompletedEvent.
+            </summary>
+        </member>
+        <member name="T:SMLimitless.Screens.Effects.IrisEffect">
+            <summary>
+            An iris wipe effect.
+            </summary>
+        </member>
+        <member name="E:SMLimitless.Screens.Effects.IrisEffect.EffectCompletedEvent">
+            <summary>
+            An event raised when this effect has completed.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Screens.Effects.IrisEffect.#ctor(Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SMLimitless.Screens.Effects.IrisEffect"/> class.
+            </summary>
+            <param name="center">The point at which the iris should close to or open from.</param>
+        </member>
+        <member name="M:SMLimitless.Screens.Effects.IrisEffect.Draw">
+            <summary>
+            Draws this effect.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Screens.Effects.IrisEffect.LoadContent">
+            <summary>
+            Loads the content for this effect.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Screens.Effects.IrisEffect.Set(SMLimitless.Interfaces.EffectDirection,Microsoft.Xna.Framework.Color)">
+            <summary>
+            Sets this effect to be completed in any direction.
+            </summary>
+            <param name="direction">The direction to be set to.</param>
+            <param name="color">The color of the effect.</param>
+        </member>
+        <member name="M:SMLimitless.Screens.Effects.IrisEffect.Start(System.Int32,SMLimitless.Interfaces.EffectDirection,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Color)">
+            <summary>
+            Starts this effect.
+            </summary>
+            <param name="length">How many frames this effect should last.</param>
+            <param name="direction">The direction in which to run the effect (forward is iris in, backwards is iris out).</param>
+            <param name="position">The position at which the iris should close/open.</param>
+            <param name="color">The color of the background after the iris-in.</param>
+        </member>
+        <member name="M:SMLimitless.Screens.Effects.IrisEffect.Stop">
+            <summary>
+            Stops the effect, filling the screen with the color specified in the <see cref="M:SMLimitless.Screens.Effects.IrisEffect.Start(System.Int32,SMLimitless.Interfaces.EffectDirection,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Color)"/> method.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Screens.Effects.IrisEffect.Update">
+            <summary>
+            Updates this effect.
             </summary>
         </member>
         <member name="T:SMLimitless.Screens.LevelScreen">
@@ -7131,6 +7472,183 @@
             </summary>
             <param name="gameTime">Snapshot of the game timing state expressed in values that can be used by
             variable-step (real time) or fixed-step (game time) games.</param>
+        </member>
+        <member name="T:SMLimitless.Sounds.AudioPlaybackEngine">
+            <summary>
+            A fire-and-forget audio player for music and sound effects.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sounds.AudioPlaybackEngine.Instance">
+            <summary>
+            Gets an instance of the <see cref="T:SMLimitless.Sounds.AudioPlaybackEngine"/> for global usage.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Sounds.AudioPlaybackEngine.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SMLimitless.Sounds.AudioPlaybackEngine"/> class.
+            </summary>
+            <param name="sampleRate">How many samples should be played in a second.</param>
+            <param name="channelCount">How many channels of sound should be played.</param>
+        </member>
+        <member name="M:SMLimitless.Sounds.AudioPlaybackEngine.PlaySound(System.String,System.EventHandler)">
+            <summary>
+            Plays a sound given a filename.
+            </summary>
+            <param name="fileName">The name of the file to play.</param>
+            <param name="additionalOnPlaybackEndedHandler">An event handler raised when the playback ends.</param>
+        </member>
+        <member name="M:SMLimitless.Sounds.AudioPlaybackEngine.PlayFadeableSound(System.String,System.EventHandler,System.Action{System.Double}@,System.Action{System.Double}@)">
+            <summary>
+            Plays a sound that fades in and/or out from a file.
+            </summary>
+            <param name="fileName">The name of the file to play.</param>
+            <param name="additionalOnPlaybackEndedHandler">An event handler raised when the playback ends.</param>
+            <param name="beginFadeInAction">An action called when the fade-in begins.</param>
+            <param name="beginFadeOutAction">An action called when the fade-out begins.</param>
+        </member>
+        <member name="M:SMLimitless.Sounds.AudioPlaybackEngine.PlaySound(SMLimitless.Sounds.CachedSound,System.EventHandler)">
+            <summary>
+            Plays a <see cref="T:SMLimitless.Sounds.CachedSound"/> instance.
+            </summary>
+            <param name="sound">The sound to play.</param>
+            <param name="additionalOnPlaybackEndedHandler">An event handler raised when the playback ends.</param>
+        </member>
+        <member name="M:SMLimitless.Sounds.AudioPlaybackEngine.PlayFadeableSound(SMLimitless.Sounds.CachedSound,System.EventHandler,System.Action{System.Double}@,System.Action{System.Double}@)">
+            <summary>
+            Plays a <see cref="T:SMLimitless.Sounds.CachedSound"/> instance that fades in and/or out.
+            </summary>
+            <param name="sound">The sound to play.</param>
+            <param name="additionalOnPlaybackEndedHandler">An event handler raised when the playback ends.</param>
+            <param name="beginFadeInAction">An action called when the fade-in begins.</param>
+            <param name="beginFadeOutAction">An action called when the fade-out begins.</param>
+        </member>
+        <member name="M:SMLimitless.Sounds.AudioPlaybackEngine.Dispose">
+            <summary>
+            Disposes the members of this class.
+            </summary>
+        </member>
+        <member name="T:SMLimitless.Sounds.AutoDisposeFileReader">
+            <summary>
+            An automatically-disposing file reader for audio files.
+            </summary>
+        </member>
+        <member name="E:SMLimitless.Sounds.AutoDisposeFileReader.PlaybackEndedEvent">
+            <summary>
+            An event raised when the playback of this file has ended.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Sounds.AutoDisposeFileReader.#ctor(NAudio.Wave.AudioFileReader)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SMLimitless.Sounds.AutoDisposeFileReader"/> class.
+            </summary>
+            <param name="reader">A reader for an audio file.</param>
+        </member>
+        <member name="M:SMLimitless.Sounds.AutoDisposeFileReader.Read(System.Single[],System.Int32,System.Int32)">
+            <summary>
+            Reads a number of samples from the file into a buffer.
+            </summary>
+            <param name="buffer">A buffer of <see cref="T:System.Single"/> samples.</param>
+            <param name="offset">How many samples from the beginning to skip.</param>
+            <param name="count">How many samples to read.</param>
+            <returns>The number of samples read.</returns>
+        </member>
+        <member name="P:SMLimitless.Sounds.AutoDisposeFileReader.WaveFormat">
+            <summary>
+            Gets a value indicating the <see cref="P:SMLimitless.Sounds.AutoDisposeFileReader.WaveFormat"/> of this reader.
+            </summary>
+        </member>
+        <member name="T:SMLimitless.Sounds.CachedSound">
+            <summary>
+            A sound, consisting of a buffer of <see cref="T:System.Single"/> samples.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sounds.CachedSound.AudioData">
+            <summary>
+            The samples of this sound.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sounds.CachedSound.WaveFormat">
+            <summary>
+            The <see cref="P:SMLimitless.Sounds.CachedSound.WaveFormat"/> of this sound.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sounds.CachedSound.Name">
+            <summary>
+            The name of this sound.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Sounds.CachedSound.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SMLimitless.Sounds.CachedSound"/> class.
+            </summary>
+            <param name="audioFileName">The name of the file containing the sound.</param>
+        </member>
+        <member name="T:SMLimitless.Sounds.CachedSoundSampleProvider">
+            <summary>
+            Provides audio samples from a <see cref="T:SMLimitless.Sounds.CachedSound"/> instance.
+            </summary>
+        </member>
+        <member name="E:SMLimitless.Sounds.CachedSoundSampleProvider.PlaybackEndedEvent">
+            <summary>
+            An event raised when playback of this sound has ended.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Sounds.CachedSoundSampleProvider.#ctor(SMLimitless.Sounds.CachedSound)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SMLimitless.Sounds.CachedSoundSampleProvider"/> class.
+            </summary>
+            <param name="cachedSound">The sound to provide samples from.</param>
+        </member>
+        <member name="M:SMLimitless.Sounds.CachedSoundSampleProvider.Read(System.Single[],System.Int32,System.Int32)">
+            <summary>
+            Reads a number of samples from the sound.
+            </summary>
+            <param name="buffer">A buffer to write samples into.</param>
+            <param name="offset">How many samples in the sound to skip.</param>
+            <param name="count">The number of samples to read.</param>
+            <returns>The number of samples read.</returns>
+        </member>
+        <member name="P:SMLimitless.Sounds.CachedSoundSampleProvider.WaveFormat">
+            <summary>
+            Gets the <see cref="P:SMLimitless.Sounds.CachedSoundSampleProvider.WaveFormat"/> of this sample provider.
+            </summary>
+        </member>
+        <member name="T:SMLimitless.Sounds.FadeInFadeOutSampleProvider">
+            <summary>
+            Provides samples for a sound that fades in or fades out.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Sounds.FadeInFadeOutSampleProvider.#ctor(NAudio.Wave.ISampleProvider)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SMLimitless.Sounds.FadeInFadeOutSampleProvider"/> class.
+            </summary>
+            <param name="source">A sample provider.</param>
+        </member>
+        <member name="M:SMLimitless.Sounds.FadeInFadeOutSampleProvider.BeginFadeIn(System.Double)">
+            <summary>
+            Begins a fade-in.
+            </summary>
+            <param name="fadeDurationInMilliseconds">How long the fade should last, in milliseconds.</param>
+        </member>
+        <member name="M:SMLimitless.Sounds.FadeInFadeOutSampleProvider.BeginFadeOut(System.Double)">
+            <summary>
+            Begins a fade-out.
+            </summary>
+            <param name="fadeDurationInMilliseconds">How long the fade should last, in milliseconds.</param>
+        </member>
+        <member name="M:SMLimitless.Sounds.FadeInFadeOutSampleProvider.Read(System.Single[],System.Int32,System.Int32)">
+            <summary>
+            Reads samples from this provider into a buffer.
+            </summary>
+            <param name="buffer">A buffer to write samples into.</param>
+            <param name="offset">How many samples in the sound to skip.</param>
+            <param name="count">The number of samples to read.</param>
+            <returns>The number of samples read.</returns>
+        </member>
+        <member name="P:SMLimitless.Sounds.FadeInFadeOutSampleProvider.WaveFormat">
+            <summary>
+            Gets the <see cref="P:SMLimitless.Sounds.FadeInFadeOutSampleProvider.WaveFormat"/> for this provider.
+            </summary>
         </member>
         <member name="T:SMLimitless.Sounds.Sound">
             <summary>

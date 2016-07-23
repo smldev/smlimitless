@@ -328,6 +328,13 @@ namespace SMLimitless.Sprites
         /// </summary>
         Dead
     }
+
+	public enum SpriteActiveState
+	{
+		Active,
+		WaitingToLeaveBounds,
+		Inactive
+	}
 }
 
 namespace SMLimitless.Sprites.Collections

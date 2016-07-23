@@ -17,10 +17,11 @@ using SMLimitless.Sprites.Collections;
 
 namespace SMLimitless.Sprites
 {
-    /// <summary>
-    /// The base type for all sprites.
-    /// </summary>
-    public abstract class Sprite : IName, IEditorObject, IPositionable, IPositionable2
+	/// <summary>
+	/// The base type for all sprites.
+	/// </summary>
+	[DefaultProperty("Name")]
+	public abstract class Sprite : IName, IEditorObject, IPositionable, IPositionable2
     {
         /// <summary>
         /// A backing field for the Position property.
@@ -50,47 +51,59 @@ namespace SMLimitless.Sprites
 		/// <summary>
 		/// Gets or sets an identification number that identifies all sprites of this kind.
 		/// </summary>
+		[Browsable(false)]
 		public uint ID { get; set; }
 
 		#region State Properties (components, state, owner)
 		/// <summary>
 		/// Gets a list of all the components used by this sprite instance.
 		/// </summary>
+		[Browsable(false)]
 		public List<SpriteComponent> Components { get; private set; } = new List<SpriteComponent>();
 
 		/// <summary>
 		/// Gets the state of this sprite when it was first loaded into the level.
 		/// </summary>
+		[Browsable(false)]
 		public SpriteState InitialState { get; internal set; }
 
 		/// <summary>
 		/// Gets or sets a string representing the state of this sprite. Please see
 		/// http://smlimitless.wikia.com/wiki/Sprite_State for more information.
 		/// </summary>
+		[Browsable(false)]
 		public SpriteState State { get; protected internal set; }
 
 		/// <summary>
-        /// Gets or sets the section that owns this sprite.
-        /// </summary>
-        public Section Owner { get; set; }
+		/// Gets or sets the section that owns this sprite.
+		/// </summary>
+		[Browsable(false)]
+		public Section Owner { get; set; }
 		#endregion
 
 		#region Flags (active, embedded, ground, slope, remove)
         /// <summary>
         /// Gets or sets a value indicating whether this sprite is actively updating or not.
         /// </summary>
-        public bool IsActive { get; set; }
+        [Obsolete]
+		public bool IsActive { get; set; }
+
+		[Browsable(false)]
+		public virtual SpriteActiveState ActiveState { get; set; } = SpriteActiveState.Active;
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this sprite is embedded inside of a tile.
 		/// </summary>
+		[Browsable(false)]
 		public bool IsEmbedded { get; set; }
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this sprite is resting on the ground.
 		/// </summary>
+		[Browsable(false)]
 		public bool IsOnGround { get; internal set; }
 
+		[Browsable(false)]
 		public Tile TileBeneathSprite
 		{
 			get
@@ -118,6 +131,7 @@ namespace SMLimitless.Sprites
 		/// <summary>
 		/// Gets or sets a value indicating whether this sprite should be removed from its owner section on the next frame.
 		/// </summary>
+		[Browsable(false)]
 		public bool RemoveOnNextFrame { get; set; }
 		#endregion
 
@@ -125,29 +139,29 @@ namespace SMLimitless.Sprites
 		/// <summary>
 		/// Gets or sets the size in pixels of this sprite.
 		/// </summary>
+		[Browsable(false)]
 		public Vector2 Size { get; protected set; }
 
 		/// <summary>
 		/// Gets or sets the position of this sprite when it was first loaded into the level, measured in pixels.
 		/// </summary>
+		[Browsable(false)]
 		public Vector2 InitialPosition { get; protected internal set; }
-		// TODO: To properly emulate sprite respawn behavior as it is in most Mario games,
-		// sprites need to completely despawn if offscreen (with exceptions like shells),
-		// and then respawn as if they were new when they move back into the active area.
-		// Exceptions include sprites that are truly killed (not just disabled).
-		// Clearly, sprite handling needs a lot of stages, so write a design document
-		// for every possible mode a sprite can be in.
 
 		/// <summary>
 		/// Gets or sets the last position of this sprite, measured in pixels.
 		/// </summary>
+		[Browsable(false)]
 		public Vector2 PreviousPosition { get; protected set; }
 
+		[Browsable(false)]
 		public Vector2 PreviousVelocity { get; protected set; }
 
 		/// <summary>
 		/// Gets or sets the current position of this sprite, measured in pixels.
 		/// </summary>
+		[Description("The position of this sprite in the level.")]
+		[Category("Physics")]
 		public Vector2 Position
 		{
 			get
@@ -169,6 +183,7 @@ namespace SMLimitless.Sprites
 		/// <summary>
 		/// Gets or sets the velocity of this sprite, measured in pixels per second.
 		/// </summary>
+		[Browsable(false)]
 		public Vector2 Velocity 
 		{
 			get
@@ -185,6 +200,7 @@ namespace SMLimitless.Sprites
 		/// <summary>
 		/// Gets or sets the acceleration of this sprite, measured in pixels per second per second.
 		/// </summary>
+		[Browsable(false)]
 		public Vector2 Acceleration { get; set; }
 
 		/// <summary>
@@ -196,6 +212,7 @@ namespace SMLimitless.Sprites
 		/// <summary>
 		/// Gets or sets a value indicating whether the sprite has moved during this frame.
 		/// </summary>
+		[Browsable(false)]
 		public bool HasMoved
 		{
 			get; set;
@@ -204,25 +221,29 @@ namespace SMLimitless.Sprites
 		/// <summary>
 		/// Gets or sets a value indicating whether a collision between this sprite and a tile should break the debugger if collision debugging is enabled.
 		/// </summary>
+		[Browsable(false)]
 		public bool BreakOnCollision { get; set; }
 		#endregion
 
 		#region Collision Properties (mode, hitbox, resting tile/slope)
-        /// <summary>
-        /// Gets or sets the current collision mode of this sprite. Please see the SpriteCollisionMode documentation for
-        /// more information.
-        /// </summary>
-        public SpriteCollisionMode TileCollisionMode { get; protected internal set; }
+		/// <summary>
+		/// Gets or sets the current collision mode of this sprite. Please see the SpriteCollisionMode documentation for
+		/// more information.
+		/// </summary>
+		[Browsable(false)]
+		public SpriteCollisionMode TileCollisionMode { get; protected internal set; }
 
 		/// <summary>
 		/// Gets or sets the current collision mode of this sprite for other sprites.
 		/// </summary>
+		[Browsable(false)]
 		public SpriteCollisionMode SpriteCollisionMode { get; protected internal set; }
 
-        /// <summary>
-        /// Gets a rectangle representing this sprite's hitbox.
-        /// </summary>
-        public BoundingRectangle Hitbox
+		/// <summary>
+		/// Gets a rectangle representing this sprite's hitbox.
+		/// </summary>
+		[Browsable(false)]
+		public BoundingRectangle Hitbox
         {
             get
             {
@@ -236,17 +257,17 @@ namespace SMLimitless.Sprites
 		#endregion
 
 		#region Editor Properties (category, label, name, message, hostility, moving, direction)
-		
+		/// <summary>
+		/// Gets the name of the category that this sprite is categorized within in the level editor.
+		/// </summary>
+		[Browsable(false)]
+		public abstract string EditorCategory { get; }
 
-        /// <summary>
-        /// Gets the name of the category that this sprite is categorized within in the level editor.
-        /// </summary>
-        public abstract string EditorCategory { get; }
-
-        /// <summary>
-        /// Gets or sets the name of this sprite used in the level editor.
-        /// </summary>
-        public string EditorLabel { get; protected set; }
+		/// <summary>
+		/// Gets or sets the name of this sprite used in the level editor.
+		/// </summary>
+		[Browsable(false)]
+		public string EditorLabel { get; protected set; }
 
         /// <summary>
         /// Gets or sets an editor property representing an optional name for this sprite, used by event scripting to
@@ -277,6 +298,7 @@ namespace SMLimitless.Sprites
 		/// <summary>
 		/// Gets a value indicating whether this sprite is a player sprite.
 		/// </summary>
+		[Browsable(false)]
 		public virtual bool IsPlayer { get { return false; }}
 
         /// <summary>
@@ -484,6 +506,17 @@ namespace SMLimitless.Sprites
         public virtual void Damage()
         {
         }
+
+		/// <summary>
+		/// Accepts a sprite that was dropped on this sprite by the level editor.
+		/// when the user left-clicked on it with a sprite selected.
+		/// </summary>
+		/// <param name="sprite">The sprite dropped on this sprite.</param>
+		/// <returns>True if this sprite supports dropping, false if otherwise.</returns>
+		public virtual bool OnEditorDrop(Sprite sprite)
+		{
+			return false;
+		}
 
 		#region Serialization Methods
 		/// <summary>

@@ -97,6 +97,11 @@ namespace SMLimitless.Sprites.InternalSprites
 			}
 		}
 
+		internal void UnsubscribeAllHandlers()
+		{
+			SelectedObjectChanged = null;
+		}
+
 		public void SelectExistingTile(Tile tile)
 		{
 			SelectedObjectType = EditorSelectedObjectType.Tile;
@@ -110,8 +115,8 @@ namespace SMLimitless.Sprites.InternalSprites
 		{
 			SelectedObjectType = EditorSelectedObjectType.Sprite;
 			selectedSprite = AssemblyManager.GetSpriteByFullName(sprite.GetType().FullName);
-			selectedTile.Initialize(Owner);
-			selectedTile.LoadContent();
+			selectedSprite.Initialize(Owner);
+			selectedSprite.LoadContent();
 			OnSelectedObjectChanged();
 		}
 
@@ -184,7 +189,16 @@ namespace SMLimitless.Sprites.InternalSprites
 						sprite.Initialize(Owner);
 						sprite.LoadContent();
 						sprite.Position = Position;
+						sprite.InitialPosition = Position;
 						Owner.AddSpriteOnNextFrame(sprite);
+					}
+					else // otherwise see if we can drop this sprite inside this object
+					{
+						Sprite sprite = AssemblyManager.GetSpriteByFullName(selectedSprite.GetType().FullName);
+						sprite.TileCollisionMode = selectedSprite.TileCollisionMode;
+						sprite.State = sprite.InitialState = selectedSprite.InitialState;
+						sprite.DeserializeCustomObjects(new JsonHelper(JObject.FromObject(selectedSprite.GetCustomSerializableObjects())));
+						spriteUnderCursor.OnEditorDrop(sprite);
 					}
 					break;
 				default:

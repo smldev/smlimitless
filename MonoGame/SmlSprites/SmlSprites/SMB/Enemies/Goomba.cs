@@ -45,6 +45,18 @@ namespace SmlSprites.SMB.Enemies
 		public override string EditorCategory => "Enemies";
 		public override bool IsPlayer => false;
 
+		private Sprite droppedSprite = null;
+		private bool hasSpriteDropped = false;
+
+		public bool HasSpriteDropped
+		{
+			get { return hasSpriteDropped; }
+			set
+			{
+				if (!value) { droppedSprite = null; }
+			}
+		}
+
 		static Goomba()
 		{
 			WalkingSpeed = new PhysicsSetting<float>("SMB Goomba: Walking Speed (p/s)", 0.01f, 256f, 32f, PhysicsSettingType.FloatingPoint);
@@ -150,6 +162,13 @@ namespace SmlSprites.SMB.Enemies
 				default:
 					throw new InvalidOperationException();
 			}
+		}
+
+		public override bool OnEditorDrop(Sprite sprite)
+		{
+			droppedSprite = sprite;
+			HasSpriteDropped = true;
+			return true;
 		}
 	}
 

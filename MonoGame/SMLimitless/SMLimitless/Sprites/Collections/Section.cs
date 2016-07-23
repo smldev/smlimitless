@@ -339,7 +339,7 @@ namespace SMLimitless.Sprites.Collections
 				UpdateObjectActiveStates();
 
 				Tiles.Where(t => t.IsActive).ForEach(t => t.Update());
-				SpritesGrid.Where(s => s.IsActive).ForEach(s => s.Update());
+				SpritesGrid.Where(s => s.ActiveState == SpriteActiveState.Active).ForEach(s => s.Update());
 				SpritesGrid.Update();
 				UpdatePhysics();
 				SpritesGrid.ForEach(s => s.SpritesCollidedWithThisFrame.Clear());
@@ -379,10 +379,26 @@ namespace SMLimitless.Sprites.Collections
 
 			foreach (Sprite sprite in Sprites)
 			{
-				bool currentActiveState = sprite.IsActive;
-				sprite.IsActive = sprite.Hitbox.IntersectsIncludingEdges(CameraSystem.ActiveBounds);
-				if (sprite.IsActive != currentActiveState)
+				SpriteActiveState currentActiveState = sprite.ActiveState;
+				bool withinBounds = sprite.Hitbox.IntersectsIncludingEdges(CameraSystem.ActiveBounds);
+				bool initialPositionWithinBounds = CameraSystem.ActiveBounds.Within(sprite.InitialPosition, true);
+
+				if (currentActiveState == SpriteActiveState.Active && !withinBounds)
 				{
+					sprite.ActiveState = SpriteActiveState.WaitingToLeaveBounds;
+					sprite.Deactivate();
+					sprite.Position = sprite.InitialPosition;
+					updatedSprites++;
+				}
+				else if (currentActiveState == SpriteActiveState.WaitingToLeaveBounds && !initialPositionWithinBounds)
+				{
+					sprite.ActiveState = SpriteActiveState.Inactive;
+					updatedSprites++;
+				}
+				else if (currentActiveState == SpriteActiveState.Inactive && initialPositionWithinBounds)
+				{
+					sprite.ActiveState = SpriteActiveState.Active;
+					sprite.Activate();
 					updatedSprites++;
 				}
 			}
@@ -784,6 +800,8 @@ namespace SMLimitless.Sprites.Collections
 				Vector2 initialSpritePosition = sprite.Position;
 				sprite.IsOnGround = false;
 
+				UpdateSpriteEmbeddedState(sprite);
+
 				int numberOfCollidingTiles = 0;
 				bool slopeCollisionOccurred = false;
 
@@ -797,6 +815,47 @@ namespace SMLimitless.Sprites.Collections
 			}
 
 			debugText = $"";
+		}
+
+		private void UpdateSpriteEmbeddedState(Sprite sprite)
+		{
+			if (!sprite.IsEmbedded) { return; }
+
+			// Does the sprite collide with any tiles?
+
+			foreach (Layer layer in GetLayersIntersectingRectangle(sprite.Hitbox))
+			{
+				Vector2 cellRangeTopLeft = layer.GetClampedCellNumberAtPosition(sprite.Position);
+				Vector2 cellRangeBottomRight = layer.GetClampedCellNumberAtPosition(sprite.Hitbox.BottomRight);
+
+				for (int y = (int)cellRangeTopLeft.Y; y <= (int)cellRangeBottomRight.Y; y++)
+				{
+					for (int x = (int)cellRangeTopLeft.X; x <= (int)cellRangeBottomRight.X; x++)
+					{
+						Tile tile = layer.SafeGetTile(new Vector2(x, y));
+
+						if (tile == null) { continue; }
+						
+						// Is the tile solid on the left and/or right sides?
+						if (tile.TileShape == CollidableShape.Rectangle)
+						{
+							if (((tile.RectSolidSides & TileRectSolidSides.Left) != 0) || ((tile.RectSolidSides & TileRectSolidSides.Right) != 0))
+							{
+								return;
+							}
+						}
+						else if (tile.TileShape == CollidableShape.RightTriangle)
+						{
+							if (((tile.TriSolidSides & TileTriSolidSides.Slope) != 0) || ((tile.TriSolidSides & TileTriSolidSides.VerticalLeg) != 0))
+							{
+								return;
+							}
+						}
+					}
+				}
+
+				sprite.IsEmbedded = false;
+			}
 		}
 	}
 }

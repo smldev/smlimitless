@@ -16,38 +16,53 @@ namespace SMLimitless.Editor
 	/// </summary>
 	public partial class PropertyForm : Form
 	{
-		private EditorSelectedObject selectedObject;
+		private object displayedObject;
+		public object DisplayedObject
+		{
+			get { return displayedObject; }
+			internal set
+			{
+				displayedObject = value;
+				if (PropertyGridSelectedObject != null) { PropertyGridSelectedObject.SelectedObject = value; }
+			}
+		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="PropertyForm"/> class.
 		/// </summary>
-		/// <param name="selectedObject">An <see cref="EditorSelectedObject"/> instance currently in use by the level editor.</param>
-		public PropertyForm(EditorSelectedObject selectedObject)
+		/// <param name="displayedObject">An <see cref="EditorSelectedObject"/> instance currently in use by the level editor.</param>
+		public PropertyForm(object displayedObject, bool showDialogButtons = false)
 		{
-			this.selectedObject = selectedObject;
-			this.selectedObject.SelectedObjectChanged += SelectedObject_SelectedObjectChanged;
+			DisplayedObject = displayedObject;
 			InitializeComponent();
+			PropertyGridSelectedObject.SelectedObject = displayedObject;
+
+			if (showDialogButtons)
+			{
+				CreateDialogButtons();
+			}
 		}
 
-		private void SelectedObject_SelectedObjectChanged(object sender, EventArgs e)
+		private void CreateDialogButtons()
 		{
-			if (selectedObject.SelectedObjectType == EditorSelectedObjectType.Tile)
-			{
-				PropertyGridSelectedObject.SelectedObject = selectedObject.SelectedTile;
-			}
-			else if (selectedObject.SelectedObjectType == EditorSelectedObjectType.Sprite)
-			{
-				PropertyGridSelectedObject.SelectedObject = selectedObject.SelectedSprite;
-			}
-			else
-			{
-				PropertyGridSelectedObject.SelectedObject = null;
-			}
+			// Extend the form.
+			Size = new Size(Size.Width, Size.Height + 40);
+
+			// Create a new button
+			Button okButton = new Button();
+			okButton.Text = "OK";
+			okButton.Size = new Size(100, 30);
+			okButton.Location = new Point(Size.Width - 105, Size.Height - 35);
+			okButton.Click += OkButton_Click;
+		}
+
+		private void OkButton_Click(object sender, EventArgs e)
+		{
+			Close();
 		}
 
 		private void PropertyForm_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			selectedObject.SelectedObjectChanged -= SelectedObject_SelectedObjectChanged;
 		}
 	}
 }

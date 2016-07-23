@@ -50,9 +50,28 @@ namespace SMLimitless.Editor
 			PropertyLevel.SelectedObject = level;
 			PropertySection.SelectedObject = section;
 
-			propertyForm = new PropertyForm(selectedObject);
+			propertyForm = new PropertyForm(GetSelectedObject(selectedObject));
+			selectedObject.SelectedObjectChanged += (sender, e) => {
+				propertyForm.DisplayedObject = GetSelectedObject(selectedObject);
+			};
 
 			PopulateObjectTabs();
+		}
+
+		private object GetSelectedObject(EditorSelectedObject selectedObject)
+		{
+			switch (selectedObject.SelectedObjectType)
+			{
+				case EditorSelectedObjectType.Nothing:
+				case EditorSelectedObjectType.Delete:
+					return new object();
+				case EditorSelectedObjectType.Tile:
+					return selectedObject.SelectedTile;
+				case EditorSelectedObjectType.Sprite:
+					return selectedObject.SelectedSprite;
+				default:
+					throw new InvalidOperationException();
+			}
 		}
 
 		private void PopulateObjectTabs()
@@ -153,6 +172,8 @@ namespace SMLimitless.Editor
 			propertyForm.Close();
 			propertyForm.Dispose();
 			propertyForm = null;
+
+			selectedObject.UnsubscribeAllHandlers();
 		}
 	}
 
