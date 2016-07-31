@@ -523,6 +523,34 @@ namespace SMLimitless.Sprites
 			return "";
 		}
 
+		public Sprite Clone()
+		{
+			Sprite clone = AssemblyManager.GetSpriteByFullName(GetType().FullName);
+
+			clone.EditorLabel = EditorLabel.SafeCopy();
+			clone.Owner = Owner;
+			clone.InitialState = State;
+			clone.State = clone.InitialState;
+			// Clones should always start out active. If they're not supposed to be active, the Section will disable them on the next frame.
+			clone.ActiveState = (ActiveState == SpriteActiveState.AlwaysActive) ? SpriteActiveState.AlwaysActive : SpriteActiveState.Active;
+			clone.Size = Size;
+			clone.InitialPosition = clone.Position = Vector2.Zero;
+			clone.Velocity = Vector2.Zero;
+			clone.Acceleration = Vector2.Zero;
+			clone.HasMoved = true;
+			clone.TileCollisionMode = TileCollisionMode;
+			clone.SpriteCollisionMode = SpriteCollisionMode;
+			clone.Name = Name.SafeCopy();
+			clone.Message = Message.SafeCopy();
+			clone.IsHostile = IsHostile;
+			clone.IsMoving = IsMoving;
+			clone.Direction = Direction;
+
+			clone.DeserializeCustomObjects(new JsonHelper(JObject.FromObject(GetCustomSerializableObjects())));
+
+			return clone;
+		}
+
 		#region Serialization Methods
 		/// <summary>
         /// Deserializes any objects that custom sprites have written to the level file.

@@ -145,6 +145,8 @@ namespace SmlSprites.SMB.Enemies
 			{
 				SpinyState = SpinyState.Spiny;
 			}
+
+			base.HandleTileCollision(tile, resolutionDistance);
 		}
 	}
 

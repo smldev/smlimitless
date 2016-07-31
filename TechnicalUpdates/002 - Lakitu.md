@@ -6,7 +6,7 @@
 
 Lakitu is an enemy sprite that hovers over the player and throws things, typically Spiny Eggs. Although his behavior varied across the games, the first Lakitu that will be implemented is the SMB version.
 
-This Lakitu hovers at a fixed height on the screen (not necessarily in the section as the camera might move vertically). Lakitu moves horizontally along his vertical position, trying to remain in front of the player while the player is moving, and floating around the player while the player is stopped.
+This Lakitu hovers at a fixed height on the screen (not necessarily in the section as the camera might move vertically). Lakitu moves horizontally along his vertical position, chasing one of two desired positions, one on the left-hand side of the screen, and the other on the righthand side. When Lakitu reaches one desired position, his desired position switches to the other side.
 
 Lakitu throws things which have a certain upward velocity and a sideways velocity slightly more than Lakitu himself in whichever direction Lakitu is travelling. The things are Sprite instances that are cloned when Lakitu drops them. There is a two-second delay between when Lakitu throws things. Lakitu keeps track of all the things he has thrown that are onscreen - when these sprites move offscreen, they are permanently removed from his "thrown" list. Lakitu can only have so many onscreen sprites.
 

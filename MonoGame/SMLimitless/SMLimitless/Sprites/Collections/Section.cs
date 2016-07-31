@@ -280,9 +280,8 @@ namespace SMLimitless.Sprites.Collections
 				isContentLoaded = true;
 			}
 
-			// WYLO: Lakitu still kind of acts weirdly but at least he works.
-			// Fix his motion and figure out a way to do sprite cloning
-			// and proper trigger zones, I guess.
+			// WYLO: Lakitu works now, but his sprites act weirdly. Some don't get assigned their proper position,
+			// and some vanish but can still kill the player.
 		}
 
 		/// <summary>
@@ -293,6 +292,7 @@ namespace SMLimitless.Sprites.Collections
 		{
 			// TODO: add code to check if all players are dead
 
+			CameraSystem.TrackingObjects.Remove(player);
 			Vector2 createPlayerAt = Tiles.First(t => GetTileAtPosition(new Vector2(t.Position.X, t.Position.Y - 8f)) == null).Position;
 			createPlayerAt.Y -= 16f;
 			Sprite playerSprite = Assemblies.AssemblyManager.GetSpriteByFullName("SmlSprites.Players.PlayerMario");
@@ -372,6 +372,8 @@ namespace SMLimitless.Sprites.Collections
 			// The only objects that need to be updated are those that are active;
 			// that is, those within the CameraSystem.ActiveBounds rectangle.
 
+			if (EditorActive) { return; }
+
 			int updatedTiles = 0;
 			int updatedSprites = 0;
 
@@ -387,6 +389,8 @@ namespace SMLimitless.Sprites.Collections
 
 			foreach (Sprite sprite in Sprites)
 			{
+				if (sprite.IsPlayer) { continue; }
+
 				SpriteActiveState currentActiveState = sprite.ActiveState;
 				bool withinBounds = sprite.Hitbox.IntersectsIncludingEdges(CameraSystem.ActiveBounds);
 				bool initialPositionWithinBounds = CameraSystem.ActiveBounds.Within(sprite.InitialPosition, true);

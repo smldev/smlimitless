@@ -22,7 +22,8 @@ namespace SmlSprites.SMB.Enemies
 	public sealed class Lakitu : Sprite
 	{
 		private const int GraphicsFrameTransitionFrames = 10;
-	
+
+		public static PhysicsSetting<float> DesiredXPositionPercentage;
 		public static PhysicsSetting<float> DesiredYPositionPercentage;
 		public static PhysicsSetting<float> XAcceleration;
 		public static PhysicsSetting<float> YAcceleration;
@@ -42,6 +43,7 @@ namespace SmlSprites.SMB.Enemies
 		private int throwTimer;
 		private int respawnTimer;
 		private int frameTransitionTimer = GraphicsFrameTransitionFrames;
+		private Direction desiredXPositionDirection = SMLimitless.Direction.Left;
 
 		public override string EditorCategory => "Enemies";
 
@@ -77,12 +79,45 @@ namespace SmlSprites.SMB.Enemies
 			}
 		}
 
+		private float DesiredXPositionLeft
+		{
+			get
+			{
+				return Owner.Camera.Viewport.Left + (Owner.Camera.Viewport.Width * DesiredXPositionPercentage.Value);
+			}
+		}
+
+		private float DesiredXPositionRight
+		{
+			get
+			{
+				return Owner.Camera.Viewport.Right - (Owner.Camera.Viewport.Width * DesiredXPositionPercentage.Value);
+			}
+		}
+
+		private bool ShouldSwitchDirections
+		{
+			get
+			{
+				if (desiredXPositionDirection == SMLimitless.Direction.Left)
+				{
+					return Position.X <= DesiredXPositionLeft;
+				}
+				else if (desiredXPositionDirection == SMLimitless.Direction.Right)
+				{
+					return Position.X >= DesiredXPositionRight;
+				}
+				throw new InvalidOperationException($"The desired X position direction has an invalid value of {desiredXPositionDirection}");
+			}
+		}
+
 		static Lakitu()
 		{
-			DesiredYPositionPercentage = new PhysicsSetting<float>("SMB Lakitu: Desired Y Position Screen %", 0f, 1f, 0.3f, PhysicsSettingType.FloatingPoint);
-			XAcceleration = new PhysicsSetting<float>("SMB Lakitu: X Acceleration (px/sec²)", 0f, 400f, 40f, PhysicsSettingType.FloatingPoint);
-			YAcceleration = new PhysicsSetting<float>("SMB Lakitu: Y Acceleration (px/sec²)", 0f, 400f, 40f, PhysicsSettingType.FloatingPoint);
-			MaxXVelocity = new PhysicsSetting<float>("SMB Lakitu: Max X Velocity (px/sec)", 0f, 4000f, 1200f, PhysicsSettingType.FloatingPoint);
+			DesiredXPositionPercentage = new PhysicsSetting<float>("SMB Lakitu: Desired X Position Screen %", 0f, 1f, 0.1f, PhysicsSettingType.FloatingPoint);
+			DesiredYPositionPercentage = new PhysicsSetting<float>("SMB Lakitu: Desired Y Position Screen %", 0f, 1f, 0.05f, PhysicsSettingType.FloatingPoint);
+			XAcceleration = new PhysicsSetting<float>("SMB Lakitu: X Acceleration (px/sec²)", 0f, 100f, 40f, PhysicsSettingType.FloatingPoint);
+			YAcceleration = new PhysicsSetting<float>("SMB Lakitu: Y Acceleration (px/sec²)", 0f, 100f, 40f, PhysicsSettingType.FloatingPoint);
+			MaxXVelocity = new PhysicsSetting<float>("SMB Lakitu: Max X Velocity (px/sec)", 0f, 500f, 150f, PhysicsSettingType.FloatingPoint);
 			ThrownAdditionalXVelocity = new PhysicsSetting<float>("SMB Lakitu: Thrown Additional X Velocity (px/sec)", 0f, 200f, 20f, PhysicsSettingType.FloatingPoint);
 			ThrownAdditionalYVelocity = new PhysicsSetting<float>("SMB Lakitu: Thrown Additional Y Velocity (px/sec)", 0f, 200f, 20f, PhysicsSettingType.FloatingPoint);
 			MaximumOnscreenSprites = new PhysicsSetting<int>("SMB Lakitu: Maximum Onscreen Sprites", 0, 100, 5, PhysicsSettingType.Integer);
@@ -116,13 +151,18 @@ namespace SmlSprites.SMB.Enemies
 
 		public override void Draw()
 		{
-			if (isActive || Owner.EditorActive)
+			if (isActive)
 			{
 				SpriteEffects effects = SpriteEffects.None;
 				if (Velocity.X < 0f) { effects |= SpriteEffects.FlipHorizontally; }
 				if (isFlippedOver) { effects |= SpriteEffects.FlipVertically; }
 
 				graphics.Draw(Position, Color.White, effects);
+			}
+			else if (Owner.EditorActive)
+			{
+				graphics.Draw(Position, Color.White);
+				if (HasSpriteDropped) { GameServices.SpriteBatch.DrawRectangle((int)Position.X, (int)Position.Y, 4, 4, Color.Lime); }
 			}
 		}
 
@@ -139,9 +179,8 @@ namespace SmlSprites.SMB.Enemies
 		public override void Update()
 		{
 			float delta = GameServices.GameTime.GetElapsedSeconds();
-			Vector2 center = Hitbox.Center;
+			float desiredXPosition = (desiredXPositionDirection == SMLimitless.Direction.Left) ? DesiredXPositionLeft : DesiredXPositionRight;
 			float top = Hitbox.Top;
-			Vector2 screenCenter = Owner.Camera.Viewport.Center;
 			float desiredY = DesiredYPosition;
 			column.Update();
 
@@ -155,18 +194,24 @@ namespace SmlSprites.SMB.Enemies
 				Components.ForEach(c => c.Update());
 				PreviousPosition = Position;
 
-				if (throwTimer == 0)
+				throwTimer--;
+				if (throwTimer <= 0)
 				{
 					ThrowSprite();
 					throwTimer = (int)(ThrowDelay.Value * 60);
 				}
 
-				Acceleration = new Vector2((center.X < screenCenter.X) ? XAcceleration.Value : -XAcceleration.Value, 0f);
+				if (ShouldSwitchDirections)
+				{
+					desiredXPositionDirection = (desiredXPositionDirection == SMLimitless.Direction.Left) ? SMLimitless.Direction.Right : SMLimitless.Direction.Left;
+					desiredXPosition = (desiredXPositionDirection == SMLimitless.Direction.Left) ? DesiredXPositionLeft : DesiredXPositionRight;
+				}
+				Acceleration = new Vector2((Position.X < desiredXPosition) ? XAcceleration.Value : -XAcceleration.Value, Acceleration.Y);
 
 				if (Math.Abs(Position.Y - desiredY) < 1f)
 				{
 					Acceleration = new Vector2(Acceleration.X, 0f);
-					Velocity = new Vector2(Acceleration.X, 0f);	// TODO: make this so that Lakitu slows down before reaching the desired Y coordinate
+					Velocity = new Vector2(Velocity.X, 0f);	// TODO: make this so that Lakitu slows down before reaching the desired Y coordinate
 				}
 				else
 				{
@@ -186,7 +231,7 @@ namespace SmlSprites.SMB.Enemies
 				if (isActive && withinViewport)
 				{
 					// Find the nearest screen edge and accelerate toward it.
-					Acceleration = new Vector2((center.X < screenCenter.X) ? -XAcceleration.Value : XAcceleration.Value, 0f);
+					Acceleration = new Vector2((Hitbox.Center.X < Owner.Camera.Viewport.Center.X) ? -XAcceleration.Value : XAcceleration.Value, 0f);
 				}
 				else if (isActive && !withinViewport)
 				{
@@ -214,6 +259,7 @@ namespace SmlSprites.SMB.Enemies
 
 			// Lakitu spawns 10% past the edge of the viewport on whichever side the player is moving toward
 			float xPosition = Owner.Camera.Viewport.X + ((viewportWidth + (viewportWidth * 0.1f)) * facingDirection);
+			desiredXPositionDirection = (facingDirection == 1) ? SMLimitless.Direction.Left : SMLimitless.Direction.Right;
 			Position = new Vector2(xPosition, DesiredYPosition);
 			Acceleration = new Vector2(XAcceleration.Value * (facingDirection * -1), 0f);
 
@@ -223,11 +269,25 @@ namespace SmlSprites.SMB.Enemies
 		private void ThrowSprite()
 		{
 			if (thrownSprites.Count >= MaximumOnscreenSprites.Value) { return; }
+
+			Sprite spriteToThrow = ThrownSprite.Clone();
+			spriteToThrow.Initialize(Owner);
+			spriteToThrow.LoadContent();
+			spriteToThrow.Position = Position;
+			spriteToThrow.Velocity = new Vector2(Velocity.X + ThrownAdditionalXVelocity.Value, Velocity.Y - ThrownAdditionalYVelocity.Value);
+			Owner.AddSpriteOnNextFrame(spriteToThrow);
+			thrownSprites.Add(spriteToThrow);
 		}
 
 		public override void LoadContent()
 		{
 			graphics.LoadContent();
+		}
+
+		public override bool OnEditorDrop(Sprite sprite)
+		{
+			ThrownSprite = sprite;
+			return true;
 		}
 	}
 }
