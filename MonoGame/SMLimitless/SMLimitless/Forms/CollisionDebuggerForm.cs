@@ -80,6 +80,10 @@ namespace SMLimitless.Forms
 			resultBuilder.AppendLine($"Colliding with {numberOfCollidingTiles} tiles.");
 			resultBuilder.AppendLine($"Sprite is {(SelectedSprite.IsOnGround ? "on ground" : "not on ground")}");
 			resultBuilder.AppendLine($"Slope collisions? {((slopeCollisionOccurred) ? "Yes" : "No" )}");
+			resultBuilder.AppendLine();
+			resultBuilder.AppendLine("Additional Debug Info:");
+			resultBuilder.AppendLine();
+			resultBuilder.Append(SelectedSprite.GetDebugInfo());
 
 			return resultBuilder.ToString();
 		}

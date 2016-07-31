@@ -331,6 +331,7 @@ namespace SMLimitless.Sprites
 
 	public enum SpriteActiveState
 	{
+		AlwaysActive,
 		Active,
 		WaitingToLeaveBounds,
 		Inactive

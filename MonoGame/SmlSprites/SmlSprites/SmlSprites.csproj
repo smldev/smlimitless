@@ -67,11 +67,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyMetadata.cs" />
+    <Compile Include="Helpers\ListenerTriggeredEventArgs.cs" />
+    <Compile Include="Helpers\PlayerSensingColumn.cs" />
+    <Compile Include="Helpers\VerticalLinePlayerListener.cs" />
     <Compile Include="Players\PlayerMario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SMB\Enemies\BuzzyBeetle.cs" />
     <Compile Include="SMB\Enemies\Goomba.cs" />
     <Compile Include="SMB\Enemies\KoopaTroopa.cs" />
+    <Compile Include="SMB\Enemies\Lakitu.cs" />
     <Compile Include="SMB\Enemies\Spiny.cs" />
     <Compile Include="Tiles\SlopedTile.cs" />
     <Compile Include="Tiles\SolidTile.cs" />

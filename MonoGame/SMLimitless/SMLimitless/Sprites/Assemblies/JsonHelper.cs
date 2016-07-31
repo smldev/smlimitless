@@ -23,7 +23,7 @@ namespace SMLimitless.Sprites.Assemblies
         /// <summary>
         /// The JToken instance.
         /// </summary>
-        private JToken value;
+        internal JToken Value { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="JsonHelper"/> class.
@@ -31,7 +31,7 @@ namespace SMLimitless.Sprites.Assemblies
         /// <param name="token">The JToken instance.</param>
         public JsonHelper(JToken token)
         {
-            this.value = token;
+            this.Value = token;
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace SMLimitless.Sprites.Assemblies
         {
             try
             {
-                return (bool)this.value[key];
+                return (bool)this.Value[key];
             }
             catch (Exception ex)
             {
@@ -70,7 +70,7 @@ namespace SMLimitless.Sprites.Assemblies
         {
             try
             {
-                return (byte)this.value[key];
+                return (byte)this.Value[key];
             }
             catch (Exception ex)
             {
@@ -87,7 +87,7 @@ namespace SMLimitless.Sprites.Assemblies
         {
             try
             {
-                return (sbyte)this.value[key];
+                return (sbyte)this.Value[key];
             }
             catch (Exception ex)
             {
@@ -104,7 +104,7 @@ namespace SMLimitless.Sprites.Assemblies
         {
             try
             {
-                return (short)this.value[key];
+                return (short)this.Value[key];
             }
             catch (Exception ex)
             {
@@ -121,7 +121,7 @@ namespace SMLimitless.Sprites.Assemblies
         {
             try
             {
-                return (ushort)this.value[key];
+                return (ushort)this.Value[key];
             }
             catch (Exception ex)
             {
@@ -138,7 +138,7 @@ namespace SMLimitless.Sprites.Assemblies
         {
             try
             {
-                return (int)this.value[key];
+                return (int)this.Value[key];
             }
             catch (Exception ex)
             {
@@ -155,7 +155,7 @@ namespace SMLimitless.Sprites.Assemblies
         {
             try
             {
-                return (uint)this.value[key];
+                return (uint)this.Value[key];
             }
             catch (Exception ex)
             {
@@ -172,7 +172,7 @@ namespace SMLimitless.Sprites.Assemblies
         {
             try
             {
-                return (long)this.value[key];
+                return (long)this.Value[key];
             }
             catch (Exception ex)
             {
@@ -189,7 +189,7 @@ namespace SMLimitless.Sprites.Assemblies
         {
             try
             {
-                return (ulong)this.value[key];
+                return (ulong)this.Value[key];
             }
             catch (Exception ex)
             {
@@ -206,7 +206,7 @@ namespace SMLimitless.Sprites.Assemblies
         {
             try
             {
-                return (float)this.value[key];
+                return (float)this.Value[key];
             }
             catch (Exception ex)
             {
@@ -223,7 +223,7 @@ namespace SMLimitless.Sprites.Assemblies
         {
             try
             {
-                return (double)this.value[key];
+                return (double)this.Value[key];
             }
             catch (Exception ex)
             {
@@ -240,7 +240,7 @@ namespace SMLimitless.Sprites.Assemblies
         {
             try
             {
-                return (decimal)this.value[key];
+                return (decimal)this.Value[key];
             }
             catch (Exception ex)
             {
@@ -255,17 +255,17 @@ namespace SMLimitless.Sprites.Assemblies
         /// <returns>A UTF-16 character from the JToken.</returns>
         public char GetChar(string key)
         {
-            return (char)this.value[key];
+            return (char)this.Value[key];
         }
 
-        /// <summary>
-        /// Returns a UTF-16 string from the JToken instance.
-        /// </summary>
-        /// <param name="key">The name of the key containing the UTF-16 string.</param>
-        /// <returns>A UTF-16 string from the JToken.</returns>
-        public string GetString(string key)
-        {
-            return (string)this.value[key];
-        }
+		/// <summary>
+		/// Returns a UTF-16 string from the JToken instance.
+		/// </summary>
+		/// <param name="key">The name of the key containing the UTF-16 string.</param>
+		/// <returns>A UTF-16 string from the JToken.</returns>
+		public string GetString(string key)
+		{
+			return (string)this.Value[key];
+		}
     }
 }

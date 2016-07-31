@@ -1,0 +1,14 @@
+[Complex]
+FrameSize = 16,24
+TotalGraphicsObjects = 2
+StartingObject = headUp
+
+[Object0]
+Name = headUp
+Type = static
+Frame = 0,0
+
+[Object1]
+Name = headDown
+Type = static
+Frame = 16,0

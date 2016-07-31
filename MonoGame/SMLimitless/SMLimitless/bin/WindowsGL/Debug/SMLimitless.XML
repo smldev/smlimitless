@@ -2928,7 +2928,7 @@
             to explicitly reference Newtonsoft.Json.dll.
             </remarks>
         </member>
-        <member name="F:SMLimitless.Sprites.Assemblies.JsonHelper.value">
+        <member name="P:SMLimitless.Sprites.Assemblies.JsonHelper.Value">
             <summary>
             The JToken instance.
             </summary>

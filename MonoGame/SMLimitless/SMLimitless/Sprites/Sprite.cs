@@ -518,6 +518,11 @@ namespace SMLimitless.Sprites
 			return false;
 		}
 
+		public virtual string GetDebugInfo()
+		{
+			return "";
+		}
+
 		#region Serialization Methods
 		/// <summary>
         /// Deserializes any objects that custom sprites have written to the level file.

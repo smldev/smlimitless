@@ -147,6 +147,7 @@
     <Compile Include="IO\LevelSerializers\Serializer003Types\LayerTileSaveData.cs" />
     <Compile Include="IO\LevelSerializers\Serializer003Types\TilePositionCloud.cs" />
     <Compile Include="IO\LevelSerializers\Serializer003Types\TileSaveData.cs" />
+    <Compile Include="IO\LevelSerializers\TypeSerializer.cs" />
     <Compile Include="Physics\BoundingRectangle.cs" />
     <Compile Include="Physics\Camera2D.cs" />
     <Compile Include="Physics\CameraSystem.cs" />

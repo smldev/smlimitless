@@ -114,6 +114,10 @@ namespace SMLimitless.Sprites.Collections
 
 		internal List<Sprite> Sprites { get; set; } = new List<Sprite>();
 
+		public IReadOnlyList<Sprite> PlayerList { get { return Players.AsReadOnly(); } }
+		
+		public IReadOnlyList<Sprite> SpriteList { get { return Sprites.AsReadOnly(); } }
+
 		internal SparseCellGrid<Sprite> SpritesGrid { get; set; }
 
 		internal List<Sprite> SpritesToAddOnNextFrame { get; } = new List<Sprite>();
@@ -275,6 +279,10 @@ namespace SMLimitless.Sprites.Collections
 
 				isContentLoaded = true;
 			}
+
+			// WYLO: Lakitu still kind of acts weirdly but at least he works.
+			// Fix his motion and figure out a way to do sprite cloning
+			// and proper trigger zones, I guess.
 		}
 
 		/// <summary>
@@ -339,7 +347,7 @@ namespace SMLimitless.Sprites.Collections
 				UpdateObjectActiveStates();
 
 				Tiles.Where(t => t.IsActive).ForEach(t => t.Update());
-				SpritesGrid.Where(s => s.ActiveState == SpriteActiveState.Active).ForEach(s => s.Update());
+				SpritesGrid.Where(s => s.ActiveState == SpriteActiveState.Active || s.ActiveState == SpriteActiveState.AlwaysActive).ForEach(s => s.Update());
 				SpritesGrid.Update();
 				UpdatePhysics();
 				SpritesGrid.ForEach(s => s.SpritesCollidedWithThisFrame.Clear());
@@ -383,6 +391,7 @@ namespace SMLimitless.Sprites.Collections
 				bool withinBounds = sprite.Hitbox.IntersectsIncludingEdges(CameraSystem.ActiveBounds);
 				bool initialPositionWithinBounds = CameraSystem.ActiveBounds.Within(sprite.InitialPosition, true);
 
+				if (currentActiveState == SpriteActiveState.AlwaysActive) { continue; }
 				if (currentActiveState == SpriteActiveState.Active && !withinBounds)
 				{
 					sprite.ActiveState = SpriteActiveState.WaitingToLeaveBounds;

@@ -317,6 +317,18 @@
 			"customObjects": {
 				"spinyState": 1
 			}
+		},
+		{
+			"typeName": "SmlSprites.SMB.Enemies.Lakitu",
+			"editorResourceName": "SMBLakitu",
+			"editorTextureSourceRectangle": "0, 0, 16, 16",
+			"state": 0,
+			"collision": 3,
+			"customObjects": {
+				"spawnBandStart": 100,
+				"spawnBandEnd": 10000,
+				"thrownSprite": null
+			}
 		}
 	]
 }
