@@ -209,12 +209,13 @@ namespace SMLimitless.Sprites.Collections
 			foreach (Sprite sprite in SpritesGrid)
 			{
 				sprite.Draw();
+				sprite.Hitbox.DrawOutline(Color.Red);
 				if (GameServices.CollisionDebuggerActive && sprite.BreakOnCollision) { GameServices.SpriteBatch.DrawRectangleEdges(sprite.Hitbox.ToRectangle(), Color.DarkRed); }
 			}
 
 			editorSelectedObject.Draw();
 			CameraSystem.Draw(debug: false);
-			GameServices.DebugFont.DrawString(debugText, new Vector2(120f, 16f), 1f);
+			GameServices.DebugFont.DrawString(debugText, new Vector2(120f, 16f) + Camera.Position, 1f);
 			DrawCollisionDebug();
 			irisEffect.Draw();
 		}
@@ -415,9 +416,6 @@ namespace SMLimitless.Sprites.Collections
 					updatedSprites++;
 				}
 			}
-
-			if (updatedTiles > 0) { Debug.Logger.LogInfo($"{updatedTiles} tile{((updatedTiles > 1) ? "s" : "")} changed activity states this frame."); }
-			if (updatedSprites > 0) { Debug.Logger.LogInfo($"{updatedSprites} sprite{(updatedSprites > 1 ? "s" : "")} changed activity states this frame."); }
 		}
 
 		internal void CollisionDebugSelectSprite(Sprite sprite)
@@ -732,7 +730,7 @@ namespace SMLimitless.Sprites.Collections
 				irisEffect.Start(30, Interfaces.EffectDirection.Backward, Vector2.Zero, Color.Black);
 			}
 
-			// debugText = $"{MousePosition.X}, {MousePosition.Y}";
+			debugText = Camera.Viewport.ToString();
 			Tile tileUnderCursor = (!MousePosition.IsNaN()) ? GetTileAtPosition(MousePosition) : null;
 			if (GameServices.CollisionDebuggerActive) { GameServices.CollisionDebuggerForm.SetTileInfo(tileUnderCursor); }
 		}
@@ -826,8 +824,6 @@ namespace SMLimitless.Sprites.Collections
 				var spritesNear = SpritesGrid.GetItemsNearItem(sprite).ToList();
 				ResolveSpriteSpriteCollisions(sprite, spritesNear, sprite.Position - initialSpritePosition);
 			}
-
-			debugText = $"";
 		}
 
 		private void UpdateSpriteEmbeddedState(Sprite sprite)

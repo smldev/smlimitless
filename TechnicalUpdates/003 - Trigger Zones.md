@@ -20,15 +20,15 @@ As of 2016-07-31, there are two primary kinds of game objects in `Section` insta
 
 * Class `TriggerZone`
   * Field `List<Sprite> playersWithin`
-  * Value Property^1 `Vector2 Position`
+  * Value Property<sup>1</sup> `Vector2 Position`
   * Value Property `Vector2 Size`
-  * Calculated Property^2 `BoundingRectangle Bounds`
+  * Calculated Property<sup>2</sup> `BoundingRectangle Bounds`
   * Value Property `Action<Sprite> PlayerEnteredAction`
   * Value Property `Action<Sprite> PlayerLeftAction`
   * Constructor `TriggerZone()`
   * Method `object GetSerializableObjects()`
   * Method `void DeserializeCustomObjects(JObject)` or `void DeserializeCustomObjects(JsonHelper)`
   
-^1 Value properties are autoproperties or properties that merely get or set a private field without much calculation.
+<sup>1</sup> Value properties are autoproperties or properties that merely get or set a private field without much calculation.
 
-^2 Calculated properties are getter-only properties that return a value calculated from other fields, properties, or methods.
+<sup>2</sup> Calculated properties are getter-only properties that return a value calculated from other fields, properties, or methods.

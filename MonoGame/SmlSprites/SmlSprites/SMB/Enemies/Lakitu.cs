@@ -15,6 +15,7 @@ using SMLimitless.Physics;
 using SMLimitless.Sprites;
 using SMLimitless.Sprites.Assemblies;
 using SMLimitless.Sprites.Collections;
+using SMLimitless.Sprites.Components;
 using SmlSprites.Helpers;
 
 namespace SmlSprites.SMB.Enemies
@@ -117,7 +118,7 @@ namespace SmlSprites.SMB.Enemies
 			DesiredYPositionPercentage = new PhysicsSetting<float>("SMB Lakitu: Desired Y Position Screen %", 0f, 1f, 0.05f, PhysicsSettingType.FloatingPoint);
 			XAcceleration = new PhysicsSetting<float>("SMB Lakitu: X Acceleration (px/sec²)", 0f, 100f, 40f, PhysicsSettingType.FloatingPoint);
 			YAcceleration = new PhysicsSetting<float>("SMB Lakitu: Y Acceleration (px/sec²)", 0f, 100f, 40f, PhysicsSettingType.FloatingPoint);
-			MaxXVelocity = new PhysicsSetting<float>("SMB Lakitu: Max X Velocity (px/sec)", 0f, 500f, 150f, PhysicsSettingType.FloatingPoint);
+			MaxXVelocity = new PhysicsSetting<float>("SMB Lakitu: Max X Velocity (px/sec)", 0f, 500f, 80f, PhysicsSettingType.FloatingPoint);
 			ThrownAdditionalXVelocity = new PhysicsSetting<float>("SMB Lakitu: Thrown Additional X Velocity (px/sec)", 0f, 200f, 20f, PhysicsSettingType.FloatingPoint);
 			ThrownAdditionalYVelocity = new PhysicsSetting<float>("SMB Lakitu: Thrown Additional Y Velocity (px/sec)", 0f, 200f, 20f, PhysicsSettingType.FloatingPoint);
 			MaximumOnscreenSprites = new PhysicsSetting<int>("SMB Lakitu: Maximum Onscreen Sprites", 0, 100, 5, PhysicsSettingType.Integer);
@@ -146,7 +147,24 @@ namespace SmlSprites.SMB.Enemies
 
 			ActiveState = SpriteActiveState.AlwaysActive;
 
+			var health = new HealthComponent(1, 1, new string[] { });
+			health.SpriteKilled += Health_SpriteKilled;
+
+			Components.Add(health);
+			Components.Add(new DamageComponent());
+
 			base.Initialize(owner);
+		}
+
+		private void Health_SpriteKilled(object sender, SpriteDamagedEventArgs e)
+		{
+			if (e.DamageType == SpriteDamageTypes.PlayerStomp)
+			{
+				Velocity = Vector2.Zero;
+				isFlippedOver = true;
+				SpriteCollisionMode = TileCollisionMode = SpriteCollisionMode.NoCollision;
+				respawnTimer = (int)(RespawnDelay.Value * 60f);
+			}
 		}
 
 		public override void Draw()
@@ -183,6 +201,17 @@ namespace SmlSprites.SMB.Enemies
 			float top = Hitbox.Top;
 			float desiredY = DesiredYPosition;
 			column.Update();
+
+			if (respawnTimer > 0)
+			{
+				if (!Hitbox.IntersectsIncludingEdges(Owner.Camera.Viewport))
+				{
+					isActive = false;
+				}
+				respawnTimer--;
+				base.Update();	// to apply gravity
+				return;
+			}
 
 			if (column.HasPlayers)
 			{
@@ -263,12 +292,19 @@ namespace SmlSprites.SMB.Enemies
 			Position = new Vector2(xPosition, DesiredYPosition);
 			Acceleration = new Vector2(XAcceleration.Value * (facingDirection * -1), 0f);
 
+			var health = GetComponent<HealthComponent>();
+			health.Heal(1);
+
 			isActive = true;
+			isFlippedOver = false;
+			SpriteCollisionMode = SpriteCollisionMode.OffsetNotify;
 		}
 
 		private void ThrowSprite()
 		{
 			if (thrownSprites.Count >= MaximumOnscreenSprites.Value) { return; }
+			if (!Hitbox.IntersectsIncludingEdges(Owner.Camera.Viewport)) { return; }
+			if (ThrownSprite == null) { return; }
 
 			Sprite spriteToThrow = ThrownSprite.Clone();
 			spriteToThrow.Initialize(Owner);
@@ -277,6 +313,8 @@ namespace SmlSprites.SMB.Enemies
 			spriteToThrow.Velocity = new Vector2(Velocity.X + ThrownAdditionalXVelocity.Value, Velocity.Y - ThrownAdditionalYVelocity.Value);
 			Owner.AddSpriteOnNextFrame(spriteToThrow);
 			thrownSprites.Add(spriteToThrow);
+
+			SMLimitless.Debug.Logger.LogInfo($"Spawned sprite {((spriteToThrow.Hitbox.IntersectsIncludingEdges(Owner.Camera.Viewport) ? "INSIDE" : "OUTSIDE"))} {spriteToThrow.Position - Owner.Camera.Position}");
 		}
 
 		public override void LoadContent()
@@ -288,6 +326,23 @@ namespace SmlSprites.SMB.Enemies
 		{
 			ThrownSprite = sprite;
 			return true;
+		}
+
+		public override void HandleSpriteCollision(Sprite sprite, Vector2 resolutionDistance)
+		{
+			if (!isActive) { return; }
+
+			if (sprite.IsPlayer)
+			{
+				if (!(sprite.Hitbox.Bottom < Hitbox.Center.Y && sprite.Velocity.Y >= 0f))
+				{
+					var damageComponent = GetComponent<DamageComponent>();
+					damageComponent.PerformDamage(sprite, SpriteDamageTypes.General, 1);
+				}
+			}
+			
+			
+			base.HandleSpriteCollision(sprite, resolutionDistance);
 		}
 	}
 }
