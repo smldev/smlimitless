@@ -81,6 +81,8 @@ namespace SmlSprites.SMB.Enemies
 			SpriteCollisionMode = SpriteCollisionMode.NoCollision;
 			Components.ForEach(c => c.IsActive = false);
 			graphics.CurrentObjectName = "shell";
+
+			Owner.HUDInfo.AddScore(200);
 		}
 
 		public override void Draw()

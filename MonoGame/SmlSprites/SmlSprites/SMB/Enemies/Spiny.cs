@@ -93,6 +93,8 @@ namespace SmlSprites.SMB.Enemies
 
 			var walker = GetComponent<WalkerComponent>();
 			if (walker != null) { walker.IsActive = false; }
+
+			Owner.HUDInfo.AddScore(200);
 		}
 
 		public override void DeserializeCustomObjects(JsonHelper customObjects)
@@ -133,7 +135,14 @@ namespace SmlSprites.SMB.Enemies
 			if (sprite.IsPlayer)
 			{
 				var damage = GetComponent<DamageComponent>();
-				damage.PerformDamage(sprite, SpriteDamageTypes.General, 1);
+				if (sprite.Hitbox.Bottom < Hitbox.Center.Y)
+				{
+					damage.PerformDamage(sprite, SpriteDamageTypes.FromSpinJumpable, 1);
+				}
+				else
+				{
+					damage.PerformDamage(sprite, SpriteDamageTypes.General, 1);
+				}
 			}
 
 			base.HandleSpriteCollision(sprite, resolutionDistance);

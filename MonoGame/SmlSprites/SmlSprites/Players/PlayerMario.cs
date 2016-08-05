@@ -35,6 +35,7 @@ namespace SmlSprites.Players
 		private int inAirSpinTimer = 0;
 		private int inAirSpinTimeout = 0;
 		private bool isSliding;
+		private bool isSpinJumping;
 
 		private static PhysicsSetting<float> MaximumWalkingSpeed = new PhysicsSetting<float>("Small Mario: Full Walking Speed (px/sec)", 0f, 100f, 50f, PhysicsSettingType.FloatingPoint);
 		private static PhysicsSetting<float> MaximumRunningSpeed = new PhysicsSetting<float>("Small Mario: Full Running Speed (px/sec)", 0f, 150f, 75f, PhysicsSettingType.FloatingPoint);
@@ -64,10 +65,32 @@ namespace SmlSprites.Players
 		public string DebugGraphicsName { get; protected set; } = "";
 		protected virtual Vector2 TargetVelocity { get; set; }
 		protected virtual bool IsJumping { get; set; }
-		protected virtual bool IsSpinJumping { get; set; }
+
+		protected virtual bool IsSpinJumping
+		{
+			get
+			{
+				return isSpinJumping;
+			}
+			set
+			{
+				isSpinJumping = value;
+				var health = GetComponent<HealthComponent>();
+				if (value)
+				{
+					health.ImmuneTo.Add(SpriteDamageTypes.FromSpinJumpable);
+				}
+				else
+				{
+					health.ImmuneTo.Remove(SpriteDamageTypes.FromSpinJumpable);
+				}
+			}
+		}
 
 		private CachedSound jumpSound;
 		private CachedSound spinJumpSound;
+		private CachedSound stompSound;
+		private CachedSound spinJumpStompSound;
 		private CachedSound groundPoundDropSound;
 		private CachedSound groundPoundHitSound;
 		private CachedSound inAirSpinSound;
@@ -387,14 +410,14 @@ namespace SmlSprites.Players
 				Velocity = new Vector2(Velocity.X, -GetJumpImpulse());
 				IsJumping = true;
 				isSliding = false;
-				PlaySound(jumpSound, (sender, e) => { });
+				PlaySound(jumpSound);
 			}
 			else if (isNewJumpPress && IsSlidingDownWall && !IsSpinJumping)
 			{
 				Velocity = new Vector2((FacingDirection == SMLimitless.Direction.Right) ? -WallJumpHorizontalImpulse.Value : WallJumpHorizontalImpulse.Value, -WallJumpVerticalImpulse.Value);
 				IsJumping = true;
 				isSliding = false;
-				PlaySound(wallJumpSound, (sender, e) => { });
+				PlaySound(wallJumpSound);
 			}
 		}
 
@@ -407,7 +430,7 @@ namespace SmlSprites.Players
 				Velocity = new Vector2(Velocity.X, -GetSpinJumpImpulse());
 				IsSpinJumping = true;
 				isSliding = false;
-				PlaySound(spinJumpSound, (sender, e) => { });
+				PlaySound(spinJumpSound);
 			}
 		}
 
@@ -430,7 +453,7 @@ namespace SmlSprites.Players
 				// Start a ground pound.
 				isGroundPounding = true;
 				Velocity = TargetVelocity = Vector2.Zero;
-				PlaySound(groundPoundDropSound, (sender, e) => { });
+				PlaySound(groundPoundDropSound);
 				SetPlayerGraphicsObject("groundPoundSpin");
 			}
 			else if (isGroundPounding && groundPoundSpinTimer < GroundPoundSpinTimer.Value)
@@ -440,7 +463,7 @@ namespace SmlSprites.Players
 			}
 			else if (isGroundPounding && IsOnGround)
 			{
-				PlaySound(groundPoundHitSound, (sender, e) => { });
+				PlaySound(groundPoundHitSound);
 				isGroundPounding = false;
 				groundPoundSpinTimer = 0;
 				actionScheduler.ScheduleAction(() => wasGroundPounding = false, 20);
@@ -514,7 +537,7 @@ namespace SmlSprites.Players
 			{
 				perfomingInAirSpin = true;
 				inAirSpinTimer = InAirSpinDuration.Value;
-				PlaySound(inAirSpinSound, (sender, e) => { });
+				PlaySound(inAirSpinSound);
 				SetPlayerGraphicsObject("inAirSpin");
 			}
 			else if (perfomingInAirSpin)
@@ -543,6 +566,11 @@ namespace SmlSprites.Players
 		protected virtual void PlaySound(CachedSound sound, EventHandler additionalOnPlaybackEndedHandler)
 		{
 			AudioPlaybackEngine.Instance.PlaySound(sound, additionalOnPlaybackEndedHandler);
+		}
+
+		protected virtual void PlaySound(CachedSound sound)
+		{
+			PlaySound(sound, (sender, e) => { });
 		}
 
 		protected virtual void DeterminePlayerGraphicsObject()
@@ -630,6 +658,8 @@ namespace SmlSprites.Players
 		{
 			jumpSound = new CachedSound(ContentPackageManager.GetAbsoluteFilePath("nsmbwiiJump"));
 			spinJumpSound = new CachedSound(ContentPackageManager.GetAbsoluteFilePath("nsmbwiiSpinJump"));
+			stompSound = new CachedSound(ContentPackageManager.GetAbsoluteFilePath("nsmbwiiStomp"));
+			spinJumpStompSound = new CachedSound(ContentPackageManager.GetAbsoluteFilePath("smwSpinJumpStomp"));
 			groundPoundDropSound = new CachedSound(ContentPackageManager.GetAbsoluteFilePath("nsmbwiiGroundPound"));
 			groundPoundHitSound = new CachedSound(ContentPackageManager.GetAbsoluteFilePath("nsmbwiiGroundPoundHit"));
 			inAirSpinSound = new CachedSound(ContentPackageManager.GetAbsoluteFilePath("nsmbwiiInAirSpin"));
@@ -666,10 +696,15 @@ namespace SmlSprites.Players
 
 		public override void HandleSpriteCollision(Sprite sprite, Vector2 resolutionDistance)
 		{
+			if (sprite.SpriteCollisionMode != SpriteCollisionMode.OffsetNotify || sprite.SpriteCollisionMode != SpriteCollisionMode.OffsetOnly) { return; }
+
 			if (Hitbox.Bottom < sprite.Hitbox.Center.Y && Velocity.Y >= 0f)
 			{
 				var damageComponent = GetComponent<DamageComponent>();
 				damageComponent.PerformDamage(sprite, SpriteDamageTypes.PlayerStomp, 1);
+
+				if (!IsSpinJumping) { PlaySound(stompSound); }
+				if (IsSpinJumping) { PlaySound(spinJumpStompSound); }
 
 				if (InputManager.IsCurrentActionPress(InputAction.Jump) || InputManager.IsCurrentActionPress(InputAction.SpinJump))
 				{

@@ -24,7 +24,7 @@ namespace SMLimitless.Sprites.Components
 		/// <summary>
 		/// A collection of damage type names that this sprite is immune to.
 		/// </summary>
-		public readonly string[] ImmuneTo;
+		public List<string> ImmuneTo;
 
 		/// <summary>
 		/// Gets the current number of hit points this sprite has.
@@ -56,7 +56,7 @@ namespace SMLimitless.Sprites.Components
 		{
 			MaximumHitPoints = maximumHP;
 			StartingHitPoints = HitPoints = startingHP;
-			ImmuneTo = immuneTo ?? new string[0];
+			ImmuneTo = immuneTo.ToList() ?? new List<string>();
 		}
 
 		/// <summary>

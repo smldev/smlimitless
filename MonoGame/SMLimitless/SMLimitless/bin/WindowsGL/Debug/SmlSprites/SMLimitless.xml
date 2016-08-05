@@ -3655,19 +3655,24 @@
             Contains a list of string constants representing names of sprite damage types.
             </summary>
         </member>
+        <member name="F:SMLimitless.Sprites.SpriteDamageTypes.FromSpinJumpable">
+            <summary>
+            The name of the FromSpinJumpable damage type.
+            </summary>
+        </member>
         <member name="F:SMLimitless.Sprites.SpriteDamageTypes.General">
             <summary>
             The name of the General damage type.
             </summary>
         </member>
-        <member name="F:SMLimitless.Sprites.SpriteDamageTypes.PlayerStomp">
-            <summary>
-            The name of the PlayerStomp damage type.
-            </summary>
-        </member>
         <member name="F:SMLimitless.Sprites.SpriteDamageTypes.PlayerFireball">
             <summary>
             The name of the PlayerFireball damage type.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.SpriteDamageTypes.PlayerStomp">
+            <summary>
+            The name of the PlayerStomp damage type.
             </summary>
         </member>
         <member name="F:SMLimitless.Sprites.SpriteDamageTypes.ShellSpinning">

@@ -178,8 +178,9 @@ namespace SMLimitless.Sprites.Components
 		public override void HandleSpriteCollision(Sprite collidingSprite, Vector2 resolutionDistance)
 		{
 			if (!TurnOnSpriteCollisions) { return; }
-
 			if (Owner.SpriteCollisionMode == SpriteCollisionMode.NoCollision || collidingSprite.SpriteCollisionMode == SpriteCollisionMode.NoCollision) { return; }
+			if (collidingSprite.Hitbox.Center.Y <= Owner.Hitbox.Top || collidingSprite.Hitbox.Center.Y >= Owner.Hitbox.Bottom) { return; }
+
 			if (collidingSprite.Hitbox.Right > Owner.Hitbox.Left && collidingSprite.Hitbox.Left <= Owner.Hitbox.Left)
 			{
 				Direction = Direction.Right;

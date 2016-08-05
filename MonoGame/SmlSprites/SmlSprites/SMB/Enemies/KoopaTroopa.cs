@@ -126,6 +126,8 @@ namespace SmlSprites.SMB.Enemies
 			SpriteCollisionMode = SpriteCollisionMode.NoCollision;
 			Components.ForEach(c => c.IsActive = false);
 			graphics.CurrentObjectName = AppendTypeSuffix("shell");
+
+			Owner.HUDInfo.AddScore(200);
 		}
 
 		private void SetBehavior()

@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using SMLimitless.Collections;
+using SMLimitless.Components;
 using SMLimitless.Editor;
 using SMLimitless.Extensions;
 using SMLimitless.Input;
@@ -104,6 +105,8 @@ namespace SMLimitless.Sprites.Collections
 
 		internal Sprite CollisionDebugSelectedSprite { get; set; }
 
+		public HUDInfo HUDInfo { get; private set; }
+
 		internal List<Layer> Layers { get; set; }
 
 		internal Layer MainLayer { get; set; }
@@ -121,6 +124,7 @@ namespace SMLimitless.Sprites.Collections
 		internal SparseCellGrid<Sprite> SpritesGrid { get; set; }
 
 		internal List<Sprite> SpritesToAddOnNextFrame { get; } = new List<Sprite>();
+		internal List<Sprite> SpritesToRemoveOnNextFrame { get; } = new List<Sprite>();
 
 		internal List<Tile> Tiles { get; private set; }
 
@@ -137,6 +141,7 @@ namespace SMLimitless.Sprites.Collections
 			Tiles = new List<Tile>();
 			Paths = new List<Path>();
 			Background = new Background(this);
+			HUDInfo = new HUDInfo(100);
 
 			// temporary
 			GameServices.Camera = Camera;
@@ -209,13 +214,14 @@ namespace SMLimitless.Sprites.Collections
 			foreach (Sprite sprite in SpritesGrid)
 			{
 				sprite.Draw();
-				sprite.Hitbox.DrawOutline(Color.Red);
 				if (GameServices.CollisionDebuggerActive && sprite.BreakOnCollision) { GameServices.SpriteBatch.DrawRectangleEdges(sprite.Hitbox.ToRectangle(), Color.DarkRed); }
 			}
 
 			editorSelectedObject.Draw();
 			CameraSystem.Draw(debug: false);
-			GameServices.DebugFont.DrawString(debugText, new Vector2(120f, 16f) + Camera.Position, 1f);
+			GameServices.DebugFont.DrawString($"{HUDInfo.Score:D9}", new Vector2(120f, 16f) + Camera.Position, 1f);
+			GameServices.DebugFont.DrawString($"{HUDInfo.Coins:D2}", new Vector2(600f, 16f) + Camera.Position, 1f);
+			GameServices.DebugFont.DrawString(debugText, new Vector2(120f, 48f) + Camera.Position, 1f);
 			DrawCollisionDebug();
 			irisEffect.Draw();
 		}
@@ -317,6 +323,13 @@ namespace SMLimitless.Sprites.Collections
 			SpritesGrid.Remove(sprite);
 		}
 
+		public void RemoveSpriteOnNextFrame(Sprite sprite)
+		{
+			if (sprite == null) { throw new ArgumentNullException(nameof(sprite), "The sprite to remove from the section was not null."); }
+
+			SpritesToRemoveOnNextFrame.Add(sprite);
+		}
+
 		/// <summary>
 		/// Removes a tile from this section and all layers it may be in.
 		/// </summary>
@@ -338,7 +351,7 @@ namespace SMLimitless.Sprites.Collections
 			System.Diagnostics.Stopwatch stopwatch = System.Diagnostics.Stopwatch.StartNew();
 
 			irisEffect.Update();
-			AddSpritesToAddOnNextFrame();
+			AddAndRemoveSpritesForNextFrame();
 
 			if (!EditorActive)
 			{
@@ -427,12 +440,18 @@ namespace SMLimitless.Sprites.Collections
 			CameraSystem.TrackingObjects.Add(sprite);
 			GameServices.CollisionDebuggerForm.SelectedSprite = sprite;
 		}
-		private void AddSpritesToAddOnNextFrame()
+		private void AddAndRemoveSpritesForNextFrame()
 		{
 			if (SpritesToAddOnNextFrame.Any())
 			{
 				SpritesToAddOnNextFrame.ForEach(s => AddSprite(s));
 				SpritesToAddOnNextFrame.Clear();
+			}
+
+			if (SpritesToRemoveOnNextFrame.Any())
+			{
+				SpritesToRemoveOnNextFrame.ForEach(s => RemoveSprite(s));
+				SpritesToRemoveOnNextFrame.Clear();
 			}
 		}
 
@@ -729,8 +748,6 @@ namespace SMLimitless.Sprites.Collections
 			{
 				irisEffect.Start(30, Interfaces.EffectDirection.Backward, Vector2.Zero, Color.Black);
 			}
-
-			debugText = Camera.Viewport.ToString();
 			Tile tileUnderCursor = (!MousePosition.IsNaN()) ? GetTileAtPosition(MousePosition) : null;
 			if (GameServices.CollisionDebuggerActive) { GameServices.CollisionDebuggerForm.SetTileInfo(tileUnderCursor); }
 		}

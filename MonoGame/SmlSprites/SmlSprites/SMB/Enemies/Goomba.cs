@@ -107,6 +107,8 @@ namespace SmlSprites.SMB.Enemies
 				SpriteCollisionMode = SpriteCollisionMode.NoCollision;
 				Components.RemoveAll(c => c is WalkerComponent);
 			}
+
+			Owner.HUDInfo.AddScore(200);
 		}
 
 		public override void Draw()

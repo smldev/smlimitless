@@ -323,12 +323,20 @@
 			"editorResourceName": "SMBLakitu",
 			"editorTextureSourceRectangle": "0, 0, 16, 16",
 			"state": 0,
-			"collision": 3,
+			"collision": 0,
 			"customObjects": {
 				"spawnBandStart": 100,
 				"spawnBandEnd": 10000,
 				"thrownSprite": null
 			}
+		},
+		{
+			"typeName": "SmlSprites.SMB.Items.Coin",
+			"editorResourceName": "SMBCoin",
+			"editorTextureSourceRectangle": "0, 0, 16, 16",
+			"state": 0,
+			"collision": 2,
+			"customObjects": {}
 		}
 	]
 }

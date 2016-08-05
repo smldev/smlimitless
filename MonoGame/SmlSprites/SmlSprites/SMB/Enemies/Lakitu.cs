@@ -164,6 +164,8 @@ namespace SmlSprites.SMB.Enemies
 				isFlippedOver = true;
 				SpriteCollisionMode = TileCollisionMode = SpriteCollisionMode.NoCollision;
 				respawnTimer = (int)(RespawnDelay.Value * 60f);
+
+				Owner.HUDInfo.AddScore(200);
 			}
 		}
 
@@ -311,6 +313,7 @@ namespace SmlSprites.SMB.Enemies
 			spriteToThrow.LoadContent();
 			spriteToThrow.Position = Position;
 			spriteToThrow.Velocity = new Vector2(Velocity.X + ThrownAdditionalXVelocity.Value, Velocity.Y - ThrownAdditionalYVelocity.Value);
+			spriteToThrow.IsMoving = true;
 			Owner.AddSpriteOnNextFrame(spriteToThrow);
 			thrownSprites.Add(spriteToThrow);
 
