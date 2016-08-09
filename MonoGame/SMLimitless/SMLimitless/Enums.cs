@@ -102,8 +102,222 @@ namespace SMLimitless.Input
     }
 }
 
+namespace SMLimitless.Physics
+{
+    /// <summary>
+    /// An enumeration of the collidable shapes that
+    /// SML supports.
+    /// </summary>
+    public enum CollidableShape
+    {
+        /// <summary>
+        /// A parallelogram with sides parallel to the coordinate axes.
+        /// </summary>
+        Rectangle,
+
+        /// <summary>
+        /// A rectangle split in half from corner to corner.
+        /// </summary>
+        RightTriangle
+    }
+
+	/// <summary>
+	/// Enumerates the cardinal directions as a set of flags.
+	/// </summary>
+	[Flags]
+	public enum FlaggedDirection
+	{
+		/// <summary>
+		/// Represents no direction set.
+		/// </summary>
+		None = 0,
+
+		/// <summary>
+		/// Represents the upward cardinal direction (negative Y).
+		/// </summary>
+		Up = 1,
+
+		/// <summary>
+		/// Represents the downward cardinal direction (positive Y).
+		/// </summary>
+		Down = 2,
+
+		/// <summary>
+		/// Represents the leftward cardinal direction (negative X).
+		/// </summary>
+		Left = 4,
+
+		/// <summary>
+		/// Represents the rightward cardinal direction (positive X).
+		/// </summary>
+		Right = 8
+	}
+
+    /// <summary>
+    /// Defines the horizontal directions of left, right, and none.
+    /// </summary>
+    public enum HorizontalDirection : int
+    {
+        /// <summary>
+        /// The leftward cardinal direction (negative X).
+        /// </summary>
+        Left = -1,
+
+        /// <summary>
+        /// No direction.
+        /// </summary>
+        None = 0,
+
+        /// <summary>
+        /// The rightward cardinal direction (positive X).
+        /// </summary>
+        Right = 1
+    }
+
+	/// <summary>
+	/// Enumerates the division of the space around a rectangle.
+	/// </summary>
+	public enum RectangularSpaceDivision
+	{
+		/// <summary>
+		/// The default/invalid value.
+		/// </summary>
+		None,
+
+		/// <summary>
+		/// The area within the rectangle.
+		/// </summary>
+		Within,
+
+		/// <summary>
+		/// The area directly above the rectangle.
+		/// </summary>
+		Above,
+
+		/// <summary>
+		/// The area directly below the rectangle.
+		/// </summary>
+		/// 
+		Below,
+		/// <summary>
+		/// The area directly to the left of the rectangle.
+		/// </summary>
+		Left,
+
+		/// <summary>
+		/// The area directly to the right of the rectangle.
+		/// </summary>
+		Right,
+
+		/// <summary>
+		/// The area above and to the left of the rectangle.
+		/// </summary>
+		AboveLeft,
+
+		/// <summary>
+		/// The area above and to the right of the rectangle.
+		/// </summary>
+		AboveRight,
+
+		/// <summary>
+		/// The area below and to the left of the rectangle.
+		/// </summary>
+		BelowLeft,
+
+		/// <summary>
+		/// The area below and to the right of the rectangle.
+		/// </summary>
+		BelowRight
+	}
+
+    /// <summary>
+    /// An enumeration of the different types of
+    /// collision resolutions between tiles and sprites.
+    /// </summary>
+    public enum ResolutionType
+    {
+        /// <summary>
+        /// Not a resolution (resolution of zero).
+        /// </summary>
+        None,
+
+        /// <summary>
+        /// A resolution between a sprite and a straight edge of a tile.
+        /// </summary>
+        Normal,
+
+        /// <summary>
+        /// A resolution between a sprite and the sloped side of a sloped tile.
+        /// </summary>
+        Slope
+    }
+
+    /// <summary>
+    /// Defines the vertical directions of up, down, and none.
+    /// </summary>
+    public enum VerticalDirection : int
+    {
+        /// <summary>
+        /// The upward cardinal direction (negative Y).
+        /// </summary>
+        Up = -1,
+
+        /// <summary>
+        /// No direction.
+        /// </summary>
+        None = 0,
+
+        /// <summary>
+        /// The downward cardinal direction (positive Y).
+        /// </summary>
+        Down = 1
+    }
+}
+
 namespace SMLimitless.Sprites
 {
+	public enum SpriteActiveState
+	{
+		AlwaysActive,
+		Active,
+		WaitingToLeaveBounds,
+		Inactive
+	}
+
+    /// <summary>
+    /// Enumerates different modes of collision handling
+    /// that sprites can choose between.
+    /// </summary>
+    public enum SpriteCollisionMode
+    {
+        /// <summary>
+        /// Sprites that are colliding with solid tiles or other sprites
+        /// are offset such that they are moved out of the tile(s).
+        /// Then, collision handler methods are called on both
+        /// the sprite and the tile.
+        /// </summary>
+        OffsetNotify,
+
+        /// <summary>
+        /// Sprites that are colliding with solid tiles or other sprites
+        /// are offset such that they are moved out of the tile(s).
+        /// No collision handlers are run.
+        /// </summary>
+        OffsetOnly,
+
+        /// <summary>
+        /// Collision handler methods are called on both the
+        /// colliding sprite and colliding tile. No offsetting
+        /// is performed.
+        /// </summary>
+        NotifyOnly,
+
+        /// <summary>
+        /// The sprite does not collide with any object.
+        /// </summary>
+        NoCollision
+    }
+
     /// <summary>
     /// Enumerates the directions a sprite faces when first loaded in a level, or when the sprite enters the visible area.
     /// </summary>
@@ -123,6 +337,42 @@ namespace SMLimitless.Sprites
         /// The sprite will be loaded facing right.
         /// </summary>
         Right
+    }
+
+    /// <summary>
+    /// Enumerates the different states of sprites.
+    /// </summary>
+    public enum SpriteState
+    {
+        /// <summary>
+        /// The default state.
+        /// </summary>
+        Default,
+
+        /// <summary>
+        /// Sprites in this state have been temporarily stopped by the player and are usually harmless.
+        /// </summary>
+        Stunned,
+
+        /// <summary>
+        /// Sprites in this state are projectiles that can render damage to other sprites.
+        /// </summary>
+        Projectile,
+
+        /// <summary>
+        /// Sprites in this state are fire projectiles that can render damage to other sprites.
+        /// </summary>
+        ProjectileFire,
+
+        /// <summary>
+        /// Sprites in this state are ice projectiles that can freeze other sprites.
+        /// </summary>
+        ProjectileIce,
+
+        /// <summary>
+        /// Sprites in this state are dead and should not be interacted with.
+        /// </summary>
+        Dead
     }
 
 	/// <summary>
@@ -259,87 +509,64 @@ namespace SMLimitless.Sprites
 		SlopeOnRight = 0x02
 	}
 
-    /// <summary>
-    /// Enumerates different modes of collision handling
-    /// that sprites can choose between.
-    /// </summary>
-    public enum SpriteCollisionMode
-    {
-        /// <summary>
-        /// Sprites that are colliding with solid tiles or other sprites
-        /// are offset such that they are moved out of the tile(s).
-        /// Then, collision handler methods are called on both
-        /// the sprite and the tile.
-        /// </summary>
-        OffsetNotify,
-
-        /// <summary>
-        /// Sprites that are colliding with solid tiles or other sprites
-        /// are offset such that they are moved out of the tile(s).
-        /// No collision handlers are run.
-        /// </summary>
-        OffsetOnly,
-
-        /// <summary>
-        /// Collision handler methods are called on both the
-        /// colliding sprite and colliding tile. No offsetting
-        /// is performed.
-        /// </summary>
-        NotifyOnly,
-
-        /// <summary>
-        /// The sprite does not collide with any object.
-        /// </summary>
-        NoCollision
-    }
-
-    /// <summary>
-    /// Enumerates the different states of sprites.
-    /// </summary>
-    public enum SpriteState
-    {
-        /// <summary>
-        /// The default state.
-        /// </summary>
-        Default,
-
-        /// <summary>
-        /// Sprites in this state have been temporarily stopped by the player and are usually harmless.
-        /// </summary>
-        Stunned,
-
-        /// <summary>
-        /// Sprites in this state are projectiles that can render damage to other sprites.
-        /// </summary>
-        Projectile,
-
-        /// <summary>
-        /// Sprites in this state are fire projectiles that can render damage to other sprites.
-        /// </summary>
-        ProjectileFire,
-
-        /// <summary>
-        /// Sprites in this state are ice projectiles that can freeze other sprites.
-        /// </summary>
-        ProjectileIce,
-
-        /// <summary>
-        /// Sprites in this state are dead and should not be interacted with.
-        /// </summary>
-        Dead
-    }
-
-	public enum SpriteActiveState
-	{
-		AlwaysActive,
-		Active,
-		WaitingToLeaveBounds,
-		Inactive
-	}
 }
 
 namespace SMLimitless.Sprites.Collections
 {
+    /// <summary>
+    /// Enumerates the direction in which
+    /// a section background scrolls.
+    /// </summary>
+    public enum BackgroundScrollDirection
+    {
+        /// <summary>
+        /// The background remains fixed on the screen.
+        /// </summary>
+        /// <remarks>
+        /// If the background is larger than the screen,
+        /// the background will shift slightly as the player
+        /// moves through the level. If the camera is at the
+        /// top of the level, the top of the background will
+        /// be displayed. Likewise, if the camera is at the
+        /// bottom of the level, the bottom of the background
+        /// will be displayed. This applies across both axes.
+        /// </remarks>
+        Fixed,
+
+        /// <summary>
+        /// The background will scroll and repeat horizontally.
+        /// </summary>
+        /// <remarks>
+        /// If the background is taller than the screen,
+        /// the background will shift slightly as the players
+        /// moves vertically through the level. If the camera is at the
+        /// top of the level, the top of the background will
+        /// be displayed. Likewise, if the camera is at the
+        /// bottom of the level, the bottom of the background
+        /// will be displayed.
+        /// </remarks>
+        Horizontal,
+
+        /// <summary>
+        /// The background will scroll and repeat vertically.
+        /// </summary>
+        /// <remarks>
+        /// If the background is wider than the screen,
+        /// the background will shift slightly as the players
+        /// moves horizontally through the level. If the camera is
+        /// at the left edge of the level, the left edge of the
+        /// background will be displayed. Likewise, if the camera
+        /// is at the right edge of the level, the right edge of the
+        /// background will be displayed.
+        /// </remarks>
+        Vertical,
+
+        /// <summary>
+        /// The background will scroll and repeat along both axes.
+        /// </summary>
+        Both
+    }
+
     /// <summary>
     /// Enumerates the ways a camera scrolls through a section.
     /// </summary>
@@ -426,229 +653,4 @@ namespace SMLimitless.Sprites.Collections
         DoorEnter
     }
 
-    /// <summary>
-    /// Enumerates the direction in which
-    /// a section background scrolls.
-    /// </summary>
-    public enum BackgroundScrollDirection
-    {
-        /// <summary>
-        /// The background remains fixed on the screen.
-        /// </summary>
-        /// <remarks>
-        /// If the background is larger than the screen,
-        /// the background will shift slightly as the player
-        /// moves through the level. If the camera is at the
-        /// top of the level, the top of the background will
-        /// be displayed. Likewise, if the camera is at the
-        /// bottom of the level, the bottom of the background
-        /// will be displayed. This applies across both axes.
-        /// </remarks>
-        Fixed,
-
-        /// <summary>
-        /// The background will scroll and repeat horizontally.
-        /// </summary>
-        /// <remarks>
-        /// If the background is taller than the screen,
-        /// the background will shift slightly as the players
-        /// moves vertically through the level. If the camera is at the
-        /// top of the level, the top of the background will
-        /// be displayed. Likewise, if the camera is at the
-        /// bottom of the level, the bottom of the background
-        /// will be displayed.
-        /// </remarks>
-        Horizontal,
-
-        /// <summary>
-        /// The background will scroll and repeat vertically.
-        /// </summary>
-        /// <remarks>
-        /// If the background is wider than the screen,
-        /// the background will shift slightly as the players
-        /// moves horizontally through the level. If the camera is
-        /// at the left edge of the level, the left edge of the
-        /// background will be displayed. Likewise, if the camera
-        /// is at the right edge of the level, the right edge of the
-        /// background will be displayed.
-        /// </remarks>
-        Vertical,
-
-        /// <summary>
-        /// The background will scroll and repeat along both axes.
-        /// </summary>
-        Both
-    }
-}
-
-namespace SMLimitless.Physics
-{
-    /// <summary>
-    /// Defines the horizontal directions of left, right, and none.
-    /// </summary>
-    public enum HorizontalDirection : int
-    {
-        /// <summary>
-        /// The leftward cardinal direction (negative X).
-        /// </summary>
-        Left = -1,
-
-        /// <summary>
-        /// No direction.
-        /// </summary>
-        None = 0,
-
-        /// <summary>
-        /// The rightward cardinal direction (positive X).
-        /// </summary>
-        Right = 1
-    }
-
-    /// <summary>
-    /// Defines the vertical directions of up, down, and none.
-    /// </summary>
-    public enum VerticalDirection : int
-    {
-        /// <summary>
-        /// The upward cardinal direction (negative Y).
-        /// </summary>
-        Up = -1,
-
-        /// <summary>
-        /// No direction.
-        /// </summary>
-        None = 0,
-
-        /// <summary>
-        /// The downward cardinal direction (positive Y).
-        /// </summary>
-        Down = 1
-    }
-
-	/// <summary>
-	/// Enumerates the cardinal directions as a set of flags.
-	/// </summary>
-	[Flags]
-	public enum FlaggedDirection
-	{
-		/// <summary>
-		/// Represents no direction set.
-		/// </summary>
-		None = 0,
-
-		/// <summary>
-		/// Represents the upward cardinal direction (negative Y).
-		/// </summary>
-		Up = 1,
-
-		/// <summary>
-		/// Represents the downward cardinal direction (positive Y).
-		/// </summary>
-		Down = 2,
-
-		/// <summary>
-		/// Represents the leftward cardinal direction (negative X).
-		/// </summary>
-		Left = 4,
-
-		/// <summary>
-		/// Represents the rightward cardinal direction (positive X).
-		/// </summary>
-		Right = 8
-	}
-
-    /// <summary>
-    /// An enumeration of the collidable shapes that
-    /// SML supports.
-    /// </summary>
-    public enum CollidableShape
-    {
-        /// <summary>
-        /// A parallelogram with sides parallel to the coordinate axes.
-        /// </summary>
-        Rectangle,
-
-        /// <summary>
-        /// A rectangle split in half from corner to corner.
-        /// </summary>
-        RightTriangle
-    }
-
-    /// <summary>
-    /// An enumeration of the different types of
-    /// collision resolutions between tiles and sprites.
-    /// </summary>
-    public enum ResolutionType
-    {
-        /// <summary>
-        /// Not a resolution (resolution of zero).
-        /// </summary>
-        None,
-
-        /// <summary>
-        /// A resolution between a sprite and a straight edge of a tile.
-        /// </summary>
-        Normal,
-
-        /// <summary>
-        /// A resolution between a sprite and the sloped side of a sloped tile.
-        /// </summary>
-        Slope
-    }
-
-	/// <summary>
-	/// Enumerates the division of the space around a rectangle.
-	/// </summary>
-	public enum RectangularSpaceDivision
-	{
-		/// <summary>
-		/// The default/invalid value.
-		/// </summary>
-		None,
-
-		/// <summary>
-		/// The area within the rectangle.
-		/// </summary>
-		Within,
-
-		/// <summary>
-		/// The area directly above the rectangle.
-		/// </summary>
-		Above,
-
-		/// <summary>
-		/// The area directly below the rectangle.
-		/// </summary>
-		/// 
-		Below,
-		/// <summary>
-		/// The area directly to the left of the rectangle.
-		/// </summary>
-		Left,
-
-		/// <summary>
-		/// The area directly to the right of the rectangle.
-		/// </summary>
-		Right,
-
-		/// <summary>
-		/// The area above and to the left of the rectangle.
-		/// </summary>
-		AboveLeft,
-
-		/// <summary>
-		/// The area above and to the right of the rectangle.
-		/// </summary>
-		AboveRight,
-
-		/// <summary>
-		/// The area below and to the left of the rectangle.
-		/// </summary>
-		BelowLeft,
-
-		/// <summary>
-		/// The area below and to the right of the rectangle.
-		/// </summary>
-		BelowRight
-	}
 }

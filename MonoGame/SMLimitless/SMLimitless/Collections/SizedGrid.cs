@@ -85,15 +85,45 @@ namespace SMLimitless.Collections
 			}
 		}
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SizedGrid{T}"/> class.
-        /// </summary>
+		/// <summary>
+		/// Gets an object on the grid from the specified cell.
+		/// To add objects to the grid, use the Add method.
+		/// </summary>
+		/// <param name="x">The X-coordinate of the cell.</param>
+		/// <param name="y">The Y-coordinate of the cell.</param>
+		/// <returns>The object at the specified grid cell, or null if there is no object in the cell.</returns>
+		public T this[int x, int y]
+		{
+			get
+			{
+				if (!IndexWithinBounds(x, y))
+				{
+					throw new ArgumentOutOfRangeException(string.Format("SizedGrid<T>.this[int, int].get: The provided cell number fell outside the range of the grid. The grid has the size of {0}x{1} cells and the requested cell was {2}, {3}.", grid.Width, grid.Height, x, y));
+				}
+
+				return grid[x, y];
+			}
+
+			private set
+			{
+				if (!IndexWithinBounds(x, y))
+				{
+					throw new ArgumentOutOfRangeException(string.Format("SizedGrid<T>.this[int, int].set: The provided cell number fell outside the range of the grid. The grid has the size of {0}x{1} cells and the requested cell was {2}, {3}.", grid.Width, grid.Height, x, y));
+				}
+
+				grid[x, y] = value;
+			}
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SizedGrid{T}"/> class.
+		/// </summary>
 		/// <param name="position">The position of the top-left corner of the grid.</param>
-        /// <param name="cellWidth">The width of the grid cells.</param>
-        /// <param name="cellHeight">The height of the grid cells.</param>
-        /// <param name="gridWidth">The width of the grid in cells.</param>
-        /// <param name="gridHeight">The height of the grid in cells.</param>
-        public SizedGrid(Vector2 position, int cellWidth, int cellHeight, int gridWidth, int gridHeight)
+		/// <param name="cellWidth">The width of the grid cells.</param>
+		/// <param name="cellHeight">The height of the grid cells.</param>
+		/// <param name="gridWidth">The width of the grid in cells.</param>
+		/// <param name="gridHeight">The height of the grid in cells.</param>
+		public SizedGrid(Vector2 position, int cellWidth, int cellHeight, int gridWidth, int gridHeight)
         {
             if (cellWidth <= 0 || cellHeight <= 0)
             {
@@ -112,35 +142,7 @@ namespace SMLimitless.Collections
 			CellHeight = cellHeight;
         }
 
-        /// <summary>
-        /// Gets an object on the grid from the specified cell.
-        /// To add objects to the grid, use the Add method.
-        /// </summary>
-        /// <param name="x">The X-coordinate of the cell.</param>
-        /// <param name="y">The Y-coordinate of the cell.</param>
-        /// <returns>The object at the specified grid cell, or null if there is no object in the cell.</returns>
-        public T this[int x, int y]
-        {
-            get
-            {
-                if (!IndexWithinBounds(x, y))
-                {
-                    throw new ArgumentOutOfRangeException(string.Format("SizedGrid<T>.this[int, int].get: The provided cell number fell outside the range of the grid. The grid has the size of {0}x{1} cells and the requested cell was {2}, {3}.", grid.Width, grid.Height, x, y));
-                }
-
-                return grid[x, y];
-            }
-
-            private set
-            {
-                if (!IndexWithinBounds(x, y))
-                {
-                    throw new ArgumentOutOfRangeException(string.Format("SizedGrid<T>.this[int, int].set: The provided cell number fell outside the range of the grid. The grid has the size of {0}x{1} cells and the requested cell was {2}, {3}.", grid.Width, grid.Height, x, y));
-                }
-
-				grid[x, y] = value;
-            }
-        }
+		#region Core Collection Methods
 
 		/// <summary>
 		/// Adds an item to the grid.
@@ -214,7 +216,59 @@ namespace SMLimitless.Collections
 				}
 			}
 		}
+		#endregion
 
+		#region Validators
+
+		/// <summary>
+		/// Returns a value indicating whether all items in an enumerable align to the grid.
+		/// </summary>
+		/// <param name="items">The items to check for alignment.</param>
+		/// <returns>True if all items align to the grid, false if they don't.</returns>
+		public bool DoesRangeAlignToGrid(IEnumerable<T> items)
+		{
+			return items.All(i =>
+			{
+				var offset = OffsetPosition(i);
+				return offset.X % CellWidth == 0 && offset.Y % CellHeight == 0;
+			});
+		}
+
+		/// <summary>
+		/// Checks if a grid cell coordinate falls within the bounds of the grid.
+		/// </summary>
+		/// <param name="x">The X-coordinate of the coordinate to check.</param>
+		/// <param name="y">The Y-coordinate of the coordinate to check.</param>
+		/// <returns>True if the cell falls within the grid, false if otherwise.</returns>
+		public bool IndexWithinBounds(int x, int y)
+		{
+			return (x >= 0 && x < grid.Width) && (y >= 0 && y < grid.Height);
+		}
+
+		/// <summary>
+		/// Checks if a point in space falls within the bounds of the grid.
+		/// </summary>
+		/// <param name="point">The point to check.</param>
+		/// <returns>True if the point falls within the grid, false if otherwise.</returns>
+		public bool PointWithinBounds(Vector2 point)
+		{
+			return Bounds.IntersectsIncludingEdges(point);
+		}
+		#endregion
+
+		#region Offset Position Getters
+		private Vector2 OffsetPosition(T item)
+		{
+			return item.Position - Position;
+		}
+
+		private Vector2 OffsetPosition(Vector2 point)
+		{
+			return point - Position;
+		}
+		#endregion
+
+		#region Subgrid, cell, object, etc. Getters
 		/// <summary>
 		/// Returns a portion of this grid.
 		/// </summary>
@@ -279,50 +333,8 @@ namespace SMLimitless.Collections
 			Point cell = GetCellAtPosition(position);
 			return this[cell.X, cell.Y];
 		}
+		#endregion
 
-		/// <summary>
-		/// Returns a value indicating whether all items in an enumerable align to the grid.
-		/// </summary>
-		/// <param name="items">The items to check for alignment.</param>
-		/// <returns>True if all items align to the grid, false if they don't.</returns>
-		public bool DoesRangeAlignToGrid(IEnumerable<T> items)
-		{
-			return items.All(i =>
-			{
-				var offset = OffsetPosition(i);
-				return offset.X % CellWidth == 0 && offset.Y % CellHeight == 0;
-			});
-		}
-        /// <summary>
-        /// Checks if a grid cell coordinate falls within the bounds of the grid.
-        /// </summary>
-        /// <param name="x">The X-coordinate of the coordinate to check.</param>
-        /// <param name="y">The Y-coordinate of the coordinate to check.</param>
-        /// <returns>True if the cell falls within the grid, false if otherwise.</returns>
-        public bool IndexWithinBounds(int x, int y)
-        {
-            return (x >= 0 && x < grid.Width) && (y >= 0 && y < grid.Height);
-        }
-
-        /// <summary>
-        /// Checks if a point in space falls within the bounds of the grid.
-        /// </summary>
-        /// <param name="point">The point to check.</param>
-        /// <returns>True if the point falls within the grid, false if otherwise.</returns>
-        public bool PointWithinBounds(Vector2 point)
-        {
-			return Bounds.IntersectsIncludingEdges(point);
-        }
-
-		private Vector2 OffsetPosition(T item)
-		{
-			return item.Position - Position;
-		}
-
-		private Vector2 OffsetPosition(Vector2 point)
-		{
-			return point - Position;
-		}
 
 		/// <summary>
 		/// Draws the cell borders of this grid.
@@ -353,6 +365,7 @@ namespace SMLimitless.Collections
 			}
 		}
 
+		#region Enumerators
 		/// <summary>
 		/// Gets the enumerator for this grid.
 		/// </summary>
@@ -402,5 +415,6 @@ namespace SMLimitless.Collections
 		{
 			return grid.GetEnumerator();
 		}
-    }
+		#endregion
+	}
 }

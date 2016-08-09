@@ -93,16 +93,6 @@ namespace SMLimitless
 			stopwatch.Stop();
 			Logger.LogInfo(string.Format("Load content completed (took {0} ms)", stopwatch.ElapsedMilliseconds));
         }
-
-        /// <summary>
-        /// Unloads the content for this game and all its components.
-        /// </summary>
-        protected override void UnloadContent()
-        {
-            SoundManager.UnloadContent();
-			Content.Unload();
-        }
-
         /// <summary>
         /// Updates the game.
         /// All calls to the Update() method of every other type should be done here.
@@ -145,6 +135,15 @@ namespace SMLimitless
 			spriteBatch.End();
 
             base.Draw(gameTime);
+		}
+
+		/// <summary>
+		/// Unloads the content for this game and all its components.
+		/// </summary>
+		protected override void UnloadContent()
+        {
+            SoundManager.UnloadContent();
+			Content.Unload();
         }
     }
 }

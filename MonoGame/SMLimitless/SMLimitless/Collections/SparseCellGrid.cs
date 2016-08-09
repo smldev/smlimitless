@@ -110,28 +110,6 @@ namespace SMLimitless.Collections
 		}
 
 		/// <summary>
-		/// Removes an item from this grid.
-		/// </summary>
-		/// <param name="item">The item to remove.</param>
-		public void Remove(T item)
-		{
-			if (item == null) throw new ArgumentNullException(nameof(item), "The item to remove from the sparse cell grid was null.");
-
-			items.Remove(item);
-
-			LocalRemove(item);
-		}
-
-		/// <summary>
-		/// Removes all items from this grid that match a predicate.
-		/// </summary>
-		/// <param name="predicate">All the removed items must match this predicate.</param>
-		public void RemoveAllWhere(Predicate<T> predicate)
-		{
-			cells.Values.ForEach(c => c.Items.RemoveWhere(predicate));
-		}
-
-		/// <summary>
 		/// Adds an item to the cell grid without adding it to the Items collection.
 		/// </summary>
 		/// <param name="item">The item to add.</param>
@@ -151,6 +129,19 @@ namespace SMLimitless.Collections
 		}
 
 		/// <summary>
+		/// Removes an item from this grid.
+		/// </summary>
+		/// <param name="item">The item to remove.</param>
+		public void Remove(T item)
+		{
+			if (item == null) throw new ArgumentNullException(nameof(item), "The item to remove from the sparse cell grid was null.");
+
+			items.Remove(item);
+
+			LocalRemove(item);
+		}
+
+		/// <summary>
 		/// Removes an item from the cell grid without removing it from the Items collection.
 		/// </summary>
 		/// <param name="item">The item to remove.</param>
@@ -162,6 +153,14 @@ namespace SMLimitless.Collections
 			}
 		}
 
+		/// <summary>
+		/// Removes all items from this grid that match a predicate.
+		/// </summary>
+		/// <param name="predicate">All the removed items must match this predicate.</param>
+		public void RemoveAllWhere(Predicate<T> predicate)
+		{
+			cells.Values.ForEach(c => c.Items.RemoveWhere(predicate));
+		}
 		/// <summary>
 		/// Adds an item to a given cell.
 		/// </summary>

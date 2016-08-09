@@ -34,13 +34,7 @@ namespace SMLimitless.Collections
 		/// <summary>
 		/// Gets a collection of all the items intersecting this cell.
 		/// </summary>
-		public HashSet<T> Items
-		{
-			get
-			{
-				return cellItems;
-			}
-		}
+		public HashSet<T> Items => cellItems;
 
 		/// <summary>
 		/// Gets the bounding rectangle enclosing this cell.
@@ -50,13 +44,7 @@ namespace SMLimitless.Collections
 		/// <summary>
 		/// Gets a value indicating whether this cell has no items.
 		/// </summary>
-		public bool IsEmpty
-		{
-			get
-			{
-				return cellItems.Count == 0;
-			}
-		}
+		public bool IsEmpty => cellItems.Count == 0;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SparseCell{T}"/> class.

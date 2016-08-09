@@ -21,47 +21,29 @@ namespace SMLimitless.Collections
 		/// <summary>
 		/// Gets the number of items in this dictionary.
 		/// </summary>
-		public int Count
-		{
-			get { return _dictionary.Count; }
-		}
+		public int Count => _dictionary.Count;
 
 		/// <summary>
 		/// Gets a collection of all the keys in this dictionary.
 		/// </summary>
-		public ICollection<TKey> Keys
-		{
-			get { return _dictionary.Keys; }
-		}
+		public ICollection<TKey> Keys => _dictionary.Keys;
 
 		/// <summary>
 		/// Gets a value indicating whether this dictionary is read-only.
 		/// </summary>
-		public bool IsReadOnly
-		{
-			get { return true; }
-		}
+		public bool IsReadOnly => true;
 
 		/// <summary>
 		/// Gets a collection of the values in this dictionary.
 		/// </summary>
-		public ICollection<TValue> Values
-		{
-			get { return _dictionary.Values; }
-		}
+		public ICollection<TValue> Values => _dictionary.Values;
 
 		/// <summary>
 		/// Gets a value from this dictionary for a given key.
 		/// </summary>
 		/// <param name="key">The key for which to get the value.</param>
 		/// <returns>The value for the given key.</returns>
-		public TValue this[TKey key]
-		{
-			get
-			{
-				return _dictionary[key];
-			}
-		}
+		public TValue this[TKey key] => _dictionary[key];
 
 		/// <summary>
 		/// Gets a value from this dictionary for a given key.

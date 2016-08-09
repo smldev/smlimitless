@@ -21,11 +21,11 @@ namespace SMLimitless
 	public static class GameServices
     {
         private static GameServiceContainer container;
-
-        /// <summary>
-        /// Gets the GameServicesContainer that stores references to the services added.
-        /// </summary>
-        internal static GameServiceContainer Container
+		#region Game Services
+		/// <summary>
+		/// Gets the GameServicesContainer that stores references to the services added.
+		/// </summary>
+		internal static GameServiceContainer Container
         {
             get
             {
@@ -38,49 +38,86 @@ namespace SMLimitless
             }
         }
 
-        /// <summary>
-        /// Gets a reference to the GraphicsDevice.
-        /// </summary>
-        public static GraphicsDevice Graphics
-        {
-            get { return GetService<GraphicsDevice>(); }
-        }
-
-        /// <summary>
-        /// Gets a reference to the SpriteBatch.
-        /// </summary>
-        public static SpriteBatch SpriteBatch
-        {
-            get { return GetService<SpriteBatch>(); }
-        }
-
-        /// <summary>
-        /// Gets a reference to the GameTime instance.
-        /// </summary>
-        public static GameTime GameTime
-        {
-            get { return GetService<GameTime>(); }
-        }
-
-        /// <summary>
-        /// Gets or sets the current camera.
-        /// </summary>
-        public static Camera2D Camera { get; set; }
-
 		/// <summary>
 		/// Gets or sets a dictionary containing <see cref="Effects"/> instances and their names.
 		/// </summary>
 		public static Dictionary<string, Effect> Effects { get; set; } = new Dictionary<string, Effect>();
 
-        /// <summary>
-        /// Gets or sets the size of the window in pixels.
-        /// </summary>
-        public static Vector2 ScreenSize { get; set; }
+		/// <summary>
+		/// Gets a reference to the GameTime instance.
+		/// </summary>
+		public static GameTime GameTime
+		{
+			get { return GetService<GameTime>(); }
+		}
 
-        /// <summary>
-        /// Gets a bitmap font used for drawing debug text to screen.
-        /// </summary>
-        public static BitmapFont DebugFont { get; private set; }
+		/// <summary>
+		/// Gets a reference to the GraphicsDevice.
+		/// </summary>
+		public static GraphicsDevice Graphics
+        {
+            get { return GetService<GraphicsDevice>(); }
+        }
+
+		/// <summary>
+		/// Gets a reference to the SpriteBatch.
+		/// </summary>
+		public static SpriteBatch SpriteBatch
+        {
+            get { return GetService<SpriteBatch>(); }
+        }
+		#endregion
+
+		#region Game Components and Properties
+		/// <summary>
+		/// Gets or sets the current camera.
+		/// </summary>
+		public static Camera2D Camera { get; set; }
+
+		/// <summary>
+		/// Gets a bitmap font used for drawing debug text to screen.
+		/// </summary>
+		public static BitmapFont DebugFont { get; private set; }
+
+		/// <summary>
+		/// Gets the standard size for a game object (tile/sprite/etc). Subject to change.
+		/// </summary>
+		public static Vector2 GameObjectSize
+		{
+			get
+			{
+				return new Vector2(16f);
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the size of the window in pixels.
+		/// </summary>
+		public static Vector2 ScreenSize { get; set; }
+
+		/// <summary>
+		/// Gets the size, in pixels, of a QuadTree cell.
+		/// </summary>
+		public static Vector2 QuadTreeCellSize
+        {
+            get
+            {
+				return new Vector2(64f, 64f);
+            }
+        }
+
+		#endregion
+
+		#region Forms and Form Properties
+		/// <summary>
+		/// Gets or sets a value indicating whether the collision debugger is active.
+		/// </summary>
+		public static bool CollisionDebuggerActive { get; set; }
+
+		/// <summary>
+		/// Gets or sets the current <see cref="Forms.CollisionDebuggerForm"/> instance.
+		/// </summary>
+		public static CollisionDebuggerForm CollisionDebuggerForm { get; set; }
 
 		/// <summary>
 		/// Gets a debug form used for printing log messages and receiving debug commands.
@@ -91,38 +128,7 @@ namespace SMLimitless
 		/// Gets a form used to edit global physics settings for game objects.
 		/// </summary>
 		public static PhysicsSettingsEditorForm PhysicsSettingsEditorForm { get; private set; }
-
-        /// <summary>
-        /// Gets the size, in pixels, of a QuadTree cell.
-        /// </summary>
-        public static Vector2 QuadTreeCellSize
-        {
-            get
-            {
-				return new Vector2(64f, 64f);
-            }
-        }
-
-        /// <summary>
-        /// Gets the standard size for a game object (tile/sprite/etc). Subject to change.
-        /// </summary>
-        public static Vector2 GameObjectSize
-        {
-            get
-            {
-                return new Vector2(16f);
-            }
-        }
-
-		/// <summary>
-		/// Gets or sets a value indicating whether the collision debugger is active.
-		/// </summary>
-		public static bool CollisionDebuggerActive { get; set; }
-
-		/// <summary>
-		/// Gets or sets the current <see cref="Forms.CollisionDebuggerForm"/> instance.
-		/// </summary>
-		public static CollisionDebuggerForm CollisionDebuggerForm { get; set; }
+		#endregion
 
 		static GameServices()
 		{
@@ -154,24 +160,24 @@ namespace SMLimitless
             DebugFont.LoadContent();
         }
 
-        /// <summary>
-        /// Returns a game service.
-        /// </summary>
-        /// <typeparam name="T">The type of game service to retrieve.</typeparam>
-        /// <returns>A game service of the specified type.</returns>
-        public static T GetService<T>()
+		/// <summary>
+		/// Adds a service to the container.
+		/// </summary>
+		/// <typeparam name="T">The type of the service to add.</typeparam>
+		/// <param name="service">The service to add.</param>
+		public static void AddService<T>(T service)
+		{
+			Container.AddService(typeof(T), service);
+		}
+
+		/// <summary>
+		/// Returns a game service.
+		/// </summary>
+		/// <typeparam name="T">The type of game service to retrieve.</typeparam>
+		/// <returns>A game service of the specified type.</returns>
+		public static T GetService<T>()
         {
             return (T)Container.GetService(typeof(T));
-        }
-
-        /// <summary>
-        /// Adds a service to the container.
-        /// </summary>
-        /// <typeparam name="T">The type of the service to add.</typeparam>
-        /// <param name="service">The service to add.</param>
-        public static void AddService<T>(T service)
-        {
-            Container.AddService(typeof(T), service);
         }
 
         /// <summary>

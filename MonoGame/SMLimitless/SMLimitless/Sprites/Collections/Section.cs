@@ -286,9 +286,6 @@ namespace SMLimitless.Sprites.Collections
 
 				isContentLoaded = true;
 			}
-
-			// WYLO: Lakitu works now, but his sprites act weirdly. Some don't get assigned their proper position,
-			// and some vanish but can still kill the player.
 		}
 
 		/// <summary>
