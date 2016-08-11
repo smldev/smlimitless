@@ -4,7 +4,7 @@
 
 ### Description
 
-Many video games have the idea of *trigger zones* - areas of the game in which a player entering performs some actions or calls some callback. This document outlines how SML is going to implement them
+Many video games have the idea of *trigger zones* - areas of the game in which a player entering performs some actions or calls some callback. This document outlines how SML is going to implement them.
 
 ### Behavior
 

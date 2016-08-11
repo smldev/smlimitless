@@ -455,6 +455,7 @@ namespace SmlSprites.Players
 				Velocity = TargetVelocity = Vector2.Zero;
 				PlaySound(groundPoundDropSound);
 				SetPlayerGraphicsObject("groundPoundSpin");
+				AddAttribute("GroundPounding");
 			}
 			else if (isGroundPounding && groundPoundSpinTimer < GroundPoundSpinTimer.Value)
 			{
@@ -467,6 +468,7 @@ namespace SmlSprites.Players
 				isGroundPounding = false;
 				groundPoundSpinTimer = 0;
 				actionScheduler.ScheduleAction(() => wasGroundPounding = false, 20);
+				RemoveAttribute("GroundPounding");
 			}
 			else if (isGroundPounding && groundPoundSpinTimer == GroundPoundSpinTimer.Value)
 			{

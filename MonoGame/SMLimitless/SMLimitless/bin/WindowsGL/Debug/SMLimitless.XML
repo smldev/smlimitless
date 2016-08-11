@@ -253,6 +253,15 @@
             Gets a rectangle that can completely contain this sized grid.
             </summary>
         </member>
+        <member name="P:SMLimitless.Collections.SizedGrid`1.Item(System.Int32,System.Int32)">
+            <summary>
+            Gets an object on the grid from the specified cell.
+            To add objects to the grid, use the Add method.
+            </summary>
+            <param name="x">The X-coordinate of the cell.</param>
+            <param name="y">The Y-coordinate of the cell.</param>
+            <returns>The object at the specified grid cell, or null if there is no object in the cell.</returns>
+        </member>
         <member name="M:SMLimitless.Collections.SizedGrid`1.#ctor(Microsoft.Xna.Framework.Vector2,System.Int32,System.Int32,System.Int32,System.Int32)">
             <summary>
             Initializes a new instance of the <see cref="T:SMLimitless.Collections.SizedGrid`1"/> class.
@@ -262,15 +271,6 @@
             <param name="cellHeight">The height of the grid cells.</param>
             <param name="gridWidth">The width of the grid in cells.</param>
             <param name="gridHeight">The height of the grid in cells.</param>
-        </member>
-        <member name="P:SMLimitless.Collections.SizedGrid`1.Item(System.Int32,System.Int32)">
-            <summary>
-            Gets an object on the grid from the specified cell.
-            To add objects to the grid, use the Add method.
-            </summary>
-            <param name="x">The X-coordinate of the cell.</param>
-            <param name="y">The Y-coordinate of the cell.</param>
-            <returns>The object at the specified grid cell, or null if there is no object in the cell.</returns>
         </member>
         <member name="M:SMLimitless.Collections.SizedGrid`1.Add(SMLimitless.Interfaces.IPositionable2)">
             <summary>
@@ -291,6 +291,28 @@
             Removes an item from the grid.
             </summary>
             <param name="item">The item to be removed from the grid.</param>
+        </member>
+        <member name="M:SMLimitless.Collections.SizedGrid`1.DoesRangeAlignToGrid(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Returns a value indicating whether all items in an enumerable align to the grid.
+            </summary>
+            <param name="items">The items to check for alignment.</param>
+            <returns>True if all items align to the grid, false if they don't.</returns>
+        </member>
+        <member name="M:SMLimitless.Collections.SizedGrid`1.IndexWithinBounds(System.Int32,System.Int32)">
+            <summary>
+            Checks if a grid cell coordinate falls within the bounds of the grid.
+            </summary>
+            <param name="x">The X-coordinate of the coordinate to check.</param>
+            <param name="y">The Y-coordinate of the coordinate to check.</param>
+            <returns>True if the cell falls within the grid, false if otherwise.</returns>
+        </member>
+        <member name="M:SMLimitless.Collections.SizedGrid`1.PointWithinBounds(Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Checks if a point in space falls within the bounds of the grid.
+            </summary>
+            <param name="point">The point to check.</param>
+            <returns>True if the point falls within the grid, false if otherwise.</returns>
         </member>
         <member name="M:SMLimitless.Collections.SizedGrid`1.GetSubgrid(System.Int32,System.Int32,System.Int32,System.Int32)">
             <summary>
@@ -315,28 +337,6 @@
             </summary>
             <param name="position">The position to return for.</param>
             <returns>The object at the position, or null if there is no object.</returns>
-        </member>
-        <member name="M:SMLimitless.Collections.SizedGrid`1.DoesRangeAlignToGrid(System.Collections.Generic.IEnumerable{`0})">
-            <summary>
-            Returns a value indicating whether all items in an enumerable align to the grid.
-            </summary>
-            <param name="items">The items to check for alignment.</param>
-            <returns>True if all items align to the grid, false if they don't.</returns>
-        </member>
-        <member name="M:SMLimitless.Collections.SizedGrid`1.IndexWithinBounds(System.Int32,System.Int32)">
-            <summary>
-            Checks if a grid cell coordinate falls within the bounds of the grid.
-            </summary>
-            <param name="x">The X-coordinate of the coordinate to check.</param>
-            <param name="y">The Y-coordinate of the coordinate to check.</param>
-            <returns>True if the cell falls within the grid, false if otherwise.</returns>
-        </member>
-        <member name="M:SMLimitless.Collections.SizedGrid`1.PointWithinBounds(Microsoft.Xna.Framework.Vector2)">
-            <summary>
-            Checks if a point in space falls within the bounds of the grid.
-            </summary>
-            <param name="point">The point to check.</param>
-            <returns>True if the point falls within the grid, false if otherwise.</returns>
         </member>
         <member name="M:SMLimitless.Collections.SizedGrid`1.Draw(Microsoft.Xna.Framework.Color)">
             <summary>
@@ -499,9 +499,21 @@
             </summary>
             <param name="item">The item to add.</param>
         </member>
+        <member name="M:SMLimitless.Collections.SparseCellGrid`1.LocalAdd(`0)">
+            <summary>
+            Adds an item to the cell grid without adding it to the Items collection.
+            </summary>
+            <param name="item">The item to add.</param>
+        </member>
         <member name="M:SMLimitless.Collections.SparseCellGrid`1.Remove(`0)">
             <summary>
             Removes an item from this grid.
+            </summary>
+            <param name="item">The item to remove.</param>
+        </member>
+        <member name="M:SMLimitless.Collections.SparseCellGrid`1.LocalRemove(`0)">
+            <summary>
+            Removes an item from the cell grid without removing it from the Items collection.
             </summary>
             <param name="item">The item to remove.</param>
         </member>
@@ -510,18 +522,6 @@
             Removes all items from this grid that match a predicate.
             </summary>
             <param name="predicate">All the removed items must match this predicate.</param>
-        </member>
-        <member name="M:SMLimitless.Collections.SparseCellGrid`1.LocalAdd(`0)">
-            <summary>
-            Adds an item to the cell grid without adding it to the Items collection.
-            </summary>
-            <param name="item">The item to add.</param>
-        </member>
-        <member name="M:SMLimitless.Collections.SparseCellGrid`1.LocalRemove(`0)">
-            <summary>
-            Removes an item from the cell grid without removing it from the Items collection.
-            </summary>
-            <param name="item">The item to remove.</param>
         </member>
         <member name="M:SMLimitless.Collections.SparseCellGrid`1.AddItemToCell(`0,Microsoft.Xna.Framework.Point)">
             <summary>
@@ -617,6 +617,11 @@
             </summary>
             <typeparam name="T">Any class.</typeparam>
         </member>
+        <member name="P:SMLimitless.Collections.Hierarchy`1.Data">
+            <summary>
+            Gets or sets the data contained within this node.
+            </summary>
+        </member>
         <member name="P:SMLimitless.Collections.Hierarchy`1.Parent">
             <summary>
             Gets the next level up in the hierarchy.
@@ -626,11 +631,6 @@
         <member name="P:SMLimitless.Collections.Hierarchy`1.Children">
             <summary>
             Gets a collection of the children of this node in the hierarchy.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Collections.Hierarchy`1.Data">
-            <summary>
-            Gets or sets the data contained within this node.
             </summary>
         </member>
         <member name="M:SMLimitless.Collections.Hierarchy`1.#ctor(`0)">
@@ -5844,6 +5844,16 @@
             Gets the GameServicesContainer that stores references to the services added.
             </summary>
         </member>
+        <member name="P:SMLimitless.GameServices.Effects">
+            <summary>
+            Gets or sets a dictionary containing <see cref="P:SMLimitless.GameServices.Effects"/> instances and their names.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.GameServices.GameTime">
+            <summary>
+            Gets a reference to the GameTime instance.
+            </summary>
+        </member>
         <member name="P:SMLimitless.GameServices.Graphics">
             <summary>
             Gets a reference to the GraphicsDevice.
@@ -5854,24 +5864,9 @@
             Gets a reference to the SpriteBatch.
             </summary>
         </member>
-        <member name="P:SMLimitless.GameServices.GameTime">
-            <summary>
-            Gets a reference to the GameTime instance.
-            </summary>
-        </member>
         <member name="P:SMLimitless.GameServices.Camera">
             <summary>
             Gets or sets the current camera.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.GameServices.Effects">
-            <summary>
-            Gets or sets a dictionary containing <see cref="P:SMLimitless.GameServices.Effects"/> instances and their names.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.GameServices.ScreenSize">
-            <summary>
-            Gets or sets the size of the window in pixels.
             </summary>
         </member>
         <member name="P:SMLimitless.GameServices.DebugFont">
@@ -5879,24 +5874,19 @@
             Gets a bitmap font used for drawing debug text to screen.
             </summary>
         </member>
-        <member name="P:SMLimitless.GameServices.DebugForm">
+        <member name="P:SMLimitless.GameServices.GameObjectSize">
             <summary>
-            Gets a debug form used for printing log messages and receiving debug commands.
+            Gets the standard size for a game object (tile/sprite/etc). Subject to change.
             </summary>
         </member>
-        <member name="P:SMLimitless.GameServices.PhysicsSettingsEditorForm">
+        <member name="P:SMLimitless.GameServices.ScreenSize">
             <summary>
-            Gets a form used to edit global physics settings for game objects.
+            Gets or sets the size of the window in pixels.
             </summary>
         </member>
         <member name="P:SMLimitless.GameServices.QuadTreeCellSize">
             <summary>
             Gets the size, in pixels, of a QuadTree cell.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.GameServices.GameObjectSize">
-            <summary>
-            Gets the standard size for a game object (tile/sprite/etc). Subject to change.
             </summary>
         </member>
         <member name="P:SMLimitless.GameServices.CollisionDebuggerActive">
@@ -5907,6 +5897,16 @@
         <member name="P:SMLimitless.GameServices.CollisionDebuggerForm">
             <summary>
             Gets or sets the current <see cref="T:SMLimitless.Forms.CollisionDebuggerForm"/> instance.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.GameServices.DebugForm">
+            <summary>
+            Gets a debug form used for printing log messages and receiving debug commands.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.GameServices.PhysicsSettingsEditorForm">
+            <summary>
+            Gets a form used to edit global physics settings for game objects.
             </summary>
         </member>
         <member name="M:SMLimitless.GameServices.InitializeServices(Microsoft.Xna.Framework.Graphics.GraphicsDevice,Microsoft.Xna.Framework.Graphics.SpriteBatch,Microsoft.Xna.Framework.Content.ContentManager)">
@@ -5923,19 +5923,19 @@
             </summary>
             <param name="contentResourceName">The name of the font's content resource.</param>
         </member>
-        <member name="M:SMLimitless.GameServices.GetService``1">
-            <summary>
-            Returns a game service.
-            </summary>
-            <typeparam name="T">The type of game service to retrieve.</typeparam>
-            <returns>A game service of the specified type.</returns>
-        </member>
         <member name="M:SMLimitless.GameServices.AddService``1(``0)">
             <summary>
             Adds a service to the container.
             </summary>
             <typeparam name="T">The type of the service to add.</typeparam>
             <param name="service">The service to add.</param>
+        </member>
+        <member name="M:SMLimitless.GameServices.GetService``1">
+            <summary>
+            Returns a game service.
+            </summary>
+            <typeparam name="T">The type of game service to retrieve.</typeparam>
+            <returns>A game service of the specified type.</returns>
         </member>
         <member name="M:SMLimitless.GameServices.RemoveService``1">
             <summary>
@@ -7458,11 +7458,6 @@
             Loads the content for this game and all its components.
             </summary>
         </member>
-        <member name="M:SMLimitless.SmlProgram.UnloadContent">
-            <summary>
-            Unloads the content for this game and all its components.
-            </summary>
-        </member>
         <member name="M:SMLimitless.SmlProgram.Update(Microsoft.Xna.Framework.GameTime)">
             <summary>
             Updates the game.
@@ -7477,6 +7472,11 @@
             </summary>
             <param name="gameTime">Snapshot of the game timing state expressed in values that can be used by
             variable-step (real time) or fixed-step (game time) games.</param>
+        </member>
+        <member name="M:SMLimitless.SmlProgram.UnloadContent">
+            <summary>
+            Unloads the content for this game and all its components.
+            </summary>
         </member>
         <member name="T:SMLimitless.Sounds.AudioPlaybackEngine">
             <summary>

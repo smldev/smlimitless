@@ -78,6 +78,7 @@
     <Compile Include="SMB\Enemies\Lakitu.cs" />
     <Compile Include="SMB\Enemies\Spiny.cs" />
     <Compile Include="SMB\Items\Coin.cs" />
+    <Compile Include="Tiles\QuestionBlock.cs" />
     <Compile Include="Tiles\SlopedTile.cs" />
     <Compile Include="Tiles\SolidTile.cs" />
   </ItemGroup>

@@ -38,6 +38,8 @@ namespace SMLimitless.Sprites
 		/// </summary>
 		private BoundingRectangle hitbox;
 
+		private List<string> attributes = new List<string>();
+
 		/// <summary>
 		/// A physics setting representing the maximum downward velocity a sprite can acquire through falling. Measured in pixels per second.
 		/// </summary>
@@ -79,6 +81,8 @@ namespace SMLimitless.Sprites
 		/// </summary>
 		[Browsable(false)]
 		public Section Owner { get; set; }
+
+		public IReadOnlyList<string> Attributes => attributes.AsReadOnly();
 		#endregion
 
 		#region Flags (active, embedded, ground, slope, remove)
@@ -353,6 +357,24 @@ namespace SMLimitless.Sprites
 		public virtual void Activate() { }
 
 		public virtual void Deactivate() { }
+
+		public bool HasAttribute(string attribute)
+		{
+			return attributes.Contains(attribute);
+		}
+
+		public void AddAttribute(string attribute)
+		{
+			if (!attributes.Contains(attribute))
+			{
+				attributes.Add(attribute);
+			}
+		}
+
+		public bool RemoveAttribute(string attribute)
+		{
+			return attributes.Remove(attribute);
+		}
 
 		#region Core Gameobject Methods
         /// <summary>
