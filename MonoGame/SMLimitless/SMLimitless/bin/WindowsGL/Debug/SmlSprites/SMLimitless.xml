@@ -253,6 +253,15 @@
             Gets a rectangle that can completely contain this sized grid.
             </summary>
         </member>
+        <member name="P:SMLimitless.Collections.SizedGrid`1.Item(System.Int32,System.Int32)">
+            <summary>
+            Gets an object on the grid from the specified cell.
+            To add objects to the grid, use the Add method.
+            </summary>
+            <param name="x">The X-coordinate of the cell.</param>
+            <param name="y">The Y-coordinate of the cell.</param>
+            <returns>The object at the specified grid cell, or null if there is no object in the cell.</returns>
+        </member>
         <member name="M:SMLimitless.Collections.SizedGrid`1.#ctor(Microsoft.Xna.Framework.Vector2,System.Int32,System.Int32,System.Int32,System.Int32)">
             <summary>
             Initializes a new instance of the <see cref="T:SMLimitless.Collections.SizedGrid`1"/> class.
@@ -262,15 +271,6 @@
             <param name="cellHeight">The height of the grid cells.</param>
             <param name="gridWidth">The width of the grid in cells.</param>
             <param name="gridHeight">The height of the grid in cells.</param>
-        </member>
-        <member name="P:SMLimitless.Collections.SizedGrid`1.Item(System.Int32,System.Int32)">
-            <summary>
-            Gets an object on the grid from the specified cell.
-            To add objects to the grid, use the Add method.
-            </summary>
-            <param name="x">The X-coordinate of the cell.</param>
-            <param name="y">The Y-coordinate of the cell.</param>
-            <returns>The object at the specified grid cell, or null if there is no object in the cell.</returns>
         </member>
         <member name="M:SMLimitless.Collections.SizedGrid`1.Add(SMLimitless.Interfaces.IPositionable2)">
             <summary>
@@ -291,6 +291,28 @@
             Removes an item from the grid.
             </summary>
             <param name="item">The item to be removed from the grid.</param>
+        </member>
+        <member name="M:SMLimitless.Collections.SizedGrid`1.DoesRangeAlignToGrid(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Returns a value indicating whether all items in an enumerable align to the grid.
+            </summary>
+            <param name="items">The items to check for alignment.</param>
+            <returns>True if all items align to the grid, false if they don't.</returns>
+        </member>
+        <member name="M:SMLimitless.Collections.SizedGrid`1.IndexWithinBounds(System.Int32,System.Int32)">
+            <summary>
+            Checks if a grid cell coordinate falls within the bounds of the grid.
+            </summary>
+            <param name="x">The X-coordinate of the coordinate to check.</param>
+            <param name="y">The Y-coordinate of the coordinate to check.</param>
+            <returns>True if the cell falls within the grid, false if otherwise.</returns>
+        </member>
+        <member name="M:SMLimitless.Collections.SizedGrid`1.PointWithinBounds(Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Checks if a point in space falls within the bounds of the grid.
+            </summary>
+            <param name="point">The point to check.</param>
+            <returns>True if the point falls within the grid, false if otherwise.</returns>
         </member>
         <member name="M:SMLimitless.Collections.SizedGrid`1.GetSubgrid(System.Int32,System.Int32,System.Int32,System.Int32)">
             <summary>
@@ -315,28 +337,6 @@
             </summary>
             <param name="position">The position to return for.</param>
             <returns>The object at the position, or null if there is no object.</returns>
-        </member>
-        <member name="M:SMLimitless.Collections.SizedGrid`1.DoesRangeAlignToGrid(System.Collections.Generic.IEnumerable{`0})">
-            <summary>
-            Returns a value indicating whether all items in an enumerable align to the grid.
-            </summary>
-            <param name="items">The items to check for alignment.</param>
-            <returns>True if all items align to the grid, false if they don't.</returns>
-        </member>
-        <member name="M:SMLimitless.Collections.SizedGrid`1.IndexWithinBounds(System.Int32,System.Int32)">
-            <summary>
-            Checks if a grid cell coordinate falls within the bounds of the grid.
-            </summary>
-            <param name="x">The X-coordinate of the coordinate to check.</param>
-            <param name="y">The Y-coordinate of the coordinate to check.</param>
-            <returns>True if the cell falls within the grid, false if otherwise.</returns>
-        </member>
-        <member name="M:SMLimitless.Collections.SizedGrid`1.PointWithinBounds(Microsoft.Xna.Framework.Vector2)">
-            <summary>
-            Checks if a point in space falls within the bounds of the grid.
-            </summary>
-            <param name="point">The point to check.</param>
-            <returns>True if the point falls within the grid, false if otherwise.</returns>
         </member>
         <member name="M:SMLimitless.Collections.SizedGrid`1.Draw(Microsoft.Xna.Framework.Color)">
             <summary>
@@ -499,9 +499,21 @@
             </summary>
             <param name="item">The item to add.</param>
         </member>
+        <member name="M:SMLimitless.Collections.SparseCellGrid`1.LocalAdd(`0)">
+            <summary>
+            Adds an item to the cell grid without adding it to the Items collection.
+            </summary>
+            <param name="item">The item to add.</param>
+        </member>
         <member name="M:SMLimitless.Collections.SparseCellGrid`1.Remove(`0)">
             <summary>
             Removes an item from this grid.
+            </summary>
+            <param name="item">The item to remove.</param>
+        </member>
+        <member name="M:SMLimitless.Collections.SparseCellGrid`1.LocalRemove(`0)">
+            <summary>
+            Removes an item from the cell grid without removing it from the Items collection.
             </summary>
             <param name="item">The item to remove.</param>
         </member>
@@ -510,18 +522,6 @@
             Removes all items from this grid that match a predicate.
             </summary>
             <param name="predicate">All the removed items must match this predicate.</param>
-        </member>
-        <member name="M:SMLimitless.Collections.SparseCellGrid`1.LocalAdd(`0)">
-            <summary>
-            Adds an item to the cell grid without adding it to the Items collection.
-            </summary>
-            <param name="item">The item to add.</param>
-        </member>
-        <member name="M:SMLimitless.Collections.SparseCellGrid`1.LocalRemove(`0)">
-            <summary>
-            Removes an item from the cell grid without removing it from the Items collection.
-            </summary>
-            <param name="item">The item to remove.</param>
         </member>
         <member name="M:SMLimitless.Collections.SparseCellGrid`1.AddItemToCell(`0,Microsoft.Xna.Framework.Point)">
             <summary>
@@ -617,6 +617,11 @@
             </summary>
             <typeparam name="T">Any class.</typeparam>
         </member>
+        <member name="P:SMLimitless.Collections.Hierarchy`1.Data">
+            <summary>
+            Gets or sets the data contained within this node.
+            </summary>
+        </member>
         <member name="P:SMLimitless.Collections.Hierarchy`1.Parent">
             <summary>
             Gets the next level up in the hierarchy.
@@ -626,11 +631,6 @@
         <member name="P:SMLimitless.Collections.Hierarchy`1.Children">
             <summary>
             Gets a collection of the children of this node in the hierarchy.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Collections.Hierarchy`1.Data">
-            <summary>
-            Gets or sets the data contained within this node.
             </summary>
         </member>
         <member name="M:SMLimitless.Collections.Hierarchy`1.#ctor(`0)">
@@ -1813,6 +1813,1228 @@
             to perform actions with or using the images.
             </summary>
         </member>
+        <member name="T:SMLimitless.Physics.CollidableShape">
+            <summary>
+            An enumeration of the collidable shapes that
+            SML supports.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.CollidableShape.Rectangle">
+            <summary>
+            A parallelogram with sides parallel to the coordinate axes.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.CollidableShape.RightTriangle">
+            <summary>
+            A rectangle split in half from corner to corner.
+            </summary>
+        </member>
+        <member name="T:SMLimitless.Physics.FlaggedDirection">
+            <summary>
+            Enumerates the cardinal directions as a set of flags.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.FlaggedDirection.None">
+            <summary>
+            Represents no direction set.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.FlaggedDirection.Up">
+            <summary>
+            Represents the upward cardinal direction (negative Y).
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.FlaggedDirection.Down">
+            <summary>
+            Represents the downward cardinal direction (positive Y).
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.FlaggedDirection.Left">
+            <summary>
+            Represents the leftward cardinal direction (negative X).
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.FlaggedDirection.Right">
+            <summary>
+            Represents the rightward cardinal direction (positive X).
+            </summary>
+        </member>
+        <member name="T:SMLimitless.Physics.HorizontalDirection">
+            <summary>
+            Defines the horizontal directions of left, right, and none.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.HorizontalDirection.Left">
+            <summary>
+            The leftward cardinal direction (negative X).
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.HorizontalDirection.None">
+            <summary>
+            No direction.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.HorizontalDirection.Right">
+            <summary>
+            The rightward cardinal direction (positive X).
+            </summary>
+        </member>
+        <member name="T:SMLimitless.Physics.RectangularSpaceDivision">
+            <summary>
+            Enumerates the division of the space around a rectangle.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.RectangularSpaceDivision.None">
+            <summary>
+            The default/invalid value.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.RectangularSpaceDivision.Within">
+            <summary>
+            The area within the rectangle.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.RectangularSpaceDivision.Above">
+            <summary>
+            The area directly above the rectangle.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.RectangularSpaceDivision.Below">
+            <summary>
+            The area directly below the rectangle.
+            </summary>
+            
+        </member>
+        <member name="F:SMLimitless.Physics.RectangularSpaceDivision.Left">
+            <summary>
+            The area directly to the left of the rectangle.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.RectangularSpaceDivision.Right">
+            <summary>
+            The area directly to the right of the rectangle.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.RectangularSpaceDivision.AboveLeft">
+            <summary>
+            The area above and to the left of the rectangle.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.RectangularSpaceDivision.AboveRight">
+            <summary>
+            The area above and to the right of the rectangle.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.RectangularSpaceDivision.BelowLeft">
+            <summary>
+            The area below and to the left of the rectangle.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.RectangularSpaceDivision.BelowRight">
+            <summary>
+            The area below and to the right of the rectangle.
+            </summary>
+        </member>
+        <member name="T:SMLimitless.Physics.ResolutionType">
+            <summary>
+            An enumeration of the different types of
+            collision resolutions between tiles and sprites.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.ResolutionType.None">
+            <summary>
+            Not a resolution (resolution of zero).
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.ResolutionType.Normal">
+            <summary>
+            A resolution between a sprite and a straight edge of a tile.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.ResolutionType.Slope">
+            <summary>
+            A resolution between a sprite and the sloped side of a sloped tile.
+            </summary>
+        </member>
+        <member name="T:SMLimitless.Physics.VerticalDirection">
+            <summary>
+            Defines the vertical directions of up, down, and none.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.VerticalDirection.Up">
+            <summary>
+            The upward cardinal direction (negative Y).
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.VerticalDirection.None">
+            <summary>
+            No direction.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.VerticalDirection.Down">
+            <summary>
+            The downward cardinal direction (positive Y).
+            </summary>
+        </member>
+        <member name="T:SMLimitless.Physics.BoundingRectangle">
+            <summary>
+            Using Rectangle for Collision bounds causes 'jiggling' as Rectangle 
+            must round values to integers. This struct uses float for precision.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.BoundingRectangle.IntersectionCallCount">
+            <summary>
+            Debug; keeps track of how many times intersection methods have been called.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.BoundingRectangle.min">
+            <summary>
+            The position of the top-left corner.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.BoundingRectangle.max">
+            <summary>
+            The size of the rectangle.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.BoundingRectangle.Zero">
+            <summary>
+            Gets a bounding rectangle at the origin of the world with zero width and height.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.BoundingRectangle.NaN">
+            <summary>
+            Gets a bounding rectangle with all coordinates set to NaN.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Physics.BoundingRectangle.#ctor(Microsoft.Xna.Framework.Rectangle)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SMLimitless.Physics.BoundingRectangle"/> struct.
+            </summary>
+            <param name="rectangle">The <see cref="T:Microsoft.Xna.Framework.Rectangle"/> used to create this rectangle.</param>
+        </member>
+        <member name="M:SMLimitless.Physics.BoundingRectangle.#ctor(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SMLimitless.Physics.BoundingRectangle"/> struct.
+            </summary>
+            <param name="start">The position of the top-left corner.</param>
+            <param name="end">The size of the rectangle.</param>
+        </member>
+        <member name="M:SMLimitless.Physics.BoundingRectangle.#ctor(System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SMLimitless.Physics.BoundingRectangle"/> struct.
+            </summary>
+            <param name="x">The X-coordinate of the top-left corner.</param>
+            <param name="y">The Y-coordinate of the top-right corner.</param>
+            <param name="width">The width.</param>
+            <param name="height">The height.</param>
+        </member>
+        <member name="P:SMLimitless.Physics.BoundingRectangle.X">
+            <summary>
+            Gets or sets the X-coordinate of the left line.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.BoundingRectangle.Y">
+            <summary>
+            Gets or sets the Y-coordinate of the top line.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.BoundingRectangle.Width">
+            <summary>
+            Gets or sets the width.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.BoundingRectangle.Height">
+            <summary>
+            Gets or sets the height.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.BoundingRectangle.Left">
+            <summary>
+            Gets the X-coordinate of the left line.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.BoundingRectangle.Top">
+            <summary>
+            Gets the Y-coordinate of the top line.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.BoundingRectangle.Right">
+            <summary>
+            Gets the X-coordinate of the right line.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.BoundingRectangle.Bottom">
+            <summary>
+            Gets the Y-coordinate of the bottom line.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.BoundingRectangle.TopCenter">
+            <summary>
+            Gets the position of the top-center point of this rectangle.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.BoundingRectangle.BottomCenter">
+            <summary>
+            Gets the position of the bottom-center point of this rectangle.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.BoundingRectangle.LeftCenter">
+            <summary>
+            Gets the position of the center point on the left edge.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.BoundingRectangle.RightCenter">
+            <summary>
+            Gets the position of the center point on the right edge.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.BoundingRectangle.Position">
+            <summary>
+            Gets or sets the position.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.BoundingRectangle.Size">
+            <summary>
+            Gets or sets the size.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.BoundingRectangle.Center">
+            <summary>
+            Gets the position of the point in the center.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.BoundingRectangle.Shape">
+            <summary>
+            Gets the shape of this collidable object.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.BoundingRectangle.Bounds">
+            <summary>
+            Gets this rectangle.
+            </summary>
+            <remarks>This member is required for the ICollidableShape interface.</remarks>
+        </member>
+        <member name="P:SMLimitless.Physics.BoundingRectangle.BottomRight">
+            <summary>
+            Gets the position of the bottom-right point on this rectangle.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.BoundingRectangle.TopRight">
+            <summary>
+            Gets the position of the top-right point on this rectangle.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.BoundingRectangle.BottomLeft">
+            <summary>
+            Gets the position of the bottom-left point on this rectangle.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.BoundingRectangle.TopLeft">
+            <summary>
+            Gets the position of the top-left point on this rectangle.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Physics.BoundingRectangle.FromSimpleString(System.String)">
+            <summary>
+            Returns a rectangle created from a simple string representation.
+            </summary>
+            <param name="input">A string containing four comma-delimited numbers.</param>
+            <returns>A rectangle created from the string.</returns>
+        </member>
+        <member name="M:SMLimitless.Physics.BoundingRectangle.Serialize">
+            <summary>
+            Returns a string representing the components of this rectangle.
+            </summary>
+            <returns>A string in the format "X, Y, Width, Height".</returns>
+        </member>
+        <member name="M:SMLimitless.Physics.BoundingRectangle.IsNaN">
+            <summary>
+            Checks if any component of this rectangle is Not a Number (NaN).
+            </summary>
+            <returns>True if any component is equal to float.NaN, false if otherwise.</returns>
+        </member>
+        <member name="M:SMLimitless.Physics.BoundingRectangle.Intersects(Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Determines if a given point is within this rectangle.
+            </summary>
+            <param name="point">The point to check.</param>
+            <returns>True if the point is within this rectangle, false if otherwise.</returns>
+        </member>
+        <member name="M:SMLimitless.Physics.BoundingRectangle.IntersectsIncludingEdges(Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Determines if a given point is within or tangent to this rectangle.
+            </summary>
+            <param name="point">The point to check.</param>
+            <returns>True if the point is within or tangent to this rectangle, false if otherwise.</returns>
+        </member>
+        <member name="M:SMLimitless.Physics.BoundingRectangle.Intersects(SMLimitless.Physics.BoundingRectangle)">
+            <summary>
+            Determines if a given rectangle is intersecting this rectangle.
+            </summary>
+            <param name="that">The rectangle to check.</param>
+            <returns>True if any part of the other rectangle is intersecting this rectangle, false if otherwise.</returns>
+        </member>
+        <member name="M:SMLimitless.Physics.BoundingRectangle.IntersectsIncludingEdges(SMLimitless.Physics.BoundingRectangle)">
+            <summary>
+            Returns a value indicating whether another rectangle intersects or is tangent to this one.
+            </summary>
+            <param name="that">The other rectangle.</param>
+            <returns>True if the other rectangle intersects or is tangent to this one, false if otherwise.</returns>
+        </member>
+        <member name="M:SMLimitless.Physics.BoundingRectangle.Intersects(SMLimitless.Physics.RightTriangle)">
+            <summary>
+            Determines if a given right triangle is intersecting this rectangle.
+            </summary>
+            <param name="triangle">The right triangle to check.</param>
+            <returns>True if any part of the right triangle is intersecting this rectangle, false if otherwise.</returns>
+        </member>
+        <member name="M:SMLimitless.Physics.BoundingRectangle.Within(Microsoft.Xna.Framework.Vector2,System.Boolean)">
+            <summary>
+            Determines if a point is within this rectangle.
+            </summary>
+            <param name="point">The point to check.</param>
+            <param name="adjacentPointsAreWithin">If true, any point on the edge of the shape will be considered within.</param>
+            <returns>True if the point is within the shape, false if otherwise.</returns>
+        </member>
+        <member name="M:SMLimitless.Physics.BoundingRectangle.Within(SMLimitless.Physics.BoundingRectangle)">
+            <summary>
+            Returns a value indicating whether a bounding rectangle is entirely contained within this rectangle.
+            </summary>
+            <param name="that">The other rectangle.</param>
+            <returns>True if the other rectangle is entirely contained within this one, false if otherwise.</returns>
+        </member>
+        <member name="M:SMLimitless.Physics.BoundingRectangle.GetPointRelation(Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Returns a value indicating whether a point is above, below, to the left of, et cetera, of this rectangle.
+            </summary>
+            <param name="point">The point to check.</param>
+            <returns>A <see cref="T:SMLimitless.Physics.RectangularSpaceDivision"/> instance indicating where the point is with relation to this rectangle.</returns>
+        </member>
+        <member name="M:SMLimitless.Physics.BoundingRectangle.GetIntersectionDepth(SMLimitless.Physics.BoundingRectangle)">
+            <summary>
+            Returns the intersection depth between a given rectangle and this one.
+            </summary>
+            <param name="that">The rectangle to check.</param>
+            <returns>The intersection depth between the other rectangle and this one. If the rectangles aren't intersecting, a vector with NaN components is returned.</returns>
+            <remarks>
+            This method determines the sign of either component of the result
+            by determining the "direction" of the intersection - for example,
+            if the right edge of the other rectangle is to the left of the center
+            of this rectangle, the "direction" is to the left, and since left is
+            negative X, the resulting X component will be negative.
+            </remarks>
+        </member>
+        <member name="M:SMLimitless.Physics.BoundingRectangle.GetCollisionResolution(SMLimitless.Physics.BoundingRectangle)">
+            <summary>
+            Returns the distance to move a given rectangle
+            in order to properly resolve a collision.
+            </summary>
+            <param name="that">The rectangle to check.</param>
+            <returns>A value that can be applied to the position of the rectangle
+            to move it the minimum distance such that it won't be intersecting this one.</returns>
+            <remarks>Internally, this method uses the GetIntersectionDepth() method to determine
+            the intersection depth. It then determines which of the two axes has the smallest absolute
+            value and zeroes out the other. This way of collision resolution is called the "shallowest edge"
+            method, and it allows quick determination of which axis to resolve along.</remarks>
+        </member>
+        <member name="M:SMLimitless.Physics.BoundingRectangle.GetCollisionResolution(Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Returns the distance to move a given rectangle
+            in order to properly resolve a collision.
+            </summary>
+            <param name="intersect">The intersection depth for the other rectangle.</param>
+            <returns>A value that can be applied to the position of the rectangle
+            to move it the minimum distance such that it won't be intersecting this one.</returns>
+        </member>
+        <member name="M:SMLimitless.Physics.BoundingRectangle.GetTopPoint(System.Single)">
+            <summary>
+            Gets the Y-coordinate of the top of this rectangle.
+            </summary>
+            <param name="x">The x-coordinate to check for.</param>
+            <returns>The Y-coordinate of the top of this rectangle.</returns>
+        </member>
+        <member name="M:SMLimitless.Physics.BoundingRectangle.ToRectangle">
+            <summary>
+            Returns a standard Rectangle that uses integral components.
+            </summary>
+            <returns>The standard Rectangle.</returns>
+        </member>
+        <member name="M:SMLimitless.Physics.BoundingRectangle.Draw(Microsoft.Xna.Framework.Color)">
+            <summary>
+            Draws this rectangle to the screen.
+            </summary>
+            <param name="color">The color of the rectangle.</param>
+        </member>
+        <member name="M:SMLimitless.Physics.BoundingRectangle.DrawOutline(Microsoft.Xna.Framework.Color)">
+            <summary>
+            Draws the outline of this rectangle to the screen.
+            </summary>
+            <param name="color">The color of the outline.</param>
+        </member>
+        <member name="M:SMLimitless.Physics.BoundingRectangle.ToString">
+            <summary>
+            Returns a string representing key values of this rectangle.
+            </summary>
+            <returns>A string representing key values of this rectangle.</returns>
+        </member>
+        <member name="T:SMLimitless.Physics.Camera2D">
+            <summary>
+            Represents a camera that is used to view a portion
+            of a two-dimensional space.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.Camera2D.zoom">
+            <summary>
+            A backing field for the Zoom property.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.Camera2D.position">
+            <summary>
+            A backing field for the Position property;
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.Camera2D.transform">
+            <summary>
+            A field containing the matrix transformation for the camera.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.Camera2D.Zoom">
+            <summary>
+            Gets or sets the zoom of the camera.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.Camera2D.Rotation">
+            <summary>
+            Gets or sets the rotation of the camera in degrees.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.Camera2D.Position">
+            <summary>
+            Gets or sets the position of the top-left corner of the camera's view.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.Camera2D.Viewport">
+            <summary>
+            Gets a rectangle corresponding to the viewport of the camera.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.Camera2D.ViewportSize">
+            <summary>
+            Gets the size of the viewport of the camera, adjusted for zoom.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Physics.Camera2D.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:SMLimitless.Physics.Camera2D"/> class.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Physics.Camera2D.Move(Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Moves the camera by a given distance.
+            </summary>
+            <param name="amount">The distance to move the camera by.</param>
+        </member>
+        <member name="M:SMLimitless.Physics.Camera2D.GetTransformation">
+            <summary>
+            Gets a matrix transformation for use with the sprite batch.
+            </summary>
+            <returns>The matrix transformation.</returns>
+        </member>
+        <member name="T:SMLimitless.Physics.CameraSystem">
+            <summary>
+            A system that moves a <see cref="T:SMLimitless.Physics.Camera2D"/> instance around a <see cref="T:SMLimitless.Sprites.Collections.Section"/> instance.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.CameraSystem.ActiveBounds">
+            <summary>
+            Gets a rectangle in which game objects such as tiles and sprites are active.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.CameraSystem.StayInBounds">
+            <summary>
+            Gets or sets a value indicating whether the camera's viewport should stay within bounds.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Physics.CameraSystem.#ctor(SMLimitless.Physics.Camera2D,SMLimitless.Physics.BoundingRectangle,SMLimitless.Interfaces.IPositionable2[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:SMLimitless.Physics.CameraSystem"/> class.
+            </summary>
+            <param name="camera">A camera for the system to move.</param>
+            <param name="totalBounds">The bounds of the <see cref="T:SMLimitless.Sprites.Collections.Section"/> instance.</param>
+            <param name="trackingObjects">A collection of objects that the camera should follow.</param>
+        </member>
+        <member name="M:SMLimitless.Physics.CameraSystem.Update">
+            <summary>
+            Updates this camera system.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Physics.CameraSystem.Draw(System.Boolean)">
+            <summary>
+            Draws the total bounds of the camera system as a green rectangle,
+            plus optional debug information.
+            </summary>
+            <param name="debug">A value indicating whether debug information should be displayed.</param>
+        </member>
+        <member name="T:SMLimitless.Physics.InterpolatorScaleDelegate">
+            <summary>
+            A delegate used by Interpolators to scale their progress and generate their current value.
+            </summary>
+            <param name="progress">The current progress of the Interpolator in the range [0, 1].</param>
+            <returns>A value representing the scaled progress used to generate the Interpolator's Value.</returns>
+        </member>
+        <member name="T:SMLimitless.Physics.Interpolator">
+            <summary>
+            Represents a type that can interpolate
+            between two values, and optionally perform an action
+            whenever the interpolator is updated or when the interpolator
+            completes.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Physics.Interpolator.#ctor(System.Single,System.Single,System.Action{SMLimitless.Physics.Interpolator})">
+            <summary>
+            Initializes a new instance of the <see cref="T:SMLimitless.Physics.Interpolator"/> class.
+            </summary>
+            <param name="endValue">The value at which the interpolator ends.</param>
+            <param name="length">The length in seconds of the interpolation.</param>
+            <param name="step">The action to perform on each step.</param>
+        </member>
+        <member name="M:SMLimitless.Physics.Interpolator.#ctor(System.Single,System.Single,System.Single,System.Action{SMLimitless.Physics.Interpolator})">
+            <summary>
+            Initializes a new instance of the <see cref="T:SMLimitless.Physics.Interpolator"/> class.
+            </summary>
+            <param name="startValue">The value at which the interpolator starts.</param>
+            <param name="endValue">The value at which the interpolator ends.</param>
+            <param name="length">The length in seconds of the interpolation.</param>
+            <param name="step">The action to perform on each step.</param>
+        </member>
+        <member name="M:SMLimitless.Physics.Interpolator.#ctor(System.Single,System.Single,System.Single,System.Action{SMLimitless.Physics.Interpolator},SMLimitless.Physics.InterpolatorScaleDelegate)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SMLimitless.Physics.Interpolator"/> class.
+            </summary>
+            <param name="startValue">The value at which the interpolator starts.</param>
+            <param name="endValue">The value at which the interpolator ends.</param>
+            <param name="length">The length in seconds of the interpolation.</param>
+            <param name="step">The action to perform on each step.</param>
+            <param name="scale">The kind of interpolator scale to use.</param>
+        </member>
+        <member name="M:SMLimitless.Physics.Interpolator.#ctor(System.Single,System.Single,System.Single,System.Action{SMLimitless.Physics.Interpolator},System.Action{SMLimitless.Physics.Interpolator},SMLimitless.Physics.InterpolatorScaleDelegate)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SMLimitless.Physics.Interpolator"/> class.
+            </summary>
+            <param name="startValue">The value at which the interpolator starts.</param>
+            <param name="endValue">The value at which the interpolator ends.</param>
+            <param name="length">The length in seconds of the interpolation.</param>
+            <param name="step">The action to perform on each step.</param>
+            <param name="completed">The action to perform when the interpolator completes.</param>
+            <param name="scale">The kind of interpolator scale to use.</param>
+        </member>
+        <member name="M:SMLimitless.Physics.Interpolator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:SMLimitless.Physics.Interpolator"/> class.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.Interpolator.Enabled">
+            <summary>
+            Gets a value indicating whether this interpolator is currently running.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.Interpolator.Start">
+            <summary>
+            Gets the value at which the interpolator starts.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.Interpolator.End">
+            <summary>
+            Gets the value at which the interpolator ends.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.Interpolator.Range">
+            <summary>
+            Gets the range (end - start) of the interpolator.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.Interpolator.Progress">
+            <summary>
+            Gets the interpolator's progress in the range of [0, 1].
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.Interpolator.Value">
+            <summary>
+            Gets the current value of the interpolator.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.Interpolator.Length">
+            <summary>
+            Gets the length in seconds of how long the interpolation will take.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.Interpolator.Scale">
+            <summary>
+            Gets the scale of this interpolator.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.Interpolator.Step">
+            <summary>
+            Gets the action to perform whenever a step occurs.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.Interpolator.Completed">
+            <summary>
+            Gets the action to perform whenever the interpolation is complete.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Physics.Interpolator.Stop">
+            <summary>
+            Stops this interpolator.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Physics.Interpolator.ForceFinish">
+            <summary>
+            Forces the interpolator to finish immediately.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Physics.Interpolator.Update">
+            <summary>
+            Updates this interpolator.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Physics.Interpolator.ToString">
+            <summary>
+            Returns a string containing several useful values.
+            </summary>
+            <returns>A string containing several useful values.</returns>
+        </member>
+        <member name="M:SMLimitless.Physics.Interpolator.ToString(System.String,System.IFormatProvider)">
+            <summary>
+            Returns a string containing several useful values.
+            </summary>
+            <param name="format">The parameter is not used.</param>
+            <param name="formatProvider">The parameter is not used.</param>
+            <returns>A string containing several useful values.</returns>
+        </member>
+        <member name="M:SMLimitless.Physics.Interpolator.Reset(System.Single,System.Single,System.Single,System.Action{SMLimitless.Physics.Interpolator},System.Action{SMLimitless.Physics.Interpolator},SMLimitless.Physics.InterpolatorScaleDelegate)">
+            <summary>
+            Resets the values of this interpolator.
+            </summary>
+            <param name="startValue">The value at which the interpolator starts.</param>
+            <param name="endValue">The value at which the interpolator ends.</param>
+            <param name="length">The length in seconds of the interpolation.</param>
+            <param name="step">The action to perform on each step.</param>
+            <param name="completed">The action to perform when the interpolator completes.</param>
+            <param name="scale">The kind of interpolator scale to use.</param>
+        </member>
+        <member name="T:SMLimitless.Physics.InterpolatorScales">
+            <summary>
+            Defines several different scales
+            for interpolators to use.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Physics.InterpolatorScales.#cctor">
+            <summary>
+            Initializes static members of the <see cref="T:SMLimitless.Physics.InterpolatorScales"/> class.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.InterpolatorScales.Linear">
+            <summary>
+            Gets a scale that linearly interpolates between two values.
+            The change in the value on every step is equal.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.InterpolatorScales.Quadratic">
+            <summary>
+            Gets a quadratic scale to interpolate between two values.
+            The value starts increasing slowly, and gains more speed as it approaches completion.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.InterpolatorScales.InverseQuadratic">
+            <summary>
+            Gets an inverse quadratic scale to interpolate between two values.
+            The value starts increasing quickly, and loses speed as it approaches completion.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.InterpolatorScales.Cubic">
+            <summary>
+            Gets a cubic scale to interpolate between two values.
+            This scale is similar to the quadratic scale, although it seems
+            to accelerate more slowly.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.InterpolatorScales.SmoothStep">
+            <summary>
+            Gets a smooth step scale to interpolate between two values.
+            The value will start increasing slowly, accelerate, and then slow
+            down as it approaches completion.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Physics.InterpolatorScales.LinearScale(System.Single)">
+            <summary>
+            Applies the linear scale to a certain amount of progress.
+            </summary>
+            <param name="progress">The original progress.</param>
+            <returns>The progress itself (it remains unchanged).</returns>
+        </member>
+        <member name="M:SMLimitless.Physics.InterpolatorScales.QuadraticScale(System.Single)">
+            <summary>
+            Applies the quadratic scale to a certain amount of progress.
+            Only use for progress values less than 1.
+            </summary>
+            <param name="progress">The original progress.</param>
+            <returns>Returns the progress multiplied by itself.</returns>
+        </member>
+        <member name="M:SMLimitless.Physics.InterpolatorScales.InverseQuadraticScale(System.Single)">
+            <summary>
+            Applies the inverse quadratic scale to a certain amount of progress.
+            Only use for progress values less than 1.
+            </summary>
+            <param name="progress">The original progress.</param>
+            <returns>Return 1 minus the inverse (1 minus the progress) squared.</returns>
+        </member>
+        <member name="M:SMLimitless.Physics.InterpolatorScales.CubicScale(System.Single)">
+            <summary>
+            Applies the cubic scale to a certain amount of progress.
+            Only use for progress values less than 1.
+            </summary>
+            <param name="progress">The original progress.</param>
+            <returns>The progress multiplied by itself thrice.</returns>
+        </member>
+        <member name="M:SMLimitless.Physics.InterpolatorScales.SmoothstepScale(System.Single)">
+            <summary>
+            Applies the smooth step scale to a certain amount of progress.
+            Only use for progress values less than 1.
+            </summary>
+            <param name="progress">The original progress.</param>
+            <returns>Returns the progress, multiplied by itself, multiplied by 3 less than twice the progress.</returns>
+        </member>
+        <member name="T:SMLimitless.Physics.Path">
+            <summary>
+            A collection of points that creates
+            a set of lines that objects can follow.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.Path.pathingObject">
+            <summary>
+            The object currently attached to this path.
+            This contains a null reference if no object is attached.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.Path.Points">
+            <summary>
+            Gets or sets a collection of the points representing this path.
+            </summary>
+        </member>
+        <member name="E:SMLimitless.Physics.Path.PointNotifierEvent">
+            <summary>
+            An event notifying an attached object that it has reached
+            one of the points and should change its velocity to continue
+            along the path.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Physics.Path.#ctor(SMLimitless.Interfaces.IPositionable)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SMLimitless.Physics.Path"/> class.
+            </summary>
+            <param name="pathingObject">An object to attach to this path.</param>
+        </member>
+        <member name="M:SMLimitless.Physics.Path.CalculateVelocityMultiplier(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Calculates a vector with component between 0 and 1,
+            based on the angle between two given points, to ensure that
+            velocity is distributed such that an attached object will follow that path.
+            </summary>
+            <param name="a">The first point.</param>
+            <param name="b">The second point.</param>
+            <returns>A vector with components between 0 and 1.</returns>
+        </member>
+        <member name="M:SMLimitless.Physics.Path.OnPointNotifier(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Fires the point notifier event, providing a velocity multiplier.
+            </summary>
+            <param name="a">The first point.</param>
+            <param name="b">The second point.</param>
+        </member>
+        <member name="M:SMLimitless.Physics.Path.GetPoints">
+            <summary>
+            Returns a list of the points in this path.
+            </summary>
+            <returns>A list of points in this path.</returns>
+        </member>
+        <member name="M:SMLimitless.Physics.Path.Draw(Microsoft.Xna.Framework.Color)">
+            <summary>
+            Draws the lines between the points in the path.
+            </summary>
+            <param name="color">The color to draw the lines.</param>
+        </member>
+        <member name="M:SMLimitless.Physics.Path.Update">
+            <summary>
+            Updates an attached object along this path.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Physics.Path.GetSerializableObjects">
+            <summary>
+            Returns the serializable objects for this path.
+            </summary>
+            <returns>An anonymous object containing a list of points.</returns>
+        </member>
+        <member name="M:SMLimitless.Physics.Path.Serialize">
+            <summary>
+            Returns the serialized form of this path.
+            </summary>
+            <returns>A JSON string containing this path's data.</returns>
+        </member>
+        <member name="M:SMLimitless.Physics.Path.Deserialize(System.String)">
+            <summary>
+            Sets the points in this object.
+            </summary>
+            <param name="json">A JSON string containing a valid Path state.</param>
+        </member>
+        <member name="T:SMLimitless.Physics.PointNotifierEventHandler">
+            <summary>
+            A delegate for the PointNotifier event.
+            </summary>
+            <param name="newVelocityMultiplier">The new velocity multiplier for the attached object.</param>
+        </member>
+        <member name="T:SMLimitless.Physics.PhysicsSetting`1">
+            <summary>
+            Represents a physics setting which can be changed in a <see cref="T:SMLimitless.Forms.PhysicsSettingsEditorForm"/>.
+            </summary>
+            <typeparam name="T">The type of the value of the setting.</typeparam>
+        </member>
+        <member name="P:SMLimitless.Physics.PhysicsSetting`1.Name">
+            <summary>
+            Gets the setting's name.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.PhysicsSetting`1.Value">
+            <summary>
+            Gets or sets the current value of the setting.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.PhysicsSetting`1.Minimum">
+            <summary>
+            Gets the lowest value the value can be.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.PhysicsSetting`1.Maximum">
+            <summary>
+            Gets the highest value the value can be.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.PhysicsSetting`1.Type">
+            <summary>
+            Gets the type of value this setting has.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Physics.PhysicsSetting`1.#ctor(System.String,`0,`0,`0,SMLimitless.Physics.PhysicsSettingType)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SMLimitless.Physics.PhysicsSetting`1"/> class.
+            </summary>
+            <param name="name">The setting's name.</param>
+            <param name="minimum">The lowest value the value can be.</param>
+            <param name="maximum">The highest value the value can be.</param>
+            <param name="initialValue">The initial value of the setting.</param>
+            <param name="type">The type of value this setting has.</param>
+        </member>
+        <member name="M:SMLimitless.Physics.PhysicsSetting`1.Dispose">
+            <summary>
+            Unregisters this setting from the <see cref="T:SMLimitless.Forms.PhysicsSettingsEditorForm"/>.
+            </summary>
+        </member>
+        <member name="T:SMLimitless.Physics.PhysicsSettingType">
+            <summary>
+            Enumerates the types a physics setting can be.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.PhysicsSettingType.Integer">
+            <summary>
+            Represents a setting that is integral (a whole number).
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.PhysicsSettingType.FloatingPoint">
+            <summary>
+            Represents a setting that is a floating point number.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.PhysicsSettingType.Boolean">
+            <summary>
+            Represents a setting that is a Boolean true/false value.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.PhysicsSettingType.Other">
+            <summary>
+            Represents a setting that has another type not otherwise listed here.
+            </summary>
+        </member>
+        <member name="T:SMLimitless.Physics.RightTriangle">
+            <summary>
+            Represents a right triangle, used for sloped tiles.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.RightTriangle.Bounds">
+            <summary>
+            Gets or sets the rectangle that completely contains the triangle.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.RightTriangle.SlopedSides">
+            <summary>
+            Gets or sets a value indicating which sides of the triangle are sloped.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.RightTriangle.Slope">
+            <summary>
+            Gets the slope (rise over run) of the triangle.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.RightTriangle.Point90">
+            <summary>
+            Gets the location of the point of the 90-degree angle.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.RightTriangle.Point1">
+            <summary>
+            Gets the location of the point at the bottom of the slope.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.RightTriangle.Point2">
+            <summary>
+            Gets the location of the point at the top of the slope.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.RightTriangle.YIntersect">
+            <summary>
+            Gets the point on the Y-axis where the line
+            coinciding with the slope intersects with the Y-axis.
+            Equivalent to the variable b in the linear equation y = mx + b.
+            </summary>
+            <remarks>
+            To account for the fact that, in XNA, the Y-axis is flipped
+            (positive Y goes down), the equation is b = mx + y.
+            </remarks>
+        </member>
+        <member name="P:SMLimitless.Physics.RightTriangle.Shape">
+            <summary>
+            Gets the shape of this collidable object.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.RightTriangle.HorizontalSlopedSide">
+            <summary>
+            Gets the horizontal side (left or right) that has the sloped edge.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.RightTriangle.VerticalSlopedSide">
+            <summary>
+            Gets the vertical side (up or down) that has the sloped edge.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Physics.RightTriangle.#ctor(SMLimitless.Physics.BoundingRectangle,SMLimitless.Physics.RtSlopedSides)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SMLimitless.Physics.RightTriangle"/> class.
+            </summary>
+            <param name="bounds">The rectangle that forms the bounds of the triangle.</param>
+            <param name="slopedSides">Which sides of the triangle are sloped.</param>
+        </member>
+        <member name="M:SMLimitless.Physics.RightTriangle.#ctor(System.Single,System.Single,System.Single,System.Single,SMLimitless.Physics.RtSlopedSides)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SMLimitless.Physics.RightTriangle"/> class.
+            </summary>
+            <param name="x">The horizontal distance from the left edge of the game space.</param>
+            <param name="y">The vertical distance from the top edge of the game space.</param>
+            <param name="width">The width of the triangle.</param>
+            <param name="height">The height of the triangle.</param>
+            <param name="slopedSides">Which sides of the triangle are replaced by the slope.</param>
+        </member>
+        <member name="M:SMLimitless.Physics.RightTriangle.GetPointOnSlope(System.Single)">
+            <summary>
+            Gets a point directly on the slope of the triangle.
+            Restricted to the slope itself. To get any point on the line
+            coincident to this slope, call GetPointOnLine().
+            </summary>
+            <param name="x">The X-coordinate to solve for.</param>
+            <returns>The point directly on the slope, or NaN if the point is not on the slope.</returns>
+        </member>
+        <member name="M:SMLimitless.Physics.RightTriangle.GetClampedPointOnSlope(System.Single)">
+            <summary>
+            For a given vertical line at an X coordinate,
+            returns the point of intersection between this line and the slope,
+            clamped to the left and right edges of the triangle.
+            </summary>
+            <param name="x">The X coordinate of the vertical line.</param>
+            <returns>A value between the left and right edges of the triangle.</returns>
+        </member>
+        <member name="M:SMLimitless.Physics.RightTriangle.GetPointOnLine(System.Single)">
+            <summary>
+            Gets a point directly on the line that is
+            coincident to the slope of the triangle.
+            To get points only on the slope itself,
+            call GetPointOnSlope().
+            </summary>
+            <param name="x">The X-coordinate to solve for.</param>
+            <returns>A point directly on the line.</returns>
+        </member>
+        <member name="M:SMLimitless.Physics.RightTriangle.Intersects(SMLimitless.Physics.BoundingRectangle)">
+            <summary>
+            Determines if a given rectangle intersects this triangle.
+            </summary>
+            <param name="rect">The rectangle to check for intersection.</param>
+            <returns>True if any part of the rectangle intersects this right triangle, false if otherwise.</returns>
+        </member>
+        <member name="M:SMLimitless.Physics.RightTriangle.Within(Microsoft.Xna.Framework.Vector2,System.Boolean)">
+            <summary>
+            Determines if a point is within this triangle.
+            </summary>
+            <param name="point">The point to check.</param>
+            <param name="adjacentPointsAreWithin">If true, any point on the edge of the shape will be considered within.</param>
+            <returns>True if the point is within the shape, false if otherwise.</returns>
+        </member>
+        <member name="M:SMLimitless.Physics.RightTriangle.GetCollisionResolution(SMLimitless.Physics.BoundingRectangle)">
+            <summary>
+            Gets the minimum distance to move a given rectangle such that
+            it will no longer be intersecting this right triangle.
+            </summary>
+            <param name="rect">The rectangle to resolve.</param>
+            <returns>The minimum distance to move the rectangle,
+            which can be directly applied to the rectangle's position.</returns>
+            <remarks>This method resolves collision by first determining if the bottom-center point
+            (for TopLeft/TopRight triangles) or the top-center point (for BottomLeft/BottomRight
+            triangles) is within the bounds. If it is, the method treats it as a slope collision 
+            by checking if the point is between the slope and the top. If it isn't, the collision
+            is treated as a collision between two rectangles.</remarks>
+        </member>
+        <member name="M:SMLimitless.Physics.RightTriangle.GetIntersectionDepth(SMLimitless.Physics.BoundingRectangle)">
+            <summary>
+            Returns the depth of the intersection between this triangle
+            and a given rectangle.
+            </summary>
+            <param name="that">The given rectangle.</param>
+            <returns>A vector representing the collision depth.</returns>
+        </member>
+        <member name="M:SMLimitless.Physics.RightTriangle.GetTopPoint(System.Single)">
+            <summary>
+            Gets the position of the top of this triangle, given an X-coordinate.
+            </summary>
+            <param name="x">The X-coordinate to check.</param>
+            <returns>The position of the top of this triangle.</returns>
+        </member>
+        <member name="M:SMLimitless.Physics.RightTriangle.AboveOrBelowSlopeLine(Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Returns a value indicating whether a given point rests above or below the slope line.
+            </summary>
+            <param name="point">The point to check.</param>
+            <returns>-1 if the point is above the slope line, 1 if the point is below the slope line, 0 if otherwise.</returns>
+        </member>
+        <member name="M:SMLimitless.Physics.RightTriangle.ResolveSlopeCollision(SMLimitless.Physics.BoundingRectangle,Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Resolves a collision between a rectangle and the sloped side of this triangle.
+            </summary>
+            <param name="that">The rectangle to resolve.</param>
+            <param name="intersection">The intersection between the rectangle and the bounds of this triangle.</param>
+            <returns>The distance to move the rectangle by to resolve this collision.</returns>
+        </member>
+        <member name="M:SMLimitless.Physics.RightTriangle.Draw(System.Boolean)">
+            <summary>
+            Draws this triangle to the screen.
+            </summary>
+            <param name="debug">Draws some useful debug information.</param>
+        </member>
+        <member name="M:SMLimitless.Physics.RightTriangle.ToString">
+            <summary>
+            Returns a string representation of the important components of the triangle.
+            </summary>
+            <returns>A string representation.</returns>
+        </member>
+        <member name="T:SMLimitless.Physics.RtSlopedSides">
+            <summary>
+            An enumeration defining which sides of a right triangle are sloped.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.RtSlopedSides.Default">
+            <summary>
+            A default value. Do not use.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.RtSlopedSides.TopLeft">
+            <summary>
+            The top and left sides of the right triangle are sloped.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.RtSlopedSides.TopRight">
+            <summary>
+            The top and right sides of the right triangle are sloped.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.RtSlopedSides.BottomLeft">
+            <summary>
+            The bottom and left sides of the right triangle are sloped.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Physics.RtSlopedSides.BottomRight">
+            <summary>
+            The bottom and right sides of the right triangle are sloped.
+            </summary>
+        </member>
+        <member name="T:SMLimitless.Physics.SectionAutoscrollSettings">
+            <summary>
+            A structure containing data about how a section should automatically scroll.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.SectionAutoscrollSettings.ScrollType">
+            <summary>
+            Gets a value indicating how the section automatically scrolls.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.SectionAutoscrollSettings.Speed">
+            <summary>
+            Gets a value indicating how fast the section automatically scrolls.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">Thrown in the getter and setter if this section is not automatically scrolling.</exception>
+        </member>
+        <member name="P:SMLimitless.Physics.SectionAutoscrollSettings.PathName">
+            <summary>
+            Gets the name of the path that this section is automatically scrolling along.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">Thrown in the getter and setter if this section is not automatically scrolling along a path.</exception>
+        </member>
+        <member name="M:SMLimitless.Physics.SectionAutoscrollSettings.#ctor(SMLimitless.Sprites.Collections.CameraScrollType,Microsoft.Xna.Framework.Vector2,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SMLimitless.Physics.SectionAutoscrollSettings"/> struct.
+            </summary>
+            <param name="scrollType">A value indicating how the section automatically scrolls.</param>
+            <param name="speed">A value indicating how fast the section automatically scrolls.</param>
+            <param name="pathName">The name of the path that this section is automatically scrolling along.</param>
+        </member>
+        <member name="T:SMLimitless.Sprites.SpriteCollisionMode">
+            <summary>
+            Enumerates different modes of collision handling
+            that sprites can choose between.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.SpriteCollisionMode.OffsetNotify">
+            <summary>
+            Sprites that are colliding with solid tiles or other sprites
+            are offset such that they are moved out of the tile(s).
+            Then, collision handler methods are called on both
+            the sprite and the tile.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.SpriteCollisionMode.OffsetOnly">
+            <summary>
+            Sprites that are colliding with solid tiles or other sprites
+            are offset such that they are moved out of the tile(s).
+            No collision handlers are run.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.SpriteCollisionMode.NotifyOnly">
+            <summary>
+            Collision handler methods are called on both the
+            colliding sprite and colliding tile. No offsetting
+            is performed.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.SpriteCollisionMode.NoCollision">
+            <summary>
+            The sprite does not collide with any object.
+            </summary>
+        </member>
         <member name="T:SMLimitless.Sprites.SpriteDirection">
             <summary>
             Enumerates the directions a sprite faces when first loaded in a level, or when the sprite enters the visible area.
@@ -1831,6 +3053,41 @@
         <member name="F:SMLimitless.Sprites.SpriteDirection.Right">
             <summary>
             The sprite will be loaded facing right.
+            </summary>
+        </member>
+        <member name="T:SMLimitless.Sprites.SpriteState">
+            <summary>
+            Enumerates the different states of sprites.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.SpriteState.Default">
+            <summary>
+            The default state.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.SpriteState.Stunned">
+            <summary>
+            Sprites in this state have been temporarily stopped by the player and are usually harmless.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.SpriteState.Projectile">
+            <summary>
+            Sprites in this state are projectiles that can render damage to other sprites.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.SpriteState.ProjectileFire">
+            <summary>
+            Sprites in this state are fire projectiles that can render damage to other sprites.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.SpriteState.ProjectileIce">
+            <summary>
+            Sprites in this state are ice projectiles that can freeze other sprites.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.SpriteState.Dead">
+            <summary>
+            Sprites in this state are dead and should not be interacted with.
             </summary>
         </member>
         <member name="T:SMLimitless.Sprites.TileCollisionType">
@@ -1959,72 +3216,57 @@
             There is a sloped tile to the right of this tile.
             </summary>
         </member>
-        <member name="T:SMLimitless.Sprites.SpriteCollisionMode">
+        <member name="T:SMLimitless.Sprites.Collections.BackgroundScrollDirection">
             <summary>
-            Enumerates different modes of collision handling
-            that sprites can choose between.
+            Enumerates the direction in which
+            a section background scrolls.
             </summary>
         </member>
-        <member name="F:SMLimitless.Sprites.SpriteCollisionMode.OffsetNotify">
+        <member name="F:SMLimitless.Sprites.Collections.BackgroundScrollDirection.Fixed">
             <summary>
-            Sprites that are colliding with solid tiles or other sprites
-            are offset such that they are moved out of the tile(s).
-            Then, collision handler methods are called on both
-            the sprite and the tile.
+            The background remains fixed on the screen.
             </summary>
+            <remarks>
+            If the background is larger than the screen,
+            the background will shift slightly as the player
+            moves through the level. If the camera is at the
+            top of the level, the top of the background will
+            be displayed. Likewise, if the camera is at the
+            bottom of the level, the bottom of the background
+            will be displayed. This applies across both axes.
+            </remarks>
         </member>
-        <member name="F:SMLimitless.Sprites.SpriteCollisionMode.OffsetOnly">
+        <member name="F:SMLimitless.Sprites.Collections.BackgroundScrollDirection.Horizontal">
             <summary>
-            Sprites that are colliding with solid tiles or other sprites
-            are offset such that they are moved out of the tile(s).
-            No collision handlers are run.
+            The background will scroll and repeat horizontally.
             </summary>
+            <remarks>
+            If the background is taller than the screen,
+            the background will shift slightly as the players
+            moves vertically through the level. If the camera is at the
+            top of the level, the top of the background will
+            be displayed. Likewise, if the camera is at the
+            bottom of the level, the bottom of the background
+            will be displayed.
+            </remarks>
         </member>
-        <member name="F:SMLimitless.Sprites.SpriteCollisionMode.NotifyOnly">
+        <member name="F:SMLimitless.Sprites.Collections.BackgroundScrollDirection.Vertical">
             <summary>
-            Collision handler methods are called on both the
-            colliding sprite and colliding tile. No offsetting
-            is performed.
+            The background will scroll and repeat vertically.
             </summary>
+            <remarks>
+            If the background is wider than the screen,
+            the background will shift slightly as the players
+            moves horizontally through the level. If the camera is
+            at the left edge of the level, the left edge of the
+            background will be displayed. Likewise, if the camera
+            is at the right edge of the level, the right edge of the
+            background will be displayed.
+            </remarks>
         </member>
-        <member name="F:SMLimitless.Sprites.SpriteCollisionMode.NoCollision">
+        <member name="F:SMLimitless.Sprites.Collections.BackgroundScrollDirection.Both">
             <summary>
-            The sprite does not collide with any object.
-            </summary>
-        </member>
-        <member name="T:SMLimitless.Sprites.SpriteState">
-            <summary>
-            Enumerates the different states of sprites.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Sprites.SpriteState.Default">
-            <summary>
-            The default state.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Sprites.SpriteState.Stunned">
-            <summary>
-            Sprites in this state have been temporarily stopped by the player and are usually harmless.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Sprites.SpriteState.Projectile">
-            <summary>
-            Sprites in this state are projectiles that can render damage to other sprites.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Sprites.SpriteState.ProjectileFire">
-            <summary>
-            Sprites in this state are fire projectiles that can render damage to other sprites.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Sprites.SpriteState.ProjectileIce">
-            <summary>
-            Sprites in this state are ice projectiles that can freeze other sprites.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Sprites.SpriteState.Dead">
-            <summary>
-            Sprites in this state are dead and should not be interacted with.
+            The background will scroll and repeat along both axes.
             </summary>
         </member>
         <member name="T:SMLimitless.Sprites.Collections.CameraScrollType">
@@ -2109,59 +3351,6 @@
             <summary>
             The players enters the exit by pressing Up
             while within the exit.
-            </summary>
-        </member>
-        <member name="T:SMLimitless.Sprites.Collections.BackgroundScrollDirection">
-            <summary>
-            Enumerates the direction in which
-            a section background scrolls.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Sprites.Collections.BackgroundScrollDirection.Fixed">
-            <summary>
-            The background remains fixed on the screen.
-            </summary>
-            <remarks>
-            If the background is larger than the screen,
-            the background will shift slightly as the player
-            moves through the level. If the camera is at the
-            top of the level, the top of the background will
-            be displayed. Likewise, if the camera is at the
-            bottom of the level, the bottom of the background
-            will be displayed. This applies across both axes.
-            </remarks>
-        </member>
-        <member name="F:SMLimitless.Sprites.Collections.BackgroundScrollDirection.Horizontal">
-            <summary>
-            The background will scroll and repeat horizontally.
-            </summary>
-            <remarks>
-            If the background is taller than the screen,
-            the background will shift slightly as the players
-            moves vertically through the level. If the camera is at the
-            top of the level, the top of the background will
-            be displayed. Likewise, if the camera is at the
-            bottom of the level, the bottom of the background
-            will be displayed.
-            </remarks>
-        </member>
-        <member name="F:SMLimitless.Sprites.Collections.BackgroundScrollDirection.Vertical">
-            <summary>
-            The background will scroll and repeat vertically.
-            </summary>
-            <remarks>
-            If the background is wider than the screen,
-            the background will shift slightly as the players
-            moves horizontally through the level. If the camera is
-            at the left edge of the level, the left edge of the
-            background will be displayed. Likewise, if the camera
-            is at the right edge of the level, the right edge of the
-            background will be displayed.
-            </remarks>
-        </member>
-        <member name="F:SMLimitless.Sprites.Collections.BackgroundScrollDirection.Both">
-            <summary>
-            The background will scroll and repeat along both axes.
             </summary>
         </member>
         <member name="T:SMLimitless.Sprites.Collections.Background">
@@ -3867,1195 +5056,6 @@
             </summary>
             <param name="customObjects">An object containing key custom objects.</param>
         </member>
-        <member name="T:SMLimitless.Physics.HorizontalDirection">
-            <summary>
-            Defines the horizontal directions of left, right, and none.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Physics.HorizontalDirection.Left">
-            <summary>
-            The leftward cardinal direction (negative X).
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Physics.HorizontalDirection.None">
-            <summary>
-            No direction.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Physics.HorizontalDirection.Right">
-            <summary>
-            The rightward cardinal direction (positive X).
-            </summary>
-        </member>
-        <member name="T:SMLimitless.Physics.VerticalDirection">
-            <summary>
-            Defines the vertical directions of up, down, and none.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Physics.VerticalDirection.Up">
-            <summary>
-            The upward cardinal direction (negative Y).
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Physics.VerticalDirection.None">
-            <summary>
-            No direction.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Physics.VerticalDirection.Down">
-            <summary>
-            The downward cardinal direction (positive Y).
-            </summary>
-        </member>
-        <member name="T:SMLimitless.Physics.FlaggedDirection">
-            <summary>
-            Enumerates the cardinal directions as a set of flags.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Physics.FlaggedDirection.None">
-            <summary>
-            Represents no direction set.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Physics.FlaggedDirection.Up">
-            <summary>
-            Represents the upward cardinal direction (negative Y).
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Physics.FlaggedDirection.Down">
-            <summary>
-            Represents the downward cardinal direction (positive Y).
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Physics.FlaggedDirection.Left">
-            <summary>
-            Represents the leftward cardinal direction (negative X).
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Physics.FlaggedDirection.Right">
-            <summary>
-            Represents the rightward cardinal direction (positive X).
-            </summary>
-        </member>
-        <member name="T:SMLimitless.Physics.CollidableShape">
-            <summary>
-            An enumeration of the collidable shapes that
-            SML supports.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Physics.CollidableShape.Rectangle">
-            <summary>
-            A parallelogram with sides parallel to the coordinate axes.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Physics.CollidableShape.RightTriangle">
-            <summary>
-            A rectangle split in half from corner to corner.
-            </summary>
-        </member>
-        <member name="T:SMLimitless.Physics.ResolutionType">
-            <summary>
-            An enumeration of the different types of
-            collision resolutions between tiles and sprites.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Physics.ResolutionType.None">
-            <summary>
-            Not a resolution (resolution of zero).
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Physics.ResolutionType.Normal">
-            <summary>
-            A resolution between a sprite and a straight edge of a tile.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Physics.ResolutionType.Slope">
-            <summary>
-            A resolution between a sprite and the sloped side of a sloped tile.
-            </summary>
-        </member>
-        <member name="T:SMLimitless.Physics.RectangularSpaceDivision">
-            <summary>
-            Enumerates the division of the space around a rectangle.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Physics.RectangularSpaceDivision.None">
-            <summary>
-            The default/invalid value.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Physics.RectangularSpaceDivision.Within">
-            <summary>
-            The area within the rectangle.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Physics.RectangularSpaceDivision.Above">
-            <summary>
-            The area directly above the rectangle.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Physics.RectangularSpaceDivision.Below">
-            <summary>
-            The area directly below the rectangle.
-            </summary>
-            
-        </member>
-        <member name="F:SMLimitless.Physics.RectangularSpaceDivision.Left">
-            <summary>
-            The area directly to the left of the rectangle.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Physics.RectangularSpaceDivision.Right">
-            <summary>
-            The area directly to the right of the rectangle.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Physics.RectangularSpaceDivision.AboveLeft">
-            <summary>
-            The area above and to the left of the rectangle.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Physics.RectangularSpaceDivision.AboveRight">
-            <summary>
-            The area above and to the right of the rectangle.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Physics.RectangularSpaceDivision.BelowLeft">
-            <summary>
-            The area below and to the left of the rectangle.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Physics.RectangularSpaceDivision.BelowRight">
-            <summary>
-            The area below and to the right of the rectangle.
-            </summary>
-        </member>
-        <member name="T:SMLimitless.Physics.BoundingRectangle">
-            <summary>
-            Using Rectangle for Collision bounds causes 'jiggling' as Rectangle 
-            must round values to integers. This struct uses float for precision.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Physics.BoundingRectangle.IntersectionCallCount">
-            <summary>
-            Debug; keeps track of how many times intersection methods have been called.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Physics.BoundingRectangle.min">
-            <summary>
-            The position of the top-left corner.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Physics.BoundingRectangle.max">
-            <summary>
-            The size of the rectangle.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.BoundingRectangle.Zero">
-            <summary>
-            Gets a bounding rectangle at the origin of the world with zero width and height.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.BoundingRectangle.NaN">
-            <summary>
-            Gets a bounding rectangle with all coordinates set to NaN.
-            </summary>
-        </member>
-        <member name="M:SMLimitless.Physics.BoundingRectangle.#ctor(Microsoft.Xna.Framework.Rectangle)">
-            <summary>
-            Initializes a new instance of the <see cref="T:SMLimitless.Physics.BoundingRectangle"/> struct.
-            </summary>
-            <param name="rectangle">The <see cref="T:Microsoft.Xna.Framework.Rectangle"/> used to create this rectangle.</param>
-        </member>
-        <member name="M:SMLimitless.Physics.BoundingRectangle.#ctor(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2)">
-            <summary>
-            Initializes a new instance of the <see cref="T:SMLimitless.Physics.BoundingRectangle"/> struct.
-            </summary>
-            <param name="start">The position of the top-left corner.</param>
-            <param name="end">The size of the rectangle.</param>
-        </member>
-        <member name="M:SMLimitless.Physics.BoundingRectangle.#ctor(System.Single,System.Single,System.Single,System.Single)">
-            <summary>
-            Initializes a new instance of the <see cref="T:SMLimitless.Physics.BoundingRectangle"/> struct.
-            </summary>
-            <param name="x">The X-coordinate of the top-left corner.</param>
-            <param name="y">The Y-coordinate of the top-right corner.</param>
-            <param name="width">The width.</param>
-            <param name="height">The height.</param>
-        </member>
-        <member name="P:SMLimitless.Physics.BoundingRectangle.X">
-            <summary>
-            Gets or sets the X-coordinate of the left line.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.BoundingRectangle.Y">
-            <summary>
-            Gets or sets the Y-coordinate of the top line.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.BoundingRectangle.Width">
-            <summary>
-            Gets or sets the width.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.BoundingRectangle.Height">
-            <summary>
-            Gets or sets the height.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.BoundingRectangle.Left">
-            <summary>
-            Gets the X-coordinate of the left line.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.BoundingRectangle.Top">
-            <summary>
-            Gets the Y-coordinate of the top line.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.BoundingRectangle.Right">
-            <summary>
-            Gets the X-coordinate of the right line.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.BoundingRectangle.Bottom">
-            <summary>
-            Gets the Y-coordinate of the bottom line.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.BoundingRectangle.TopCenter">
-            <summary>
-            Gets the position of the top-center point of this rectangle.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.BoundingRectangle.BottomCenter">
-            <summary>
-            Gets the position of the bottom-center point of this rectangle.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.BoundingRectangle.LeftCenter">
-            <summary>
-            Gets the position of the center point on the left edge.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.BoundingRectangle.RightCenter">
-            <summary>
-            Gets the position of the center point on the right edge.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.BoundingRectangle.Position">
-            <summary>
-            Gets or sets the position.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.BoundingRectangle.Size">
-            <summary>
-            Gets or sets the size.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.BoundingRectangle.Center">
-            <summary>
-            Gets the position of the point in the center.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.BoundingRectangle.Shape">
-            <summary>
-            Gets the shape of this collidable object.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.BoundingRectangle.Bounds">
-            <summary>
-            Gets this rectangle.
-            </summary>
-            <remarks>This member is required for the ICollidableShape interface.</remarks>
-        </member>
-        <member name="P:SMLimitless.Physics.BoundingRectangle.BottomRight">
-            <summary>
-            Gets the position of the bottom-right point on this rectangle.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.BoundingRectangle.TopRight">
-            <summary>
-            Gets the position of the top-right point on this rectangle.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.BoundingRectangle.BottomLeft">
-            <summary>
-            Gets the position of the bottom-left point on this rectangle.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.BoundingRectangle.TopLeft">
-            <summary>
-            Gets the position of the top-left point on this rectangle.
-            </summary>
-        </member>
-        <member name="M:SMLimitless.Physics.BoundingRectangle.FromSimpleString(System.String)">
-            <summary>
-            Returns a rectangle created from a simple string representation.
-            </summary>
-            <param name="input">A string containing four comma-delimited numbers.</param>
-            <returns>A rectangle created from the string.</returns>
-        </member>
-        <member name="M:SMLimitless.Physics.BoundingRectangle.Serialize">
-            <summary>
-            Returns a string representing the components of this rectangle.
-            </summary>
-            <returns>A string in the format "X, Y, Width, Height".</returns>
-        </member>
-        <member name="M:SMLimitless.Physics.BoundingRectangle.IsNaN">
-            <summary>
-            Checks if any component of this rectangle is Not a Number (NaN).
-            </summary>
-            <returns>True if any component is equal to float.NaN, false if otherwise.</returns>
-        </member>
-        <member name="M:SMLimitless.Physics.BoundingRectangle.Intersects(Microsoft.Xna.Framework.Vector2)">
-            <summary>
-            Determines if a given point is within this rectangle.
-            </summary>
-            <param name="point">The point to check.</param>
-            <returns>True if the point is within this rectangle, false if otherwise.</returns>
-        </member>
-        <member name="M:SMLimitless.Physics.BoundingRectangle.IntersectsIncludingEdges(Microsoft.Xna.Framework.Vector2)">
-            <summary>
-            Determines if a given point is within or tangent to this rectangle.
-            </summary>
-            <param name="point">The point to check.</param>
-            <returns>True if the point is within or tangent to this rectangle, false if otherwise.</returns>
-        </member>
-        <member name="M:SMLimitless.Physics.BoundingRectangle.Intersects(SMLimitless.Physics.BoundingRectangle)">
-            <summary>
-            Determines if a given rectangle is intersecting this rectangle.
-            </summary>
-            <param name="that">The rectangle to check.</param>
-            <returns>True if any part of the other rectangle is intersecting this rectangle, false if otherwise.</returns>
-        </member>
-        <member name="M:SMLimitless.Physics.BoundingRectangle.IntersectsIncludingEdges(SMLimitless.Physics.BoundingRectangle)">
-            <summary>
-            Returns a value indicating whether another rectangle intersects or is tangent to this one.
-            </summary>
-            <param name="that">The other rectangle.</param>
-            <returns>True if the other rectangle intersects or is tangent to this one, false if otherwise.</returns>
-        </member>
-        <member name="M:SMLimitless.Physics.BoundingRectangle.Intersects(SMLimitless.Physics.RightTriangle)">
-            <summary>
-            Determines if a given right triangle is intersecting this rectangle.
-            </summary>
-            <param name="triangle">The right triangle to check.</param>
-            <returns>True if any part of the right triangle is intersecting this rectangle, false if otherwise.</returns>
-        </member>
-        <member name="M:SMLimitless.Physics.BoundingRectangle.Within(Microsoft.Xna.Framework.Vector2,System.Boolean)">
-            <summary>
-            Determines if a point is within this rectangle.
-            </summary>
-            <param name="point">The point to check.</param>
-            <param name="adjacentPointsAreWithin">If true, any point on the edge of the shape will be considered within.</param>
-            <returns>True if the point is within the shape, false if otherwise.</returns>
-        </member>
-        <member name="M:SMLimitless.Physics.BoundingRectangle.Within(SMLimitless.Physics.BoundingRectangle)">
-            <summary>
-            Returns a value indicating whether a bounding rectangle is entirely contained within this rectangle.
-            </summary>
-            <param name="that">The other rectangle.</param>
-            <returns>True if the other rectangle is entirely contained within this one, false if otherwise.</returns>
-        </member>
-        <member name="M:SMLimitless.Physics.BoundingRectangle.GetPointRelation(Microsoft.Xna.Framework.Vector2)">
-            <summary>
-            Returns a value indicating whether a point is above, below, to the left of, et cetera, of this rectangle.
-            </summary>
-            <param name="point">The point to check.</param>
-            <returns>A <see cref="T:SMLimitless.Physics.RectangularSpaceDivision"/> instance indicating where the point is with relation to this rectangle.</returns>
-        </member>
-        <member name="M:SMLimitless.Physics.BoundingRectangle.GetIntersectionDepth(SMLimitless.Physics.BoundingRectangle)">
-            <summary>
-            Returns the intersection depth between a given rectangle and this one.
-            </summary>
-            <param name="that">The rectangle to check.</param>
-            <returns>The intersection depth between the other rectangle and this one. If the rectangles aren't intersecting, a vector with NaN components is returned.</returns>
-            <remarks>
-            This method determines the sign of either component of the result
-            by determining the "direction" of the intersection - for example,
-            if the right edge of the other rectangle is to the left of the center
-            of this rectangle, the "direction" is to the left, and since left is
-            negative X, the resulting X component will be negative.
-            </remarks>
-        </member>
-        <member name="M:SMLimitless.Physics.BoundingRectangle.GetCollisionResolution(SMLimitless.Physics.BoundingRectangle)">
-            <summary>
-            Returns the distance to move a given rectangle
-            in order to properly resolve a collision.
-            </summary>
-            <param name="that">The rectangle to check.</param>
-            <returns>A value that can be applied to the position of the rectangle
-            to move it the minimum distance such that it won't be intersecting this one.</returns>
-            <remarks>Internally, this method uses the GetIntersectionDepth() method to determine
-            the intersection depth. It then determines which of the two axes has the smallest absolute
-            value and zeroes out the other. This way of collision resolution is called the "shallowest edge"
-            method, and it allows quick determination of which axis to resolve along.</remarks>
-        </member>
-        <member name="M:SMLimitless.Physics.BoundingRectangle.GetCollisionResolution(Microsoft.Xna.Framework.Vector2)">
-            <summary>
-            Returns the distance to move a given rectangle
-            in order to properly resolve a collision.
-            </summary>
-            <param name="intersect">The intersection depth for the other rectangle.</param>
-            <returns>A value that can be applied to the position of the rectangle
-            to move it the minimum distance such that it won't be intersecting this one.</returns>
-        </member>
-        <member name="M:SMLimitless.Physics.BoundingRectangle.GetTopPoint(System.Single)">
-            <summary>
-            Gets the Y-coordinate of the top of this rectangle.
-            </summary>
-            <param name="x">The x-coordinate to check for.</param>
-            <returns>The Y-coordinate of the top of this rectangle.</returns>
-        </member>
-        <member name="M:SMLimitless.Physics.BoundingRectangle.ToRectangle">
-            <summary>
-            Returns a standard Rectangle that uses integral components.
-            </summary>
-            <returns>The standard Rectangle.</returns>
-        </member>
-        <member name="M:SMLimitless.Physics.BoundingRectangle.Draw(Microsoft.Xna.Framework.Color)">
-            <summary>
-            Draws this rectangle to the screen.
-            </summary>
-            <param name="color">The color of the rectangle.</param>
-        </member>
-        <member name="M:SMLimitless.Physics.BoundingRectangle.DrawOutline(Microsoft.Xna.Framework.Color)">
-            <summary>
-            Draws the outline of this rectangle to the screen.
-            </summary>
-            <param name="color">The color of the outline.</param>
-        </member>
-        <member name="M:SMLimitless.Physics.BoundingRectangle.ToString">
-            <summary>
-            Returns a string representing key values of this rectangle.
-            </summary>
-            <returns>A string representing key values of this rectangle.</returns>
-        </member>
-        <member name="T:SMLimitless.Physics.Camera2D">
-            <summary>
-            Represents a camera that is used to view a portion
-            of a two-dimensional space.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Physics.Camera2D.zoom">
-            <summary>
-            A backing field for the Zoom property.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Physics.Camera2D.position">
-            <summary>
-            A backing field for the Position property;
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Physics.Camera2D.transform">
-            <summary>
-            A field containing the matrix transformation for the camera.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.Camera2D.Zoom">
-            <summary>
-            Gets or sets the zoom of the camera.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.Camera2D.Rotation">
-            <summary>
-            Gets or sets the rotation of the camera in degrees.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.Camera2D.Position">
-            <summary>
-            Gets or sets the position of the top-left corner of the camera's view.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.Camera2D.Viewport">
-            <summary>
-            Gets a rectangle corresponding to the viewport of the camera.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.Camera2D.ViewportSize">
-            <summary>
-            Gets the size of the viewport of the camera, adjusted for zoom.
-            </summary>
-        </member>
-        <member name="M:SMLimitless.Physics.Camera2D.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:SMLimitless.Physics.Camera2D"/> class.
-            </summary>
-        </member>
-        <member name="M:SMLimitless.Physics.Camera2D.Move(Microsoft.Xna.Framework.Vector2)">
-            <summary>
-            Moves the camera by a given distance.
-            </summary>
-            <param name="amount">The distance to move the camera by.</param>
-        </member>
-        <member name="M:SMLimitless.Physics.Camera2D.GetTransformation">
-            <summary>
-            Gets a matrix transformation for use with the sprite batch.
-            </summary>
-            <returns>The matrix transformation.</returns>
-        </member>
-        <member name="T:SMLimitless.Physics.CameraSystem">
-            <summary>
-            A system that moves a <see cref="T:SMLimitless.Physics.Camera2D"/> instance around a <see cref="T:SMLimitless.Sprites.Collections.Section"/> instance.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.CameraSystem.ActiveBounds">
-            <summary>
-            Gets a rectangle in which game objects such as tiles and sprites are active.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.CameraSystem.StayInBounds">
-            <summary>
-            Gets or sets a value indicating whether the camera's viewport should stay within bounds.
-            </summary>
-        </member>
-        <member name="M:SMLimitless.Physics.CameraSystem.#ctor(SMLimitless.Physics.Camera2D,SMLimitless.Physics.BoundingRectangle,SMLimitless.Interfaces.IPositionable2[])">
-            <summary>
-            Initializes a new instance of the <see cref="T:SMLimitless.Physics.CameraSystem"/> class.
-            </summary>
-            <param name="camera">A camera for the system to move.</param>
-            <param name="totalBounds">The bounds of the <see cref="T:SMLimitless.Sprites.Collections.Section"/> instance.</param>
-            <param name="trackingObjects">A collection of objects that the camera should follow.</param>
-        </member>
-        <member name="M:SMLimitless.Physics.CameraSystem.Update">
-            <summary>
-            Updates this camera system.
-            </summary>
-        </member>
-        <member name="M:SMLimitless.Physics.CameraSystem.Draw(System.Boolean)">
-            <summary>
-            Draws the total bounds of the camera system as a green rectangle,
-            plus optional debug information.
-            </summary>
-            <param name="debug">A value indicating whether debug information should be displayed.</param>
-        </member>
-        <member name="T:SMLimitless.Physics.InterpolatorScaleDelegate">
-            <summary>
-            A delegate used by Interpolators to scale their progress and generate their current value.
-            </summary>
-            <param name="progress">The current progress of the Interpolator in the range [0, 1].</param>
-            <returns>A value representing the scaled progress used to generate the Interpolator's Value.</returns>
-        </member>
-        <member name="T:SMLimitless.Physics.Interpolator">
-            <summary>
-            Represents a type that can interpolate
-            between two values, and optionally perform an action
-            whenever the interpolator is updated or when the interpolator
-            completes.
-            </summary>
-        </member>
-        <member name="M:SMLimitless.Physics.Interpolator.#ctor(System.Single,System.Single,System.Action{SMLimitless.Physics.Interpolator})">
-            <summary>
-            Initializes a new instance of the <see cref="T:SMLimitless.Physics.Interpolator"/> class.
-            </summary>
-            <param name="endValue">The value at which the interpolator ends.</param>
-            <param name="length">The length in seconds of the interpolation.</param>
-            <param name="step">The action to perform on each step.</param>
-        </member>
-        <member name="M:SMLimitless.Physics.Interpolator.#ctor(System.Single,System.Single,System.Single,System.Action{SMLimitless.Physics.Interpolator})">
-            <summary>
-            Initializes a new instance of the <see cref="T:SMLimitless.Physics.Interpolator"/> class.
-            </summary>
-            <param name="startValue">The value at which the interpolator starts.</param>
-            <param name="endValue">The value at which the interpolator ends.</param>
-            <param name="length">The length in seconds of the interpolation.</param>
-            <param name="step">The action to perform on each step.</param>
-        </member>
-        <member name="M:SMLimitless.Physics.Interpolator.#ctor(System.Single,System.Single,System.Single,System.Action{SMLimitless.Physics.Interpolator},SMLimitless.Physics.InterpolatorScaleDelegate)">
-            <summary>
-            Initializes a new instance of the <see cref="T:SMLimitless.Physics.Interpolator"/> class.
-            </summary>
-            <param name="startValue">The value at which the interpolator starts.</param>
-            <param name="endValue">The value at which the interpolator ends.</param>
-            <param name="length">The length in seconds of the interpolation.</param>
-            <param name="step">The action to perform on each step.</param>
-            <param name="scale">The kind of interpolator scale to use.</param>
-        </member>
-        <member name="M:SMLimitless.Physics.Interpolator.#ctor(System.Single,System.Single,System.Single,System.Action{SMLimitless.Physics.Interpolator},System.Action{SMLimitless.Physics.Interpolator},SMLimitless.Physics.InterpolatorScaleDelegate)">
-            <summary>
-            Initializes a new instance of the <see cref="T:SMLimitless.Physics.Interpolator"/> class.
-            </summary>
-            <param name="startValue">The value at which the interpolator starts.</param>
-            <param name="endValue">The value at which the interpolator ends.</param>
-            <param name="length">The length in seconds of the interpolation.</param>
-            <param name="step">The action to perform on each step.</param>
-            <param name="completed">The action to perform when the interpolator completes.</param>
-            <param name="scale">The kind of interpolator scale to use.</param>
-        </member>
-        <member name="M:SMLimitless.Physics.Interpolator.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:SMLimitless.Physics.Interpolator"/> class.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.Interpolator.Enabled">
-            <summary>
-            Gets a value indicating whether this interpolator is currently running.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.Interpolator.Start">
-            <summary>
-            Gets the value at which the interpolator starts.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.Interpolator.End">
-            <summary>
-            Gets the value at which the interpolator ends.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.Interpolator.Range">
-            <summary>
-            Gets the range (end - start) of the interpolator.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.Interpolator.Progress">
-            <summary>
-            Gets the interpolator's progress in the range of [0, 1].
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.Interpolator.Value">
-            <summary>
-            Gets the current value of the interpolator.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.Interpolator.Length">
-            <summary>
-            Gets the length in seconds of how long the interpolation will take.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.Interpolator.Scale">
-            <summary>
-            Gets the scale of this interpolator.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.Interpolator.Step">
-            <summary>
-            Gets the action to perform whenever a step occurs.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.Interpolator.Completed">
-            <summary>
-            Gets the action to perform whenever the interpolation is complete.
-            </summary>
-        </member>
-        <member name="M:SMLimitless.Physics.Interpolator.Stop">
-            <summary>
-            Stops this interpolator.
-            </summary>
-        </member>
-        <member name="M:SMLimitless.Physics.Interpolator.ForceFinish">
-            <summary>
-            Forces the interpolator to finish immediately.
-            </summary>
-        </member>
-        <member name="M:SMLimitless.Physics.Interpolator.Update">
-            <summary>
-            Updates this interpolator.
-            </summary>
-        </member>
-        <member name="M:SMLimitless.Physics.Interpolator.ToString">
-            <summary>
-            Returns a string containing several useful values.
-            </summary>
-            <returns>A string containing several useful values.</returns>
-        </member>
-        <member name="M:SMLimitless.Physics.Interpolator.ToString(System.String,System.IFormatProvider)">
-            <summary>
-            Returns a string containing several useful values.
-            </summary>
-            <param name="format">The parameter is not used.</param>
-            <param name="formatProvider">The parameter is not used.</param>
-            <returns>A string containing several useful values.</returns>
-        </member>
-        <member name="M:SMLimitless.Physics.Interpolator.Reset(System.Single,System.Single,System.Single,System.Action{SMLimitless.Physics.Interpolator},System.Action{SMLimitless.Physics.Interpolator},SMLimitless.Physics.InterpolatorScaleDelegate)">
-            <summary>
-            Resets the values of this interpolator.
-            </summary>
-            <param name="startValue">The value at which the interpolator starts.</param>
-            <param name="endValue">The value at which the interpolator ends.</param>
-            <param name="length">The length in seconds of the interpolation.</param>
-            <param name="step">The action to perform on each step.</param>
-            <param name="completed">The action to perform when the interpolator completes.</param>
-            <param name="scale">The kind of interpolator scale to use.</param>
-        </member>
-        <member name="T:SMLimitless.Physics.InterpolatorScales">
-            <summary>
-            Defines several different scales
-            for interpolators to use.
-            </summary>
-        </member>
-        <member name="M:SMLimitless.Physics.InterpolatorScales.#cctor">
-            <summary>
-            Initializes static members of the <see cref="T:SMLimitless.Physics.InterpolatorScales"/> class.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.InterpolatorScales.Linear">
-            <summary>
-            Gets a scale that linearly interpolates between two values.
-            The change in the value on every step is equal.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.InterpolatorScales.Quadratic">
-            <summary>
-            Gets a quadratic scale to interpolate between two values.
-            The value starts increasing slowly, and gains more speed as it approaches completion.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.InterpolatorScales.InverseQuadratic">
-            <summary>
-            Gets an inverse quadratic scale to interpolate between two values.
-            The value starts increasing quickly, and loses speed as it approaches completion.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.InterpolatorScales.Cubic">
-            <summary>
-            Gets a cubic scale to interpolate between two values.
-            This scale is similar to the quadratic scale, although it seems
-            to accelerate more slowly.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.InterpolatorScales.SmoothStep">
-            <summary>
-            Gets a smooth step scale to interpolate between two values.
-            The value will start increasing slowly, accelerate, and then slow
-            down as it approaches completion.
-            </summary>
-        </member>
-        <member name="M:SMLimitless.Physics.InterpolatorScales.LinearScale(System.Single)">
-            <summary>
-            Applies the linear scale to a certain amount of progress.
-            </summary>
-            <param name="progress">The original progress.</param>
-            <returns>The progress itself (it remains unchanged).</returns>
-        </member>
-        <member name="M:SMLimitless.Physics.InterpolatorScales.QuadraticScale(System.Single)">
-            <summary>
-            Applies the quadratic scale to a certain amount of progress.
-            Only use for progress values less than 1.
-            </summary>
-            <param name="progress">The original progress.</param>
-            <returns>Returns the progress multiplied by itself.</returns>
-        </member>
-        <member name="M:SMLimitless.Physics.InterpolatorScales.InverseQuadraticScale(System.Single)">
-            <summary>
-            Applies the inverse quadratic scale to a certain amount of progress.
-            Only use for progress values less than 1.
-            </summary>
-            <param name="progress">The original progress.</param>
-            <returns>Return 1 minus the inverse (1 minus the progress) squared.</returns>
-        </member>
-        <member name="M:SMLimitless.Physics.InterpolatorScales.CubicScale(System.Single)">
-            <summary>
-            Applies the cubic scale to a certain amount of progress.
-            Only use for progress values less than 1.
-            </summary>
-            <param name="progress">The original progress.</param>
-            <returns>The progress multiplied by itself thrice.</returns>
-        </member>
-        <member name="M:SMLimitless.Physics.InterpolatorScales.SmoothstepScale(System.Single)">
-            <summary>
-            Applies the smooth step scale to a certain amount of progress.
-            Only use for progress values less than 1.
-            </summary>
-            <param name="progress">The original progress.</param>
-            <returns>Returns the progress, multiplied by itself, multiplied by 3 less than twice the progress.</returns>
-        </member>
-        <member name="T:SMLimitless.Physics.Path">
-            <summary>
-            A collection of points that creates
-            a set of lines that objects can follow.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Physics.Path.pathingObject">
-            <summary>
-            The object currently attached to this path.
-            This contains a null reference if no object is attached.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.Path.Points">
-            <summary>
-            Gets or sets a collection of the points representing this path.
-            </summary>
-        </member>
-        <member name="E:SMLimitless.Physics.Path.PointNotifierEvent">
-            <summary>
-            An event notifying an attached object that it has reached
-            one of the points and should change its velocity to continue
-            along the path.
-            </summary>
-        </member>
-        <member name="M:SMLimitless.Physics.Path.#ctor(SMLimitless.Interfaces.IPositionable)">
-            <summary>
-            Initializes a new instance of the <see cref="T:SMLimitless.Physics.Path"/> class.
-            </summary>
-            <param name="pathingObject">An object to attach to this path.</param>
-        </member>
-        <member name="M:SMLimitless.Physics.Path.CalculateVelocityMultiplier(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2)">
-            <summary>
-            Calculates a vector with component between 0 and 1,
-            based on the angle between two given points, to ensure that
-            velocity is distributed such that an attached object will follow that path.
-            </summary>
-            <param name="a">The first point.</param>
-            <param name="b">The second point.</param>
-            <returns>A vector with components between 0 and 1.</returns>
-        </member>
-        <member name="M:SMLimitless.Physics.Path.OnPointNotifier(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2)">
-            <summary>
-            Fires the point notifier event, providing a velocity multiplier.
-            </summary>
-            <param name="a">The first point.</param>
-            <param name="b">The second point.</param>
-        </member>
-        <member name="M:SMLimitless.Physics.Path.GetPoints">
-            <summary>
-            Returns a list of the points in this path.
-            </summary>
-            <returns>A list of points in this path.</returns>
-        </member>
-        <member name="M:SMLimitless.Physics.Path.Draw(Microsoft.Xna.Framework.Color)">
-            <summary>
-            Draws the lines between the points in the path.
-            </summary>
-            <param name="color">The color to draw the lines.</param>
-        </member>
-        <member name="M:SMLimitless.Physics.Path.Update">
-            <summary>
-            Updates an attached object along this path.
-            </summary>
-        </member>
-        <member name="M:SMLimitless.Physics.Path.GetSerializableObjects">
-            <summary>
-            Returns the serializable objects for this path.
-            </summary>
-            <returns>An anonymous object containing a list of points.</returns>
-        </member>
-        <member name="M:SMLimitless.Physics.Path.Serialize">
-            <summary>
-            Returns the serialized form of this path.
-            </summary>
-            <returns>A JSON string containing this path's data.</returns>
-        </member>
-        <member name="M:SMLimitless.Physics.Path.Deserialize(System.String)">
-            <summary>
-            Sets the points in this object.
-            </summary>
-            <param name="json">A JSON string containing a valid Path state.</param>
-        </member>
-        <member name="T:SMLimitless.Physics.PointNotifierEventHandler">
-            <summary>
-            A delegate for the PointNotifier event.
-            </summary>
-            <param name="newVelocityMultiplier">The new velocity multiplier for the attached object.</param>
-        </member>
-        <member name="T:SMLimitless.Physics.PhysicsSetting`1">
-            <summary>
-            Represents a physics setting which can be changed in a <see cref="T:SMLimitless.Forms.PhysicsSettingsEditorForm"/>.
-            </summary>
-            <typeparam name="T">The type of the value of the setting.</typeparam>
-        </member>
-        <member name="P:SMLimitless.Physics.PhysicsSetting`1.Name">
-            <summary>
-            Gets the setting's name.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.PhysicsSetting`1.Value">
-            <summary>
-            Gets or sets the current value of the setting.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.PhysicsSetting`1.Minimum">
-            <summary>
-            Gets the lowest value the value can be.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.PhysicsSetting`1.Maximum">
-            <summary>
-            Gets the highest value the value can be.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.PhysicsSetting`1.Type">
-            <summary>
-            Gets the type of value this setting has.
-            </summary>
-        </member>
-        <member name="M:SMLimitless.Physics.PhysicsSetting`1.#ctor(System.String,`0,`0,`0,SMLimitless.Physics.PhysicsSettingType)">
-            <summary>
-            Initializes a new instance of the <see cref="T:SMLimitless.Physics.PhysicsSetting`1"/> class.
-            </summary>
-            <param name="name">The setting's name.</param>
-            <param name="minimum">The lowest value the value can be.</param>
-            <param name="maximum">The highest value the value can be.</param>
-            <param name="initialValue">The initial value of the setting.</param>
-            <param name="type">The type of value this setting has.</param>
-        </member>
-        <member name="M:SMLimitless.Physics.PhysicsSetting`1.Dispose">
-            <summary>
-            Unregisters this setting from the <see cref="T:SMLimitless.Forms.PhysicsSettingsEditorForm"/>.
-            </summary>
-        </member>
-        <member name="T:SMLimitless.Physics.PhysicsSettingType">
-            <summary>
-            Enumerates the types a physics setting can be.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Physics.PhysicsSettingType.Integer">
-            <summary>
-            Represents a setting that is integral (a whole number).
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Physics.PhysicsSettingType.FloatingPoint">
-            <summary>
-            Represents a setting that is a floating point number.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Physics.PhysicsSettingType.Boolean">
-            <summary>
-            Represents a setting that is a Boolean true/false value.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Physics.PhysicsSettingType.Other">
-            <summary>
-            Represents a setting that has another type not otherwise listed here.
-            </summary>
-        </member>
-        <member name="T:SMLimitless.Physics.RightTriangle">
-            <summary>
-            Represents a right triangle, used for sloped tiles.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.RightTriangle.Bounds">
-            <summary>
-            Gets or sets the rectangle that completely contains the triangle.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.RightTriangle.SlopedSides">
-            <summary>
-            Gets or sets a value indicating which sides of the triangle are sloped.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.RightTriangle.Slope">
-            <summary>
-            Gets the slope (rise over run) of the triangle.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.RightTriangle.Point90">
-            <summary>
-            Gets the location of the point of the 90-degree angle.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.RightTriangle.Point1">
-            <summary>
-            Gets the location of the point at the bottom of the slope.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.RightTriangle.Point2">
-            <summary>
-            Gets the location of the point at the top of the slope.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.RightTriangle.YIntersect">
-            <summary>
-            Gets the point on the Y-axis where the line
-            coinciding with the slope intersects with the Y-axis.
-            Equivalent to the variable b in the linear equation y = mx + b.
-            </summary>
-            <remarks>
-            To account for the fact that, in XNA, the Y-axis is flipped
-            (positive Y goes down), the equation is b = mx + y.
-            </remarks>
-        </member>
-        <member name="P:SMLimitless.Physics.RightTriangle.Shape">
-            <summary>
-            Gets the shape of this collidable object.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.RightTriangle.HorizontalSlopedSide">
-            <summary>
-            Gets the horizontal side (left or right) that has the sloped edge.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.RightTriangle.VerticalSlopedSide">
-            <summary>
-            Gets the vertical side (up or down) that has the sloped edge.
-            </summary>
-        </member>
-        <member name="M:SMLimitless.Physics.RightTriangle.#ctor(SMLimitless.Physics.BoundingRectangle,SMLimitless.Physics.RtSlopedSides)">
-            <summary>
-            Initializes a new instance of the <see cref="T:SMLimitless.Physics.RightTriangle"/> class.
-            </summary>
-            <param name="bounds">The rectangle that forms the bounds of the triangle.</param>
-            <param name="slopedSides">Which sides of the triangle are sloped.</param>
-        </member>
-        <member name="M:SMLimitless.Physics.RightTriangle.#ctor(System.Single,System.Single,System.Single,System.Single,SMLimitless.Physics.RtSlopedSides)">
-            <summary>
-            Initializes a new instance of the <see cref="T:SMLimitless.Physics.RightTriangle"/> class.
-            </summary>
-            <param name="x">The horizontal distance from the left edge of the game space.</param>
-            <param name="y">The vertical distance from the top edge of the game space.</param>
-            <param name="width">The width of the triangle.</param>
-            <param name="height">The height of the triangle.</param>
-            <param name="slopedSides">Which sides of the triangle are replaced by the slope.</param>
-        </member>
-        <member name="M:SMLimitless.Physics.RightTriangle.GetPointOnSlope(System.Single)">
-            <summary>
-            Gets a point directly on the slope of the triangle.
-            Restricted to the slope itself. To get any point on the line
-            coincident to this slope, call GetPointOnLine().
-            </summary>
-            <param name="x">The X-coordinate to solve for.</param>
-            <returns>The point directly on the slope, or NaN if the point is not on the slope.</returns>
-        </member>
-        <member name="M:SMLimitless.Physics.RightTriangle.GetClampedPointOnSlope(System.Single)">
-            <summary>
-            For a given vertical line at an X coordinate,
-            returns the point of intersection between this line and the slope,
-            clamped to the left and right edges of the triangle.
-            </summary>
-            <param name="x">The X coordinate of the vertical line.</param>
-            <returns>A value between the left and right edges of the triangle.</returns>
-        </member>
-        <member name="M:SMLimitless.Physics.RightTriangle.GetPointOnLine(System.Single)">
-            <summary>
-            Gets a point directly on the line that is
-            coincident to the slope of the triangle.
-            To get points only on the slope itself,
-            call GetPointOnSlope().
-            </summary>
-            <param name="x">The X-coordinate to solve for.</param>
-            <returns>A point directly on the line.</returns>
-        </member>
-        <member name="M:SMLimitless.Physics.RightTriangle.Intersects(SMLimitless.Physics.BoundingRectangle)">
-            <summary>
-            Determines if a given rectangle intersects this triangle.
-            </summary>
-            <param name="rect">The rectangle to check for intersection.</param>
-            <returns>True if any part of the rectangle intersects this right triangle, false if otherwise.</returns>
-        </member>
-        <member name="M:SMLimitless.Physics.RightTriangle.Within(Microsoft.Xna.Framework.Vector2,System.Boolean)">
-            <summary>
-            Determines if a point is within this triangle.
-            </summary>
-            <param name="point">The point to check.</param>
-            <param name="adjacentPointsAreWithin">If true, any point on the edge of the shape will be considered within.</param>
-            <returns>True if the point is within the shape, false if otherwise.</returns>
-        </member>
-        <member name="M:SMLimitless.Physics.RightTriangle.GetCollisionResolution(SMLimitless.Physics.BoundingRectangle)">
-            <summary>
-            Gets the minimum distance to move a given rectangle such that
-            it will no longer be intersecting this right triangle.
-            </summary>
-            <param name="rect">The rectangle to resolve.</param>
-            <returns>The minimum distance to move the rectangle,
-            which can be directly applied to the rectangle's position.</returns>
-            <remarks>This method resolves collision by first determining if the bottom-center point
-            (for TopLeft/TopRight triangles) or the top-center point (for BottomLeft/BottomRight
-            triangles) is within the bounds. If it is, the method treats it as a slope collision 
-            by checking if the point is between the slope and the top. If it isn't, the collision
-            is treated as a collision between two rectangles.</remarks>
-        </member>
-        <member name="M:SMLimitless.Physics.RightTriangle.GetIntersectionDepth(SMLimitless.Physics.BoundingRectangle)">
-            <summary>
-            Returns the depth of the intersection between this triangle
-            and a given rectangle.
-            </summary>
-            <param name="that">The given rectangle.</param>
-            <returns>A vector representing the collision depth.</returns>
-        </member>
-        <member name="M:SMLimitless.Physics.RightTriangle.GetTopPoint(System.Single)">
-            <summary>
-            Gets the position of the top of this triangle, given an X-coordinate.
-            </summary>
-            <param name="x">The X-coordinate to check.</param>
-            <returns>The position of the top of this triangle.</returns>
-        </member>
-        <member name="M:SMLimitless.Physics.RightTriangle.AboveOrBelowSlopeLine(Microsoft.Xna.Framework.Vector2)">
-            <summary>
-            Returns a value indicating whether a given point rests above or below the slope line.
-            </summary>
-            <param name="point">The point to check.</param>
-            <returns>-1 if the point is above the slope line, 1 if the point is below the slope line, 0 if otherwise.</returns>
-        </member>
-        <member name="M:SMLimitless.Physics.RightTriangle.ResolveSlopeCollision(SMLimitless.Physics.BoundingRectangle,Microsoft.Xna.Framework.Vector2)">
-            <summary>
-            Resolves a collision between a rectangle and the sloped side of this triangle.
-            </summary>
-            <param name="that">The rectangle to resolve.</param>
-            <param name="intersection">The intersection between the rectangle and the bounds of this triangle.</param>
-            <returns>The distance to move the rectangle by to resolve this collision.</returns>
-        </member>
-        <member name="M:SMLimitless.Physics.RightTriangle.Draw(System.Boolean)">
-            <summary>
-            Draws this triangle to the screen.
-            </summary>
-            <param name="debug">Draws some useful debug information.</param>
-        </member>
-        <member name="M:SMLimitless.Physics.RightTriangle.ToString">
-            <summary>
-            Returns a string representation of the important components of the triangle.
-            </summary>
-            <returns>A string representation.</returns>
-        </member>
-        <member name="T:SMLimitless.Physics.RtSlopedSides">
-            <summary>
-            An enumeration defining which sides of a right triangle are sloped.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Physics.RtSlopedSides.Default">
-            <summary>
-            A default value. Do not use.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Physics.RtSlopedSides.TopLeft">
-            <summary>
-            The top and left sides of the right triangle are sloped.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Physics.RtSlopedSides.TopRight">
-            <summary>
-            The top and right sides of the right triangle are sloped.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Physics.RtSlopedSides.BottomLeft">
-            <summary>
-            The bottom and left sides of the right triangle are sloped.
-            </summary>
-        </member>
-        <member name="F:SMLimitless.Physics.RtSlopedSides.BottomRight">
-            <summary>
-            The bottom and right sides of the right triangle are sloped.
-            </summary>
-        </member>
-        <member name="T:SMLimitless.Physics.SectionAutoscrollSettings">
-            <summary>
-            A structure containing data about how a section should automatically scroll.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.SectionAutoscrollSettings.ScrollType">
-            <summary>
-            Gets a value indicating how the section automatically scrolls.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.Physics.SectionAutoscrollSettings.Speed">
-            <summary>
-            Gets a value indicating how fast the section automatically scrolls.
-            </summary>
-            <exception cref="T:System.InvalidOperationException">Thrown in the getter and setter if this section is not automatically scrolling.</exception>
-        </member>
-        <member name="P:SMLimitless.Physics.SectionAutoscrollSettings.PathName">
-            <summary>
-            Gets the name of the path that this section is automatically scrolling along.
-            </summary>
-            <exception cref="T:System.InvalidOperationException">Thrown in the getter and setter if this section is not automatically scrolling along a path.</exception>
-        </member>
-        <member name="M:SMLimitless.Physics.SectionAutoscrollSettings.#ctor(SMLimitless.Sprites.Collections.CameraScrollType,Microsoft.Xna.Framework.Vector2,System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:SMLimitless.Physics.SectionAutoscrollSettings"/> struct.
-            </summary>
-            <param name="scrollType">A value indicating how the section automatically scrolls.</param>
-            <param name="speed">A value indicating how fast the section automatically scrolls.</param>
-            <param name="pathName">The name of the path that this section is automatically scrolling along.</param>
-        </member>
         <member name="T:SMLimitless.Extensions.ColorExtensions">
             <summary>
             Extends the Color structure.
@@ -5844,6 +5844,16 @@
             Gets the GameServicesContainer that stores references to the services added.
             </summary>
         </member>
+        <member name="P:SMLimitless.GameServices.Effects">
+            <summary>
+            Gets or sets a dictionary containing <see cref="P:SMLimitless.GameServices.Effects"/> instances and their names.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.GameServices.GameTime">
+            <summary>
+            Gets a reference to the GameTime instance.
+            </summary>
+        </member>
         <member name="P:SMLimitless.GameServices.Graphics">
             <summary>
             Gets a reference to the GraphicsDevice.
@@ -5854,24 +5864,9 @@
             Gets a reference to the SpriteBatch.
             </summary>
         </member>
-        <member name="P:SMLimitless.GameServices.GameTime">
-            <summary>
-            Gets a reference to the GameTime instance.
-            </summary>
-        </member>
         <member name="P:SMLimitless.GameServices.Camera">
             <summary>
             Gets or sets the current camera.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.GameServices.Effects">
-            <summary>
-            Gets or sets a dictionary containing <see cref="P:SMLimitless.GameServices.Effects"/> instances and their names.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.GameServices.ScreenSize">
-            <summary>
-            Gets or sets the size of the window in pixels.
             </summary>
         </member>
         <member name="P:SMLimitless.GameServices.DebugFont">
@@ -5879,24 +5874,19 @@
             Gets a bitmap font used for drawing debug text to screen.
             </summary>
         </member>
-        <member name="P:SMLimitless.GameServices.DebugForm">
+        <member name="P:SMLimitless.GameServices.GameObjectSize">
             <summary>
-            Gets a debug form used for printing log messages and receiving debug commands.
+            Gets the standard size for a game object (tile/sprite/etc). Subject to change.
             </summary>
         </member>
-        <member name="P:SMLimitless.GameServices.PhysicsSettingsEditorForm">
+        <member name="P:SMLimitless.GameServices.ScreenSize">
             <summary>
-            Gets a form used to edit global physics settings for game objects.
+            Gets or sets the size of the window in pixels.
             </summary>
         </member>
         <member name="P:SMLimitless.GameServices.QuadTreeCellSize">
             <summary>
             Gets the size, in pixels, of a QuadTree cell.
-            </summary>
-        </member>
-        <member name="P:SMLimitless.GameServices.GameObjectSize">
-            <summary>
-            Gets the standard size for a game object (tile/sprite/etc). Subject to change.
             </summary>
         </member>
         <member name="P:SMLimitless.GameServices.CollisionDebuggerActive">
@@ -5907,6 +5897,16 @@
         <member name="P:SMLimitless.GameServices.CollisionDebuggerForm">
             <summary>
             Gets or sets the current <see cref="T:SMLimitless.Forms.CollisionDebuggerForm"/> instance.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.GameServices.DebugForm">
+            <summary>
+            Gets a debug form used for printing log messages and receiving debug commands.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.GameServices.PhysicsSettingsEditorForm">
+            <summary>
+            Gets a form used to edit global physics settings for game objects.
             </summary>
         </member>
         <member name="M:SMLimitless.GameServices.InitializeServices(Microsoft.Xna.Framework.Graphics.GraphicsDevice,Microsoft.Xna.Framework.Graphics.SpriteBatch,Microsoft.Xna.Framework.Content.ContentManager)">
@@ -5923,19 +5923,19 @@
             </summary>
             <param name="contentResourceName">The name of the font's content resource.</param>
         </member>
-        <member name="M:SMLimitless.GameServices.GetService``1">
-            <summary>
-            Returns a game service.
-            </summary>
-            <typeparam name="T">The type of game service to retrieve.</typeparam>
-            <returns>A game service of the specified type.</returns>
-        </member>
         <member name="M:SMLimitless.GameServices.AddService``1(``0)">
             <summary>
             Adds a service to the container.
             </summary>
             <typeparam name="T">The type of the service to add.</typeparam>
             <param name="service">The service to add.</param>
+        </member>
+        <member name="M:SMLimitless.GameServices.GetService``1">
+            <summary>
+            Returns a game service.
+            </summary>
+            <typeparam name="T">The type of game service to retrieve.</typeparam>
+            <returns>A game service of the specified type.</returns>
         </member>
         <member name="M:SMLimitless.GameServices.RemoveService``1">
             <summary>
@@ -7458,11 +7458,6 @@
             Loads the content for this game and all its components.
             </summary>
         </member>
-        <member name="M:SMLimitless.SmlProgram.UnloadContent">
-            <summary>
-            Unloads the content for this game and all its components.
-            </summary>
-        </member>
         <member name="M:SMLimitless.SmlProgram.Update(Microsoft.Xna.Framework.GameTime)">
             <summary>
             Updates the game.
@@ -7477,6 +7472,11 @@
             </summary>
             <param name="gameTime">Snapshot of the game timing state expressed in values that can be used by
             variable-step (real time) or fixed-step (game time) games.</param>
+        </member>
+        <member name="M:SMLimitless.SmlProgram.UnloadContent">
+            <summary>
+            Unloads the content for this game and all its components.
+            </summary>
         </member>
         <member name="T:SMLimitless.Sounds.AudioPlaybackEngine">
             <summary>

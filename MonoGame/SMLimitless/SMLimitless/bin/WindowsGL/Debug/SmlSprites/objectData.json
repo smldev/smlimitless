@@ -277,6 +277,18 @@
 					}
 				}
 			]
+		},
+		{
+			"typeName": "SmlSprites.Tiles.QuestionBlock",
+			"defaultStates": [
+				{
+					"solidSides": 15,
+					"collisionType": 0,
+					"graphicsResource": "SMBQuestionBlock",
+					"state": null,
+					"customData": {}
+				}
+			]
 		}
 	],
 	"spriteData": [

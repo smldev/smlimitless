@@ -85,6 +85,29 @@ namespace SmlSprites.Tiles
 			questionGraphics.LoadContent();
 			emptyGraphics.LoadContent();
 		}
+
+		public override void Update()
+		{
+			if (!isEmpty) { questionGraphics.Update(); }
+		}
+
+		public override void Draw()
+		{
+			if (!isEmpty)
+			{
+				Vector2 displacedPosition = new Vector2(Position.X, Position.Y + visualDisplacement);
+				questionGraphics.Draw(displacedPosition, Color.White);
+			}
+			else
+			{
+				emptyGraphics.Draw(Position, Color.White);
+			}
+		}
+
+		public override void HandleCollision(Sprite sprite, Vector2 intersect)
+		{
+			
+		}
 	}
 
 	public enum QuestionBlockItemReleaseType
