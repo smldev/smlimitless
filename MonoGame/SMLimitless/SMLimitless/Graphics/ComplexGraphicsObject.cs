@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+﻿// -----------------------------------------------------------------------
 // <copyright file="ComplexGraphicsObject.cs" company="The Limitless Development Team">
 //     Copyrighted under the MIT license.
 // </copyright>
@@ -253,6 +253,11 @@ namespace SMLimitless.Graphics
         {
             this.graphicsObjects[this.CurrentObjectName].Draw(position, color, spriteEffects);
         }
+
+		public void Draw(Vector2 position, Vector2 cropping, Color color, SpriteEffects effects)
+		{
+			graphicsObjects[CurrentObjectName].Draw(position, cropping, color, effects);
+		}
 
         /// <summary>
         /// If the current object is animated,

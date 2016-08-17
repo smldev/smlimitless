@@ -433,6 +433,12 @@ namespace SMLimitless.Sprites
         /// Draws this sprite.
         /// </summary>
         public abstract void Draw();
+
+		/// <summary>
+		/// Draws a part of this sprite specified by a cropping.
+		/// </summary>
+		/// <param name="cropping">The amount of the sprite to draw.</param>
+		public abstract void Draw(Vector2 cropping);
 		#endregion
 
 		#region Collision Handlers

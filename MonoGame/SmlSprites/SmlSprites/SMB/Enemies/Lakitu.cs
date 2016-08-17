@@ -186,6 +186,22 @@ namespace SmlSprites.SMB.Enemies
 			}
 		}
 
+		public override void Draw(Vector2 cropping)
+		{
+			if (isActive)
+			{
+				SpriteEffects effects = SpriteEffects.None;
+				if (Velocity.X < 0f) { effects |= SpriteEffects.FlipHorizontally; }
+				if (isFlippedOver) { effects |= SpriteEffects.FlipVertically; }
+
+				graphics.Draw(Position, cropping, Color.White, effects);
+			}
+			else if (Owner.EditorActive)
+			{
+				graphics.Draw(Position, Color.White);
+			}
+		}
+
 		public override object GetCustomSerializableObjects()
 		{
 			return new

@@ -34,6 +34,10 @@ namespace SmlSprites.Helpers
 		{
 		}
 
+		public override void Draw(Vector2 cropping)
+		{
+		}
+
 		public override object GetCustomSerializableObjects()
 		{
 			return null;

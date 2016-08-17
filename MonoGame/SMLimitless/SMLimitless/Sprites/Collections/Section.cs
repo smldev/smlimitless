@@ -544,6 +544,7 @@ namespace SMLimitless.Sprites.Collections
 								sprite.Position = new Vector2(sprite.Position.X, (sprite.Position.Y + resolutionDistance.Y));
 								sprite.IsOnGround = (resolutionDistance.Y < 0f);
 								sprite.HandleTileCollision(tile, resolutionDistance);
+								tile.HandleCollision(sprite, resolutionDistance);
 
 								numberOfCollidingTiles++;
 								collisionDebugCollidedTiles.Add(tile);
@@ -596,6 +597,7 @@ namespace SMLimitless.Sprites.Collections
 								sprite.Velocity = new Vector2(0f, sprite.Velocity.Y);
 								sprite.Acceleration = new Vector2(0f, sprite.Acceleration.Y);
 								sprite.HandleTileCollision(tile, resolutionDistance);
+								tile.HandleCollision(sprite, resolutionDistance);
 
 								numberOfCollidingTiles++;
 								collisionDebugCollidedTiles.Add(tile);
@@ -691,6 +693,7 @@ namespace SMLimitless.Sprites.Collections
 								sprite.IsOnGround = (resolutionDistance.Y < 0f);
 								sprite.Velocity = new Vector2(sprite.Velocity.X, 0f);                                       // Stop the sprite's vertical movement.
 								sprite.HandleTileCollision(tile, resolutionDistance);
+								tile.HandleCollision(sprite, resolutionDistance);
 
 								numberOfCollidingTiles++;
 								collisionDebugCollidedTiles.Add(tile);

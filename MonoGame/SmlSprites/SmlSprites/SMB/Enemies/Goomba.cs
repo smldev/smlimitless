@@ -116,6 +116,11 @@ namespace SmlSprites.SMB.Enemies
 			graphics.Draw(Position, Color.White, (!isFlippedOver) ? SpriteEffects.None : SpriteEffects.FlipVertically);
 		}
 
+		public override void Draw(Vector2 cropping)
+		{
+			graphics.Draw(Position, cropping, Color.White, (!isFlippedOver) ? SpriteEffects.None : SpriteEffects.FlipVertically);
+		}
+
 		public override void Update()
 		{
 			base.Update();

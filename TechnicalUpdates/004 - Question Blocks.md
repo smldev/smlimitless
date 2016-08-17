@@ -40,7 +40,6 @@ If the sprite does have the attribute `FreeImmediatelyFromItemBlock`, it will si
   * Field `VisualDisplacementTarget`
   * Field `VisualDisplacement`
   * Property `Sprite ContainedSprite`
-  * Property `string ContainedSpriteGraphicsName`
   * Property `Sprite SpawningSprite`
   * Property `int Quantity`
   * Property `float TimeLimit` (expressed in seconds)

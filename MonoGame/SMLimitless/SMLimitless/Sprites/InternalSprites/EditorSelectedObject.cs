@@ -68,6 +68,13 @@ namespace SMLimitless.Sprites.InternalSprites
 			}
 		}
 
+		public override void Draw(Vector2 cropping)
+		{
+			// Does cropping the editor selected object make sense?
+			Draw();
+			// Not right now, no.
+		}
+
 		public override object GetCustomSerializableObjects()
 		{
 			return null;
@@ -129,6 +136,7 @@ namespace SMLimitless.Sprites.InternalSprites
 			tile.State = tile.InitialState = defaultState.State;
 			tile.DeserializeCustomObjects(new JsonHelper((JToken)defaultState.CustomData));
 
+			tile.Initialize(Owner);
 			tile.LoadContent();
 			SelectedObjectType = EditorSelectedObjectType.Tile;
 			selectedTile = tile;
@@ -180,7 +188,7 @@ namespace SMLimitless.Sprites.InternalSprites
 					Owner.AddTile(tile);
 					break;
 				case EditorSelectedObjectType.Sprite:
-					if (spriteUnderCursor == null)	// only add a sprite if the LMB click is new
+					if (spriteUnderCursor == null && tileUnderCursor == null) // only add a sprite if the LMB click is new
 					{
 						Sprite sprite = AssemblyManager.GetSpriteByFullName(selectedSprite.GetType().FullName);
 						sprite.TileCollisionMode = selectedSprite.TileCollisionMode;
@@ -192,13 +200,21 @@ namespace SMLimitless.Sprites.InternalSprites
 						sprite.InitialPosition = Position;
 						Owner.AddSpriteOnNextFrame(sprite);
 					}
-					else // otherwise see if we can drop this sprite inside this object
+					else if (spriteUnderCursor != null && tileUnderCursor == null) // otherwise see if we can drop this sprite inside this object
 					{
 						Sprite sprite = AssemblyManager.GetSpriteByFullName(selectedSprite.GetType().FullName);
 						sprite.TileCollisionMode = selectedSprite.TileCollisionMode;
 						sprite.State = sprite.InitialState = selectedSprite.InitialState;
 						sprite.DeserializeCustomObjects(new JsonHelper(JObject.FromObject(selectedSprite.GetCustomSerializableObjects())));
 						spriteUnderCursor.OnEditorDrop(sprite);
+					}
+					else if (tileUnderCursor != null && spriteUnderCursor == null)
+					{
+						Sprite sprite = AssemblyManager.GetSpriteByFullName(selectedSprite.GetType().FullName);
+						sprite.TileCollisionMode = selectedSprite.TileCollisionMode;
+						sprite.State = sprite.InitialState = selectedSprite.InitialState;
+						sprite.DeserializeCustomObjects(new JsonHelper(JObject.FromObject(selectedSprite.GetCustomSerializableObjects())));
+						tileUnderCursor.OnEditorDrop(sprite);
 					}
 					break;
 				default:

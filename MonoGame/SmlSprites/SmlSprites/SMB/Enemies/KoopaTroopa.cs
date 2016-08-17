@@ -114,6 +114,20 @@ namespace SmlSprites.SMB.Enemies
 		private void ShelledEnemy_StateChanged(object sender, EventArgs e)
 		{
 			SetGraphicsObject();
+
+			switch (GetComponent<ShelledEnemyComponent>().State)
+			{
+				case ShelledEnemyComponent.ShelledEnemyState.Shell:
+					RemoveAttribute("ShellSpinning");
+					break;
+				case ShelledEnemyComponent.ShelledEnemyState.ShellSpinning:
+					AddAttribute("ShellSpinning");
+					break;
+				case ShelledEnemyComponent.ShelledEnemyState.Walking:
+				case ShelledEnemyComponent.ShelledEnemyState.Emerging:
+				default:
+					break;
+			}
 		}
 
 		private void HealthComponent_SpriteKilled(object sender, SpriteDamagedEventArgs e)
@@ -162,6 +176,15 @@ namespace SmlSprites.SMB.Enemies
 			if (isFlippedOver) { effects |= SpriteEffects.FlipVertically; }
 
 			graphics.Draw(new Vector2(Position.X, Position.Y - 8f), Color.White, effects);
+		}
+
+		public override void Draw(Vector2 cropping)
+		{
+			SpriteEffects effects = SpriteEffects.None;
+			if (facingDirection == SMLimitless.Direction.Right) { effects |= SpriteEffects.FlipHorizontally; }
+			if (isFlippedOver) { effects |= SpriteEffects.FlipVertically; }
+
+			graphics.Draw(new Vector2(Position.X, Position.Y - 8f), cropping, Color.White, effects);
 		}
 
 		public override void Update()

@@ -27,6 +27,10 @@ namespace SMLimitless.Sprites.InternalSprites
 		{
 		}
 
+		public override void Draw(Vector2 cropping)
+		{
+		}
+
 		public override void Update()
 		{
 			if (moveTimeout > 0)

@@ -286,7 +286,13 @@
 					"collisionType": 0,
 					"graphicsResource": "SMBQuestionBlock",
 					"state": null,
-					"customData": {}
+					"customData": {
+						"containedSprite": null,
+						"releaseType": 0,
+						"quantity": 1,
+						"timeLimit": 0,
+						"isEmpty": false
+					}
 				}
 			]
 		}

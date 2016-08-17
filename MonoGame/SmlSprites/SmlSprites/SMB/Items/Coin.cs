@@ -44,6 +44,11 @@ namespace SmlSprites.SMB.Items
 			graphics.Draw(Position, Color.White);
 		}
 
+		public override void Draw(Vector2 cropping)
+		{
+			graphics.Draw(Position, cropping, Color.White, Microsoft.Xna.Framework.Graphics.SpriteEffects.None);
+		}
+
 		public override object GetCustomSerializableObjects()
 		{
 			return new { };

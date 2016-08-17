@@ -9,6 +9,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace SMLimitless.Extensions
@@ -45,5 +46,16 @@ namespace SMLimitless.Extensions
             stream = null;
             return image;
         }
+
+		/// <summary>
+		/// Returns a value indicating whether a given cropping is valid for a texture.
+		/// </summary>
+		/// <param name="texture">The texture the cropping will apply to.</param>
+		/// <param name="cropping">The cropping to validate.</param>
+		/// <returns></returns>
+		public static bool ValidateCropping(this Texture2D texture, Vector2 cropping)
+		{
+			return cropping.X < 0f || cropping.Y < 0f || cropping.X > texture.Width || cropping.Y > texture.Height;
+		}
     }
 }

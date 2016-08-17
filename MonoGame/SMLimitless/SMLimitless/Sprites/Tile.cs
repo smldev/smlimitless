@@ -192,6 +192,11 @@ namespace SMLimitless.Sprites
 		/// </summary>
 		public string State { get; set; }
 
+		public virtual bool OnEditorDrop(Sprite sprite)
+		{
+			return false;
+		}
+
 		/// <summary>
 		/// Gets or sets a value indicating whether a collision between this tile and a sprite should break the debugger if the collision debugger is enabled.
 		/// </summary>
