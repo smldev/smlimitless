@@ -111,7 +111,7 @@ namespace SmlSprites.SMB.Enemies
 			graphics.Draw(Position, Color.White, effects);
 		}
 
-		public override void Draw(Vector2 cropping)
+		public override void Draw(Rectangle cropping)
 		{
 			SpriteEffects effects = SpriteEffects.None;
 			if (FacingDirection == SMLimitless.Direction.Right) { effects |= SpriteEffects.FlipHorizontally; }

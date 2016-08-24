@@ -44,7 +44,7 @@ namespace SmlSprites.SMB.Items
 			graphics.Draw(Position, Color.White);
 		}
 
-		public override void Draw(Vector2 cropping)
+		public override void Draw(Rectangle cropping)
 		{
 			graphics.Draw(Position, cropping, Color.White, Microsoft.Xna.Framework.Graphics.SpriteEffects.None);
 		}

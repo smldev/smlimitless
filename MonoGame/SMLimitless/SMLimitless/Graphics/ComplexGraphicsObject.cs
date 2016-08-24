@@ -254,7 +254,7 @@ namespace SMLimitless.Graphics
             this.graphicsObjects[this.CurrentObjectName].Draw(position, color, spriteEffects);
         }
 
-		public void Draw(Vector2 position, Vector2 cropping, Color color, SpriteEffects effects)
+		public void Draw(Vector2 position, Rectangle cropping, Color color, SpriteEffects effects)
 		{
 			graphicsObjects[CurrentObjectName].Draw(position, cropping, color, effects);
 		}

@@ -68,7 +68,7 @@ namespace SMLimitless.Sprites.InternalSprites
 			}
 		}
 
-		public override void Draw(Vector2 cropping)
+		public override void Draw(Rectangle cropping)
 		{
 			// Does cropping the editor selected object make sense?
 			Draw();
@@ -183,6 +183,7 @@ namespace SMLimitless.Sprites.InternalSprites
 				case EditorSelectedObjectType.Tile:
 					Tile tile = selectedTile.Clone();
 					tile.Position = Position;
+					tile.DeserializeCustomObjects(new JsonHelper(JObject.FromObject(selectedTile.GetCustomSerializableObjects())));
 					tile.Initialize(Owner);
 					tile.LoadContent();
 					Owner.AddTile(tile);

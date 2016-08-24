@@ -53,9 +53,11 @@ namespace SMLimitless.Extensions
 		/// <param name="texture">The texture the cropping will apply to.</param>
 		/// <param name="cropping">The cropping to validate.</param>
 		/// <returns></returns>
-		public static bool ValidateCropping(this Texture2D texture, Vector2 cropping)
+		public static bool ValidateCropping(this Texture2D texture, Microsoft.Xna.Framework.Rectangle cropping)
 		{
-			return cropping.X < 0f || cropping.Y < 0f || cropping.X > texture.Width || cropping.Y > texture.Height;
+			// TODO: implement proper check (check corners with Within(), I guess?)
+			// return !(cropping.X < 0f || cropping.Y < 0f || cropping.X > texture.Width || cropping.Y > texture.Height);
+			return true;
 		}
     }
 }

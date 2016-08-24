@@ -4749,7 +4749,7 @@
             Draws this sprite.
             </summary>
         </member>
-        <member name="M:SMLimitless.Sprites.Sprite.Draw(Microsoft.Xna.Framework.Vector2)">
+        <member name="M:SMLimitless.Sprites.Sprite.Draw(Microsoft.Xna.Framework.Rectangle)">
             <summary>
             Draws a part of this sprite specified by a cropping.
             </summary>
@@ -5468,7 +5468,7 @@
             <param name="texture">The texture to convert.</param>
             <returns>A System.Drawing.Image containing the texture's pixels.</returns>
         </member>
-        <member name="M:SMLimitless.Extensions.Texture2DExtensions.ValidateCropping(Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Vector2)">
+        <member name="M:SMLimitless.Extensions.Texture2DExtensions.ValidateCropping(Microsoft.Xna.Framework.Graphics.Texture2D,Microsoft.Xna.Framework.Rectangle)">
             <summary>
             Returns a value indicating whether a given cropping is valid for a texture.
             </summary>
@@ -6543,7 +6543,7 @@
             <param name="color">The color to shade the object. Use Color.White for no shading.</param>
             <param name="effects">Defines sprite mirroring options.</param>
         </member>
-        <member name="M:SMLimitless.Graphics.IGraphicsObject.Draw(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Graphics.SpriteEffects)">
+        <member name="M:SMLimitless.Graphics.IGraphicsObject.Draw(Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Rectangle,Microsoft.Xna.Framework.Color,Microsoft.Xna.Framework.Graphics.SpriteEffects)">
             <summary>
             Draws this object to the screen.
             </summary>

@@ -69,7 +69,7 @@ namespace SMLimitless.Graphics
 		/// <param name="cropping">How much of this object to draw.</param>
 		/// <param name="color">The color to shade the object. Use Color.White for no shading.</param>
 		/// <param name="effects">Defines sprite mirroring options.</param>
-		void Draw(Vector2 position, Vector2 cropping, Color color, SpriteEffects effects);
+		void Draw(Vector2 position, Rectangle cropping, Color color, SpriteEffects effects);
 
         /// <summary>
         /// Clones this graphics object.

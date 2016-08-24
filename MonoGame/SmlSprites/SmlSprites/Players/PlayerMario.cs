@@ -191,7 +191,7 @@ namespace SmlSprites.Players
 			graphics.Draw(Position.Floor(), Color.White, (FacingDirection == SMLimitless.Direction.Right) ? SpriteEffects.None : SpriteEffects.FlipHorizontally);
 		}
 
-		public override void Draw(Vector2 cropping)
+		public override void Draw(Rectangle cropping)
 		{
 			graphics.Draw(Position.Floor(), cropping, Color.White, (FacingDirection == SMLimitless.Direction.Right) ? SpriteEffects.None : SpriteEffects.FlipHorizontally);
 		}

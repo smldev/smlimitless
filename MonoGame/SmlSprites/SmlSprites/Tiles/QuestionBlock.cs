@@ -20,18 +20,20 @@ namespace SmlSprites.Tiles
 	{
 		private static PhysicsSetting<float> MaximumVisualDisplacement;
 		private static PhysicsSetting<float> VisualDisplacementLength;
-		private static PhysicsSetting<float> SpriteSpawnLength;
+		private static PhysicsSetting<float> SpriteReleaseLength;
 
 		private bool isEmpty = false;
 		private bool isReleasingSprite = false;
+		private float releaseSpriteProgress = 0f;
+		private VerticalDirection releasingSpriteDirection = VerticalDirection.None;
 		private AnimatedGraphicsObject questionGraphics;
 		private StaticGraphicsObject emptyGraphics;
 		private float visualDisplacementTarget;
 		private float visualDisplacement;
 		private VerticalDirection visualDisplacementDirection;
 		private bool visualDisplacementReturning = false;
-		private Sprite spawningSprite;
-		private float spriteSpawnAmount;
+		private Sprite releasingSprite;
+		private float spriteReleaseAmount;
 
 		public Sprite ContainedSprite { get; set; }
 		public string ContainedSpriteGraphicsName { get; private set; }
@@ -46,7 +48,7 @@ namespace SmlSprites.Tiles
 		{
 			MaximumVisualDisplacement = new PhysicsSetting<float>("Question Block: Max Visual Displacement (px)", 1f, 64f, 6f, PhysicsSettingType.FloatingPoint);
 			VisualDisplacementLength = new PhysicsSetting<float>("Question Block: Visual Displacement Length (sec)", 0.01f, 10f, 0.75f, PhysicsSettingType.FloatingPoint);
-			SpriteSpawnLength = new PhysicsSetting<float>("Question Block: Sprite Spawn Length (sec)", 0.01f, 10f, 1f, PhysicsSettingType.FloatingPoint);
+			SpriteReleaseLength = new PhysicsSetting<float>("Question Block: Sprite Release Length (sec)", 0.01f, 10f, 1f, PhysicsSettingType.FloatingPoint);
 		}
 
 		public QuestionBlock()
@@ -96,7 +98,7 @@ namespace SmlSprites.Tiles
 
 			UpdateVisualDisplacement();
 
-			// Sprite release update
+			UpdateReleasingSprite();
 		}
 
 		private void UpdateVisualDisplacement()
@@ -117,12 +119,13 @@ namespace SmlSprites.Tiles
 				}
 				else
 				{
-					// All done. We can start the sprite spawn now.
+					// All done. We can start the sprite release now.
+					var releaseDirection = visualDisplacementDirection;
 					visualDisplacementDirection = VerticalDirection.None;
 					visualDisplacement = 0f;
 					visualDisplacementTarget = 0f;
 					visualDisplacementReturning = false;
-					// isReleasingSprite = true;
+					BeginRelease(releaseDirection);
 				}
 			}
 			else
@@ -141,6 +144,14 @@ namespace SmlSprites.Tiles
 				float displacement = (visualDisplacementDirection == VerticalDirection.Up) ? -visualDisplacement : visualDisplacement;
 				Vector2 displacedPosition = new Vector2(Position.X, Position.Y + displacement);
 				questionGraphics.Draw(displacedPosition, Color.White);
+
+				if (isReleasingSprite)
+				{
+					Rectangle cropping = GetSpriteYCropping();
+					if (releasingSpriteDirection == VerticalDirection.Up) { releasingSprite.Draw(cropping); }
+					else if (releasingSpriteDirection == VerticalDirection.Down) { releasingSprite.Draw(cropping);  }
+					SMLimitless.Debug.Logger.LogInfo($"Crop {cropping}");
+				}
 			}
 			else
 			{
@@ -148,20 +159,94 @@ namespace SmlSprites.Tiles
 			}
 		}
 
-		private void ReleaseItem(VerticalDirection releaseDirection)
+		private Rectangle GetSpriteYCropping()
+		{
+			Rectangle result = new Rectangle();
+			result.X = 0;
+			result.Width = (int)releasingSprite.Hitbox.Width;
+			
+			if (releasingSpriteDirection == VerticalDirection.Up)
+			{
+				result.Y = 0;
+				result.Height = (int)(Hitbox.Bounds.Top - releasingSprite.Hitbox.Top);
+			}
+			else if (releasingSpriteDirection == VerticalDirection.Down)
+			{
+				float visibleAmount = releasingSprite.Hitbox.Bottom - Hitbox.Bounds.Bottom;
+				result.Y = (int)(releasingSprite.Hitbox.Height - visibleAmount);
+				result.Height = (int)(visibleAmount);
+			}
+			else { throw new InvalidOperationException("There should be no sprite releasing now."); }
+
+			return result;
+		}
+
+		private void OnBlockHit(VerticalDirection releaseDirection)
 		{
 			if (isEmpty || isReleasingSprite) { return; }
 			if (ContainedSprite == null) { return; }
 
 			releaseDirection = ChangeReleaseDirectionIfNeeded(releaseDirection);
 
-			// Set the visual displacement.
+			// Set the visual displacement. Setting visualDisplacementDirection causes UpdateVisualDisplacement to start automatically.
 			visualDisplacementTarget = MaximumVisualDisplacement.Value;
 			visualDisplacementDirection = releaseDirection;
 
 			// Clone a sprite and set its properties.
-			spawningSprite = CloneSpriteToSpawn();
-			spriteSpawnAmount = 0f;
+			releasingSprite = CloneSpriteToRelease();
+			spriteReleaseAmount = 0f;
+		}
+
+		private void BeginRelease(VerticalDirection releaseDirection)
+		{
+			releasingSprite = CloneSpriteToRelease();
+			isReleasingSprite = true;
+			releasingSpriteDirection = releaseDirection;
+		}
+
+		private void UpdateReleasingSprite()
+		{
+			if (!isReleasingSprite) { return; }
+
+			float releaseSpriteDelta = 1f / (SpriteReleaseLength.Value * 60f);
+			float releaseDistanceDelta = releasingSprite.Hitbox.Height * releaseSpriteDelta;
+			float newSpriteYPosition = releasingSprite.Position.Y + (releaseDistanceDelta * ((releasingSpriteDirection == VerticalDirection.Up) ? -1f : 1f));
+
+			releasingSprite.Position = new Vector2(releasingSprite.Position.X, newSpriteYPosition);
+
+			releaseSpriteProgress += releaseSpriteDelta;
+
+			if (releaseSpriteProgress >= 1f)
+			{
+				EndRelease();
+			}
+		}
+
+		private void EndRelease()
+		{
+			isReleasingSprite = false;
+			Owner.AddSpriteOnNextFrame(releasingSprite);
+			releasingSprite = null;
+			releaseSpriteProgress = 0f;
+			releasingSpriteDirection = VerticalDirection.None;
+
+			switch (ReleaseType)
+			{
+				case QuestionBlockItemReleaseType.FixedQuantity:
+					Quantity--;
+					if (Quantity == 0) { isEmpty = true; }
+					break;
+				case QuestionBlockItemReleaseType.FixedTime:
+					break;
+				case QuestionBlockItemReleaseType.FixedTimeWithMaximumQuantity:
+					Quantity--;
+					if (Quantity == 0) { isEmpty = true; }
+					break;
+				case QuestionBlockItemReleaseType.FixedTimeWithBonusAction:
+					break;
+				default:
+					break;
+			}
 		}
 
 		/// <summary>
@@ -187,14 +272,14 @@ namespace SmlSprites.Tiles
 			return releaseDirection;
 		}
 
-		private Sprite CloneSpriteToSpawn()
+		private Sprite CloneSpriteToRelease()
 		{
-			Sprite spriteToSpawn = ContainedSprite.Clone();
-			spriteToSpawn.Initialize(Owner);
-			spriteToSpawn.LoadContent();
-			spriteToSpawn.Position = Position;
+			Sprite spriteToRelease = ContainedSprite.Clone();
+			spriteToRelease.Initialize(Owner);
+			spriteToRelease.LoadContent();
+			spriteToRelease.Position = Position;
 
-			return spriteToSpawn;
+			return spriteToRelease;
 		}
 
 		public override void HandleCollision(Sprite sprite, Vector2 intersect)
@@ -217,11 +302,11 @@ namespace SmlSprites.Tiles
 
 				if (playerCenter.Y > thisBottom)
 				{
-					ReleaseItem(VerticalDirection.Up);
+					OnBlockHit(VerticalDirection.Up);
 				}
 				else if (playerCenter.Y < thisTop && isGroundPounding)
 				{
-					ReleaseItem(VerticalDirection.Down);
+					OnBlockHit(VerticalDirection.Down);
 				}
 			}
 			else if (sprite.HasAttribute("ShellSpinning"))
@@ -231,13 +316,13 @@ namespace SmlSprites.Tiles
 				float thisLeft = Hitbox.Bounds.Left;
 				float thisRight = Hitbox.Bounds.Right;
 
-				if (spriteXVelocity > 0f && spriteCenter.X < thisLeft)
+				if (spriteCenter.X < thisLeft)
 				{
-					ReleaseItem(VerticalDirection.Up);
+					OnBlockHit(VerticalDirection.Up);
 				}
-				else if (spriteXVelocity < 0f && spriteCenter.X > thisRight)
+				else if (spriteCenter.X > thisRight)
 				{
-					ReleaseItem(VerticalDirection.Up);
+					OnBlockHit(VerticalDirection.Up);
 				}
 			}
 		}

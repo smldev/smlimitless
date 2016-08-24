@@ -34,7 +34,7 @@ namespace SmlSprites.Helpers
 		{
 		}
 
-		public override void Draw(Vector2 cropping)
+		public override void Draw(Rectangle cropping)
 		{
 		}
 

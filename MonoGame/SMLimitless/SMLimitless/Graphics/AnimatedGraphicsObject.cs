@@ -317,17 +317,17 @@ namespace SMLimitless.Graphics
             }
         }
 
-		public void Draw(Vector2 position, Vector2 cropping, Color color, SpriteEffects effects)
+		public void Draw(Vector2 position, Rectangle cropping, Color color, SpriteEffects effects)
 		{
 			if (!textures[frameIndex].ValidateCropping(cropping)) { throw new ArgumentException($"The cropping {cropping} was not valid for this texture. (Width: {textures[frameIndex].Width}, Height: {textures[frameIndex].Height}"); }
 
-			Rectangle destinationRectangle = new Rectangle((int)position.X, (int)position.Y, (int)cropping.X, (int)cropping.Y);
-			Rectangle sourceRectangle = new Rectangle(0, 0, (int)cropping.X, (int)cropping.Y);
+			Rectangle destinationRectangle = new Rectangle((int)position.X + cropping.X, (int)position.Y + cropping.Y, cropping.Width, cropping.Height);
+			Rectangle sourceRectangle = cropping;
 
 			GameServices.SpriteBatch.Draw(textures[frameIndex], destinationRectangle, sourceRectangle, color, 0f, Vector2.Zero, effects, 0f);
 		}
 
-		public void Draw(Vector2 position, Vector2 cropping, Color color, SpriteEffects effects, bool debug)
+		public void Draw(Vector2 position, Rectangle cropping, Color color, SpriteEffects effects, bool debug)
 		{
 			Draw(position, cropping, color, effects);
 
