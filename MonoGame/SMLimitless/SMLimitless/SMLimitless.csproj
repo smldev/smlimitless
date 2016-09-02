@@ -195,6 +195,7 @@
     <Compile Include="Sprites\InternalSprites\CollisionMode.cs" />
     <Compile Include="Sprites\InternalSprites\EditorCameraTrackingObject.cs" />
     <Compile Include="Sprites\InternalSprites\EditorSelectedObject.cs" />
+    <Compile Include="Sprites\Particle.cs" />
     <Compile Include="Sprites\Sprite.cs" />
     <Compile Include="Sprites\SpriteComponent.cs" />
     <Compile Include="Sprites\SpriteCollisionData.cs" />

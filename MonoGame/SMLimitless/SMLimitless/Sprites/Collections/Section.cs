@@ -20,6 +20,8 @@ namespace SMLimitless.Sprites.Collections
 	/// </summary>
 	public sealed class Section
 	{
+		internal static PhysicsSetting<int> MaximumParticles = new PhysicsSetting<int>("Section: Maximum Particles", 1, 1000, 200, PhysicsSettingType.FloatingPoint);
+
 		internal EditorSelectedObject editorSelectedObject = new EditorSelectedObject();
 		private List<Tile> collisionDebugCollidedTiles = new List<Tile>();
 		private string debugText = "";
@@ -128,6 +130,9 @@ namespace SMLimitless.Sprites.Collections
 
 		internal List<Tile> Tiles { get; private set; }
 
+		internal List<Particle> Particles { get; private set; } = new List<Particle>();
+		private List<Particle> particlesToRemoveOnNextFrame = new List<Particle>();
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Section"/> class.
 		/// </summary>
@@ -215,6 +220,11 @@ namespace SMLimitless.Sprites.Collections
 			{
 				sprite.Draw();
 				if (GameServices.CollisionDebuggerActive && sprite.BreakOnCollision) { GameServices.SpriteBatch.DrawRectangleEdges(sprite.Hitbox.ToRectangle(), Color.DarkRed); }
+			}
+
+			foreach (Particle particle in Particles)
+			{
+				particle.Draw();
 			}
 
 			editorSelectedObject.Draw();
@@ -363,6 +373,7 @@ namespace SMLimitless.Sprites.Collections
 				UpdatePhysics();
 				SpritesGrid.ForEach(s => s.SpritesCollidedWithThisFrame.Clear());
 				SpritesGrid.Update();
+				UpdateParticles();
 			}
 			else
 			{
@@ -371,6 +382,7 @@ namespace SMLimitless.Sprites.Collections
 			}
 
 			SpritesGrid.RemoveAllWhere(s => s.RemoveOnNextFrame);
+			RemoveParticlesToRemoveOnNextFrame();
 			CameraSystem.Update();
 			Background.Update();
 			TempUpdate();
@@ -437,6 +449,7 @@ namespace SMLimitless.Sprites.Collections
 			CameraSystem.TrackingObjects.Add(sprite);
 			GameServices.CollisionDebuggerForm.SelectedSprite = sprite;
 		}
+
 		private void AddAndRemoveSpritesForNextFrame()
 		{
 			if (SpritesToAddOnNextFrame.Any())
@@ -805,6 +818,46 @@ namespace SMLimitless.Sprites.Collections
 			if (sprite == CollisionDebugSelectedSprite && GameServices.CollisionDebuggerActive)
 			{
 				GameServices.CollisionDebuggerForm.Update(numberOfCollidingTiles, slopeCollisionOccurred, totalOffset);
+			}
+		}
+
+		public void AddParticle(Particle particle)
+		{
+			if (particle == null) { throw new ArgumentNullException("The provided particle was null."); }
+			particle.LoadContent();
+		
+			if (Particles.Count == MaximumParticles.Value)
+			{
+				Particles.RemoveAt(0);
+			}
+
+			Particles.Add(particle);
+		}
+
+		public void RemoveParticleOnNextFrame(Particle particle)
+		{
+			if (particle == null) { throw new ArgumentNullException("The provided particle was null."); }
+			particlesToRemoveOnNextFrame.Add(particle);
+		}
+
+		private void RemoveParticlesToRemoveOnNextFrame()
+		{
+			Particles.RemoveAll(p => particlesToRemoveOnNextFrame.Contains(p));
+			particlesToRemoveOnNextFrame.Clear();
+		}
+
+		private void UpdateParticles()
+		{
+			foreach (Particle particle in Particles)
+			{
+				if (!CameraSystem.ActiveBounds.Within(particle.Position, false))
+				{
+					particlesToRemoveOnNextFrame.Add(particle);
+				}
+				else
+				{
+					particle.Update();
+				}
 			}
 		}
 

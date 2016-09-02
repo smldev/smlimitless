@@ -37,6 +37,8 @@ namespace SmlSprites.Players
 		private bool isSliding;
 		private bool isSpinJumping;
 
+		private int testParticleSpawnTimer = 10;
+
 		private static PhysicsSetting<float> MaximumWalkingSpeed = new PhysicsSetting<float>("Small Mario: Full Walking Speed (px/sec)", 0f, 100f, 50f, PhysicsSettingType.FloatingPoint);
 		private static PhysicsSetting<float> MaximumRunningSpeed = new PhysicsSetting<float>("Small Mario: Full Running Speed (px/sec)", 0f, 150f, 75f, PhysicsSettingType.FloatingPoint);
 		private static PhysicsSetting<float> MaximumSprintingSpeed = new PhysicsSetting<float>("Small Mario: Max Sprinting Speed (px/sec)", 0f, 200f, 100f, PhysicsSettingType.FloatingPoint);
@@ -215,6 +217,16 @@ namespace SmlSprites.Players
 
 			DeterminePlayerGraphicsObject();
 			BaseUpdate();
+
+			if (testParticleSpawnTimer > 0)
+			{
+				testParticleSpawnTimer--;
+			}
+			else
+			{
+				testParticleSpawnTimer = 2;
+				Owner.AddParticle(new Particle(Owner, "TestSparkle", Hitbox.BottomCenter, Vector2.Zero, false, 0.6f));
+			}
 		}
 
 		protected virtual void BaseUpdate()
