@@ -225,7 +225,7 @@ namespace SmlSprites.Players
 			else
 			{
 				testParticleSpawnTimer = 2;
-				Owner.AddParticle(new Particle(Owner, "TestSparkle", Hitbox.BottomCenter, Vector2.Zero, false, 0.6f));
+				//Owner.AddParticle(new Particle(Owner, "TestSparkle", Hitbox.BottomCenter, Vector2.Zero, false, 0.6f));
 			}
 		}
 

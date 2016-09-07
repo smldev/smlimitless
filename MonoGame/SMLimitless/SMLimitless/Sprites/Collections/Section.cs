@@ -200,8 +200,8 @@ namespace SMLimitless.Sprites.Collections
 
 			if (!tile.Position.IsNaN() && MainLayer.GetTile(MainLayer.GetCellNumberAtPosition(tile.Position)) == null)
 			{
-				Tiles.Add(tile);
 				if (!MainLayer.Tiles.Contains(tile)) { MainLayer.AddTile(tile); }
+				else { Tiles.Add(tile); }
 			}
 		}
 
