@@ -169,6 +169,8 @@ namespace SMLimitless.Sprites.Collections
 			Sprites.Add(sprite);
 			SpritesGrid.Add(sprite);
 			MainLayer.AddSprite(sprite);
+
+			Debug.Logger.LogInfo($"Sprite {sprite.GetType().Name} spawn at {sprite.Position}");
 		}
 
 		/// <summary>
@@ -328,6 +330,8 @@ namespace SMLimitless.Sprites.Collections
 
 			Sprites.Remove(sprite);
 			SpritesGrid.Remove(sprite);
+
+			Debug.Logger.LogInfo($"Removed sprite {sprite.GetType().Name} from {sprite.Position}");
 		}
 
 		public void RemoveSpriteOnNextFrame(Sprite sprite)
@@ -421,14 +425,21 @@ namespace SMLimitless.Sprites.Collections
 				if (currentActiveState == SpriteActiveState.AlwaysActive) { continue; }
 				if (currentActiveState == SpriteActiveState.Active && !withinBounds)
 				{
-					sprite.ActiveState = SpriteActiveState.WaitingToLeaveBounds;
-					sprite.Deactivate();
-					sprite.Position = sprite.InitialPosition;
-					updatedSprites++;
+					if (!sprite.HasAttribute("DoNotRespawn"))
+					{
+						sprite.ActiveState = SpriteActiveState.WaitingToLeaveBounds;
+						sprite.Deactivate();
+						updatedSprites++;
+					}
+					else
+					{
+						RemoveSpriteOnNextFrame(sprite);
+					}
 				}
 				else if (currentActiveState == SpriteActiveState.WaitingToLeaveBounds && !initialPositionWithinBounds)
 				{
 					sprite.ActiveState = SpriteActiveState.Inactive;
+					sprite.Position = sprite.InitialPosition;
 					updatedSprites++;
 				}
 				else if (currentActiveState == SpriteActiveState.Inactive && initialPositionWithinBounds)
@@ -566,6 +577,7 @@ namespace SMLimitless.Sprites.Collections
 							else
 							{
 								sprite.IsEmbedded = true;
+								Debug.Logger.LogInfo($"Sprite embedded at {sprite.Position}");
 								continue;
 							}
 						}
@@ -792,7 +804,7 @@ namespace SMLimitless.Sprites.Collections
 
 				CameraSystem.StayInBounds = true;
 				CameraSystem.TrackingObjects.Clear();
-				CameraSystem.TrackingObjects.AddRange(Players);
+				CameraSystem.TrackingObjects.AddRange(Players.Where(p => !p.HasAttribute("Dead")));
 
 				editorForm.Close();
 				editorForm.Dispose();

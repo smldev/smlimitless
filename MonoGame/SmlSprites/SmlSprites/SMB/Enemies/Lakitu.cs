@@ -146,6 +146,7 @@ namespace SmlSprites.SMB.Enemies
 			graphics = (ComplexGraphicsObject)ContentPackageManager.GetGraphicsResource("SMBLakitu");
 
 			ActiveState = SpriteActiveState.AlwaysActive;
+			TileCollisionMode = SpriteCollisionMode.NoCollision;
 
 			var health = new HealthComponent(1, 1, new string[] { });
 			health.SpriteKilled += Health_SpriteKilled;
@@ -287,6 +288,7 @@ namespace SmlSprites.SMB.Enemies
 			}
 
 			thrownSprites.RemoveAll(s => s.ActiveState == SpriteActiveState.Inactive || s.ActiveState == SpriteActiveState.WaitingToLeaveBounds);
+			// TODO: Figure out a way to make killed thrown sprites be removed from thrownSprites
 		}
 
 		private void ActivateLakitu()
@@ -328,8 +330,10 @@ namespace SmlSprites.SMB.Enemies
 			spriteToThrow.Initialize(Owner);
 			spriteToThrow.LoadContent();
 			spriteToThrow.Position = Position;
+			spriteToThrow.InitialPosition = Position;
 			spriteToThrow.Velocity = new Vector2(Velocity.X + ThrownAdditionalXVelocity.Value, Velocity.Y - ThrownAdditionalYVelocity.Value);
 			spriteToThrow.IsMoving = true;
+			spriteToThrow.AddAttribute("DoNotRespawn");
 			Owner.AddSpriteOnNextFrame(spriteToThrow);
 			thrownSprites.Add(spriteToThrow);
 

@@ -186,6 +186,7 @@ namespace SmlSprites.Players
 			Velocity = new Vector2(0f, -100f);
 			TileCollisionMode = SpriteCollisionMode.NoCollision;
 			SpriteCollisionMode = SpriteCollisionMode.NoCollision;
+			AddAttribute("Dead");
 		}
 
 		public override void Draw()
@@ -715,7 +716,7 @@ namespace SmlSprites.Players
 
 		public override void HandleSpriteCollision(Sprite sprite, Vector2 resolutionDistance)
 		{
-			if (sprite.SpriteCollisionMode != SpriteCollisionMode.OffsetNotify || sprite.SpriteCollisionMode != SpriteCollisionMode.OffsetOnly) { return; }
+			//if (sprite.SpriteCollisionMode != SpriteCollisionMode.OffsetNotify && sprite.SpriteCollisionMode != SpriteCollisionMode.OffsetOnly) { return; }
 
 			if (Hitbox.Bottom < sprite.Hitbox.Center.Y && Velocity.Y >= 0f)
 			{

@@ -150,7 +150,7 @@ namespace SMLimitless.Sprites
 		/// Gets or sets the position of this sprite when it was first loaded into the level, measured in pixels.
 		/// </summary>
 		[Browsable(false)]
-		public Vector2 InitialPosition { get; protected internal set; }
+		public Vector2 InitialPosition { get; set; }
 
 		/// <summary>
 		/// Gets or sets the last position of this sprite, measured in pixels.
@@ -174,6 +174,8 @@ namespace SMLimitless.Sprites
 			}
 			set
 			{
+				Vector2 oldPosition = position;
+
 				HasMoved = true;
 
 				// Round values to nearest integer in case of really small precision errors.
@@ -181,6 +183,11 @@ namespace SMLimitless.Sprites
 
 				// Rebuild the hitbox
 				hitbox = new BoundingRectangle(position, position + Size);
+
+				if ((position - oldPosition).Abs().GreaterThan(16f) && !GetType().FullName.Contains("Editor"))
+				{
+					Debug.Logger.LogWarning($"Sprite teleported from {oldPosition} to {position}");
+				}
 			}
 		}
 

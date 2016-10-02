@@ -52,6 +52,8 @@ namespace SMLimitless.Sprites.InternalSprites
 
 		public override void Draw()
 		{
+			if (!Owner.EditorActive) { return; }
+
 			switch (SelectedObjectType)
 			{
 				case EditorSelectedObjectType.Nothing:
@@ -140,6 +142,7 @@ namespace SMLimitless.Sprites.InternalSprites
 			tile.LoadContent();
 			SelectedObjectType = EditorSelectedObjectType.Tile;
 			selectedTile = tile;
+			selectedSprite = null;
 
 			OnSelectedObjectChanged();
 		}
@@ -156,6 +159,7 @@ namespace SMLimitless.Sprites.InternalSprites
 			sprite.LoadContent();
 			SelectedObjectType = EditorSelectedObjectType.Sprite;
 			selectedSprite = sprite;
+			selectedTile = null;
 
 			OnSelectedObjectChanged();
 		}
