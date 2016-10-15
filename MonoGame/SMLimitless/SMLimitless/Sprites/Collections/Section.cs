@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using SMLimitless.Collections;
@@ -751,25 +752,24 @@ namespace SMLimitless.Sprites.Collections
 
 		private void TempUpdate()
 		{
-			if (InputManager.IsNewKeyPress(Keys.OemTilde))
+			if (InputManager.IsNewKeyPress(Microsoft.Xna.Framework.Input.Keys.OemTilde))
 			{
 				if (!GameServices.DebugForm.Visible) { GameServices.DebugForm.Show(); }
 				else { GameServices.DebugForm.Hide(); }
 			}
-			else if (InputManager.IsNewKeyPress(Keys.E))
+			else if (InputManager.IsNewKeyPress(Microsoft.Xna.Framework.Input.Keys.E))
 			{
 				ToggleEditor();
 			}
-			else if (InputManager.IsNewKeyPress(Keys.G))
+			else if (InputManager.IsNewKeyPress(Microsoft.Xna.Framework.Input.Keys.G))
 			{
-				string json = new IO.LevelSerializers.Serializer003().Serialize(Owner);
-				System.IO.File.WriteAllText(@"test_003.lvl", json);
+				SaveLevel();
 			}
-			else if (InputManager.IsNewKeyPress(Keys.H))
+			else if (InputManager.IsNewKeyPress(Microsoft.Xna.Framework.Input.Keys.H))
 			{
 				irisEffect.Start(30, Interfaces.EffectDirection.Forward, Vector2.Zero, Color.Black);
 			}
-			else if (InputManager.IsNewKeyPress(Keys.K))
+			else if (InputManager.IsNewKeyPress(Microsoft.Xna.Framework.Input.Keys.K))
 			{
 				irisEffect.Start(30, Interfaces.EffectDirection.Backward, Vector2.Zero, Color.Black);
 			}
@@ -810,6 +810,18 @@ namespace SMLimitless.Sprites.Collections
 				editorForm.Dispose();
 				editorForm = null;
 			}
+		}
+
+		private void SaveLevel()
+		{
+			SaveFileDialog sfd = new SaveFileDialog();
+			sfd.Title = "Super Mario Limitless";
+			sfd.Filter = "SML Level File (*.lvl)|*.lvl|All files (*.*)|*.*";
+
+			if (sfd.ShowDialog() == DialogResult.Cancel) { return; }
+
+			string json = new IO.LevelSerializers.Serializer003().Serialize(Owner);
+			System.IO.File.WriteAllText(sfd.FileName, json);
 		}
 
 		private void UninitializeCollisionDebugging()

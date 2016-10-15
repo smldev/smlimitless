@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -40,6 +41,7 @@ namespace SMLimitless
 
                 using (SmlProgram game = new SmlProgram())
                 {
+					if (args.Length == 1 && File.Exists(args[0])) { game.InitialLevelFilePath = args[0]; }
                     game.Run();
                 }
             }

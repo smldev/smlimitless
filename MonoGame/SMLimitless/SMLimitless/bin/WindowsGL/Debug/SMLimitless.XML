@@ -7466,6 +7466,11 @@
             Enables a group of sprites to be drawn using the same settings.
             </summary>
         </member>
+        <member name="P:SMLimitless.SmlProgram.InitialLevelFilePath">
+            <summary>
+            Sets a path for the level to load when the game starts.
+            </summary>
+        </member>
         <member name="M:SMLimitless.SmlProgram.#ctor">
             <summary>
             Initializes a new instance of the <see cref="T:SMLimitless.SmlProgram"/> class.
@@ -7475,6 +7480,16 @@
             <summary>
             Initializes the game's resources and managers.
             </summary>
+        </member>
+        <member name="M:SMLimitless.SmlProgram.GetInitialLevelFilePath">
+            <summary>
+            Gets the path to the level to load when the game starts. 
+            </summary>
+            <returns>
+            The value of the <see cref="P:SMLimitless.SmlProgram.InitialLevelFilePath"/> property,
+            or if it's null, the selected file from an
+            <see cref="T:System.Windows.Forms.OpenFileDialog"/> instance. 
+            </returns>
         </member>
         <member name="M:SMLimitless.SmlProgram.LoadContent">
             <summary>

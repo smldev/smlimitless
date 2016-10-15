@@ -6,7 +6,9 @@
 using System;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -35,6 +37,11 @@ namespace SMLimitless
         /// Enables a group of sprites to be drawn using the same settings.
         /// </summary>
         private SpriteBatch spriteBatch;
+
+		/// <summary>
+		/// Sets a path for the level to load when the game starts.
+		/// </summary>
+		internal string InitialLevelFilePath { private get; set; } = null;
         
         /// <summary>
         /// Initializes a new instance of the <see cref="SmlProgram"/> class.
@@ -68,13 +75,50 @@ namespace SMLimitless
             string contentPackageSettingsPath = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), @"TestPackage\settings.txt");
             // SMLimitless.Content.ContentPackageManager.AddPackage(contentPackageSettingsPath);
             // GameServices.Camera = new Physics.Camera2D(); // NOTE: comment out this line and the above if loading a LevelScreen.
-            ScreenManager.SetRootScreen(new LevelScreen(), System.IO.Directory.GetCurrentDirectory() + @"\test_003.lvl");
+            ScreenManager.SetRootScreen(new LevelScreen(), GetInitialLevelFilePath());
 
             base.Initialize();
 
 			stopwatch.Stop();
 			Logger.LogInfo(string.Format("Game initialization completed (took {0} ms)", stopwatch.ElapsedMilliseconds));
         }
+
+		/// <summary>
+		/// Gets the path to the level to load when the game starts. 
+		/// </summary>
+		/// <returns>
+		/// The value of the <see cref="InitialLevelFilePath"/> property,
+		/// or if it's null, the selected file from an
+		/// <see cref="OpenFileDialog"/> instance. 
+		/// </returns>
+		private string GetInitialLevelFilePath()
+		{
+			if (InitialLevelFilePath != null) { return InitialLevelFilePath; }
+
+			OpenFileDialog fileDialog = new OpenFileDialog();
+			fileDialog.Title = "Super Mario Limitless";
+			fileDialog.Filter = "SML Level File (*.lvl)|*.lvl|All files (*.*)|*.*";
+			fileDialog.Multiselect = false;
+
+			string selectedFilePath = null;
+			while (selectedFilePath == null)
+			{
+				DialogResult result = fileDialog.ShowDialog();
+				if (result == DialogResult.Cancel)
+				{
+					Exit();
+					Environment.Exit(1223);	// ERR_CANCELLED
+				}
+				if (File.Exists(fileDialog.FileName)) { selectedFilePath = fileDialog.FileName; }
+				else
+				{
+					string message = $"The file at that path doesn't exist.\r\n\r\nPath:{fileDialog.FileName}";
+					MessageBox.Show(message, "Super Mario Limitless", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				}
+			}
+
+			return selectedFilePath;
+		}
 
         /// <summary>
         /// Loads the content for this game and all its components.
@@ -102,7 +146,7 @@ namespace SMLimitless
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == Microsoft.Xna.Framework.Input.ButtonState.Pressed)
             {
 				Exit();
             }
