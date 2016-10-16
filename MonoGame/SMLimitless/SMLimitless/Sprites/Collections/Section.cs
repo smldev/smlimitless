@@ -278,6 +278,8 @@ namespace SMLimitless.Sprites.Collections
 				CameraSystem = new CameraSystem(Camera, Bounds);
 				irisEffect = new IrisEffect(Camera.Viewport.Center);
 
+				CameraSystem.TrackingObjects.AddRange(Players);
+
 				isInitialized = true;
 			}
 		}
