@@ -37,6 +37,11 @@ namespace SMLimitless.Physics
 		/// </summary>
 		public bool StayInBounds { get; set; } = true;
 
+		/// <summary>
+		/// Gets or sets a value indicating whether the camera cannot scroll or zoom.
+		/// </summary>
+		public bool IsFrozen { get; set; } = false;
+
 		static CameraSystem()
 		{
 			MiddleScreenBandHeight = new PhysicsSetting<float>("Camera: Middle Screen Band Height", 0.01f, 0.99f, 0.33f, PhysicsSettingType.FloatingPoint);
@@ -149,6 +154,8 @@ namespace SMLimitless.Physics
 		/// </summary>
 		public void Update()
 		{
+			if (IsFrozen) { return; }
+
 			float delta = GameServices.GameTime.GetElapsedSeconds();
 
 			// Calculate the center point of all tracking objects.

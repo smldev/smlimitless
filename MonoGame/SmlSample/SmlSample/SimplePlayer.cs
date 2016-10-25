@@ -33,7 +33,6 @@ namespace SmlSample
 		public SimplePlayer()
 		{
 			Size = new Vector2(16f);
-			IsActive = true;
 
 			jumpSound = new CachedSound(ContentPackageManager.GetAbsoluteFilePath("nsmbwiiJump"));
 		}
@@ -42,8 +41,8 @@ namespace SmlSample
 		{
 			base.Initialize(owner);
 
-			Components.Add(new HealthComponent(1, new string[] { }));
-			((HealthComponent)Components[0]).SpriteDeath += (sender, e) => { RemoveOnNextFrame = true; };
+			Components.Add(new HealthComponent(1, 1,  new string[] { }));
+			((HealthComponent)Components[0]).SpriteKilled += (sender, e) => { RemoveOnNextFrame = true; };
 		}
 
 		public override void DeserializeCustomObjects(JsonHelper customObjects)
@@ -101,7 +100,6 @@ namespace SmlSample
 			if (InputManager.IsCurrentActionPress(InputAction.Jump) && jumpTimeout > 0)
 			{
 				Velocity = new Vector2(Velocity.X, (Velocity.Y <= MaxJumpVelocity) ? MaxJumpVelocity : Velocity.Y - JumpImpulse);
-				AudioPlaybackEngine.Instance.PlaySound(jumpSound);
 				jumpTimeout--;
 			}
 
@@ -127,5 +125,10 @@ namespace SmlSample
 		}
 
 		public override object GetCustomSerializableObjects() { return null; }
+
+		public override void Draw(Rectangle cropping)
+		{
+			Draw();
+		}
 	}
 }

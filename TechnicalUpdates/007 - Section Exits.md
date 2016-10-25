@@ -8,10 +8,10 @@ A section exit has a position in the section. This position is not required to b
 
 Section exits have a specified source behavior; this is the way a player enters the section exit and how the player is animated as they enter the section exit. During such animations, the player will not interact with the world, including with other sprites, tiles, or gravity.
 
-	* **Pipe Down**: The user must press Down while standing on solid ground (or suspended in water) while within the area of the section exit. The player will be moved left or right such that their hitbox falls (horizontally) within the section exit, then they will sink into the tile they stand on. A pipe warp sound will play.
-	* **Pipe Up**: The user must press Up while contacting a solid tile from below, and they must be in the air. The player will move to be within the section exit's sides, and will then move up into the tile.
-	* **Pipe Left**: The user must press Left while contacting a solid tile from the right side and they must be standing on solid ground. The player will move leftward into the tile.
-	* **Pipe Right**: The user must press Right while contacting a solid tile from the left and they must be standing on solid ground. The player will move rightward into the tile.
+	* **Pipe Down**: The user must press Down while standing on solid ground while within the area of the section exit. The player will be moved left or right such that their hitbox falls (horizontally) within the section exit, then they will sink into the tile they stand on. A pipe warp sound will play.
+	* **Pipe Up**: The user must press Up while contacting a solid tile from below, and they must be in the air (or suspended in water). The player will move to be within the section exit's sides, and will then move up into the tile.
+	* **Pipe Left**: The user must press Left while contacting a solid tile from the right side and they must be standing on solid ground (or suspended in water). The player will move leftward into the tile.
+	* **Pipe Right**: The user must press Right while contacting a solid tile from the left and they must be standing on solid ground (or suspended in water). The player will move rightward into the tile.
 	* **Door**: The player must press Up while standing on a solid tile. The player will not be animated.
 	* **Immediate**: The player will automatically enter the section exit when they contact the exit in any manner.
 
@@ -85,6 +85,7 @@ Section exits have internal IDs of type `int`. Section exits refer to other sect
 	* Modifications to type `Section`
 		* `const int DefaultSectionExitFramesUntilTransition = 300`
 		* `int SectionExitFramesUntilTransition`
+		* `SectionExit ExitLock`: If a player has entered an exit and other players are still in the section, this is the exit the player entered. Stops players from going into multiple exits at the same time.
 		* `bool IsActive {get; set;}`
 		* `void IrisIn(Vector2 point, float duration)`
 		* `void IrisOut(Vector2 point, float duration)`

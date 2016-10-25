@@ -349,7 +349,6 @@ namespace SMLimitless.Sprites
 		/// Gets the component of a certain type.
 		/// </summary>
 		/// <typeparam name="T">The type of component to return.</typeparam>
-		/// <param name="componentType">The type of component to return</param>
 		/// <returns>The component of the given type, or null if there is no such component.</returns>
 		public T GetComponent<T>() where T : SpriteComponent
 		{
@@ -361,15 +360,31 @@ namespace SMLimitless.Sprites
 			return null;
 		}
 
+		/// <summary>
+		/// Activates this sprite in the section.
+		/// </summary>
 		public virtual void Activate() { }
 
+		/// <summary>
+		/// Deactivates this sprite in the section.
+		/// </summary>
 		public virtual void Deactivate() { }
 
+		/// <summary>
+		/// Gets a value indicating whether a given attribute is present on the
+		/// sprite.
+		/// </summary>
+		/// <param name="attribute">The attribute to check for.</param>
+		/// <returns>True if the attribute is present, false if it is not.</returns>
 		public bool HasAttribute(string attribute)
 		{
 			return attributes.Contains(attribute);
 		}
 
+		/// <summary>
+		/// Adds an attribute to this sprite.
+		/// </summary>
+		/// <param name="attribute">The attribute to add.</param>
 		public void AddAttribute(string attribute)
 		{
 			if (!attributes.Contains(attribute))
@@ -378,6 +393,11 @@ namespace SMLimitless.Sprites
 			}
 		}
 
+		/// <summary>
+		/// Removes an attribute from this sprite.
+		/// </summary>
+		/// <param name="attribute"></param>
+		/// <returns></returns>
 		public bool RemoveAttribute(string attribute)
 		{
 			return attributes.Remove(attribute);

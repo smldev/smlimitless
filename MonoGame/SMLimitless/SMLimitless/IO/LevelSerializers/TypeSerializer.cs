@@ -10,8 +10,17 @@ using SMLimitless.Sprites.Assemblies;
 
 namespace SMLimitless.IO.LevelSerializers
 {
+	/// <summary>
+	/// Serializes and deserializes individual sprites without using the
+	/// LevelSerializer types.
+	/// </summary>
 	public static class TypeSerializer
 	{
+		/// <summary>
+		/// Gets the objects for serialization for a given sprite.
+		/// </summary>
+		/// <param name="sprite">The sprite to get the objects for.</param>
+		/// <returns>An anonymous object containing the objects for serialization.</returns>
 		public static object GetSpriteObjects(Sprite sprite)
 		{
 			if (sprite == null) { return null; }
@@ -31,7 +40,6 @@ namespace SMLimitless.IO.LevelSerializers
 				customObjects = sprite.GetCustomSerializableObjects()
 			};
 		}
-
 		private static Sprite DeserializeSprite(JObject obj)
 		{
 			string typeName = (string)obj["typeName"];
@@ -51,6 +59,12 @@ namespace SMLimitless.IO.LevelSerializers
 			return result;
 		}
 
+		/// <summary>
+		/// Deserializes a sprite, given a <see cref="JsonHelper"/> and a key for the sprite. 
+		/// </summary>
+		/// <param name="helper">The <see cref="JsonHelper"/> that contains the sprite to deserialize </param>
+		/// <param name="key">The key in which the sprite is stored.</param>
+		/// <returns>A deserialized (but uninitalized) sprite.</returns>
 		public static Sprite DeserializeSprite(JsonHelper helper, string key = "")
 		{
 			if (string.IsNullOrEmpty(key))

@@ -108,6 +108,7 @@ namespace SMLimitless.Sprites.Components
 		/// <param name="startingDirection">The initial direction (Left, Right, or FacePlayer) that the sprites starts out facing.</param>
 		/// <param name="initialHorizontalVelocity">The initial velocity that the sprite has. Provide a positive value; the sign is automatically determined based on initial direction.</param>
 		/// <param name="turnOnEdges">A flag indicating whether this sprite turns when it crosses an edge.</param>
+		/// <param name="turnOnSpriteCollisions">A value indicating whether this sprite turns when it collides with another sprite.</param>
 		public WalkerComponent(Sprite owner, SpriteDirection startingDirection, float initialHorizontalVelocity, bool turnOnEdges = false, bool turnOnSpriteCollisions = true)
 		{
 			Owner = owner;
@@ -175,6 +176,11 @@ namespace SMLimitless.Sprites.Components
 			}
 		}
 
+		/// <summary>
+		/// Handles a collision between the owner sprite and another sprite.
+		/// </summary>
+		/// <param name="collidingSprite">The sprite that the owner sprite collided with.</param>
+		/// <param name="resolutionDistance">The distance the owner sprite would need to be moved to resolve the collision.</param>
 		public override void HandleSpriteCollision(Sprite collidingSprite, Vector2 resolutionDistance)
 		{
 			if (!TurnOnSpriteCollisions) { return; }

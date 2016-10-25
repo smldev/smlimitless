@@ -1,0 +1,128 @@
+[Complex]
+FrameSize = 16,24
+TotalGraphicsObjects = 16
+StartingObject = walking_green
+
+[Object0]
+Name = walking_green
+Type = animated
+Frames = 2
+Frame0 = 0,0
+Frame1 = 0,24
+CycleLength = 0.6667
+
+[Object1]
+Name = shell_green
+Type = static
+Frame = 0,48
+
+[Object2]
+Name = emerging_green
+Type = animated
+Frames = 2
+Frame0 = 0,48
+Frame1 = 0,72
+CycleLength = 0.3333
+
+[Object3]
+Name = shellSpinning_green
+Type = animated
+Frames = 4
+Frame0 = 0,96
+Frame1 = 0,120
+Frame2 = 0,144
+Frame3 = 0,48
+CycleLength = 0.45
+
+[Object4]
+Name = walking_cave
+Type = animated
+Frames = 2
+Frame0 = 16,0
+Frame1 = 16,24
+CycleLength = 0.6667
+
+[Object5]
+Name = shell_cave
+Type = static
+Frame = 16,48
+
+[Object6]
+Name = emerging_cave
+Type = animated
+Frames = 2
+Frame0 = 16,48
+Frame1 = 16,72
+CycleLength = 0.3333
+
+[Object7]
+Name = shellSpinning_cave
+Type = animated
+Frames = 4
+Frame0 = 16,96
+Frame1 = 16,120
+Frame2 = 16,144
+Frame3 = 16,48
+CycleLength = 0.45
+
+[Object8]
+Name = walking_red
+Type = animated
+Frames = 2
+Frame0 = 32,0
+Frame1 = 32,24
+CycleLength = 0.6667
+
+[Object9]
+Name = shell_red
+Type = static
+Frame = 32,48
+
+[Object10]
+Name = emerging_red
+Type = animated
+Frames = 2
+Frame0 = 32,48
+Frame1 = 32,72
+CycleLength = 0.3333
+
+[Object11]
+Name = shellSpinning_red
+Type = animated
+Frames = 4
+Frame0 = 32,96
+Frame1 = 32,120
+Frame2 = 3,144
+Frame3 = 32,48
+CycleLength = 0.45
+
+[Object12]
+Name = walking_yellow
+Type = animated
+Frames = 2
+Frame0 = 48,0
+Frame1 = 48,24
+CycleLength = 0.6667
+
+[Object13]
+Name = shell_yellow
+Type = static
+Frame = 48,48
+
+[Object14]
+Name = emerging_yellow
+Type = animated
+Frames = 2
+Frame0 = 48,48
+Frame1 = 48,72
+CycleLength = 0.3333
+
+[Object15]
+Name = shellSpinning_yellow
+Type = animated
+Frames = 4
+Frame0 = 48,96
+Frame1 = 48,120
+Frame2 = 48,144
+Frame3 = 48,48
+CycleLength = 0.45

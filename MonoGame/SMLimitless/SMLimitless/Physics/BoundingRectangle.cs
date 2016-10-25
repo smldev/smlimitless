@@ -584,6 +584,18 @@ namespace SMLimitless.Physics
             return new Rectangle((int)min.X, (int)min.Y, (int)max.X, (int)max.Y);
         }
 
+		/// <summary>
+		/// Gets a position to place another rectangle at such that both this
+		/// and that's Center lines are equal.
+		/// </summary>
+		/// <param name="that">The rectangle to align.</param>
+		/// <returns>A position to move the rectangle to.</returns>
+		public Vector2 GetCenterAlignedInColumnPosition(BoundingRectangle that)
+		{
+			float halfWidth = that.Width / 2f;
+			return new Vector2(Center.X - halfWidth, that.Y);
+		}
+
         /// <summary>
         /// Draws this rectangle to the screen.
         /// </summary>

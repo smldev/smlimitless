@@ -26,6 +26,8 @@ namespace SmlSample
 			}
 		}
 
+		public override float SurfaceFriction => 1000f;
+
 		public TestTile3()
 		{
 			Size = new Vector2(16f);

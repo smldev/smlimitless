@@ -192,6 +192,12 @@ namespace SMLimitless.Sprites
 		/// </summary>
 		public string State { get; set; }
 
+		/// <summary>
+		/// Called when the user drops a sprite onto this tile using the 
+		/// level editor.
+		/// </summary>
+		/// <param name="sprite">The sprite dropped on the tile.</param>
+		/// <returns>True if the tile accepted the sprite, false if it did not.</returns>
 		public virtual bool OnEditorDrop(Sprite sprite)
 		{
 			return false;

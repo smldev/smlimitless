@@ -31,6 +31,7 @@ namespace SMLimitless.Editor
 		/// Initializes a new instance of the <see cref="PropertyForm"/> class.
 		/// </summary>
 		/// <param name="displayedObject">An <see cref="EditorSelectedObject"/> instance currently in use by the level editor.</param>
+		/// <param name="showDialogButtons">A value that indicates if OK and Cancel button should be visible.</param>
 		public PropertyForm(object displayedObject, bool showDialogButtons = false)
 		{
 			DisplayedObject = displayedObject;

@@ -35,14 +35,19 @@ namespace SmlSample
 
 			Size = new Vector2(16f);
 			Components.Add(new WalkerComponent(this, SpriteDirection.Left, 32f));
-			Components.Add(new HealthComponent(1, new string[] { }));
+			Components.Add(new HealthComponent(1, 1, new string[] { }));
 
-			((HealthComponent)Components[1]).SpriteDeath += (sender, e) => { RemoveOnNextFrame = true; };
+			((HealthComponent)Components[1]).SpriteKilled += (sender, e) => { RemoveOnNextFrame = true; };
 		}
 
 		public override void Draw()
 		{
 			graphics.Draw(Position, Color.White);
+		}
+
+		public override void Draw(Rectangle cropping)
+		{
+			Draw();
 		}
 
 		public override void Update()

@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json.Linq;
+using SMLimitless.Components;
 using SMLimitless.Content;
 using SMLimitless.Interfaces;
 using SMLimitless.Physics;
@@ -50,6 +51,8 @@ namespace SMLimitless.Sprites.Collections
 		/// Gets or sets a collection of all the level exits in this level.
         /// </summary>
 		internal List<LevelExit> LevelExits { get; set; }
+
+		internal IDGenerator SectionExitIDGenerator { get; private set; }
 
 		/// <summary>
 		/// Gets the name of the level, which is presented on menu screens.
@@ -149,5 +152,42 @@ namespace SMLimitless.Sprites.Collections
             // Notify the owner (world/levelpack/whatever) that this exit has been cleared
             // Give the owner the LevelExit tied to the exitSpriteName
         }
+
+		internal SectionExit GetSectionExitByID(int id)
+		{
+			foreach (Section section in Sections)
+			{
+				if (section.SectionExits.Any(e => e.ID == id)) { return section.SectionExits.First(e => e.ID == id); }
+			}
+
+			return null;
+		}
+
+		internal void OnSectionExit(SectionExit source)
+		{
+			SectionExit destination = GetSectionExitByID(source.OtherID);
+
+			Section sourceSection = source.Owner;
+			Section destinationSection = destination.Owner;
+
+			foreach (Section section in Sections)
+			{
+				section.CameraSystem.IsFrozen = false;
+				section.ExitLock = null;
+			}
+
+			ChangeActiveSectionForExit(destinationSection, destination.IrisPoint, source, destination);
+		}
+
+		private void ChangeActiveSectionForExit(Section section, Vector2 irisOutPosition, SectionExit source, SectionExit destination)
+		{
+			ActiveSection = section;
+			ActiveSection.SetIrisState(closed: true);
+			ActiveSection.IrisOut(90, irisOutPosition, (sender, e) =>
+			{
+				ActiveSection.IsActive = true;
+				destination.Emerge(source.PlayersInExit);
+			});
+		}
     }
 }

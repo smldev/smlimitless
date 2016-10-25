@@ -18,7 +18,17 @@ namespace SMLimitless.Interfaces
     /// </summary>
     /// <param name="sender">The object that raises this event.</param>
     /// <param name="direction">The "forward" or "backward" direction of the effect.</param>
-    public delegate void EffectCompletedEventHandler(object sender, EffectDirection direction);
+    public delegate void EffectCompletedEventHandler(object sender, EffectCompletedEventArgs direction);
+
+	public sealed class EffectCompletedEventArgs : EventArgs
+	{
+		public EffectDirection Direction { get; }
+
+		public EffectCompletedEventArgs(EffectDirection direction)
+		{
+			Direction = direction;
+		}
+	}
 
     /// <summary>
     /// Defines a "forward" and "backward" direction for effects.

@@ -785,6 +785,11 @@
             Updates this timer, decrementing one frame.
             </summary>
         </member>
+        <member name="T:SMLimitless.Components.IDGenerator">
+            <summary>
+            Assigns unique, contiguous <see cref="T:System.Int32"/> IDs. 
+            </summary>
+        </member>
         <member name="T:SMLimitless.Content.ContentPackage">
             <summary>
             Stores information about a content package,
@@ -1279,6 +1284,7 @@
             Initializes a new instance of the <see cref="T:SMLimitless.Editor.PropertyForm"/> class.
             </summary>
             <param name="displayedObject">An <see cref="T:SMLimitless.Sprites.InternalSprites.EditorSelectedObject"/> instance currently in use by the level editor.</param>
+            <param name="showDialogButtons">A value that indicates if OK and Cancel button should be visible.</param>
         </member>
         <member name="F:SMLimitless.Editor.PropertyForm.components">
             <summary>
@@ -2260,6 +2266,14 @@
             </summary>
             <returns>The standard Rectangle.</returns>
         </member>
+        <member name="M:SMLimitless.Physics.BoundingRectangle.GetCenterAlignedInColumnPosition(SMLimitless.Physics.BoundingRectangle)">
+            <summary>
+            Gets a position to place another rectangle at such that both this
+            and that's Center lines are equal.
+            </summary>
+            <param name="that">The rectangle to align.</param>
+            <returns>A position to move the rectangle to.</returns>
+        </member>
         <member name="M:SMLimitless.Physics.BoundingRectangle.Draw(Microsoft.Xna.Framework.Color)">
             <summary>
             Draws this rectangle to the screen.
@@ -2354,6 +2368,11 @@
         <member name="P:SMLimitless.Physics.CameraSystem.StayInBounds">
             <summary>
             Gets or sets a value indicating whether the camera's viewport should stay within bounds.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Physics.CameraSystem.IsFrozen">
+            <summary>
+            Gets or sets a value indicating whether the camera cannot scroll or zoom.
             </summary>
         </member>
         <member name="M:SMLimitless.Physics.CameraSystem.#ctor(SMLimitless.Physics.Camera2D,SMLimitless.Physics.BoundingRectangle,SMLimitless.Interfaces.IPositionable2[])">
@@ -3002,6 +3021,34 @@
             <param name="speed">A value indicating how fast the section automatically scrolls.</param>
             <param name="pathName">The name of the path that this section is automatically scrolling along.</param>
         </member>
+        <member name="T:SMLimitless.Sprites.SpriteActiveState">
+            <summary>
+            Enumerates the states of activity for sprites with regards to the
+            sprite's visibility onscreen.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.SpriteActiveState.AlwaysActive">
+            <summary>
+            The sprite is always active; it will never deactivate if it goes
+            offscreen.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.SpriteActiveState.Active">
+            <summary>
+            The sprite is currently onscreen (within active bounds).
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.SpriteActiveState.WaitingToLeaveBounds">
+            <summary>
+            The sprite has deactivated by moving out of the active bounds.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.SpriteActiveState.Inactive">
+            <summary>
+            The sprite has deactivated by having the active bounds move out of
+            its initial location.
+            </summary>
+        </member>
         <member name="T:SMLimitless.Sprites.SpriteCollisionMode">
             <summary>
             Enumerates different modes of collision handling
@@ -3351,6 +3398,117 @@
             <summary>
             The players enters the exit by pressing Up
             while within the exit.
+            </summary>
+        </member>
+        <member name="T:SMLimitless.Sprites.Collections.SectionExitType">
+            <summary>
+            Enumerates the different types of section exits.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.Collections.SectionExitType.Default">
+            <summary>
+            The default/invalid value.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.Collections.SectionExitType.Source">
+            <summary>
+            Indicates a section exit that the player can enter.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.Collections.SectionExitType.Destination">
+            <summary>
+            Indicates a section exit that the player will emerge from.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.Collections.SectionExitType.TwoWay">
+            <summary>
+            Indicates a section exit that acts as both a source and a destination.
+            </summary>
+        </member>
+        <member name="T:SMLimitless.Sprites.Collections.ExitSourceBehavior">
+            <summary>
+            Enumerates the ways a player can enter a section exit.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.Collections.ExitSourceBehavior.Default">
+            <summary>
+            The default/invalid value.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.Collections.ExitSourceBehavior.NotASource">
+            <summary>
+            This exit is not a source and cannot be entered.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.Collections.ExitSourceBehavior.PipeDown">
+            <summary>
+            The player will enter the exit when the user presses Down.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.Collections.ExitSourceBehavior.PipeUp">
+            <summary>
+            The player will enter the exit when the user presses Up.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.Collections.ExitSourceBehavior.PipeLeft">
+            <summary>
+            The player will enter the exit when the user presses Left.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.Collections.ExitSourceBehavior.PipeRight">
+            <summary>
+            The player will enter the exit when the user presses Right.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.Collections.ExitSourceBehavior.Door">
+            <summary>
+            The player will enter the exit when the user presses Up.
+            but will not move up into the exit.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.Collections.ExitSourceBehavior.Immediate">
+            <summary>
+            The player will enter the exit when they contact the exit.
+            </summary>
+        </member>
+        <member name="T:SMLimitless.Sprites.Collections.ExitDestinationBehavior">
+            <summary>
+            Enumerates the ways a player can emerge from a section exit.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.Collections.ExitDestinationBehavior.Default">
+            <summary>
+            The default/invalid value.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.Collections.ExitDestinationBehavior.NotADestination">
+            <summary>
+            This exit is not a destination and the player cannot emerge from it.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.Collections.ExitDestinationBehavior.PipeUp">
+            <summary>
+            The player will emerge upward out of the exit.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.Collections.ExitDestinationBehavior.PipeDown">
+            <summary>
+            The player will emerge downward out of the exit.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.Collections.ExitDestinationBehavior.PipeRight">
+            <summary>
+            The player will emerge rightward out of the exit.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.Collections.ExitDestinationBehavior.PipeLeft">
+            <summary>
+            The player will emerge leftward out of the exit.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.Collections.ExitDestinationBehavior.None">
+            <summary>
+            The player will simply appear.
             </summary>
         </member>
         <member name="T:SMLimitless.Sprites.Collections.Background">
@@ -3963,6 +4121,12 @@
             Gets the <see cref="T:SMLimitless.Sprites.Collections.Level"/> that owns this section.
             </summary>
         </member>
+        <member name="P:SMLimitless.Sprites.Collections.Section.ExitLock">
+            <summary>
+            Gets a section exit that a player has entered before other players
+            have.
+            </summary>
+        </member>
         <member name="M:SMLimitless.Sprites.Collections.Section.#ctor(SMLimitless.Sprites.Collections.Level)">
             <summary>
             Initializes a new instance of the <see cref="T:SMLimitless.Sprites.Collections.Section"/> class.
@@ -4041,6 +4205,142 @@
             <summary>
             Moves sprites according to their velocity and performs collision detection and resolution.
             </summary>
+        </member>
+        <member name="T:SMLimitless.Sprites.Collections.SectionExit.ExitEffect">
+            <summary>
+            Keeps track of the state of an exit effect - the visual effect of
+            a player moving into an exit.
+            </summary>
+            <remarks>
+            Exit effects can have up to two stages - one where the player moves
+            laterally to be centered in the exit, and another where the player
+            moves into the exit itself. Lateral motion occurs iff the player is
+            off-center on a vertical pipe. If it occurs, it will take half the
+            duration of the effect.
+            
+            Shift motion moves the player into the exit. It is either the second
+            half of the effect or the entire effect.
+            </remarks>
+        </member>
+        <member name="P:SMLimitless.Sprites.Collections.SectionExit.ExitEffect.TotalEffectDurationFrames">
+            <summary>
+            Gets the total length of the effect in frames.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Collections.SectionExit.ExitEffect.RemainingEffectFrames">
+            <summary>
+            Gets the number of frames remaining in the effect.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Collections.SectionExit.ExitEffect.TotalLateralShiftDistance">
+            <summary>
+            Gets the total distance the player must move laterally.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Collections.SectionExit.ExitEffect.RemainingLateralShiftDistance">
+            <summary>
+            Gets the remaining distance the player must move laterally.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Collections.SectionExit.ExitEffect.LateralShiftDelta">
+            <summary>
+            Gets the distance the player must move laterally on each frame.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Collections.SectionExit.ExitEffect.TotalShiftDistance">
+            <summary>
+            Gets the total distance the player must shift.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Collections.SectionExit.ExitEffect.RemainingShiftDistance">
+            <summary>
+            Gets the remaining distance the player must shift.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Collections.SectionExit.ExitEffect.ShiftDelta">
+            <summary>
+            Gets the distance the player must shift on each frame.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.Collections.SectionExit.DefaultTransitionTimeout">
+            <summary>
+            The length of delay between an iris-in finishing and an iris-out
+            beginning after a player has entered a section exit.
+            </summary>
+        </member>
+        <member name="F:SMLimitless.Sprites.Collections.SectionExit.DefaultMultiplayerWait">
+            <summary>
+            The length of time that all players have to enter a section exit.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Collections.SectionExit.ExitType">
+            <summary>
+            Gets a value indicating the type of this section exit.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Collections.SectionExit.Owner">
+            <summary>
+            Gets the section that this exit is within.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Collections.SectionExit.ID">
+            <summary>
+            Gets an integer used to identify this exit.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Collections.SectionExit.OtherID">
+            <summary>
+            Gets an integer used to identify the other exit in the pair.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Collections.SectionExit.Position">
+            <summary>
+            Gets the position of this section exit in the section.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Collections.SectionExit.Size">
+            <summary>
+            Gets the size of this section exit, guaranteed to be a multiple
+            of <see cref="P:SMLimitless.GameServices.GameObjectSize"/>. 
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Collections.SectionExit.Hitbox">
+            <summary>
+            Gets the hitbox of this section exit.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Collections.SectionExit.SourceBehavior">
+            <summary>
+            Gets the source behavior of this exit.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Collections.SectionExit.DestinationBehavior">
+            <summary>
+            Gets the destination behavior of this exit.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Collections.SectionExit.IrisPoint">
+            <summary>
+            Gets a point for the iris effect to close to or open from.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Collections.SectionExit.PlayersInExit">
+            <summary>
+            Gets a queue of players that have entered the exit.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Sprites.Collections.SectionExit.CanPlayerEnter(SMLimitless.Sprites.Sprite)">
+            <summary>
+            Returns a value indicating whether a player can enter this exit.
+            </summary>
+            <param name="player">The player to check for.</param>
+            <returns>
+            False if the sprite is not a player, this exit is not a source or
+            a two-way exit, other players have entered a different exit, or
+            if the player is not intersecting the exit.
+            True if the player meets the above conditions and the user is
+            pressing the correct button.
+            </returns>
         </member>
         <member name="T:SMLimitless.Sprites.Collections.TestSectionGenerator">
             <summary>
@@ -4516,6 +4816,7 @@
             <param name="startingDirection">The initial direction (Left, Right, or FacePlayer) that the sprites starts out facing.</param>
             <param name="initialHorizontalVelocity">The initial velocity that the sprite has. Provide a positive value; the sign is automatically determined based on initial direction.</param>
             <param name="turnOnEdges">A flag indicating whether this sprite turns when it crosses an edge.</param>
+            <param name="turnOnSpriteCollisions">A value indicating whether this sprite turns when it collides with another sprite.</param>
         </member>
         <member name="M:SMLimitless.Sprites.Components.WalkerComponent.Update">
             <summary>
@@ -4528,6 +4829,13 @@
             </summary>
             <param name="collidingTile">The tile that the owner sprite has collided with.</param>
             <param name="resolutionDistance">The distance by which the owner sprite was moved to resolve the collision.</param>
+        </member>
+        <member name="M:SMLimitless.Sprites.Components.WalkerComponent.HandleSpriteCollision(SMLimitless.Sprites.Sprite,Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Handles a collision between the owner sprite and another sprite.
+            </summary>
+            <param name="collidingSprite">The sprite that the owner sprite collided with.</param>
+            <param name="resolutionDistance">The distance the owner sprite would need to be moved to resolve the collision.</param>
         </member>
         <member name="T:SMLimitless.Sprites.Sprite">
             <summary>
@@ -4725,8 +5033,38 @@
             Gets the component of a certain type.
             </summary>
             <typeparam name="T">The type of component to return.</typeparam>
-            <param name="componentType">The type of component to return</param>
             <returns>The component of the given type, or null if there is no such component.</returns>
+        </member>
+        <member name="M:SMLimitless.Sprites.Sprite.Activate">
+            <summary>
+            Activates this sprite in the section.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Sprites.Sprite.Deactivate">
+            <summary>
+            Deactivates this sprite in the section.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Sprites.Sprite.HasAttribute(System.String)">
+            <summary>
+            Gets a value indicating whether a given attribute is present on the
+            sprite.
+            </summary>
+            <param name="attribute">The attribute to check for.</param>
+            <returns>True if the attribute is present, false if it is not.</returns>
+        </member>
+        <member name="M:SMLimitless.Sprites.Sprite.AddAttribute(System.String)">
+            <summary>
+            Adds an attribute to this sprite.
+            </summary>
+            <param name="attribute">The attribute to add.</param>
+        </member>
+        <member name="M:SMLimitless.Sprites.Sprite.RemoveAttribute(System.String)">
+            <summary>
+            Removes an attribute from this sprite.
+            </summary>
+            <param name="attribute"></param>
+            <returns></returns>
         </member>
         <member name="M:SMLimitless.Sprites.Sprite.Initialize(SMLimitless.Sprites.Collections.Section)">
             <summary>
@@ -4983,6 +5321,14 @@
             <summary>
             Gets or sets a string indicating the current state of this tile.
             </summary>
+        </member>
+        <member name="M:SMLimitless.Sprites.Tile.OnEditorDrop(SMLimitless.Sprites.Sprite)">
+            <summary>
+            Called when the user drops a sprite onto this tile using the 
+            level editor.
+            </summary>
+            <param name="sprite">The sprite dropped on the tile.</param>
+            <returns>True if the tile accepted the sprite, false if it did not.</returns>
         </member>
         <member name="P:SMLimitless.Sprites.Tile.BreakOnCollision">
             <summary>
@@ -7042,6 +7388,27 @@
             Reads information for game objects from a JSON file.
             </summary>
             <param name="jsonPath">The path to the JSON file.</param>
+        </member>
+        <member name="T:SMLimitless.IO.LevelSerializers.TypeSerializer">
+            <summary>
+            Serializes and deserializes individual sprites without using the
+            LevelSerializer types.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.IO.LevelSerializers.TypeSerializer.GetSpriteObjects(SMLimitless.Sprites.Sprite)">
+            <summary>
+            Gets the objects for serialization for a given sprite.
+            </summary>
+            <param name="sprite">The sprite to get the objects for.</param>
+            <returns>An anonymous object containing the objects for serialization.</returns>
+        </member>
+        <member name="M:SMLimitless.IO.LevelSerializers.TypeSerializer.DeserializeSprite(SMLimitless.Sprites.Assemblies.JsonHelper,System.String)">
+            <summary>
+            Deserializes a sprite, given a <see cref="T:SMLimitless.Sprites.Assemblies.JsonHelper"/> and a key for the sprite. 
+            </summary>
+            <param name="helper">The <see cref="T:SMLimitless.Sprites.Assemblies.JsonHelper"/> that contains the sprite to deserialize </param>
+            <param name="key">The key in which the sprite is stored.</param>
+            <returns>A deserialized (but uninitalized) sprite.</returns>
         </member>
         <member name="T:SMLimitless.Program">
             <summary>

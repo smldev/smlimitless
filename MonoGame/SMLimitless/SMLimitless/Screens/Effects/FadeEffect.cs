@@ -175,10 +175,7 @@ namespace SMLimitless.Screens.Effects
         {
 			isRunning = false;
 			fadeDelta = 0f;
-            if (EffectCompletedEvent != null)
-            {
-				EffectCompletedEvent(this, dir);
-            }
-        }
+			EffectCompletedEvent?.Invoke(this, new EffectCompletedEventArgs(dir));
+		}
     }
 }

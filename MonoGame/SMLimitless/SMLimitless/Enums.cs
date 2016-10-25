@@ -276,11 +276,32 @@ namespace SMLimitless.Physics
 
 namespace SMLimitless.Sprites
 {
+	/// <summary>
+	/// Enumerates the states of activity for sprites with regards to the
+	/// sprite's visibility onscreen.
+	/// </summary>
 	public enum SpriteActiveState
 	{
+		/// <summary>
+		/// The sprite is always active; it will never deactivate if it goes
+		/// offscreen.
+		/// </summary>
 		AlwaysActive,
+
+		/// <summary>
+		/// The sprite is currently onscreen (within active bounds).
+		/// </summary>
 		Active,
+
+		/// <summary>
+		/// The sprite has deactivated by moving out of the active bounds.
+		/// </summary>
 		WaitingToLeaveBounds,
+
+		/// <summary>
+		/// The sprite has deactivated by having the active bounds move out of
+		/// its initial location.
+		/// </summary>
 		Inactive
 	}
 
@@ -614,7 +635,8 @@ namespace SMLimitless.Sprites.Collections
     /// Enumerates how players interact with
     /// screen exits and entrances.
     /// </summary>
-    public enum ScreenExitBehavior
+    [Obsolete]
+	public enum ScreenExitBehavior
     {
         /// <summary>
         /// The default behavior.
@@ -653,4 +675,128 @@ namespace SMLimitless.Sprites.Collections
         DoorEnter
     }
 
+	/// <summary>
+	/// Enumerates the different types of section exits.
+	/// </summary>
+	public enum SectionExitType
+	{
+		/// <summary>
+		/// The default/invalid value.
+		/// </summary>
+		Default,
+
+		/// <summary>
+		/// Indicates a section exit that the player can enter.
+		/// </summary>
+		Source,
+
+		/// <summary>
+		/// Indicates a section exit that the player will emerge from.
+		/// </summary>
+		Destination,
+
+		/// <summary>
+		/// Indicates a section exit that acts as both a source and a destination.
+		/// </summary>
+		TwoWay
+	}
+
+	/// <summary>
+	/// Enumerates the ways a player can enter a section exit.
+	/// </summary>
+	public enum ExitSourceBehavior
+	{
+		/// <summary>
+		/// The default/invalid value.
+		/// </summary>
+		Default,
+
+		/// <summary>
+		/// This exit is not a source and cannot be entered.
+		/// </summary>
+		NotASource,
+
+		/// <summary>
+		/// The player will enter the exit when the user presses Down.
+		/// </summary>
+		PipeDown,
+
+		/// <summary>
+		/// The player will enter the exit when the user presses Up.
+		/// </summary>
+		PipeUp,
+
+		/// <summary>
+		/// The player will enter the exit when the user presses Left.
+		/// </summary>
+		PipeLeft,
+
+		/// <summary>
+		/// The player will enter the exit when the user presses Right.
+		/// </summary>
+		PipeRight,
+
+		/// <summary>
+		/// The player will enter the exit when the user presses Up.
+		/// but will not move up into the exit.
+		/// </summary>
+		Door,
+
+		/// <summary>
+		/// The player will enter the exit when they contact the exit.
+		/// </summary>
+		Immediate
+	}
+
+	/// <summary>
+	/// Enumerates the ways a player can emerge from a section exit.
+	/// </summary>
+	public enum ExitDestinationBehavior
+	{
+		/// <summary>
+		/// The default/invalid value.
+		/// </summary>
+		Default,
+
+		/// <summary>
+		/// This exit is not a destination and the player cannot emerge from it.
+		/// </summary>
+		NotADestination,
+
+		/// <summary>
+		/// The player will emerge upward out of the exit.
+		/// </summary>
+		PipeUp,
+
+		/// <summary>
+		/// The player will emerge downward out of the exit.
+		/// </summary>
+		PipeDown,
+
+		/// <summary>
+		/// The player will emerge rightward out of the exit.
+		/// </summary>
+		PipeRight,
+
+		/// <summary>
+		/// The player will emerge leftward out of the exit.
+		/// </summary>
+		PipeLeft,
+
+		/// <summary>
+		/// The player will simply appear.
+		/// </summary>
+		None
+	}
+
+	public enum ExitTransitionState
+	{
+		Default,
+		NoTransitionOccurring,
+		ExitEffectInProgress,
+		MultiplayerWait,
+		IrisIn,
+		TransitionDelay,
+		IrisOut
+	}
 }

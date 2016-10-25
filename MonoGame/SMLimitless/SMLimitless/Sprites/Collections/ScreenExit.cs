@@ -17,6 +17,7 @@ namespace SMLimitless.Sprites.Collections
     /// <summary>
     /// An exit that allows players to move between sections.
     /// </summary>
+	[Obsolete]
     public class ScreenExit
     {
 		/// <summary>

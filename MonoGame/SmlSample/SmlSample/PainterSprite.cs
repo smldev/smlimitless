@@ -60,6 +60,11 @@ namespace SmlSample
 			tileGraphics[currentGraphicIndex].Draw(Position, Color.White);
 		}
 
+		public override void Draw(Rectangle cropping)
+		{
+			Draw();
+		}
+
 		public override void Update()
 		{
 			Position = (InputManager.MousePosition + Owner.Camera.Position).FloorDivide(16f) * 16f;

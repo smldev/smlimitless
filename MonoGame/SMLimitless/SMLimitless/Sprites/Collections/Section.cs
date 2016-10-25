@@ -76,6 +76,8 @@ namespace SMLimitless.Sprites.Collections
 		/// </summary>
 		public bool IsLoaded { get; internal set; }
 
+		public bool IsActive { get; internal set; } = true;
+
 		/// <summary>
 		/// Gets the current mouse position adjusted for the camera's position and zoom.
 		/// </summary>
@@ -131,8 +133,16 @@ namespace SMLimitless.Sprites.Collections
 
 		internal List<Tile> Tiles { get; private set; }
 
+		internal List<SectionExit> SectionExits { get; private set; } = new List<SectionExit>();
+
 		internal List<Particle> Particles { get; private set; } = new List<Particle>();
 		private List<Particle> particlesToRemoveOnNextFrame = new List<Particle>();
+
+		/// <summary>
+		/// Gets a section exit that a player has entered before other players
+		/// have.
+		/// </summary>
+		internal SectionExit ExitLock { get; set; } = null;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Section"/> class.
@@ -230,6 +240,11 @@ namespace SMLimitless.Sprites.Collections
 				particle.Draw();
 			}
 
+			foreach (SectionExit exit in SectionExits)
+			{
+				exit.Draw();
+			}
+
 			editorSelectedObject.Draw();
 			CameraSystem.Draw(debug: false);
 			GameServices.DebugFont.DrawString($"{HUDInfo.Score:D9}", new Vector2(120f, 16f) + Camera.Position, 1f);
@@ -279,6 +294,31 @@ namespace SMLimitless.Sprites.Collections
 				irisEffect = new IrisEffect(Camera.Viewport.Center);
 
 				CameraSystem.TrackingObjects.AddRange(Players);
+
+				// Temporary: testing section exits
+				var tilesWithNothingAbove = Tiles.Where(t => GetTileAtPosition(new Vector2(t.Position.X, t.Position.Y - 16f)) == null).ToList();
+				var random = new Random();
+
+				Vector2 sourceExitPosition = Players.First().Position + new Vector2(0f, 16f);
+				Vector2 destinationExitPosition = tilesWithNothingAbove[random.Next(tilesWithNothingAbove.Count)].Position;
+
+				SectionExit source = new SectionExit(this);
+				source.Position = sourceExitPosition;
+				source.Size = GameServices.GameObjectSize;
+				source.ID = 0;
+				source.OtherID = 1;
+				source.ExitType = SectionExitType.Source;
+				source.SourceBehavior = ExitSourceBehavior.PipeDown;
+				SectionExits.Add(source);
+
+				SectionExit destination = new SectionExit(this);
+				destination.Position = destinationExitPosition;
+				destination.Size = GameServices.GameObjectSize;
+				destination.ID = 1;
+				destination.OtherID = 0;
+				destination.ExitType = SectionExitType.Destination;
+				destination.DestinationBehavior = ExitDestinationBehavior.PipeUp;
+				SectionExits.Add(destination);
 
 				isInitialized = true;
 			}
@@ -333,6 +373,7 @@ namespace SMLimitless.Sprites.Collections
 
 			Sprites.Remove(sprite);
 			SpritesGrid.Remove(sprite);
+			if (sprite.IsPlayer) { Players.Remove(sprite); }
 
 			Debug.Logger.LogInfo($"Removed sprite {sprite.GetType().Name} from {sprite.Position}");
 		}
@@ -365,6 +406,14 @@ namespace SMLimitless.Sprites.Collections
 			System.Diagnostics.Stopwatch stopwatch = System.Diagnostics.Stopwatch.StartNew();
 
 			irisEffect.Update();
+
+			if (!IsActive)
+			{
+				foreach (var exit in SectionExits) { exit.Update(); }
+				stopwatch.Stop();
+				return;
+			}
+
 			AddAndRemoveSpritesForNextFrame();
 
 			if (!EditorActive)
@@ -381,6 +430,7 @@ namespace SMLimitless.Sprites.Collections
 				SpritesGrid.ForEach(s => s.SpritesCollidedWithThisFrame.Clear());
 				SpritesGrid.Update();
 				UpdateParticles();
+				SectionExits.ForEach(s => s.Update());
 			}
 			else
 			{
@@ -769,14 +819,25 @@ namespace SMLimitless.Sprites.Collections
 			}
 			else if (InputManager.IsNewKeyPress(Microsoft.Xna.Framework.Input.Keys.H))
 			{
-				irisEffect.Start(30, Interfaces.EffectDirection.Forward, Vector2.Zero, Color.Black);
+				IrisOut(90, PlayerList.First().Position, (sender, e) => { });
 			}
 			else if (InputManager.IsNewKeyPress(Microsoft.Xna.Framework.Input.Keys.K))
 			{
-				irisEffect.Start(30, Interfaces.EffectDirection.Backward, Vector2.Zero, Color.Black);
+				IrisIn(90, PlayerList.First().Position, (sender, e) => { });
 			}
 			Tile tileUnderCursor = (!MousePosition.IsNaN()) ? GetTileAtPosition(MousePosition) : null;
 			if (GameServices.CollisionDebuggerActive) { GameServices.CollisionDebuggerForm.SetTileInfo(tileUnderCursor); }
+
+			foreach (var exit in SectionExits)
+			{
+				foreach (var player in Players)
+				{
+					if (exit.CanPlayerEnter(player))
+					{
+						exit.PlayerEntered(player);
+					}
+				}
+			}
 		}
 
 		private void ToggleEditor()
@@ -961,6 +1022,39 @@ namespace SMLimitless.Sprites.Collections
 
 				sprite.IsEmbedded = false;
 			}
+		}
+
+		public void IrisIn(int length, Vector2 position, Action<object, EffectCompletedEventArgs> onEffectCompleted)
+		{
+			EffectCompletedEventHandler handler = null;
+		
+			handler = (sender, args) =>
+			{
+				onEffectCompleted(sender, args);
+				irisEffect.EffectCompletedEvent -= handler;
+			};
+
+			irisEffect.EffectCompletedEvent += handler;
+			irisEffect.Start(length, EffectDirection.Backward, position, Color.Black);
+		}
+
+		public void IrisOut(int length, Vector2 position, Action<object, EffectCompletedEventArgs> onEffectCompleted)
+		{
+			EffectCompletedEventHandler handler = null;
+
+			handler = (sender, args) =>
+			{
+				onEffectCompleted(sender, args);
+				irisEffect.EffectCompletedEvent -= handler;
+			};
+
+			irisEffect.EffectCompletedEvent += handler;
+			irisEffect.Start(length, EffectDirection.Forward, position, Color.Black);
+		}
+
+		public void SetIrisState(bool closed)
+		{
+			irisEffect.Set((closed) ? EffectDirection.Backward : EffectDirection.Forward, Color.Black);
 		}
 	}
 }
