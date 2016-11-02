@@ -34,12 +34,12 @@ namespace SMLimitless.Screens
         {
             get
             {
-                return this.isRunning;
+                return isRunning;
             }
 
             set
             {
-                this.isRunning = value;
+				isRunning = value;
             }
         }
 
@@ -98,7 +98,7 @@ namespace SMLimitless.Screens
         /// <param name="parameters">Parameters that are used to determine certain settings of a screen. Varies by screen; check the documentation.</param>
         public virtual void Start(string parameters = "")
         {
-            this.IsRunning = true;
+			IsRunning = true;
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace SMLimitless.Screens
         /// </summary>
         public virtual void Stop()
         {
-            this.IsRunning = false;
+			IsRunning = false;
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace SMLimitless.Screens
         /// <param name="parameters">Parameters that are used to determine certain settings of a screen. Varies by screen; check the documentation.</param>
         public virtual void Exit(string parameters = "")
         {
-            this.Stop();
+			Stop();
             ScreenManager.ExitScreen(this, parameters);
         }
     }

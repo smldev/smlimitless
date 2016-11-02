@@ -26,12 +26,12 @@ namespace SMLimitless.Input
         {
             get
             {
-                return this.source;
+                return source;
             }
 
             private set
             {
-                this.source = value;
+				source = value;
             }
         }
 
@@ -46,8 +46,8 @@ namespace SMLimitless.Input
         /// <param name="keys">A key.</param>
         internal InputObject(Keys keys)
         {
-            this.inputValue = (int)keys;
-            this.source = InputSource.Keyboard;
+			inputValue = (int)keys;
+			source = InputSource.Keyboard;
         }
 
         /// <summary>
@@ -56,8 +56,8 @@ namespace SMLimitless.Input
         /// <param name="mouse">A MouseButtons instance used to initialize this struct.</param>
         internal InputObject(MouseButtons mouse)
         {
-            this.inputValue = (int)mouse;
-            this.source = InputSource.Mouse;
+			inputValue = (int)mouse;
+			source = InputSource.Mouse;
         }
 
         /// <summary>
@@ -123,9 +123,9 @@ namespace SMLimitless.Input
         /// <returns>True if the key is down, false if otherwise.</returns>
         internal bool IsDown(KeyboardState keys)
         {
-            if (this.source == InputSource.Keyboard)
+            if (source == InputSource.Keyboard)
             {
-                return keys.IsKeyDown((Keys)this.inputValue);
+                return keys.IsKeyDown((Keys)inputValue);
             }
             else
             {
@@ -140,9 +140,9 @@ namespace SMLimitless.Input
         /// <returns>True if the button is down, false if otherwise.</returns>
         internal bool IsDown(MouseState mouse)
         {
-            if (this.source == InputSource.Mouse)
+            if (source == InputSource.Mouse)
             {
-                MouseButtons button = (MouseButtons)this.inputValue;
+                MouseButtons button = (MouseButtons)inputValue;
                 switch (button)
                 {
                     case MouseButtons.LeftButton:
@@ -173,12 +173,12 @@ namespace SMLimitless.Input
         /// <returns>True if the input object is down, false if otherwise.</returns>
         internal bool IsDown(KeyboardState keys, MouseState mouse)
         {
-            if (this.source == InputSource.Keyboard)
+            if (source == InputSource.Keyboard)
             {
-                return this.IsDown(keys);
+                return IsDown(keys);
             }
 
-            return this.IsDown(mouse);
+            return IsDown(mouse);
         }
 
         /// <summary>
@@ -188,9 +188,9 @@ namespace SMLimitless.Input
         /// <returns>True if the key is up, false if otherwise.</returns>
         internal bool IsUp(KeyboardState keys)
         {
-            if (this.source == InputSource.Keyboard)
+            if (source == InputSource.Keyboard)
             {
-                return !this.IsDown(keys);
+                return !IsDown(keys);
             }
             else
             {
@@ -205,9 +205,9 @@ namespace SMLimitless.Input
         /// <returns>True if the button is up, false if otherwise.</returns>
         internal bool IsUp(MouseState mouse)
         {
-            if (this.source == InputSource.Mouse)
+            if (source == InputSource.Mouse)
             {
-                return !this.IsDown(mouse);
+                return !IsDown(mouse);
             }
             else
             {
@@ -223,7 +223,7 @@ namespace SMLimitless.Input
         /// <returns>True if the input object is up, false if otherwise.</returns>
         internal bool IsUp(KeyboardState keys, MouseState mouse)
         {
-            return !this.IsDown(keys, mouse);
+            return !IsDown(keys, mouse);
         }
 
         /// <summary>
@@ -232,14 +232,14 @@ namespace SMLimitless.Input
         /// <returns>A string reading "Keyboard: " or "Mouse: ", followed by the key or mouse button.</returns>
         public override string ToString()
         {
-            if (this.source == InputSource.Keyboard)
+            if (source == InputSource.Keyboard)
             {
-                Keys key = (Keys)this.inputValue;
+                Keys key = (Keys)inputValue;
                 return string.Concat("Keyboard: ", key.ToString());
             }
             else
             {
-                MouseButtons mouse = (MouseButtons)this.inputValue;
+                MouseButtons mouse = (MouseButtons)inputValue;
                 return string.Concat("Mouse: ", mouse.ToString());
             }
         }

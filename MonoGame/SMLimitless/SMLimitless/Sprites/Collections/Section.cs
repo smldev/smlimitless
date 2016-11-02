@@ -76,6 +76,10 @@ namespace SMLimitless.Sprites.Collections
 		/// </summary>
 		public bool IsLoaded { get; internal set; }
 
+		/// <summary>
+		/// Gets a value indicating whether this section is active.
+		/// Inactive sections will be drawn but not updated.
+		/// </summary>
 		public bool IsActive { get; internal set; } = true;
 
 		/// <summary>
@@ -110,6 +114,9 @@ namespace SMLimitless.Sprites.Collections
 
 		internal Sprite CollisionDebugSelectedSprite { get; set; }
 
+		/// <summary>
+		/// Gets the <see cref="SMLimitless.Components.HUDInfo"/> for this section. 
+		/// </summary>
 		public HUDInfo HUDInfo { get; private set; }
 
 		internal List<Layer> Layers { get; set; }
@@ -122,8 +129,14 @@ namespace SMLimitless.Sprites.Collections
 
 		internal List<Sprite> Sprites { get; set; } = new List<Sprite>();
 
+		/// <summary>
+		/// Gets a read-only list of players in the section.
+		/// </summary>
 		public IReadOnlyList<Sprite> PlayerList { get { return Players.AsReadOnly(); } }
 		
+		/// <summary>
+		/// Gets a read-only list of sprites in this section.
+		/// </summary>
 		public IReadOnlyList<Sprite> SpriteList { get { return Sprites.AsReadOnly(); } }
 
 		internal SparseCellGrid<Sprite> SpritesGrid { get; set; }
@@ -378,9 +391,13 @@ namespace SMLimitless.Sprites.Collections
 			Debug.Logger.LogInfo($"Removed sprite {sprite.GetType().Name} from {sprite.Position}");
 		}
 
+		/// <summary>
+		/// Sets a sprite to be removed on the next frame.
+		/// </summary>
+		/// <param name="sprite">The sprite to remove.</param>
 		public void RemoveSpriteOnNextFrame(Sprite sprite)
 		{
-			if (sprite == null) { throw new ArgumentNullException(nameof(sprite), "The sprite to remove from the section was not null."); }
+			if (sprite == null) { throw new ArgumentNullException(nameof(sprite), "The sprite to remove from the section was null."); }
 
 			SpritesToRemoveOnNextFrame.Add(sprite);
 		}
@@ -908,6 +925,10 @@ namespace SMLimitless.Sprites.Collections
 			}
 		}
 
+		/// <summary>
+		/// Adds a particle to this section.
+		/// </summary>
+		/// <param name="particle">The particle to add.</param>
 		public void AddParticle(Particle particle)
 		{
 			if (particle == null) { throw new ArgumentNullException("The provided particle was null."); }
@@ -921,6 +942,10 @@ namespace SMLimitless.Sprites.Collections
 			Particles.Add(particle);
 		}
 
+		/// <summary>
+		/// Sets a particle to be removed from the section on the next frame.
+		/// </summary>
+		/// <param name="particle">The particle to remove.</param>
 		public void RemoveParticleOnNextFrame(Particle particle)
 		{
 			if (particle == null) { throw new ArgumentNullException("The provided particle was null."); }
@@ -1024,6 +1049,12 @@ namespace SMLimitless.Sprites.Collections
 			}
 		}
 
+		/// <summary>
+		/// Plays an iris-in effect, turning the screen black.
+		/// </summary>
+		/// <param name="length">The number of frames the effect should last.</param>
+		/// <param name="position">The position the iris should close on.</param>
+		/// <param name="onEffectCompleted">An action ran when the iris has closed.</param>
 		public void IrisIn(int length, Vector2 position, Action<object, EffectCompletedEventArgs> onEffectCompleted)
 		{
 			EffectCompletedEventHandler handler = null;
@@ -1038,6 +1069,12 @@ namespace SMLimitless.Sprites.Collections
 			irisEffect.Start(length, EffectDirection.Backward, position, Color.Black);
 		}
 
+		/// <summary>
+		/// Plays an iris-out effect, bringing the screen back.
+		/// </summary>
+		/// <param name="length">The number of frames the effect should last.</param>
+		/// <param name="position">The position the iris should open from.</param>
+		/// <param name="onEffectCompleted">An action ran when the iris has opened.</param>
 		public void IrisOut(int length, Vector2 position, Action<object, EffectCompletedEventArgs> onEffectCompleted)
 		{
 			EffectCompletedEventHandler handler = null;
@@ -1052,6 +1089,11 @@ namespace SMLimitless.Sprites.Collections
 			irisEffect.Start(length, EffectDirection.Forward, position, Color.Black);
 		}
 
+		/// <summary>
+		/// Sets the state of this iris effect.
+		/// </summary>
+		/// <param name="closed">If this parameter is true, the iris will be closed and the screen will be black.
+		/// If this parameter is false, the iris will be open and the screen will consist of the section.</param>
 		public void SetIrisState(bool closed)
 		{
 			irisEffect.Set((closed) ? EffectDirection.Backward : EffectDirection.Forward, Color.Black);

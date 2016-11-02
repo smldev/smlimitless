@@ -52,7 +52,7 @@ namespace SMLimitless.Screens
 		/// <param name="parameters">Parameters are unused.</param>
 		public override void Initialize(Screen owner, string parameters)
 		{
-			this.Effect = new FadeEffect();
+			Effect = new FadeEffect();
 		}
 
 		/// <summary>
@@ -81,11 +81,11 @@ namespace SMLimitless.Screens
 		/// <param name="direction">The direction of the completed effect.</param>
 		private void Effect_effectCompletedEvent(object sender, Interfaces.EffectDirection direction)
 		{
-			if (this.NextScreen != null)
+			if (NextScreen != null)
 			{
-				ScreenManager.AddScreen(this, this.NextScreen);
-				ScreenManager.SwitchScreen(this.NextScreen);
-				this.NextScreen = null;
+				ScreenManager.AddScreen(this, NextScreen);
+				ScreenManager.SwitchScreen(NextScreen);
+				NextScreen = null;
 			}
 		}
 	}

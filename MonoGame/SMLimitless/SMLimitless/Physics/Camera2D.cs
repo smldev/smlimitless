@@ -37,18 +37,18 @@ namespace SMLimitless.Physics
         {
             get 
             { 
-                return this.zoom; 
+                return zoom; 
             }
 
             set
             {
                 if (value > 0.1f)
                 {
-                    this.zoom = value;
+					zoom = value;
                 }
                 else
                 {
-                    this.zoom = 0.1f;
+					zoom = 0.1f;
                 }
             }
         }
@@ -65,11 +65,11 @@ namespace SMLimitless.Physics
         {
             get
             {
-                return this.position;
+                return position;
             }
             set
             {
-                this.position = new Vector2((int)value.X, (int)value.Y);
+				position = new Vector2((int)value.X, (int)value.Y);
             }
         }
 
@@ -80,7 +80,7 @@ namespace SMLimitless.Physics
         {
             get
             {
-                return new BoundingRectangle(this.Position.X, this.Position.Y, this.ViewportSize.X, this.ViewportSize.Y);
+                return new BoundingRectangle(Position.X, Position.Y, ViewportSize.X, ViewportSize.Y);
             }
         }
 
@@ -91,7 +91,7 @@ namespace SMLimitless.Physics
         {
             get
             {
-                return GameServices.ScreenSize / this.Zoom;
+                return GameServices.ScreenSize / Zoom;
             }
         }
 
@@ -100,9 +100,9 @@ namespace SMLimitless.Physics
         /// </summary>
         public Camera2D()
         {
-            this.Zoom = 1.0f;
-            this.Rotation = 0.0f;
-            this.Position = Vector2.Zero;
+			Zoom = 1.0f;
+			Rotation = 0.0f;
+			Position = Vector2.Zero;
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace SMLimitless.Physics
         /// <param name="amount">The distance to move the camera by.</param>
         public void Move(Vector2 amount)
         {
-            this.Position += amount;
+			Position += amount;
         }
 
         /// <summary>
@@ -120,11 +120,11 @@ namespace SMLimitless.Physics
         /// <returns>The matrix transformation.</returns>
         public Matrix GetTransformation()
         {
-            this.transform = Matrix.CreateTranslation(-this.Position.X, -this.Position.Y, 0) *
-                        Matrix.CreateScale(this.Zoom) *
-                        Matrix.CreateRotationZ(this.Rotation);
+			transform = Matrix.CreateTranslation(-Position.X, -Position.Y, 0) *
+                        Matrix.CreateScale(Zoom) *
+                        Matrix.CreateRotationZ(Rotation);
 
-            return this.transform;
+            return transform;
         }
     }
 }

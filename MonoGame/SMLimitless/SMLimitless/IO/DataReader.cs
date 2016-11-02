@@ -39,10 +39,10 @@ namespace SMLimitless.IO
         {
             if (File.Exists(filePath))
             {
-                this.file = File.ReadAllLines(filePath);
-                this.file = this.file.RemoveComments();
-                this.FilePath = filePath;
-                this.linePos = 0;
+				file = File.ReadAllLines(filePath);
+				file = file.RemoveComments();
+				FilePath = filePath;
+				linePos = 0;
             }
             else
             {
@@ -64,7 +64,7 @@ namespace SMLimitless.IO
         {
             get
             {
-                return this.file[index];
+                return file[index];
             }
         }
 
@@ -76,13 +76,13 @@ namespace SMLimitless.IO
         /// <remarks>This method will not change the reader's index.</remarks>
         public string ReadLine(int index)
         {
-            if (!(index < 0 || index > this.file.Length))
+            if (!(index < 0 || index > file.Length))
             {
-                return this.file[index];
+                return file[index];
             }
             else
             {
-                throw new ArgumentOutOfRangeException("index", string.Format("Index {0} is out of the range: {1} to {2}", index, this.file.GetLowerBound(0), this.file.GetUpperBound(1)));
+                throw new ArgumentOutOfRangeException("index", string.Format("Index {0} is out of the range: {1} to {2}", index, file.GetLowerBound(0), file.GetUpperBound(1)));
             }
         }
 
@@ -92,18 +92,18 @@ namespace SMLimitless.IO
         /// <returns>The next line of the file.  Null if we're beyond the end.</returns>
         public string ReadNextLine()
         {
-            if (this.linePos < 0)
+            if (linePos < 0)
             {
-                this.linePos = 0;
+				linePos = 0;
             }
 
-            if (this.linePos > this.file.GetUpperBound(0))
+            if (linePos > file.GetUpperBound(0))
             {
                 return null;
             }
 
-            string result = this.file[this.linePos];
-            this.linePos++;
+            string result = file[linePos];
+			linePos++;
             return result;
         }
 
@@ -113,18 +113,18 @@ namespace SMLimitless.IO
         /// <returns>The previous line of the file, or null if the index is at the beginning.</returns>
         public string ReadPreviousLine()
         {
-            if (this.linePos > this.file.GetUpperBound(0))
+            if (linePos > file.GetUpperBound(0))
             {
-                this.linePos = this.file.GetUpperBound(0);
+				linePos = file.GetUpperBound(0);
             }
 
-            if (this.linePos < 0)
+            if (linePos < 0)
             {
                 return null;
             }
 
-            string result = this.file[this.linePos];
-            this.linePos--;
+            string result = file[linePos];
+			linePos--;
             return result;
         }
 
@@ -136,14 +136,14 @@ namespace SMLimitless.IO
         /// <remarks>This method will not change the reader's index.</remarks>
         public string[] ReadAllLinesInSection(string sectionName)
         {
-            sectionName = this.CompleteSectionName(sectionName);
-            if (this.SectionExists(sectionName))
+            sectionName = CompleteSectionName(sectionName);
+            if (SectionExists(sectionName))
             {
                 List<string> result = new List<string>();
-                int index = Array.IndexOf(this.file, sectionName) + 1;
-                while (!this.file[index].StartsWith("[") && this.file[index].Trim() != string.Empty)
+                int index = Array.IndexOf(file, sectionName) + 1;
+                while (!file[index].StartsWith("[") && file[index].Trim() != string.Empty)
                 {
-                    result.Add(this.file[index]);
+                    result.Add(file[index]);
                     index++;
                 }
 
@@ -168,8 +168,8 @@ namespace SMLimitless.IO
         /// there is no next entry.</returns>
         public string[] ReadNextEntry()
         {
-            string entry = this.ReadNextLine();
-            if (this.IsCollapsedDataEntry(entry))
+            string entry = ReadNextLine();
+            if (IsCollapsedDataEntry(entry))
             {
                 return entry.Split(',');
             }
@@ -184,8 +184,8 @@ namespace SMLimitless.IO
         /// there is no previous entry.</returns>
         public string[] ReadPreviousEntry()
         {
-            string entry = this.ReadPreviousLine();
-            if (this.IsCollapsedDataEntry(entry))
+            string entry = ReadPreviousLine();
+            if (IsCollapsedDataEntry(entry))
             {
                 return entry.Split(',');
             }
@@ -209,14 +209,14 @@ namespace SMLimitless.IO
         /// <returns>A dictionary of the keys and their data.</returns>
         public Dictionary<string, string> ReadFullSection(string sectionName)
         {
-            sectionName = this.CompleteSectionName(sectionName);
-            if (this.SectionExists(sectionName))
+            sectionName = CompleteSectionName(sectionName);
+            if (SectionExists(sectionName))
             {
                 var result = new Dictionary<string, string>();
-                int index = Array.IndexOf(this.file, sectionName) + 1;
-                while (index < this.file.Length && !string.IsNullOrEmpty(this.file[index]))
+                int index = Array.IndexOf(file, sectionName) + 1;
+                while (index < file.Length && !string.IsNullOrEmpty(file[index]))
                 {
-                    string[] entry = this.file[index].Split('=');
+                    string[] entry = file[index].Split('=');
                     entry.TrimStringArray();
                     result.Add(entry[0], entry[1]);
                     index++;
@@ -235,23 +235,23 @@ namespace SMLimitless.IO
         /// <returns>A list of dictionaries containing keys and their data.</returns>
         public List<Dictionary<string, string>> ReadFullMultiSection(string sectionName)
         {
-            sectionName = this.CompleteSectionName(sectionName);
-            if (this.SectionExists(sectionName))
+            sectionName = CompleteSectionName(sectionName);
+            if (SectionExists(sectionName))
             {
                 var result = new List<Dictionary<string, string>>();
-                int index = Array.IndexOf(this.file, sectionName) + 1;
-                if (index == this.file.Length)
+                int index = Array.IndexOf(file, sectionName) + 1;
+                if (index == file.Length)
                 {
                     return null;
                 }
 
                 int listIndex = 0;
                 result.Add(new Dictionary<string, string>());
-                while (!(index == this.file.Length) && !this.file[index].StartsWith("["))
+                while (!(index == file.Length) && !file[index].StartsWith("["))
                 {
-                    if (!string.IsNullOrEmpty(this.file[index].Trim()))
+                    if (!string.IsNullOrEmpty(file[index].Trim()))
                     {
-                        string[] entry = this.file[index].Split('=');
+                        string[] entry = file[index].Split('=');
                         entry.TrimStringArray();
                         result[listIndex].Add(entry[0], entry[1]);
                         index++;
@@ -279,10 +279,10 @@ namespace SMLimitless.IO
         /// <returns>The data relating to the key, or null if there is no matching key or section.</returns>
         public string ReadFullEntry(string sectionName, string key)
         {
-            sectionName = this.CompleteSectionName(sectionName);
-            if (this.SectionExists(sectionName))
+            sectionName = CompleteSectionName(sectionName);
+            if (SectionExists(sectionName))
             {
-                var section = this.ReadFullSection(sectionName);
+                var section = ReadFullSection(sectionName);
                 if (section.ContainsKey(key))
                 {
                     return section[key];
@@ -304,10 +304,10 @@ namespace SMLimitless.IO
         /// <param name="sectionName">The section to move the index to.</param>
         public void SetIndexToSection(string sectionName)
         {
-            sectionName = this.CompleteSectionName(sectionName);
-            if (this.SectionExists(sectionName))
+            sectionName = CompleteSectionName(sectionName);
+            if (SectionExists(sectionName))
             {
-                this.linePos = Array.IndexOf(this.file, sectionName) + 1;
+				linePos = Array.IndexOf(file, sectionName) + 1;
             }
             else
             {
@@ -322,8 +322,8 @@ namespace SMLimitless.IO
         /// <returns>True if the section exists, false if it doesn't.</returns>
         public bool SectionExists(string sectionName)
         {
-            sectionName = this.CompleteSectionName(sectionName);
-            if (Array.IndexOf(this.file, sectionName) == -1)
+            sectionName = CompleteSectionName(sectionName);
+            if (Array.IndexOf(file, sectionName) == -1)
             {
                 return false;
             }
@@ -338,23 +338,23 @@ namespace SMLimitless.IO
         /// <returns>True if the section if empty, false if it is not.</returns>
         public bool SectionEmpty(string sectionName)
         {
-            sectionName = this.CompleteSectionName(sectionName);
-            int index = Array.IndexOf(this.file, sectionName) + 1;
-            if (index == this.file.Length)
+            sectionName = CompleteSectionName(sectionName);
+            int index = Array.IndexOf(file, sectionName) + 1;
+            if (index == file.Length)
             {
                 return true;
             }
 
             int entries = 0;
-            while (!this.file[index].StartsWith("["))
+            while (!file[index].StartsWith("["))
             {
-                if (index >= this.file.Length - 1)
+                if (index >= file.Length - 1)
                 {
                     continue;
                 }
 
                 index++;
-                if (!string.IsNullOrEmpty(this.file[index].Trim()))
+                if (!string.IsNullOrEmpty(file[index].Trim()))
                 {
                     entries++;
                 }

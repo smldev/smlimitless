@@ -80,7 +80,6 @@
       <DependentUpon>DebugForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Debug\Logger.cs" />
-    <Compile Include="Editor\EditorButton.cs" />
     <Compile Include="Editor\EditorForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -250,23 +249,6 @@
     </Content>
     <Content Include="Game.ico" />
     <Content Include="GameSettings.txt" />
-    <Content Include="gfx\complex_spritesheet.png" />
-    <Content Include="gfx\complex_spritesheet.txt" />
-    <Content Include="gfx\smb3_goomba.png" />
-    <Content Include="gfx\smb3_goomba.txt" />
-    <Content Include="gfx\smb_grass_top.png" />
-    <Content Include="gfx\smw_concrete_block.png" />
-    <Content Include="gfx\smw_grass_center.png" />
-    <Content Include="gfx\smw_grass_slope1.png" />
-    <Content Include="gfx\smw_grass_slope2.png" />
-    <Content Include="gfx\smw_grass_slope_bottom1.png" />
-    <Content Include="gfx\smw_grass_slope_bottom2.png" />
-    <Content Include="gfx\smw_grass_top.png" />
-    <Content Include="gfx\smw_player_big.png" />
-    <Content Include="gfx\smw_player_big.txt" />
-    <Content Include="gfx\smw_player_simple.png" />
-    <Content Include="gfx\smw_player_simple.txt" />
-    <Content Include="gfx\test_sheet.png" />
     <Content Include="Icon.ico" />
     <Content Include="SML Icon.ico" />
   </ItemGroup>

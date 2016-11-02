@@ -1,44 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using SMLimitless.Forms;
 
 namespace SMLimitless.Debug
 {
 	/// <summary>
-	/// A form that exposes debugging logs and commands to the user.
+	///   A form that exposes debugging logs and commands to the user.
 	/// </summary>
 	[Debug]
 	public partial class DebugForm : Form
 	{
 		/// <summary>
-		/// The maximum number of lines that will be displayed in the log textbox before it begins to remove old lines.
+		///   The maximum number of lines that will be displayed in the log
+		///   textbox before it begins to remove old lines.
 		/// </summary>
 		private const int MaximumDisplayedLines = 200;
 
 		/// <summary>
-		/// The number of lines in the log textbox.
-		/// </summary>
-		private int displayedLines = 0;
-
-		/// <summary>
-		/// A collection of previously submitted commands.
-		/// </summary>
-		private List<string> previousCommands = new List<string>();
-
-		/// <summary>
-		/// The index of the command number that is currently being displayed
-		/// (changed when the user uses KeyUp/KeyDown to change the command).
+		///   The index of the command number that is currently being displayed
+		///   (changed when the user uses KeyUp/KeyDown to change the command).
 		/// </summary>
 		private int displayedCommandNumber = -1;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="DebugForm"/> class.
+		///   The number of lines in the log textbox.
+		/// </summary>
+		private int displayedLines = 0;
+
+		/// <summary>
+		///   A collection of previously submitted commands.
+		/// </summary>
+		private List<string> previousCommands = new List<string>();
+
+		/// <summary>
+		///   Initializes a new instance of the <see cref="DebugForm" /> class.
 		/// </summary>
 		public DebugForm()
 		{
@@ -46,53 +43,7 @@ namespace SMLimitless.Debug
 		}
 
 		/// <summary>
-		/// This method is called when the Submit button is clicked.
-		/// </summary>
-		/// <param name="sender">The sender of the event.</param>
-		/// <param name="e">Arguments for this event.</param>
-		private void ButtonSubmit_Click(object sender, EventArgs e)
-		{
-			SubmitCommand();
-		}
-
-		private void SubmitCommand()
-		{
-			string fullCommand = TextCommand.Text;
-			string[] commandWords = fullCommand.Split(' ');
-			string command = commandWords[0];
-			var arguments = commandWords.Skip(1);
-			TextCommand.Text = "";
-
-			if (!string.IsNullOrEmpty(command))
-			{
-				AddToLogText(command);
-				ProcessCommand(command, arguments);
-			}
-		}
-
-		private void TextCommand_KeyDown(object sender, KeyEventArgs e)
-		{
-			if (e.KeyCode == Keys.Up)
-			{
-				SeekCommand(Direction.Up);
-			}
-			else if (e.KeyCode == Keys.Down)
-			{
-				SeekCommand(Direction.Down);
-			}
-			else if (e.KeyCode == Keys.Enter)
-			{
-				SubmitCommand();
-			}
-			else
-			{
-				// Reset the currently displayed command number in case the user edits whatever's in the box
-				displayedCommandNumber = -1;
-			}
-		}
-
-		/// <summary>
-		/// Adds a string to the debug log text.
+		///   Adds a string to the debug log text.
 		/// </summary>
 		/// <param name="text">The text to add.</param>
 		public void AddToLogText(string text)
@@ -109,6 +60,16 @@ namespace SMLimitless.Debug
 			}
 
 			TextLog.AppendText(text);
+		}
+
+		/// <summary>
+		///   This method is called when the Submit button is clicked.
+		/// </summary>
+		/// <param name="sender">The sender of the event.</param>
+		/// <param name="e">Arguments for this event.</param>
+		private void ButtonSubmit_Click(object sender, EventArgs e)
+		{
+			SubmitCommand();
 		}
 
 		private void ProcessCommand(string command, IEnumerable<string> arguments)
@@ -168,7 +129,7 @@ namespace SMLimitless.Debug
 				// There are no submitted commands.
 				return;
 			}
-			
+
 			if (direction == Direction.Down)
 			{
 				if (displayedCommandNumber == previousCommands.Count - 1)
@@ -193,7 +154,8 @@ namespace SMLimitless.Debug
 				}
 				else if (displayedCommandNumber == -1)
 				{
-					// In the default case, we want to seek to whatever the last command was.
+					// In the default case, we want to seek to whatever the last
+					// command was.
 					displayedCommandNumber = previousCommands.Count - 1;
 					TextCommand.Text = previousCommands[displayedCommandNumber];
 					TextCommand.SelectionStart = 0;
@@ -209,6 +171,43 @@ namespace SMLimitless.Debug
 			else
 			{
 				throw new ArgumentException(string.Format("DebugForm.SeekCommand(Direction): You can only seek up or seek down through commands, not {0}.", direction));
+			}
+		}
+
+		private void SubmitCommand()
+		{
+			string fullCommand = TextCommand.Text;
+			string[] commandWords = fullCommand.Split(' ');
+			string command = commandWords[0];
+			var arguments = commandWords.Skip(1);
+			TextCommand.Text = "";
+
+			if (!string.IsNullOrEmpty(command))
+			{
+				AddToLogText(command);
+				ProcessCommand(command, arguments);
+			}
+		}
+
+		private void TextCommand_KeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.KeyCode == Keys.Up)
+			{
+				SeekCommand(Direction.Up);
+			}
+			else if (e.KeyCode == Keys.Down)
+			{
+				SeekCommand(Direction.Down);
+			}
+			else if (e.KeyCode == Keys.Enter)
+			{
+				SubmitCommand();
+			}
+			else
+			{
+				// Reset the currently displayed command number in case the user
+				// edits whatever's in the box
+				displayedCommandNumber = -1;
 			}
 		}
 	}

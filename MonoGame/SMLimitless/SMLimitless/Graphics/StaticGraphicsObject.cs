@@ -67,10 +67,10 @@ namespace SMLimitless.Graphics
         /// <param name="filePath">The file path to the image to use.</param>
         public void Load(string filePath)
         {
-            if (!this.isLoaded)
+            if (!isLoaded)
             {
                 this.filePath = filePath;
-                this.isLoaded = true;
+				isLoaded = true;
             }
         }
 
@@ -90,10 +90,10 @@ namespace SMLimitless.Graphics
         /// </summary>
         public void LoadContent()
         {
-            if (this.isLoaded && !this.isContentLoaded)
+            if (isLoaded && !isContentLoaded)
             {
-                this.texture = GraphicsManager.LoadTextureFromFile(this.filePath);
-                this.isContentLoaded = true;
+				texture = GraphicsManager.LoadTextureFromFile(filePath);
+				isContentLoaded = true;
             }
         }
 
@@ -120,7 +120,7 @@ namespace SMLimitless.Graphics
         /// <param name="color">The color to shade this object. Use Color.White for no shading.</param>
         public void Draw(Vector2 position, Color color)
         {
-            GameServices.SpriteBatch.Draw(this.texture, position, color);
+            GameServices.SpriteBatch.Draw(texture, position, color);
         }
 
         /// <summary>
@@ -131,9 +131,16 @@ namespace SMLimitless.Graphics
         /// <param name="effects">Defines sprite mirroring.</param>
         public void Draw(Vector2 position, Color color, SpriteEffects effects)
         {
-            GameServices.SpriteBatch.Draw(this.texture, position, color, effects);
+            GameServices.SpriteBatch.Draw(texture, position, color, effects);
         }
 
+		/// <summary>
+		/// Draws a portion of this object to the screen.
+		/// </summary>
+		/// <param name="position">The position to draw this object. Cropping will not affect the position.</param>
+		/// <param name="cropping">The portion of the object to draw.</param>
+		/// <param name="color">The color to shade this object. Use Color.White for no shading.</param>
+		/// <param name="effects">Defines sprite mirroring.</param>
 		public void Draw(Vector2 position, Rectangle cropping, Color color, SpriteEffects effects)
 		{
 			if (!texture.ValidateCropping(cropping)) { throw new ArgumentException($"The cropping {cropping} was not valid for this texture. (Width: {texture.Width}, Height: {texture.Height})"); }
@@ -152,10 +159,10 @@ namespace SMLimitless.Graphics
         public IGraphicsObject Clone()
         {
             var clone = new StaticGraphicsObject();
-            clone.texture = this.texture;
-            clone.filePath = this.filePath;
-            clone.isLoaded = this.isLoaded;
-            clone.isContentLoaded = this.isContentLoaded;
+            clone.texture = texture;
+            clone.filePath = filePath;
+            clone.isLoaded = isLoaded;
+            clone.isContentLoaded = isContentLoaded;
             return clone;
         }
 
@@ -166,12 +173,12 @@ namespace SMLimitless.Graphics
         /// <param name="owner">The CGO that owns this object.</param>
         internal void Load(Dictionary<string, string> section, ComplexGraphicsObject owner)
         {
-            if (!this.isLoaded)
+            if (!isLoaded)
             {
-                this.CgoSourceRect = Vector2Extensions.Parse(section["Frame"]).ToRectangle(owner.FrameSize);
-                this.filePath = owner.FilePath;
-                this.CgoOwner = owner;
-                this.isLoaded = true;
+				CgoSourceRect = Vector2Extensions.Parse(section["Frame"]).ToRectangle(owner.FrameSize);
+				filePath = owner.FilePath;
+				CgoOwner = owner;
+				isLoaded = true;
             }
         }
 
@@ -182,10 +189,10 @@ namespace SMLimitless.Graphics
         /// <param name="fileTexture">The texture of this object.</param>
         internal void LoadContentCGO(Texture2D fileTexture)
         {
-            if (this.isLoaded && !this.isContentLoaded && this.CgoSourceRect != Rectangle.Empty)
+            if (isLoaded && !isContentLoaded && CgoSourceRect != Rectangle.Empty)
             {
-                this.texture = fileTexture.Crop(this.CgoSourceRect);
-                this.isContentLoaded = true;
+				texture = fileTexture.Crop(CgoSourceRect);
+				isContentLoaded = true;
             }
         }
 
@@ -195,9 +202,9 @@ namespace SMLimitless.Graphics
         /// <returns>The size of this object.</returns>
         public Vector2 GetSize()
         {
-            if (this.isContentLoaded)
+            if (isContentLoaded)
             {
-                return new Vector2(this.texture.Width, this.texture.Height);
+                return new Vector2(texture.Width, texture.Height);
             }
             else
             {

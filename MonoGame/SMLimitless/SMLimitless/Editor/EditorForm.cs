@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework.Graphics;
 using SMLimitless.Content;
@@ -17,28 +12,31 @@ using SMLimitless.Sprites.InternalSprites;
 
 namespace SMLimitless.Editor
 {
+	/// <summary>
+	///   A form that can be used to select, place, and modify game objects in levels.
+	/// </summary>
 	public partial class EditorForm : Form
 	{
-		private Level level;
-		private Section section;
-
-		private Dictionary<int, TileDefaultState> buttonTileDataMapping = new Dictionary<int, TileDefaultState>();
 		private Dictionary<int, SpriteData> buttonSpriteDataMapping = new Dictionary<int, SpriteData>();
-
-		/// <summary>
-		/// Gets the state of the level editor.
-		/// </summary>
-		public EditorState EditorState { get; private set; } = EditorState.Cursor;
+		private Dictionary<int, TileDefaultState> buttonTileDataMapping = new Dictionary<int, TileDefaultState>();
+		private Level level;
+		private PropertyForm propertyForm;
+		private Section section;
 		private EditorSelectedObject selectedObject;
 
-		private PropertyForm propertyForm;
+		/// <summary>
+		///   Gets the state of the level editor.
+		/// </summary>
+		public EditorState EditorState { get; private set; } = EditorState.Cursor;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="EditorForm"/> class.
+		///   Initializes a new instance of the <see cref="EditorForm" /> class.
 		/// </summary>
 		/// <param name="level">The level being edited.</param>
 		/// <param name="section">The section being edited.</param>
-		/// <param name="selectedObject">An <see cref="EditorSelectedObject"/> instance in the section.</param>
+		/// <param name="selectedObject">
+		///   An <see cref="EditorSelectedObject" /> instance in the section.
+		/// </param>
 		public EditorForm(Level level, Section section, EditorSelectedObject selectedObject)
 		{
 			InitializeComponent();
@@ -51,11 +49,36 @@ namespace SMLimitless.Editor
 			PropertySection.SelectedObject = section;
 
 			propertyForm = new PropertyForm(GetSelectedObject(selectedObject));
-			selectedObject.SelectedObjectChanged += (sender, e) => {
+			selectedObject.SelectedObjectChanged += (sender, e) =>
+			{
 				propertyForm.DisplayedObject = GetSelectedObject(selectedObject);
 			};
 
 			PopulateObjectTabs();
+		}
+
+		private void ButtonCursor_Click(object sender, EventArgs e)
+		{
+			selectedObject.SelectedObjectType = EditorSelectedObjectType.Nothing;
+		}
+
+		private void ButtonDelete_Click(object sender, EventArgs e)
+		{
+			selectedObject.SelectedObjectType = EditorSelectedObjectType.Delete;
+		}
+
+		private void EditorForm_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			propertyForm.Close();
+			propertyForm.Dispose();
+			propertyForm = null;
+
+			selectedObject.UnsubscribeAllHandlers();
+		}
+
+		private void EditorForm_Load(object sender, EventArgs e)
+		{
+			propertyForm.Show();
 		}
 
 		private object GetSelectedObject(EditorSelectedObject selectedObject)
@@ -151,50 +174,5 @@ namespace SMLimitless.Editor
 				}
 			}
 		}
-
-		private void ButtonDelete_Click(object sender, EventArgs e)
-		{
-			selectedObject.SelectedObjectType = EditorSelectedObjectType.Delete;
-		}
-
-		private void ButtonCursor_Click(object sender, EventArgs e)
-		{
-			selectedObject.SelectedObjectType = EditorSelectedObjectType.Nothing;
-		}
-
-		private void EditorForm_Load(object sender, EventArgs e)
-		{
-			propertyForm.Show();
-		}
-
-		private void EditorForm_FormClosing(object sender, FormClosingEventArgs e)
-		{
-			propertyForm.Close();
-			propertyForm.Dispose();
-			propertyForm = null;
-
-			selectedObject.UnsubscribeAllHandlers();
-		}
-	}
-
-	/// <summary>
-	/// An enumeration of states that the level editor can be in.
-	/// </summary>
-	public enum EditorState
-	{
-		/// <summary>
-		/// An object is selected and can be placed in the section.
-		/// </summary>
-		ObjectSelected,
-
-		/// <summary>
-		/// No object is selected, but an object can be selected by clicking it.
-		/// </summary>
-		Cursor,
-
-		/// <summary>
-		/// Any object clicked on will be removed from the section.
-		/// </summary>
-		Delete
 	}
 }

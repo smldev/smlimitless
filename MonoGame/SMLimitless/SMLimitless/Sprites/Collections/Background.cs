@@ -58,7 +58,7 @@ namespace SMLimitless.Sprites.Collections
         /// <param name="owner">A reference to the section that owns this background.</param>
         public Background(Section owner)
         {
-            this.Layers = new List<BackgroundLayer>();
+			Layers = new List<BackgroundLayer>();
             this.owner = owner;
         }
 
@@ -67,7 +67,7 @@ namespace SMLimitless.Sprites.Collections
 		/// </summary>
 		public void Initialize()
 		{
-			this.Layers.ForEach(l => l.Initialize());
+			Layers.ForEach(l => l.Initialize());
 		}
 
 		/// <summary>
@@ -75,14 +75,14 @@ namespace SMLimitless.Sprites.Collections
         /// </summary>
         public void LoadContent()
         {
-            if (!this.isContentLoaded)
+            if (!isContentLoaded)
             {
-                Color[] color = new Color[] { this.TopColor, this.BottomColor };
-                this.backgroundGradient = new Texture2D(GameServices.Graphics, 1, 2);
-                this.backgroundGradient.SetData<Color>(color);
+                Color[] color = new Color[] { TopColor, BottomColor };
+				backgroundGradient = new Texture2D(GameServices.Graphics, 1, 2);
+				backgroundGradient.SetData<Color>(color);
 
-                this.Layers.ForEach(l => l.LoadContent());
-                this.isContentLoaded = true;
+				Layers.ForEach(l => l.LoadContent());
+				isContentLoaded = true;
             }
         }
 
@@ -92,7 +92,7 @@ namespace SMLimitless.Sprites.Collections
 		/// </summary>
 		public void Update()
 		{
-			this.Layers.ForEach(l => l.Update());
+			Layers.ForEach(l => l.Update());
 		}
 
 		/// <summary>
@@ -105,11 +105,11 @@ namespace SMLimitless.Sprites.Collections
 			// Thus, the texture needs to be made taller than the screen - the top needs to be drawn one-third of a screen higher than the screen,
 			// and the height needs to be a screen height plus two-thirds of a screen height.
 			float screenHeight = GameServices.ScreenSize.Y;
-			float gradientTop = this.owner.Camera.Viewport.Y - (screenHeight / 3f);
-			float gradientHeight = this.owner.Camera.Viewport.Height + (screenHeight * (2f / 3f));
-			GameServices.SpriteBatch.Draw(this.backgroundGradient, new Rectangle((int)this.owner.Camera.Viewport.X, (int)gradientTop, (int)this.owner.Camera.ViewportSize.X, (int)gradientHeight), Color.White);
+			float gradientTop = owner.Camera.Viewport.Y - (screenHeight / 3f);
+			float gradientHeight = owner.Camera.Viewport.Height + (screenHeight * (2f / 3f));
+			GameServices.SpriteBatch.Draw(backgroundGradient, new Rectangle((int)owner.Camera.Viewport.X, (int)gradientTop, (int)owner.Camera.ViewportSize.X, (int)gradientHeight), Color.White);
 
-			this.Layers.ForEach(l => l.Draw());
+			Layers.ForEach(l => l.Draw());
 		}
 
 		/// <summary>
@@ -118,9 +118,9 @@ namespace SMLimitless.Sprites.Collections
 		/// <param name="layer">The background layer to add.</param>
 		public void AddLayerToFront(BackgroundLayer layer)
 		{
-			this.Layers.Add(layer);
+			Layers.Add(layer);
 
-			if (this.isContentLoaded)
+			if (isContentLoaded)
 			{
 				layer.LoadContent();
 			}
@@ -134,13 +134,13 @@ namespace SMLimitless.Sprites.Collections
 		[Obsolete]
 		public object GetSerializableObjects()
 		{
-			List<object> backgroundLayerObjects = new List<object>(this.Layers.Count);
-			this.Layers.ForEach(b => backgroundLayerObjects.Add(b.GetSerializableObjects()));
+			List<object> backgroundLayerObjects = new List<object>(Layers.Count);
+			Layers.ForEach(b => backgroundLayerObjects.Add(b.GetSerializableObjects()));
 
 			return new
 			{
-				topColor = this.TopColor.Serialize(),
-				bottomColor = this.BottomColor.Serialize(),
+				topColor = TopColor.Serialize(),
+				bottomColor = BottomColor.Serialize(),
 				layers = backgroundLayerObjects
 			};
 		}
@@ -152,7 +152,7 @@ namespace SMLimitless.Sprites.Collections
 		[Obsolete]
 		public string Serialize()
 		{
-			return JObject.FromObject(this.GetSerializableObjects()).ToString();
+			return JObject.FromObject(GetSerializableObjects()).ToString();
 		}
 
 		/// <summary>
@@ -165,17 +165,17 @@ namespace SMLimitless.Sprites.Collections
 			JObject obj = JObject.Parse(json);
 
 			// Deserialize the root objects first.
-			this.TopColor = obj["topColor"].ToColor();
-			this.BottomColor = obj["bottomColor"].ToColor();
+			TopColor = obj["topColor"].ToColor();
+			BottomColor = obj["bottomColor"].ToColor();
 
 			// Now, get the Layers.
 			JArray layersData = (JArray)obj["layers"];
 
 			foreach (var layerData in layersData)
 			{
-				BackgroundLayer layer = new BackgroundLayer(this.owner.Camera, this.owner.Bounds);
+				BackgroundLayer layer = new BackgroundLayer(owner.Camera, owner.Bounds);
 				layer.Deserialize(layerData.ToString());
-				this.Layers.Add(layer);
+				Layers.Add(layer);
 			}
 		}
     }

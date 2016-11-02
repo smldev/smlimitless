@@ -15,8 +15,6 @@ using SMLimitless.Interfaces;
 
 namespace SMLimitless.Physics
 {
-	// why is this a class? make it a struct
-
 	/// <summary>
 	/// Represents a right triangle, used for sloped tiles.
 	/// </summary>
@@ -40,15 +38,15 @@ namespace SMLimitless.Physics
         {
             get
             {
-                if (this.SlopedSides == RtSlopedSides.TopLeft || this.SlopedSides == RtSlopedSides.BottomRight)
+                if (SlopedSides == RtSlopedSides.TopLeft || SlopedSides == RtSlopedSides.BottomRight)
                 {
                     // With these two triangles (top-left and bottom-right), the slope goes up as you move from left to right, thus a positive slope.
-                    return this.Bounds.Height / this.Bounds.Width;
+                    return Bounds.Height / Bounds.Width;
                 }
                 else
                 {
                     // With the other two triangles (top-right and bottom-left), the slope goes down as you move from left to right thus a negative slope.
-                    return -this.Bounds.Height / this.Bounds.Width;
+                    return -Bounds.Height / Bounds.Width;
                 }
             }
         }
@@ -60,20 +58,20 @@ namespace SMLimitless.Physics
         {
             get
             {
-                switch (this.SlopedSides)
+                switch (SlopedSides)
                 {
                     case RtSlopedSides.TopLeft:
                         // For a top-left triangle, the point is at the bottom-right corner.
-                        return new Vector2(this.Bounds.Right, this.Bounds.Bottom);
+                        return new Vector2(Bounds.Right, Bounds.Bottom);
                     case RtSlopedSides.TopRight:
                         // For a top-right triangle, the point is at the bottom-left corner.
-                        return new Vector2(this.Bounds.Left, this.Bounds.Bottom);
+                        return new Vector2(Bounds.Left, Bounds.Bottom);
                     case RtSlopedSides.BottomLeft:
                         // For a bottom-left triangle, the point is at the top-right corner.
-                        return new Vector2(this.Bounds.Right, this.Bounds.Top);
+                        return new Vector2(Bounds.Right, Bounds.Top);
                     case RtSlopedSides.BottomRight:
                         // For a bottom-right triangle, the point is at the top-left corner.
-                        return new Vector2(this.Bounds.Left, this.Bounds.Top);
+                        return new Vector2(Bounds.Left, Bounds.Top);
                     default:
                         // This can't happen, but the compiler complains.
                         return new Vector2(float.NaN, float.NaN);
@@ -88,15 +86,15 @@ namespace SMLimitless.Physics
         {
             get
             {
-                if (this.SlopedSides == RtSlopedSides.TopLeft || this.SlopedSides == RtSlopedSides.BottomRight)
+                if (SlopedSides == RtSlopedSides.TopLeft || SlopedSides == RtSlopedSides.BottomRight)
                 {
                     // Bottom-left corner.
-                    return new Vector2(this.Bounds.Left, this.Bounds.Bottom);
+                    return new Vector2(Bounds.Left, Bounds.Bottom);
                 }
                 else
                 {
                     // Bottom-right corner.
-                    return new Vector2(this.Bounds.Right, this.Bounds.Bottom);
+                    return new Vector2(Bounds.Right, Bounds.Bottom);
                 }
             }
         }
@@ -108,15 +106,15 @@ namespace SMLimitless.Physics
         {
             get
             {
-                if (this.SlopedSides == RtSlopedSides.TopLeft || this.SlopedSides == RtSlopedSides.BottomRight)
+                if (SlopedSides == RtSlopedSides.TopLeft || SlopedSides == RtSlopedSides.BottomRight)
                 {
                     // Top-right corner.
-                    return new Vector2(this.Bounds.Right, this.Bounds.Top);
+                    return new Vector2(Bounds.Right, Bounds.Top);
                 }
                 else
                 {
                     // Top-left corner.
-                    return new Vector2(this.Bounds.Left, this.Bounds.Top);
+                    return new Vector2(Bounds.Left, Bounds.Top);
                 }
             }
         }
@@ -136,7 +134,7 @@ namespace SMLimitless.Physics
             {
                 // Ordinarily, the y-intersect is equal to (Slope * x) - y,
                 // but since the Y-axis is flipped in XNA, it's equal to (Slope * x) + y.
-                return (this.Slope * this.Point1.X) + this.Point1.Y;
+                return (Slope * Point1.X) + Point1.Y;
             }
         }
 
@@ -158,7 +156,7 @@ namespace SMLimitless.Physics
         {
             get
             {
-                if (this.SlopedSides == RtSlopedSides.TopLeft || this.SlopedSides == RtSlopedSides.BottomLeft)
+                if (SlopedSides == RtSlopedSides.TopLeft || SlopedSides == RtSlopedSides.BottomLeft)
                 {
                     return HorizontalDirection.Left;
                 }
@@ -176,7 +174,7 @@ namespace SMLimitless.Physics
         {
             get
             {
-                if (this.SlopedSides == RtSlopedSides.TopLeft || this.SlopedSides == RtSlopedSides.TopRight)
+                if (SlopedSides == RtSlopedSides.TopLeft || SlopedSides == RtSlopedSides.TopRight)
                 {
                     return VerticalDirection.Up;
                 }
@@ -194,8 +192,8 @@ namespace SMLimitless.Physics
         /// <param name="slopedSides">Which sides of the triangle are sloped.</param>
         public RightTriangle(BoundingRectangle bounds, RtSlopedSides slopedSides)
         {
-            this.Bounds = bounds;
-            this.SlopedSides = slopedSides;
+			Bounds = bounds;
+			SlopedSides = slopedSides;
         }
 
         /// <summary>
@@ -221,7 +219,7 @@ namespace SMLimitless.Physics
         public Vector2 GetPointOnSlope(float x)
         {
             // Y = mx + b.
-            if (x <= this.Bounds.Left || x >= this.Bounds.Right)
+            if (x <= Bounds.Left || x >= Bounds.Right)
             {
                 return new Vector2(float.NaN);
             }
@@ -229,7 +227,7 @@ namespace SMLimitless.Physics
             // Ordinarily, y = mx + b.
             // But since the Y-axis is reversed, y = mx - b.
             // But we still need a positive value, so we return negative Y.
-            float y = (this.Slope * x) - this.YIntersect;
+            float y = (Slope * x) - YIntersect;
             return new Vector2(x, (-y));
         }
 
@@ -256,7 +254,7 @@ namespace SMLimitless.Physics
         /// <returns>A point directly on the line.</returns>
         public Vector2 GetPointOnLine(float x)
         {
-            float y = (this.Slope * x) - this.YIntersect;
+            float y = (Slope * x) - YIntersect;
             return new Vector2(x, -y);
         }
 
@@ -278,14 +276,14 @@ namespace SMLimitless.Physics
         /// <returns>True if the point is within the shape, false if otherwise.</returns>
         public bool Within(Vector2 point, bool adjacentPointsAreWithin)
         {
-            if (!this.Bounds.Within(point, adjacentPointsAreWithin))
+            if (!Bounds.Within(point, adjacentPointsAreWithin))
             {
                 return false;
             }
 
-            float pointOnSlopeY = this.GetClampedPointOnSlope(point.X).Y;
+            float pointOnSlopeY = GetClampedPointOnSlope(point.X).Y;
 
-            if (this.SlopedSides == RtSlopedSides.TopLeft || this.SlopedSides == RtSlopedSides.TopRight)
+            if (SlopedSides == RtSlopedSides.TopLeft || SlopedSides == RtSlopedSides.TopRight)
             {
                 if (adjacentPointsAreWithin)
                 {
@@ -302,7 +300,7 @@ namespace SMLimitless.Physics
                     }
                 }
             }
-            else if (this.SlopedSides == RtSlopedSides.BottomLeft || this.SlopedSides == RtSlopedSides.BottomRight)
+            else if (SlopedSides == RtSlopedSides.BottomLeft || SlopedSides == RtSlopedSides.BottomRight)
             {
                 if (adjacentPointsAreWithin)
                 {
@@ -377,7 +375,7 @@ namespace SMLimitless.Physics
             }
             else
             {
-                return this.ResolveSlopeCollision(rect, this.Bounds.GetCollisionResolution(rect));
+                return ResolveSlopeCollision(rect, Bounds.GetCollisionResolution(rect));
             }
         }
 
@@ -389,7 +387,7 @@ namespace SMLimitless.Physics
         /// <returns>A vector representing the collision depth.</returns>
         public Vector2 GetIntersectionDepth(BoundingRectangle that)
         {
-            return this.GetCollisionResolution(that);
+            return GetCollisionResolution(that);
         }
 
         /// <summary>
@@ -399,11 +397,11 @@ namespace SMLimitless.Physics
         /// <returns>The position of the top of this triangle.</returns>
         public Vector2 GetTopPoint(float x)
         {
-            if (this.SlopedSides == RtSlopedSides.TopLeft || this.SlopedSides == RtSlopedSides.TopRight)
+            if (SlopedSides == RtSlopedSides.TopLeft || SlopedSides == RtSlopedSides.TopRight)
             {
-                return this.GetPointOnSlope(x);
+                return GetPointOnSlope(x);
             }
-            return new Vector2(x, this.Bounds.Top);
+            return new Vector2(x, Bounds.Top);
         }
 
 		/// <summary>
@@ -413,7 +411,7 @@ namespace SMLimitless.Physics
 		/// <returns>-1 if the point is above the slope line, 1 if the point is below the slope line, 0 if otherwise.</returns>
 		public int AboveOrBelowSlopeLine(Vector2 point)
 		{
-			float slopeIntersect = this.GetPointOnLine(point.X).Y;
+			float slopeIntersect = GetPointOnLine(point.X).Y;
 			if (slopeIntersect < point.Y) { return -1; }
 			else if (slopeIntersect > point.Y) { return 1; }
 			else { return 0; }
@@ -429,14 +427,14 @@ namespace SMLimitless.Physics
         {
 			Vector2 topCenter = (HorizontalSlopedSide == HorizontalDirection.Left) ? that.TopRight : that.TopLeft;
 			Vector2 bottomCenter = (HorizontalSlopedSide == HorizontalDirection.Left) ? that.BottomRight : that.BottomLeft;
-            Vector2 pointOnSlope = this.GetPointOnSlope((HorizontalSlopedSide == HorizontalDirection.Left) ? that.Right : that.Left);
+            Vector2 pointOnSlope = GetPointOnSlope((HorizontalSlopedSide == HorizontalDirection.Left) ? that.Right : that.Left);
 
             if (pointOnSlope == Vector2.Zero)
             {
                 return Vector2.Zero;
             }
 
-            if (this.SlopedSides == RtSlopedSides.TopLeft || this.SlopedSides == RtSlopedSides.TopRight)
+            if (SlopedSides == RtSlopedSides.TopLeft || SlopedSides == RtSlopedSides.TopRight)
             {
                 if (bottomCenter.Y > pointOnSlope.Y)
                 {
@@ -444,7 +442,7 @@ namespace SMLimitless.Physics
                     return new Vector2(0f, -(bottomCenter.Y - pointOnSlope.Y));
                 }
             }
-            else if (this.SlopedSides == RtSlopedSides.BottomLeft || this.SlopedSides == RtSlopedSides.BottomRight)
+            else if (SlopedSides == RtSlopedSides.BottomLeft || SlopedSides == RtSlopedSides.BottomRight)
             {
                 if (topCenter.Y < pointOnSlope.Y)
                 {
@@ -462,27 +460,27 @@ namespace SMLimitless.Physics
         /// <param name="debug">Draws some useful debug information.</param>
         public void Draw(bool debug)
         {
-            GameServices.SpriteBatch.DrawLine(1f, Color.White, this.Point90, this.Point1);
-            GameServices.SpriteBatch.DrawLine(1f, Color.White, this.Point90, this.Point2);
-            GameServices.SpriteBatch.DrawLine(1f, Color.White, this.Point1, this.Point2);
+            GameServices.SpriteBatch.DrawLine(1f, Color.White, Point90, Point1);
+            GameServices.SpriteBatch.DrawLine(1f, Color.White, Point90, Point2);
+            GameServices.SpriteBatch.DrawLine(1f, Color.White, Point1, Point2);
 
             if (debug)
             {
                 // Draw the line coincident to the slope.
                 // For the inverted Y-axis, the slope-intercept formula, solved for x, is x = (-y + b) / m
                 Vector2 screenSize = GameServices.ScreenSize;
-                Vector2 lineStart = new Vector2((-screenSize.Y + this.YIntersect) / this.Slope, screenSize.Y);
-                Vector2 lineEnd = new Vector2(this.YIntersect / this.Slope, 0f);
+                Vector2 lineStart = new Vector2((-screenSize.Y + YIntersect) / Slope, screenSize.Y);
+                Vector2 lineEnd = new Vector2(YIntersect / Slope, 0f);
                 GameServices.SpriteBatch.DrawLine(1f, Color.ForestGreen, lineStart, lineEnd);
 
                 // DrawLine is a little weird with drawing the right-triangle - 
                 // the bounds look visually larger than the triangle, even though they are the right sizes.
                 // So we'll correct the bounds so they look right.
-                Rectangle drawBounds = new Rectangle((int)this.Bounds.X + 1, (int)this.Bounds.Y - 1, (int)this.Bounds.Width, (int)this.Bounds.Height);
+                Rectangle drawBounds = new Rectangle((int)Bounds.X + 1, (int)Bounds.Y - 1, (int)Bounds.Width, (int)Bounds.Height);
                 drawBounds.DrawOutline(Color.Red);
 
                 // Draw some useful debug information.
-                GameServices.DebugFont.DrawString(this.ToString(), new Vector2(this.Bounds.X, this.Bounds.Y));
+                GameServices.DebugFont.DrawString(ToString(), new Vector2(Bounds.X, Bounds.Y));
             }
         }
 
@@ -492,43 +490,12 @@ namespace SMLimitless.Physics
         /// <returns>A string representation.</returns>
         public override string ToString()
         {
-            string boundsString = string.Format("Bounds: X:{0}, Y:{1}, Width:{2}, Height:{3}{4}", this.Bounds.X, this.Bounds.Y, this.Bounds.Width, this.Bounds.Height, Environment.NewLine);
-            string point90String = string.Format("Point 90: X:{0}, Y:{1}{2}", this.Point90.X, this.Point90.Y, Environment.NewLine);
-            string point1String = string.Format("Point 1: X:{0}, Y:{1}{2}", this.Point1.X, this.Point1.Y, Environment.NewLine);
-            string point2String = string.Format("Point 2: X:{0}, Y:{1}{2}", this.Point2.X, this.Point2.Y, Environment.NewLine);
-            string slopeString = string.Format("Slope: {0}, Y-Intersect: {1}, Sloped Sides:{2}{3}", this.Slope, this.YIntersect, this.SlopedSides.ToString(), Environment.NewLine);
+            string boundsString = string.Format("Bounds: X:{0}, Y:{1}, Width:{2}, Height:{3}{4}", Bounds.X, Bounds.Y, Bounds.Width, Bounds.Height, Environment.NewLine);
+            string point90String = string.Format("Point 90: X:{0}, Y:{1}{2}", Point90.X, Point90.Y, Environment.NewLine);
+            string point1String = string.Format("Point 1: X:{0}, Y:{1}{2}", Point1.X, Point1.Y, Environment.NewLine);
+            string point2String = string.Format("Point 2: X:{0}, Y:{1}{2}", Point2.X, Point2.Y, Environment.NewLine);
+            string slopeString = string.Format("Slope: {0}, Y-Intersect: {1}, Sloped Sides:{2}{3}", Slope, YIntersect, SlopedSides.ToString(), Environment.NewLine);
             return string.Concat(boundsString, point90String, point1String, point2String, slopeString);
         }
-    }
-
-    /// <summary>
-    /// An enumeration defining which sides of a right triangle are sloped.
-    /// </summary>
-    public enum RtSlopedSides
-    {
-		/// <summary>
-		/// A default value. Do not use.
-		/// </summary>
-		Default,
-
-        /// <summary>
-        /// The top and left sides of the right triangle are sloped.
-        /// </summary>
-        TopLeft,
-
-        /// <summary>
-        /// The top and right sides of the right triangle are sloped.
-        /// </summary>
-        TopRight,
-
-        /// <summary>
-        /// The bottom and left sides of the right triangle are sloped.
-        /// </summary>
-        BottomLeft,
-
-        /// <summary>
-        /// The bottom and right sides of the right triangle are sloped.
-        /// </summary>
-        BottomRight
     }
 }

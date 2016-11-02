@@ -65,30 +65,4 @@ namespace SMLimitless.Physics
 			// TODO: implement unregistering of this setting
 		}
     }
-
-	/// <summary>
-	/// Enumerates the types a physics setting can be.
-	/// </summary>
-	public enum PhysicsSettingType
-	{
-		/// <summary>
-		/// Represents a setting that is integral (a whole number).
-		/// </summary>
-		Integer,
-
-		/// <summary>
-		/// Represents a setting that is a floating point number.
-		/// </summary>
-		FloatingPoint,
-
-		/// <summary>
-		/// Represents a setting that is a Boolean true/false value.
-		/// </summary>
-		Boolean,
-
-		/// <summary>
-		/// Represents a setting that has another type not otherwise listed here.
-		/// </summary>
-		Other
-	}
 }

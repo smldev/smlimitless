@@ -14,12 +14,12 @@ using SMLimitless.Physics;
 namespace SMLimitless.Extensions
 {
 	/// <summary>
-	/// Contains extension methods for the Vector2 structure.
+	///   Contains extension methods for the Vector2 structure.
 	/// </summary>
 	public static class Vector2Extensions
 	{
 		/// <summary>
-		/// Returns a vector with the absolute values of the components.
+		///   Returns a vector with the absolute values of the components.
 		/// </summary>
 		/// <param name="vector">The vector to get the absolute value of.</param>
 		/// <returns>A vector with the absolute values of the components.</returns>
@@ -29,7 +29,7 @@ namespace SMLimitless.Extensions
 		}
 
 		/// <summary>
-		/// Converts a string containing compact vectors into a list vectors.
+		///   Converts a string containing compact vectors into a list vectors.
 		/// </summary>
 		/// <param name="value">The string containing the compact vectors.</param>
 		/// <returns>A list of vectors.</returns>
@@ -48,21 +48,7 @@ namespace SMLimitless.Extensions
 		}
 
 		/// <summary>
-		/// Gets the linear distance between any two points.
-		/// </summary>
-		/// <param name="a">The first point.</param>
-		/// <param name="b">The second point.</param>
-		/// <returns>The linear distance between any two points.</returns>
-		public static float GetDistance(this Vector2 a, Vector2 b)
-		{
-			float xDistance = (b.X - a.X) * (b.X - a.X);
-			float yDistance = (b.Y - a.Y) * (b.Y - a.Y);
-
-			return (float)Math.Sqrt(xDistance + yDistance);
-		}
-
-		/// <summary>
-		/// Floors both components of a Vector2.
+		///   Floors both components of a Vector2.
 		/// </summary>
 		/// <param name="vector">The vector to floor.</param>
 		/// <returns>The floored vector.</returns>
@@ -72,29 +58,38 @@ namespace SMLimitless.Extensions
 		}
 
 		/// <summary>
-		/// Floors and Vector2 and divides the result.
+		///   Floors and Vector2 and divides the result.
 		/// </summary>
 		/// <param name="vector">The original vector to floor and divide.</param>
-		/// <param name="divisor">The number by which to divide the floored vector by.</param>
-		/// <returns>A vector with both components floored and divided by the divisor.</returns>
+		/// <param name="divisor">
+		///   The number by which to divide the floored vector by.
+		/// </param>
+		/// <returns>
+		///   A vector with both components floored and divided by the divisor.
+		/// </returns>
 		public static Vector2 FloorDivide(this Vector2 vector, float divisor)
 		{
 			return new Vector2((float)Math.Floor(vector.X / divisor), (float)Math.Floor(vector.Y / divisor));
 		}
 
 		/// <summary>
-		/// Floors and Vector2 and divides the result by another vector.
+		///   Floors and Vector2 and divides the result by another vector.
 		/// </summary>
 		/// <param name="vector">The original vector to floor and divide.</param>
-		/// <param name="divisor">The vector by which to divide the floored vector by.</param>
-		/// <returns>A vector with both components floored and divided by the components in the divisor.</returns>
+		/// <param name="divisor">
+		///   The vector by which to divide the floored vector by.
+		/// </param>
+		/// <returns>
+		///   A vector with both components floored and divided by the components
+		///   in the divisor.
+		/// </returns>
 		public static Vector2 FloorDivide(this Vector2 vector, Vector2 divisor)
 		{
 			return new Vector2((float)Math.Floor(vector.X / divisor.X), (float)Math.Floor(vector.Y / divisor.Y));
 		}
 
 		/// <summary>
-		/// Converts a string, formatted as "x,y", into a Vector2.
+		///   Converts a string, formatted as "x,y", into a Vector2.
 		/// </summary>
 		/// <param name="value">The string from which to convert.</param>
 		/// <returns>A Vector2 containing the values of the string.</returns>
@@ -112,7 +107,7 @@ namespace SMLimitless.Extensions
 		}
 
 		/// <summary>
-		/// Gets the angle between two given vectors.
+		///   Gets the angle between two given vectors.
 		/// </summary>
 		/// <param name="a">The first vector.</param>
 		/// <param name="b">The second vector.</param>
@@ -124,10 +119,29 @@ namespace SMLimitless.Extensions
 		}
 
 		/// <summary>
-		/// Given a <see cref="Vector2"/> instance, returns a flagged <see cref="FlaggedDirection"/> value indicating the direction of each component.
+		///   Gets the linear distance between any two points.
+		/// </summary>
+		/// <param name="a">The first point.</param>
+		/// <param name="b">The second point.</param>
+		/// <returns>The linear distance between any two points.</returns>
+		public static float GetDistance(this Vector2 a, Vector2 b)
+		{
+			float xDistance = (b.X - a.X) * (b.X - a.X);
+			float yDistance = (b.Y - a.Y) * (b.Y - a.Y);
+
+			return (float)Math.Sqrt(xDistance + yDistance);
+		}
+
+		/// <summary>
+		///   Given a <see cref="Vector2" /> instance, returns a flagged <see
+		///   cref="FlaggedDirection" /> value indicating the direction of each component.
 		/// </summary>
 		/// <param name="intersect">The vector to get the directions of.</param>
-		/// <returns>A <see cref="FlaggedDirection"/> instance. "Left" is set for X &lt; 0, "Right" is set for X &gt; 0, "Up" is set for Y &lt; 0, "Down" is set for Y &gt; 0, "None" is set for X = Y = 0.</returns>
+		/// <returns>
+		///   A <see cref="FlaggedDirection" /> instance. "Left" is set for X
+		///   &lt; 0, "Right" is set for X &gt; 0, "Up" is set for Y &lt; 0,
+		///   "Down" is set for Y &gt; 0, "None" is set for X = Y = 0.
+		/// </returns>
 		public static FlaggedDirection GetIntersectionDirection(this Vector2 intersect)
 		{
 			FlaggedDirection result = FlaggedDirection.None;
@@ -141,11 +155,19 @@ namespace SMLimitless.Extensions
 		}
 
 		/// <summary>
-		/// Given a resolution distance, gets the direction of the resolution.
+		///   Given a resolution distance, gets the direction of the resolution.
 		/// </summary>
-		/// <param name="intersect">A <see cref="Vector2"/> instance with at least one component equal to zero.</param>
-		/// <returns>The direction in which a resolution occurs, or Direction.None if both components of <paramref name="intersect"/> are zero.</returns>
-		/// <exception cref="ArgumentException">Thrown if neither component of <paramref name="intersect"/> are zero.</exception>
+		/// <param name="intersect">
+		///   A <see cref="Vector2" /> instance with at least one component equal
+		///   to zero.
+		/// </param>
+		/// <returns>
+		///   The direction in which a resolution occurs, or Direction.None if
+		///   both components of <paramref name="intersect" /> are zero.
+		/// </returns>
+		/// <exception cref="ArgumentException">
+		///   Thrown if neither component of <paramref name="intersect" /> are zero.
+		/// </exception>
 		public static Direction GetResolutionDirection(this Vector2 intersect)
 		{
 			if (intersect.X != 0f && intersect.Y != 0f) { throw new ArgumentException($"The intersect of {intersect} must have at least one zero component."); }
@@ -158,7 +180,7 @@ namespace SMLimitless.Extensions
 		}
 
 		/// <summary>
-		/// Compares the components of one vector to another.
+		///   Compares the components of one vector to another.
 		/// </summary>
 		/// <param name="left">The first vector.</param>
 		/// <param name="right">The second vector.</param>
@@ -169,40 +191,51 @@ namespace SMLimitless.Extensions
 		}
 
 		/// <summary>
-		/// Does a greater-than comparison on both components of two <see cref="Vector2"/> instances.
+		///   Does a greater-than comparison on both components of two <see
+		///   cref="Vector2" /> instances.
 		/// </summary>
 		/// <param name="left">The first vector to compare.</param>
 		/// <param name="right">The second vector to compare.</param>
-		/// <returns>True if both components of <paramref name="left"/> are greater than their corresponding components in <paramref name="right"/>.</returns>
+		/// <returns>
+		///   True if both components of <paramref name="left" /> are greater
+		///   than their corresponding components in <paramref name="right" />.
+		/// </returns>
 		public static bool GreaterThan(this Vector2 left, float right)
 		{
 			return (left.X > right) && (left.Y > right);
 		}
 
 		/// <summary>
-		/// Compares the components of one vector to another.
+		///   Compares the components of one vector to another.
 		/// </summary>
 		/// <param name="left">The first vector.</param>
 		/// <param name="right">The second vector.</param>
-		/// <returns>True if left is greater than or equal to right, false if otherwise.</returns>
+		/// <returns>
+		///   True if left is greater than or equal to right, false if otherwise.
+		/// </returns>
 		public static bool GreaterThanOrEqualTo(this Vector2 left, Vector2 right)
 		{
 			return (left.X >= right.X) && (left.Y >= right.Y);
 		}
 
 		/// <summary>
-		/// Determines if both components of one vector are greater than or equal to both components of another vector.
+		///   Determines if both components of one vector are greater than or
+		///   equal to both components of another vector.
 		/// </summary>
 		/// <param name="left">The first vector to compare.</param>
 		/// <param name="right">The second vector to compare.</param>
-		/// <returns>True if both components of <paramref name="left"/> are greater than or equal to both components of <paramref name="right"/>.</returns>
+		/// <returns>
+		///   True if both components of <paramref name="left" /> are greater
+		///   than or equal to both components of <paramref name="right" />.
+		/// </returns>
 		public static bool GreaterThanOrEqualTo(this Vector2 left, float right)
 		{
 			return (left.X >= right) && (left.Y >= right);
 		}
 
 		/// <summary>
-		/// Returns a vector with the largest X component, given a collection of vectors.
+		///   Returns a vector with the largest X component, given a collection
+		///   of vectors.
 		/// </summary>
 		/// <param name="vectors">A collection of vectors.</param>
 		/// <returns>The vector with the largest X component.</returns>
@@ -221,7 +254,8 @@ namespace SMLimitless.Extensions
 		}
 
 		/// <summary>
-		/// Returns a vector with the largest Y component, given a collection of vectors.
+		///   Returns a vector with the largest Y component, given a collection
+		///   of vectors.
 		/// </summary>
 		/// <param name="vectors">A collection of vectors.</param>
 		/// <returns>The vector with the largest Y component.</returns>
@@ -240,10 +274,13 @@ namespace SMLimitless.Extensions
 		}
 
 		/// <summary>
-		/// Checks if one or both of the components of a Vector2 are equal to Single.NaN.
+		///   Checks if one or both of the components of a Vector2 are equal to Single.NaN.
 		/// </summary>
 		/// <param name="vector">The Vector2 to check.</param>
-		/// <returns>True if one or both of the components equal Single.NaN, false if neither do.</returns>
+		/// <returns>
+		///   True if one or both of the components equal Single.NaN, false if
+		///   neither do.
+		/// </returns>
 		[System.Diagnostics.DebuggerStepThrough]
 		public static bool IsNaN(this Vector2 vector)
 		{
@@ -251,7 +288,8 @@ namespace SMLimitless.Extensions
 		}
 
 		/// <summary>
-		/// Returns the vector with the lowest X component, given a collection of vectors.
+		///   Returns the vector with the lowest X component, given a collection
+		///   of vectors.
 		/// </summary>
 		/// <param name="vectors">A collection of vectors.</param>
 		/// <returns>The vector with the lowest X component.</returns>
@@ -271,7 +309,8 @@ namespace SMLimitless.Extensions
 		}
 
 		/// <summary>
-		/// Returns the vector with the lowest Y component, given a collection of vectors.
+		///   Returns the vector with the lowest Y component, given a collection
+		///   of vectors.
 		/// </summary>
 		/// <param name="vectors">The collection of vectors.</param>
 		/// <returns>The vector with the lowest Y component.</returns>
@@ -291,7 +330,7 @@ namespace SMLimitless.Extensions
 		}
 
 		/// <summary>
-		/// Compares the components of one vector to another.
+		///   Compares the components of one vector to another.
 		/// </summary>
 		/// <param name="left">The first vector.</param>
 		/// <param name="right">The second vector.</param>
@@ -302,18 +341,20 @@ namespace SMLimitless.Extensions
 		}
 
 		/// <summary>
-		/// Compares the components of one vector to another.
+		///   Compares the components of one vector to another.
 		/// </summary>
 		/// <param name="left">The first vector.</param>
 		/// <param name="right">The second vector.</param>
-		/// <returns>True if left is less than or equal to right, false if otherwise.</returns>
+		/// <returns>
+		///   True if left is less than or equal to right, false if otherwise.
+		/// </returns>
 		public static bool LessThanOrEqualTo(this Vector2 left, Vector2 right)
 		{
 			return (left.X <= right.X) && (left.Y <= right.Y);
 		}
 
 		/// <summary>
-		/// Divides the components of a vector by another, and returns the remainder.
+		///   Divides the components of a vector by another, and returns the remainder.
 		/// </summary>
 		/// <param name="a">The divisor vector.</param>
 		/// <param name="b">The dividend vector.</param>
@@ -324,12 +365,19 @@ namespace SMLimitless.Extensions
 		}
 
 		/// <summary>
-		/// Returns a vector from a given vector moved by a given distance in a given cardinal direction.
+		///   Returns a vector from a given vector moved by a given distance in a
+		///   given cardinal direction.
 		/// </summary>
 		/// <param name="vector">The original vector.</param>
-		/// <param name="direction">The direction in which the return vector is moved.</param>
-		/// <param name="distance">The distance by which to move the return vector.</param>
-		/// <returns>A vector moved by the given distance in the given direction.</returns>
+		/// <param name="direction">
+		///   The direction in which the return vector is moved.
+		/// </param>
+		/// <param name="distance">
+		///   The distance by which to move the return vector.
+		/// </param>
+		/// <returns>
+		///   A vector moved by the given distance in the given direction.
+		/// </returns>
 		public static Vector2 Move(this Vector2 vector, Direction direction, float distance)
 		{
 			switch (direction)
@@ -348,10 +396,13 @@ namespace SMLimitless.Extensions
 					throw new ArgumentOutOfRangeException(nameof(direction), $"An invalid Direction value was passed. Expected between 1 and 4, got {direction}.");
 			}
 		}
+
 		/// <summary>
-		/// Parses a string containing a vector value formatted "x,y".
+		///   Parses a string containing a vector value formatted "x,y".
 		/// </summary>
-		/// <param name="input">The string, containing only a vector formatted "x,y", to parse.</param>
+		/// <param name="input">
+		///   The string, containing only a vector formatted "x,y", to parse.
+		/// </param>
 		/// <returns>The parsed vector.</returns>
 		public static Vector2 Parse(string input)
 		{
@@ -376,7 +427,8 @@ namespace SMLimitless.Extensions
 		}
 
 		/// <summary>
-		/// Produces a string representation of this vector usable for serializers and deserializers.
+		///   Produces a string representation of this vector usable for
+		///   serializers and deserializers.
 		/// </summary>
 		/// <param name="value">The vector to serialize.</param>
 		/// <returns>A string in the format of "X, Y".</returns>
@@ -386,7 +438,7 @@ namespace SMLimitless.Extensions
 		}
 
 		/// <summary>
-		/// Produces a list of strings containing serialized forms of a list of vectors.
+		///   Produces a list of strings containing serialized forms of a list of vectors.
 		/// </summary>
 		/// <param name="value">The vectors to serialize.</param>
 		/// <returns>A list of strings in the format of "X, Y".</returns>
@@ -396,7 +448,7 @@ namespace SMLimitless.Extensions
 		}
 
 		/// <summary>
-		/// Returns a string representation of a point suitable for JSON serialization.
+		///   Returns a string representation of a point suitable for JSON serialization.
 		/// </summary>
 		/// <param name="value">The point to serialize.</param>
 		/// <returns>A string in the format "{x}, {y}".</returns>
@@ -406,10 +458,12 @@ namespace SMLimitless.Extensions
 		}
 
 		/// <summary>
-		/// Converts a list of vectors into a string in which values are compact.
+		///   Converts a list of vectors into a string in which values are compact.
 		/// </summary>
 		/// <param name="values">The values to convert.</param>
-		/// <returns>A string containing all values of the list expressed in "x,y" form.</returns>
+		/// <returns>
+		///   A string containing all values of the list expressed in "x,y" form.
+		/// </returns>
 		public static string SerializeCompact(this List<Vector2> values)
 		{
 			StringBuilder result = new StringBuilder();
@@ -418,31 +472,46 @@ namespace SMLimitless.Extensions
 		}
 
 		/// <summary>
-		/// Converts a <see cref="Vector2"/> instance to a <see cref="Point"/> instance.
+		///   Converts a <see cref="Vector2" /> instance to a <see cref="Point"
+		///   /> instance.
 		/// </summary>
-		/// <param name="vector">The <see cref="Vector2"/> to convert to a <see cref="Point"/>.</param>
-		/// <returns>A point with components equal to the integral portion of each vector component.</returns>
+		/// <param name="vector">
+		///   The <see cref="Vector2" /> to convert to a <see cref="Point" />.
+		/// </param>
+		/// <returns>
+		///   A point with components equal to the integral portion of each
+		///   vector component.
+		/// </returns>
 		public static Point ToPoint(this Vector2 vector)
 		{
 			return new Point((int)vector.X, (int)vector.Y);
 		}
 
 		/// <summary>
-		/// Converts this Vector2 and another Vector2 into a rectangle.
+		///   Converts this Vector2 and another Vector2 into a rectangle.
 		/// </summary>
-		/// <param name="position">The Vector2 that will become the X and Y components of the rectangle.</param>
-		/// <param name="size">The Vector2 that will become the Width and Height components of the rectangle.</param>
+		/// <param name="position">
+		///   The Vector2 that will become the X and Y components of the rectangle.
+		/// </param>
+		/// <param name="size">
+		///   The Vector2 that will become the Width and Height components of the rectangle.
+		/// </param>
 		/// <returns>A rectangle constructed from the two vectors.</returns>
-		/// <remarks>As the Rectangle type uses integers for components, any fractional component will be lost.</remarks>
+		/// <remarks>
+		///   As the Rectangle type uses integers for components, any fractional
+		///   component will be lost.
+		/// </remarks>
 		public static Rectangle ToRectangle(this Vector2 position, Vector2 size)
 		{
 			return new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y);
 		}
 
 		/// <summary>
-		/// Converts a JToken value into a Vector2.
+		///   Converts a JToken value into a Vector2.
 		/// </summary>
-		/// <param name="jsonEntry">A JSON token containing two comma-delimited numbers.</param>
+		/// <param name="jsonEntry">
+		///   A JSON token containing two comma-delimited numbers.
+		/// </param>
 		/// <returns>A Vector2 converted from the token.</returns>
 		public static Vector2 ToVector2(this JToken jsonEntry)
 		{
@@ -451,7 +520,7 @@ namespace SMLimitless.Extensions
 
 			if (values.Length != 2)
 			{
-				throw new ArgumentException(string.Format("Vector2Extensions.ToVector2(JToken): Tried to turn a non-vector object into a vector.", json));
+				throw new ArgumentException(string.Format("Vector2Extensions.ToVector2(JToken): Tried to turn a non-vector object into a vector.\r\nJSON:\r\n{0}", json));
 			}
 
 			if (values[0].Contains("NaN") || values[1].Contains("NaN"))
@@ -466,6 +535,7 @@ namespace SMLimitless.Extensions
 
 			return new Vector2(x, y);
 		}
+
 		////public static bool EqualityWithinEpsilon(this Vector2 a, Vector2 b, float epsilon)
 		////{
 		// we have a lot of learning to do before this can work

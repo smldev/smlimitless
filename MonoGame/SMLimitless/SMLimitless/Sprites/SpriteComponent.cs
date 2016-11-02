@@ -37,7 +37,7 @@ namespace SMLimitless.Sprites
         /// <param name="owner">The sprite that owns this component.</param>
         public virtual void Initialize(Sprite owner)
         {
-            this.Owner = owner;
+			Owner = owner;
         }
 
         /// <summary>

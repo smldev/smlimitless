@@ -45,7 +45,7 @@ namespace SMLimitless.Physics
         /// <param name="pathingObject">An object to attach to this path.</param>
         public Path(IPositionable pathingObject)
         {
-            this.Points = new List<Vector2>();
+			Points = new List<Vector2>();
             this.pathingObject = pathingObject;
         }
 
@@ -112,9 +112,9 @@ namespace SMLimitless.Physics
         /// <param name="b">The second point.</param>
         private void OnPointNotifier(Vector2 a, Vector2 b)
         {
-            if (this.PointNotifierEvent != null)
+            if (PointNotifierEvent != null)
             {
-                this.PointNotifierEvent(this.CalculateVelocityMultiplier(a, b));
+				PointNotifierEvent(new PointNotifierEventArgs(CalculateVelocityMultiplier(a, b)));
             }
         }
 
@@ -124,7 +124,7 @@ namespace SMLimitless.Physics
         /// <returns>A list of points in this path.</returns>
         public List<Vector2> GetPoints()
         {
-            return new List<Vector2>(this.Points.OrderBy(p => p.X));
+            return new List<Vector2>(Points.OrderBy(p => p.X));
         }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace SMLimitless.Physics
         public void Draw(Color color)
         {
             // Draw lines between the points, from the leftmost to the rightmost.
-            var sortedPoints = this.Points.OrderBy(p => p.X).ToList();
+            var sortedPoints = Points.OrderBy(p => p.X).ToList();
 
             for (int i = 0; i < sortedPoints.Count - 1; i++)
             {
@@ -155,7 +155,7 @@ namespace SMLimitless.Physics
         {
             return new
             {
-                points = this.Points.Serialize(),
+                points = Points.Serialize(),
             };
         }
 
@@ -165,7 +165,7 @@ namespace SMLimitless.Physics
         /// <returns>A JSON string containing this path's data.</returns>
         public string Serialize()
         {
-            return JObject.FromObject(this.GetSerializableObjects()).ToString();
+            return JObject.FromObject(GetSerializableObjects()).ToString();
         }
 
         /// <summary>
@@ -179,7 +179,7 @@ namespace SMLimitless.Physics
 
             foreach (var point in points)
             {
-                this.Points.Add(point.ToVector2());
+				Points.Add(point.ToVector2());
             }
         }
     }
@@ -187,6 +187,26 @@ namespace SMLimitless.Physics
     /// <summary>
     /// A delegate for the PointNotifier event.
     /// </summary>
-    /// <param name="newVelocityMultiplier">The new velocity multiplier for the attached object.</param>
-    public delegate void PointNotifierEventHandler(Vector2 newVelocityMultiplier);
+    /// <param name="e">Event arguments containing the new velocity multiplier for the attached object.</param>
+    public delegate void PointNotifierEventHandler(PointNotifierEventArgs e);
+
+	/// <summary>
+	/// Arguments for the <see cref="PointNotifierEventHandler"/>.
+	/// </summary>
+	public sealed class PointNotifierEventArgs : EventArgs
+	{
+		/// <summary>
+		/// Gets a value indicating the new multiplier to apply to the object's path velocity.
+		/// </summary>
+		public Vector2 NewVelocityMultiplier { get; }
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="PointNotifierEventArgs"/> class.
+		/// </summary>
+		/// <param name="newVelocityMultiplier">The value indicating the new multiplier to apply to the object's path velocity.</param>
+		public PointNotifierEventArgs(Vector2 newVelocityMultiplier)
+		{
+			NewVelocityMultiplier = newVelocityMultiplier;
+		}
+	}
 }

@@ -9,30 +9,33 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace SMLimitless.Graphics
 {
-    /// <summary>
-    /// Defines metadata information for cropped textures.
-    /// </summary>
-    internal struct CroppedTextureMetadata
-    {
-        /// <summary>
-        /// A reference to the original texture.
-        /// </summary>
-        internal Texture2D SourceTexture;
+	/// <summary>
+	///   Defines metadata information for cropped textures.
+	/// </summary>
+	internal struct CroppedTextureMetadata
+	{
+		/// <summary>
+		///   The area of the original texture that was cropped.
+		/// </summary>
+		internal Rectangle SourceRectangle;
 
-        /// <summary>
-        /// The area of the original texture that was cropped.
-        /// </summary>
-        internal Rectangle SourceRectangle;
+		/// <summary>
+		///   A reference to the original texture.
+		/// </summary>
+		internal Texture2D SourceTexture;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CroppedTextureMetadata"/> struct.
-        /// </summary>
-        /// <param name="sourceTexture">The original texture.</param>
-        /// <param name="sourceRectangle">The area of the original texture that was cropped.</param>
-        internal CroppedTextureMetadata(Texture2D sourceTexture, Rectangle sourceRectangle)
-        {
-            this.SourceTexture = sourceTexture;
-            this.SourceRectangle = sourceRectangle;
-        }
-    }
+		/// <summary>
+		///   Initializes a new instance of the <see
+		///   cref="CroppedTextureMetadata" /> struct.
+		/// </summary>
+		/// <param name="sourceTexture">The original texture.</param>
+		/// <param name="sourceRectangle">
+		///   The area of the original texture that was cropped.
+		/// </param>
+		internal CroppedTextureMetadata(Texture2D sourceTexture, Rectangle sourceRectangle)
+		{
+			SourceTexture = sourceTexture;
+			SourceRectangle = sourceRectangle;
+		}
+	}
 }

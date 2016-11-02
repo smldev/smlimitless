@@ -3,40 +3,41 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
 using SMLimitless.Extensions;
 using SMLimitless.Graphics;
 using SMLimitless.Interfaces;
 using SMLimitless.Physics;
-using SMLimitless.Sprites;
 
 namespace SMLimitless.Collections
 {
 	/// <summary>
-	/// Represents a grid composed of sized cells that can contain items.
-	/// The grid is "sparse" - cells only exist if they contains items.
+	///   Represents a grid composed of sized cells that can contain items. The
+	///   grid is "sparse" - cells only exist if they contains items.
 	/// </summary>
-	/// <typeparam name="T">A type implementing the <see cref="IPositionable2"/> interface.</typeparam>
+	/// <typeparam name="T">
+	///   A type implementing the <see cref="IPositionable2" /> interface.
+	/// </typeparam>
 	public sealed class SparseCellGrid<T> : IEnumerable<T>, IEnumerable where T : IPositionable2
 	{
 		/// <summary>
-		/// The default size, in pixels, of a sparse cell.
+		///   The default size, in pixels, of a sparse cell.
 		/// </summary>
 		private static readonly Vector2 DefaultCellSize = new Vector2(64f);
 
 		/// <summary>
-		/// A dictionary of all the cell indices as keys and the corresponding cells as values.
+		///   A dictionary of all the cell indices as keys and the corresponding
+		///   cells as values.
 		/// </summary>
 		private Dictionary<Point, SparseCell<T>> cells = new Dictionary<Point, SparseCell<T>>();
 
 		/// <summary>
-		/// A collection of all items within any of the cells in the grid.
+		///   A collection of all items within any of the cells in the grid.
 		/// </summary>
 		private List<T> items = new List<T>();
 
 		/// <summary>
-		/// Gets a read-only dictionary of the cells in this grid.
+		///   Gets a read-only dictionary of the cells in this grid.
 		/// </summary>
 		public ReadOnlyDictionary<Point, SparseCell<T>> Cells
 		{
@@ -47,7 +48,12 @@ namespace SMLimitless.Collections
 		}
 
 		/// <summary>
-		/// Gets a read-only collection of the items in this grid.
+		///   Gets the size of all cells.
+		/// </summary>
+		public Vector2 CellSize { get; }
+
+		/// <summary>
+		///   Gets a read-only collection of the items in this grid.
 		/// </summary>
 		public ReadOnlyCollection<T> Items
 		{
@@ -58,12 +64,7 @@ namespace SMLimitless.Collections
 		}
 
 		/// <summary>
-		/// Gets the size of all cells.
-		/// </summary>
-		public Vector2 CellSize { get; }
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="SparseCellGrid{T}"/> class.
+		///   Initializes a new instance of the <see cref="SparseCellGrid{T}" /> class.
 		/// </summary>
 		public SparseCellGrid()
 		{
@@ -71,7 +72,7 @@ namespace SMLimitless.Collections
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SparseCellGrid{T}"/> class.
+		///   Initializes a new instance of the <see cref="SparseCellGrid{T}" /> class.
 		/// </summary>
 		/// <param name="cellSize">The size of all cells.</param>
 		public SparseCellGrid(Vector2 cellSize)
@@ -82,10 +83,12 @@ namespace SMLimitless.Collections
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SparseCellGrid{T}"/> class.
+		///   Initializes a new instance of the <see cref="SparseCellGrid{T}" /> class.
 		/// </summary>
 		/// <param name="cellSize">The size of all cells.</param>
-		/// <param name="items">A collection of all items to be contained within this grid.</param>
+		/// <param name="items">
+		///   A collection of all items to be contained within this grid.
+		/// </param>
 		public SparseCellGrid(Vector2 cellSize, IEnumerable<T> items)
 		{
 			if (cellSize.IsNaN() || cellSize.X <= 0f || cellSize.Y <= 0f) { throw new ArgumentException("The sparse cell grid constructor received a cell size that is not a number or has zero or negative area.", nameof(cellSize)); }
@@ -95,7 +98,7 @@ namespace SMLimitless.Collections
 		}
 
 		/// <summary>
-		/// Adds an item to this grid.
+		///   Adds an item to this grid.
 		/// </summary>
 		/// <param name="item">The item to add.</param>
 		public void Add(T item)
@@ -110,26 +113,54 @@ namespace SMLimitless.Collections
 		}
 
 		/// <summary>
-		/// Adds an item to the cell grid without adding it to the Items collection.
+		///   Draws each cell as white rectangular edges with their cell number
+		///   printed in the corner.
 		/// </summary>
-		/// <param name="item">The item to add.</param>
-		private void LocalAdd(T item)
+		public void DrawCells()
 		{
-			// LocalAdd and LocalRemove are needed so we don't douch our Items collections in Update(),
-			// which changes the Items collection and invalidates the enumerator
-			var range = GetCellsItemIsIn(item);
-
-			for (int y = range.TopLeft.Y; y <= range.BottomRight.Y; y++)
+			foreach (KeyValuePair<Point, SparseCell<T>> cellPair in cells)
 			{
-				for (int x = range.TopLeft.X; x <= range.BottomRight.X; x++)
+				Point cellNumber = cellPair.Key;
+				BoundingRectangle cellBounds = cellPair.Value.Bounds;
+				BitmapFont debugFont = GameServices.DebugFont;
+
+				GameServices.SpriteBatch.DrawRectangleEdges(cellBounds.ToRectangle(), Color.White);
+
+				if (debugFont != null)
 				{
-					AddItemToCell(item, new Point(x, y));
+					Vector2 drawStringPosition = new Vector2(cellBounds.Position.X + 3f, cellBounds.Position.Y + 3f);
+					Vector2 drawCountPosition = new Vector2(cellBounds.Right - 11f, cellBounds.Top + 3f);
+					debugFont.DrawString($"{cellNumber.X},{cellNumber.Y}", drawStringPosition);
+					debugFont.DrawString($"{cellPair.Value.Items.Count}", drawCountPosition);
 				}
 			}
 		}
 
 		/// <summary>
-		/// Removes an item from this grid.
+		///   Gets the enumerator for this grid.
+		/// </summary>
+		/// <returns>
+		///   An enumerator that enumerates over every item in this grid cell by cell.
+		/// </returns>
+		public IEnumerator<T> GetEnumerator()
+		{
+			foreach (T item in cells.SelectMany(c => cells.Values.SelectMany(v => v.Items)).Distinct()) // good god
+			{
+				yield return item;
+			}
+		}
+
+		/// <summary>
+		///   The explicit interface implementation of IEnumerable.GetEnumerator().
+		/// </summary>
+		/// <returns>The enumerator returned by the GetEnumerator() method.</returns>
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return GetEnumerator();
+		}
+
+		/// <summary>
+		///   Removes an item from this grid.
 		/// </summary>
 		/// <param name="item">The item to remove.</param>
 		public void Remove(T item)
@@ -142,38 +173,48 @@ namespace SMLimitless.Collections
 		}
 
 		/// <summary>
-		/// Removes an item from the cell grid without removing it from the Items collection.
+		///   Removes all items from this grid that match a predicate.
 		/// </summary>
-		/// <param name="item">The item to remove.</param>
-		private void LocalRemove(T item)
-		{
-			foreach (var cell in cells)
-			{
-				cell.Value.Remove(item);
-			}
-		}
-
-		/// <summary>
-		/// Removes all items from this grid that match a predicate.
-		/// </summary>
-		/// <param name="predicate">All the removed items must match this predicate.</param>
+		/// <param name="predicate">
+		///   All the removed items must match this predicate.
+		/// </param>
 		public void RemoveAllWhere(Predicate<T> predicate)
 		{
 			cells.Values.ForEach(c => c.Items.RemoveWhere(predicate));
 		}
+
 		/// <summary>
-		/// Adds an item to a given cell.
+		///   Checks and updates the containing cells of all items that have
+		///   moved since the last update. Removes any empty cells.
 		/// </summary>
-		/// <param name="item">The item to add.</param>
-		/// <param name="cellNumber">The two-dimensional, zero-based index of the cell to which to add the item.</param>
-		private void AddItemToCell(T item, Point cellNumber)
+		public void Update()
 		{
-			if (!cells.ContainsKey(cellNumber))
+			// To update the sparse cell grid, we need to remove and re-add any
+			// items that have moved since the last update.
+			foreach (T item in items)
 			{
-				cells.Add(cellNumber, new SparseCell<T>(CellSize, cellNumber));
+				if (item.HasMoved)
+				{
+					LocalRemove(item);
+					LocalAdd(item);
+					item.HasMoved = false;
+				}
 			}
 
-			cells[cellNumber].Add(item);
+			cells.RemoveAll(c => c.IsEmpty);
+		}
+
+		/// <summary>
+		///   Gets the cell number at a given position.
+		/// </summary>
+		/// <param name="position">The position to get the cell number for.</param>
+		/// <returns>
+		///   A two-dimensional, zero-based index of the cell that the given
+		///   position is within.
+		/// </returns>
+		internal Point GetCellNumberAtPosition(Vector2 position)
+		{
+			return new Point((int)Math.Floor(position.X / CellSize.X), (int)Math.Floor(position.Y / CellSize.Y));
 		}
 
 		internal IEnumerable<T> GetItemsNearItem(T item)
@@ -205,17 +246,26 @@ namespace SMLimitless.Collections
 		}
 
 		/// <summary>
-		/// Gets the cell number at a given position.
+		///   Adds an item to a given cell.
 		/// </summary>
-		/// <param name="position">The position to get the cell number for.</param>
-		/// <returns>A two-dimensional, zero-based index of the cell that the given position is within.</returns>
-		internal Point GetCellNumberAtPosition(Vector2 position)
+		/// <param name="item">The item to add.</param>
+		/// <param name="cellNumber">
+		///   The two-dimensional, zero-based index of the cell to which to add
+		///   the item.
+		/// </param>
+		private void AddItemToCell(T item, Point cellNumber)
 		{
-			return new Point((int)Math.Floor(position.X / CellSize.X), (int)Math.Floor(position.Y / CellSize.Y));
+			if (!cells.ContainsKey(cellNumber))
+			{
+				cells.Add(cellNumber, new SparseCell<T>(CellSize, cellNumber));
+			}
+
+			cells[cellNumber].Add(item);
 		}
 
 		/// <summary>
-		/// Gets a range containing the two-dimensional, zero-based indices of every cell a given item is in.
+		///   Gets a range containing the two-dimensional, zero-based indices of
+		///   every cell a given item is in.
 		/// </summary>
 		/// <param name="item">The item to get the cells for.</param>
 		/// <returns>The range of cells the item is in.</returns>
@@ -228,67 +278,36 @@ namespace SMLimitless.Collections
 		}
 
 		/// <summary>
-		/// Checks and updates the containing cells of all items that have moved since the last update.
-		/// Removes any empty cells.
+		///   Adds an item to the cell grid without adding it to the Items collection.
 		/// </summary>
-		public void Update()
+		/// <param name="item">The item to add.</param>
+		private void LocalAdd(T item)
 		{
-			// To update the sparse cell grid, we need to remove and re-add any items that have moved since the last update.
-			foreach (T item in items)
+			// LocalAdd and LocalRemove are needed so we don't douch our Items
+			// collections in Update(), which changes the Items collection and
+			// invalidates the enumerator
+			var range = GetCellsItemIsIn(item);
+
+			for (int y = range.TopLeft.Y; y <= range.BottomRight.Y; y++)
 			{
-				if (item.HasMoved)
+				for (int x = range.TopLeft.X; x <= range.BottomRight.X; x++)
 				{
-					LocalRemove(item);
-					LocalAdd(item);
-					item.HasMoved = false;
-				}
-			}
-
-			cells.RemoveAll(c => c.IsEmpty);
-		}
-
-		/// <summary>
-		/// Draws each cell as white rectangular edges with their cell number printed in the corner.
-		/// </summary>
-		public void DrawCells()
-		{
-			foreach (KeyValuePair<Point, SparseCell<T>> cellPair in cells)
-			{
-				Point cellNumber = cellPair.Key;
-				BoundingRectangle cellBounds = cellPair.Value.Bounds;
-				BitmapFont debugFont = GameServices.DebugFont;
-
-				GameServices.SpriteBatch.DrawRectangleEdges(cellBounds.ToRectangle(), Color.White);
-
-				if (debugFont != null)
-				{
-					Vector2 drawStringPosition = new Vector2(cellBounds.Position.X + 3f, cellBounds.Position.Y + 3f);
-					Vector2 drawCountPosition = new Vector2(cellBounds.Right - 11f, cellBounds.Top + 3f);
-					debugFont.DrawString($"{cellNumber.X},{cellNumber.Y}", drawStringPosition);
-					debugFont.DrawString($"{cellPair.Value.Items.Count}", drawCountPosition);
+					AddItemToCell(item, new Point(x, y));
 				}
 			}
 		}
 
 		/// <summary>
-		/// Gets the enumerator for this grid.
+		///   Removes an item from the cell grid without removing it from the
+		///   Items collection.
 		/// </summary>
-		/// <returns>An enumerator that enumerates over every item in this grid cell by cell.</returns>
-		public IEnumerator<T> GetEnumerator()
+		/// <param name="item">The item to remove.</param>
+		private void LocalRemove(T item)
 		{
-			foreach (T item in cells.SelectMany(c => cells.Values.SelectMany(v => v.Items)).Distinct()) // good god
+			foreach (var cell in cells)
 			{
-				yield return item;
+				cell.Value.Remove(item);
 			}
-		}
-
-		/// <summary>
-		/// The explicit interface implementation of IEnumerable.GetEnumerator().
-		/// </summary>
-		/// <returns>The enumerator returned by the GetEnumerator() method.</returns>
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return GetEnumerator();
 		}
 	}
 }

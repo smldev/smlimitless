@@ -71,13 +71,13 @@ namespace SMLimitless.Sprites.Collections
         {
             return new
             {
-                sectionIndex = this.SectionIndex,
-                position = this.Position,
-                entranceBehavior = this.EntranceBehavior,
-                destinationSectionIndex = this.DestinationSectionIndex,
-                destinationPosition = this.DestinationPosition,
-                exitBehavior = this.ExitBehavior
-            };
+                sectionIndex = SectionIndex,
+                position = Position,
+                entranceBehavior = EntranceBehavior,
+                destinationSectionIndex = DestinationSectionIndex,
+                destinationPosition = DestinationPosition,
+                exitBehavior = ExitBehavior
+			};
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace SMLimitless.Sprites.Collections
 		[Obsolete]
         public string Serialize()
         {
-            return JObject.FromObject(this.GetSerializableObjects()).ToString();
+            return JObject.FromObject(GetSerializableObjects()).ToString();
         }
 
         /// <summary>
@@ -98,12 +98,12 @@ namespace SMLimitless.Sprites.Collections
         public void Deserialize(string json)
         {
             JObject obj = JObject.Parse(json);
-            this.SectionIndex = (int)obj["sectionIndex"];
-            this.Position = obj["position"].ToVector2();
-            this.EntranceBehavior = (ScreenExitBehavior)(int)obj["entranceBehavior"];
-            this.DestinationSectionIndex = (int)obj["destinationSectionIndex"];
-            this.DestinationPosition = obj["destinationPosition"].ToVector2();
-            this.ExitBehavior = (ScreenExitBehavior)(int)obj["exitBehavior"];
+			SectionIndex = (int)obj["sectionIndex"];
+			Position = obj["position"].ToVector2();
+			EntranceBehavior = (ScreenExitBehavior)(int)obj["entranceBehavior"];
+			DestinationSectionIndex = (int)obj["destinationSectionIndex"];
+			DestinationPosition = obj["destinationPosition"].ToVector2();
+			ExitBehavior = (ScreenExitBehavior)(int)obj["exitBehavior"];
         }
     }
 }

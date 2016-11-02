@@ -122,30 +122,30 @@ namespace SMLimitless.Sprites.Collections
 			// but if we have a bunch of tiles to add at once, we only need to resize the grid once, if at all.
 
 			if (!tiles.Any()) return;
-			if (!this.Tiles.DoesRangeAlignToGrid(tiles)) { throw new ArgumentException("Tried to add tiles to a grid that weren't grid aligned."); }
+			if (!Tiles.DoesRangeAlignToGrid(tiles)) { throw new ArgumentException("Tried to add tiles to a grid that weren't grid aligned."); }
 
-			BoundingRectangle allTilesBound = tiles.Concat(this.Tiles).GetBoundsOfPositionables();
+			BoundingRectangle allTilesBound = tiles.Concat(Tiles).GetBoundsOfPositionables();
 
 			// so, here's probably a good point to talk about cell coordinate agnosticity
 			// Tiles will have cell coordinates since they're in a grid where each cell has coordinates,
 			// but you can't rely on them, and here's why:
-			int allTilesBoundWidthInCells = (int)(allTilesBound.Width / this.Tiles.CellWidth);
-			int allTilesBoundHeightInCells = (int)(allTilesBound.Height / this.Tiles.CellHeight);
+			int allTilesBoundWidthInCells = (int)(allTilesBound.Width / Tiles.CellWidth);
+			int allTilesBoundHeightInCells = (int)(allTilesBound.Height / Tiles.CellHeight);
 
 			// ...adding tiles that are to the left and/or above the old grid...
-			float newGridOriginX = (allTilesBound.X < this.Tiles.Position.X) ? allTilesBound.X : this.Tiles.Position.X;
-			float newGridOriginY = (allTilesBound.Y < this.Tiles.Position.Y) ? allTilesBound.Y : this.Tiles.Position.Y;
-			int newGridWidth = (allTilesBoundWidthInCells * this.Tiles.CellWidth > this.Tiles.Width) ? allTilesBoundWidthInCells * this.Tiles.CellWidth : (this.Tiles.Width);
-			int newGridHeight = (allTilesBoundHeightInCells * this.Tiles.CellHeight > this.Tiles.Height) ? allTilesBoundHeightInCells * this.Tiles.CellHeight : (this.Tiles.Height);
+			float newGridOriginX = (allTilesBound.X < Tiles.Position.X) ? allTilesBound.X : Tiles.Position.X;
+			float newGridOriginY = (allTilesBound.Y < Tiles.Position.Y) ? allTilesBound.Y : Tiles.Position.Y;
+			int newGridWidth = (allTilesBoundWidthInCells * Tiles.CellWidth > Tiles.Width) ? allTilesBoundWidthInCells * Tiles.CellWidth : (Tiles.Width);
+			int newGridHeight = (allTilesBoundHeightInCells * Tiles.CellHeight > Tiles.Height) ? allTilesBoundHeightInCells * Tiles.CellHeight : (Tiles.Height);
 			Vector2 newGridOrigin = new Vector2(newGridOriginX, newGridOriginY);
-			SizedGrid<Tile> newGrid = new SizedGrid<Tile>(newGridOrigin, this.Tiles.CellWidth, this.Tiles.CellHeight, 
+			SizedGrid<Tile> newGrid = new SizedGrid<Tile>(newGridOrigin, Tiles.CellWidth, Tiles.CellHeight, 
 														  newGridWidth, newGridHeight);
 
 			// ...forces a change of the cell coordinates of every tile already in the grid.
 			// We also have to move the layer's position accordingly.
 			Position = newGridOrigin;
 
-			this.Tiles.ForEach(t => newGrid.Add(t));
+			Tiles.ForEach(t => newGrid.Add(t));
 			tiles.ForEach(t => newGrid.Add(t));
 
 			foreach (Tile tile in newGrid)
@@ -169,8 +169,8 @@ namespace SMLimitless.Sprites.Collections
 				}
 			}
 
-			this.Tiles = newGrid;
-			Bounds = this.Tiles.Bounds;
+			Tiles = newGrid;
+			Bounds = Tiles.Bounds;
 
 			tiles.ForEach(t => Owner.Tiles.Add(t));
 		}
@@ -204,7 +204,7 @@ namespace SMLimitless.Sprites.Collections
 		/// <remarks>Returns cell numbers for positions outside the <see cref="Bounds"/> of the layer.</remarks>
 		public Vector2 GetCellNumberAtPosition(Vector2 position)
 		{
-			Vector2 adjustedPosition = position - this.Position;
+			Vector2 adjustedPosition = position - Position;
 			return new Vector2((adjustedPosition.X / Tiles.CellWidth), (adjustedPosition.Y / Tiles.CellHeight)).Floor();
 		}
 
@@ -221,6 +221,11 @@ namespace SMLimitless.Sprites.Collections
 			return cellNumber;
 		}
 
+		/// <summary>
+		/// Returns a value indicating whether a given cell number is within the bounds of the layer's tile grid.
+		/// </summary>
+		/// <param name="cellNumber">The cell number to check.</param>
+		/// <returns>True if the cell is within bounds, false if it's not.</returns>
 		public bool CellWithinBounds(Vector2 cellNumber)
 		{
 			return cellNumber.X >= 0f && cellNumber.X < Tiles.Width && cellNumber.Y >= 0f && cellNumber.Y < Tiles.Height;
@@ -287,7 +292,7 @@ namespace SMLimitless.Sprites.Collections
 		{
 			if (IsMainLayer) { throw new InvalidOperationException("Cannot move the main layer."); }
 
-			Vector2 distance = position - this.Position;
+			Vector2 distance = position - Position;
 			Translate(distance);
 		}
 

@@ -61,7 +61,7 @@ namespace SMLimitless.Physics
 
 			this.camera = camera;
 			this.totalBounds = totalBounds;
-			this.TrackingObjects = trackingObjects.ToList();
+			TrackingObjects = trackingObjects.ToList();
 
 			this.camera.Zoom = 1f;
 			this.camera.Rotation = 0f;

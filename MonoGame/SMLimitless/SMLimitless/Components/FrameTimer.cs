@@ -1,31 +1,77 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SMLimitless.Components
 {
 	/// <summary>
-	/// A timer that fires an event after a defined number of frames.
+	///   A timer that fires an event after a defined number of frames.
 	/// </summary>
 	public sealed class FrameTimer
 	{
-		private bool isActive;
 		private int framesLeft;
+		private bool isActive;
 
 		/// <summary>
-		/// Gets a value indicating whether the timer has expired.
+		///   Gets a value indicating whether the timer has expired.
 		/// </summary>
 		public bool TimerExpired { get; private set; }
 
 		/// <summary>
-		/// An event that is fired when the timer expires.
+		///   An event that is fired when the timer expires.
 		/// </summary>
 		public event EventHandler TimerExpiredEvent;
 
 		/// <summary>
-		/// Starts the timer to expire in a certain number of frames.
+		///   Cancels the timer and removes any frames remaining.
+		/// </summary>
+		public void Cancel()
+		{
+			if (isActive)
+			{
+				isActive = false;
+				framesLeft = 0;
+			}
+			else
+			{
+				throw new InvalidOperationException("Tried to cancel a timer that wasn't running.");
+			}
+		}
+
+		/// <summary>
+		///   Pauses the timer so that it can be resumed from where it was later.
+		/// </summary>
+		public void Pause()
+		{
+			if (isActive) { isActive = false; }
+			else
+			{
+				string message = (framesLeft > 0) ? "Tried to pause a timer that was already paused." : "Tried to pause a timer that wasn't running.";
+				throw new InvalidOperationException(message);
+			}
+		}
+
+		/// <summary>
+		///   Resets the timer.
+		/// </summary>
+		public void Reset()
+		{
+			isActive = false;
+			TimerExpired = false;
+			framesLeft = 0;
+		}
+
+		/// <summary>
+		///   Restarts the timer with a new number of frames.
+		/// </summary>
+		/// <param name="frames">The number of frames until the timer expires.</param>
+		public void Restart(int frames)
+		{
+			isActive = false;
+			framesLeft = 0;
+			Start(frames);
+		}
+
+		/// <summary>
+		///   Starts the timer to expire in a certain number of frames.
 		/// </summary>
 		/// <param name="frames">The number of frames before the timer expires.</param>
 		public void Start(int frames)
@@ -43,57 +89,7 @@ namespace SMLimitless.Components
 		}
 
 		/// <summary>
-		/// Pauses the timer so that it can be resumed from where it was later.
-		/// </summary>
-		public void Pause()
-		{
-			if (isActive) { isActive = false; }
-			else
-			{
-				string message = (framesLeft > 0) ? "Tried to pause a timer that was already paused." : "Tried to pause a timer that wasn't running.";
-				throw new InvalidOperationException(message);
-			}
-		}
-
-		/// <summary>
-		/// Cancels the timer and removes any frames remaining.
-		/// </summary>
-		public void Cancel()
-		{
-			if (isActive)
-			{
-				isActive = false;
-				framesLeft = 0;
-			}
-			else
-			{
-				throw new InvalidOperationException("Tried to cancel a timer that wasn't running.");
-			}
-		}
-
-		/// <summary>
-		/// Resets the timer.
-		/// </summary>
-		public void Reset()
-		{
-			isActive = false;
-			TimerExpired = false;
-			framesLeft = 0;
-		}
-
-		/// <summary>
-		/// Restarts the timer with a new number of frames.
-		/// </summary>
-		/// <param name="frames">The number of frames until the timer expires.</param>
-		public void Restart(int frames)
-		{
-			isActive = false;
-			framesLeft = 0;
-			Start(frames);
-		}
-
-		/// <summary>
-		/// Updates this timer, decrementing one frame.
+		///   Updates this timer, decrementing one frame.
 		/// </summary>
 		public void Update()
 		{
@@ -113,10 +109,7 @@ namespace SMLimitless.Components
 
 		private void OnTimerExpired()
 		{
-			if (TimerExpiredEvent != null)
-			{
-				TimerExpiredEvent(this, new EventArgs());
-			}
+			TimerExpiredEvent?.Invoke(this, new EventArgs());
 		}
 	}
 }

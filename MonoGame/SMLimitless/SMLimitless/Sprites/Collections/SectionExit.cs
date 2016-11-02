@@ -10,6 +10,9 @@ using SMLimitless.Sounds;
 
 namespace SMLimitless.Sprites.Collections
 {
+	/// <summary>
+	/// An object in a section that players can use to teleport inside and between sections.
+	/// </summary>
 	public sealed class SectionExit
 	{
 		/// <summary>
@@ -69,6 +72,9 @@ namespace SMLimitless.Sprites.Collections
 			/// </summary>
 			public float RemainingShiftDistance { get; }
 
+			/// <summary>
+			/// An event fired when an effect completes.
+			/// </summary>
 			public event EventHandler<Sprite> EffectCompletedEvent;
 
 			/// <summary>
@@ -83,6 +89,12 @@ namespace SMLimitless.Sprites.Collections
 				}
 			}
 
+			/// <summary>
+			/// Initializes a new instance of the <see cref="ExitEffect"/> class. 
+			/// </summary>
+			/// <param name="player">The player entering or leaving the exit.</param>
+			/// <param name="exitHitbox">The hitbox of the exit being entered or left.</param>
+			/// <param name="shiftDirection">The direction the player must move to enter or emerge from the exit.</param>
 			public ExitEffect(Sprite player, BoundingRectangle exitHitbox, Direction shiftDirection)
 			{
 				this.player = player;
@@ -113,6 +125,9 @@ namespace SMLimitless.Sprites.Collections
 				RemainingShiftDistance = TotalShiftDistance;
 			}
 
+			/// <summary>
+			/// Updates this effect.
+			/// </summary>
 			public void Update()
 			{
 				if (RemainingEffectFrames > 0)
@@ -142,6 +157,9 @@ namespace SMLimitless.Sprites.Collections
 				}
 			}
 
+			/// <summary>
+			/// Draws the player entering this effect.
+			/// </summary>
 			public void Draw()
 			{
 				player.Draw();
@@ -259,6 +277,10 @@ namespace SMLimitless.Sprites.Collections
 
 		private bool IsMultiplayer => Owner.PlayerList.Count + PlayersInExit.Count > 1;
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SectionExit"/> class. 
+		/// </summary>
+		/// <param name="owner">The section this exit is in.</param>
 		public SectionExit(Section owner)
 		{
 			Owner = owner;
@@ -351,6 +373,10 @@ namespace SMLimitless.Sprites.Collections
 			return Owner.GetTileAtPosition(checkPosition) != null;
 		}
 
+		/// <summary>
+		/// A method called when a player enters a section exit.
+		/// </summary>
+		/// <param name="player">The player that has entered the section exit.</param>
 		public void PlayerEntered(Sprite player)
 		{
 			state = (SourceBehavior != ExitSourceBehavior.Door) ? ExitTransitionState.ExitEffectInProgress :
@@ -406,6 +432,9 @@ namespace SMLimitless.Sprites.Collections
 			Owner.IrisIn(90, IrisPoint, onIrisClose);
 		}
 
+		/// <summary>
+		/// Updates this section exit.
+		/// </summary>
 		public void Update()
 		{
 			exitEffect?.Update();
@@ -430,6 +459,9 @@ namespace SMLimitless.Sprites.Collections
 			}
 		}
 
+		/// <summary>
+		/// Draws a rectangle showing the hitbox of this exit.
+		/// </summary>
 		public void Draw()
 		{
 			GameServices.SpriteBatch.DrawRectangleEdges(new Rectangle(Position.ToPoint(), Size.ToPoint()), Color.AliceBlue);
@@ -479,6 +511,10 @@ namespace SMLimitless.Sprites.Collections
 			}
 		}
 
+		/// <summary>
+		/// Places the player to emerge from the correct location in the section exit.
+		/// </summary>
+		/// <param name="player">The player set to emerge.</param>
 		public void PlacePlayerToEmerge(Sprite player)
 		{
 			if (ExitType != SectionExitType.Destination && ExitType != SectionExitType.TwoWay)
@@ -537,6 +573,10 @@ namespace SMLimitless.Sprites.Collections
 			}
 		}
 
+		/// <summary>
+		/// Queues a sequence of players to emerge from a section exit.
+		/// </summary>
+		/// <param name="players"></param>
 		public void Emerge(IEnumerable<Sprite> players)
 		{
 			state = ExitTransitionState.ExitEffectInProgress;

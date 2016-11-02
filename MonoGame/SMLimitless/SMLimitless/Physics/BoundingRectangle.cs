@@ -259,7 +259,7 @@ namespace SMLimitless.Physics
 		{
 			get
 			{
-				return new Vector2(this.Right, this.Bottom);
+				return new Vector2(Right, Bottom);
 			}
 		}
 

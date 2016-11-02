@@ -14,7 +14,7 @@ namespace SMLimitless.IO.LevelSerializers.Serializer003Types
 		
 		public TilePositionCloud()
 		{
-			this.CellNumbers = new List<Point>();
+			CellNumbers = new List<Point>();
 		}
 	}
 }

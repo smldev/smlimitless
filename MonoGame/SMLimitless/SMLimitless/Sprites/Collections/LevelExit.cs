@@ -45,10 +45,10 @@ namespace SMLimitless.Sprites.Collections
         {
             return new
             {
-                exitIndex = this.ExitIndex,
-                exitDirection = (int)this.ExitDirection,
-                objectName = this.ObjectName
-            };
+                exitIndex = ExitIndex,
+                exitDirection = (int)ExitDirection,
+                objectName = ObjectName
+			};
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace SMLimitless.Sprites.Collections
 		[Obsolete]
         public string Serialize()
         {
-            return JObject.FromObject(this.GetSerializableObjects()).ToString();
+            return JObject.FromObject(GetSerializableObjects()).ToString();
         }
 
         /// <summary>
@@ -70,9 +70,9 @@ namespace SMLimitless.Sprites.Collections
         {
             JObject obj = JObject.Parse(json);
 
-            this.ExitIndex = (int)obj["exitIndex"];
-            this.ExitDirection = (Direction)(int)obj["exitDirection"];
-            this.ObjectName = (string)obj["objectName"];
+			ExitIndex = (int)obj["exitIndex"];
+			ExitDirection = (Direction)(int)obj["exitDirection"];
+			ObjectName = (string)obj["objectName"];
         }
     }
 }

@@ -20,34 +20,25 @@ namespace SMLimitless.Interfaces
     /// <param name="direction">The "forward" or "backward" direction of the effect.</param>
     public delegate void EffectCompletedEventHandler(object sender, EffectCompletedEventArgs direction);
 
+	/// <summary>
+	/// Arguments for the <see cref="EffectCompletedEventHandler"/>. 
+	/// </summary>
 	public sealed class EffectCompletedEventArgs : EventArgs
 	{
+		/// <summary>
+		/// Gets the <see cref="EffectDirection"/> for the effect that had completed.
+		/// </summary>
 		public EffectDirection Direction { get; }
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="EffectCompletedEventArgs"/> class. 
+		/// </summary>
+		/// <param name="direction">The <see cref="EffectDirection"/> for the effect that had completed.</param>
 		public EffectCompletedEventArgs(EffectDirection direction)
 		{
 			Direction = direction;
 		}
 	}
-
-    /// <summary>
-    /// Defines a "forward" and "backward" direction for effects.
-    /// Every effect may use this differently, but the general definition
-    /// is that a forward effect changes something on the screen,
-    /// and a backward effect undoes that change.
-    /// </summary>
-    public enum EffectDirection
-    {
-        /// <summary>
-        /// The forward direction.
-        /// </summary>
-        Forward,
-
-        /// <summary>
-        /// The backward direction.
-        /// </summary>
-        Backward
-    }
     
    /// <summary>
     /// Defines a visual effect.

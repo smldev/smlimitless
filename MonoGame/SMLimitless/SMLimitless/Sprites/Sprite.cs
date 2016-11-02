@@ -82,6 +82,9 @@ namespace SMLimitless.Sprites
 		[Browsable(false)]
 		public Section Owner { get; set; }
 
+		/// <summary>
+		/// Gets a read-only list of the current attributes this sprite has.
+		/// </summary>
 		public IReadOnlyList<string> Attributes => attributes.AsReadOnly();
 		#endregion
 
@@ -92,6 +95,9 @@ namespace SMLimitless.Sprites
         [Obsolete]
 		public bool IsActive { get; set; }
 
+		/// <summary>
+		/// Gets or sets the current <see cref="SpriteActiveState"/> of this sprite. 
+		/// </summary>
 		[Browsable(false)]
 		public virtual SpriteActiveState ActiveState { get; set; } = SpriteActiveState.Active;
 
@@ -107,6 +113,9 @@ namespace SMLimitless.Sprites
 		[Browsable(false)]
 		public bool IsOnGround { get; internal set; }
 
+		/// <summary>
+		/// Gets the tile directly beneath the sprite, or null if there isn't one.
+		/// </summary>
 		[Browsable(false)]
 		public Tile TileBeneathSprite
 		{
@@ -158,6 +167,9 @@ namespace SMLimitless.Sprites
 		[Browsable(false)]
 		public Vector2 PreviousPosition { get; protected set; }
 
+		/// <summary>
+		/// Gets or sets the last velocity of the sprite, measured in pixels per second.
+		/// </summary>
 		[Browsable(false)]
 		public Vector2 PreviousVelocity { get; protected set; }
 
@@ -572,12 +584,21 @@ namespace SMLimitless.Sprites
 		{
 			return false;
 		}
-
+		
+		/// <summary>
+		/// Gets a string containing debug information. about this sprite,
+		/// such as position, velocity, or sprite-specific information.
+		/// </summary>
+		/// <returns>A string containing debug information.</returns>
 		public virtual string GetDebugInfo()
 		{
 			return "";
 		}
 
+		/// <summary>
+		/// Creates a new, separate instance of this sprite, with the same properties.
+		/// </summary>
+		/// <returns>A cloned sprite.</returns>
 		public Sprite Clone()
 		{
 			Sprite clone = AssemblyManager.GetSpriteByFullName(GetType().FullName);

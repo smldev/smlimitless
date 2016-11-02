@@ -21,6 +21,7 @@ namespace SMLimitless
             /// The main entry point for the application.
             /// </summary>
             /// <param name="args">Command-line arguments.</param>
+			[STAThread]
             public static void Main(string[] args)
             {
 #if !DEBUG

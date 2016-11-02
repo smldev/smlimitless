@@ -10,6 +10,11 @@ using SMLimitless.Sprites.Assemblies;
 
 namespace SMLimitless.Sprites.InternalSprites
 {
+	/// <summary>
+	/// A sprite that controls the camera while the level editor is active.
+	/// The user can use the keyboard arrow keys to move the camera around.
+	/// The user can hold Shift to make the camera move faster.
+	/// </summary>
 	public sealed class EditorCameraTrackingObject : Sprite
 	{
 		private const float MoveDistance = 16f;
@@ -18,19 +23,39 @@ namespace SMLimitless.Sprites.InternalSprites
 
 		private int moveTimeout = DefaultMoveTimeout;
 
+		/// <summary>
+		/// Gets the name of the category that this sprite is categorized within in the level editor.
+		/// </summary>
 		public override string EditorCategory => "Internal Sprites";
+
+		/// <summary>
+		/// Gets a value indicating whether this sprite is a player sprite.
+		/// </summary>
 		public override bool IsPlayer => false;
 
+		/// <summary>
+		/// Deserializes any objects that custom sprites have written to the level file.
+		/// </summary>
+		/// <param name="customObjects">An object containing the objects of the custom sprites.</param>
 		public override void DeserializeCustomObjects(JsonHelper customObjects) { }
 
+		/// <summary>
+		/// This sprite has no graphics.
+		/// </summary>
 		public override void Draw()
 		{
 		}
 
+		/// <summary>
+		/// This sprite has no graphics.
+		/// </summary>
 		public override void Draw(Rectangle cropping)
 		{
 		}
 
+		/// <summary>
+		/// Updates this object.
+		/// </summary>
 		public override void Update()
 		{
 			if (moveTimeout > 0)
@@ -74,11 +99,18 @@ namespace SMLimitless.Sprites.InternalSprites
 			base.Update();
 		}
 
+		/// <summary>
+		/// Gets an anonymous object containing objects that need to be saved to the level file.
+		/// </summary>
+		/// <returns></returns>
 		public override object GetCustomSerializableObjects()
 		{
 			return null;
 		}
 
+		/// <summary>
+		/// Loads the content for this sprite.
+		/// </summary>
 		public override void LoadContent()
 		{
 		}

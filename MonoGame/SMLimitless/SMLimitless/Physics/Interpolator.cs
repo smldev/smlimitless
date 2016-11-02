@@ -71,7 +71,7 @@ namespace SMLimitless.Physics
         /// <param name="scale">The kind of interpolator scale to use.</param>
         public Interpolator(float startValue, float endValue, float length, Action<Interpolator> step, Action<Interpolator> completed, InterpolatorScaleDelegate scale)
         {
-            this.Reset(startValue, endValue, length, step, completed, scale);
+			Reset(startValue, endValue, length, step, completed, scale);
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace SMLimitless.Physics
         { 
             get 
             { 
-                return this.End - this.Start; 
+                return End - Start; 
             } 
         }
 
@@ -142,7 +142,7 @@ namespace SMLimitless.Physics
         /// </summary>
         public void Stop()
         {
-            this.Enabled = false;
+			Enabled = false;
         }
 
         /// <summary>
@@ -150,21 +150,21 @@ namespace SMLimitless.Physics
         /// </summary>
         public void ForceFinish()
         {
-            if (this.Enabled)
+            if (Enabled)
             {
-                this.Enabled = false;
-                this.Progress = 1;
-                float scaledProgress = this.Scale(this.Progress);
-                this.Value = (this.Start + this.Range) * scaledProgress;
+				Enabled = false;
+				Progress = 1;
+                float scaledProgress = Scale(Progress);
+				Value = (Start + Range) * scaledProgress;
 
-                if (this.Step != null)
+                if (Step != null)
                 {
-                    this.Step(this);
+					Step(this);
                 }
 
-                if (this.Completed != null)
+                if (Completed != null)
                 {
-                    this.Completed(this);
+					Completed(this);
                 }
             }
         }
@@ -174,36 +174,36 @@ namespace SMLimitless.Physics
         /// </summary>
         public void Update()
         {
-            if (this.Enabled)
+            if (Enabled)
             {
-                // Update the progress, clamping at 1f.
-                this.Progress = Math.Min(this.Progress + ((1 / this.Length) * GameServices.GameTime.GetElapsedSeconds()), 1f);
+				// Update the progress, clamping at 1f.
+				Progress = Math.Min(Progress + ((1 / Length) * GameServices.GameTime.GetElapsedSeconds()), 1f);
 
                 // Get the scaled progress and use that to generate the value
-                float scaledProgress = this.Scale(this.Progress);
-                this.Value = (this.Start + this.Range) * scaledProgress;
+                float scaledProgress = Scale(Progress);
+				Value = (Start + Range) * scaledProgress;
 
                 // invoke the step callback
-                if (this.Step != null)
+                if (Step != null)
                 {
-                    this.Step(this);
+					Step(this);
                 }
 
                 // if the progress is 1, the interpolator is done.
-                if (this.Progress == 1f)
+                if (Progress == 1f)
                 {
-                    this.Enabled = false;
+					Enabled = false;
 
                     // invoke the completed callback
-                    if (this.Completed != null)
+                    if (Completed != null)
                     {
-                        this.Completed(this);
+						Completed(this);
                     }
 
-                    // free the Interpolator's resources.
-                    this.Scale = null;
-                    this.Step = null;
-                    this.Completed = null;
+					// free the Interpolator's resources.
+					Scale = null;
+					Step = null;
+					Completed = null;
                 }
             }
         }
@@ -214,7 +214,7 @@ namespace SMLimitless.Physics
         /// <returns>A string containing several useful values.</returns>
         public override string ToString()
         {
-            return string.Format("{0} to {1}, {2}, Length: {3}, Value: {4}, Progress {5}", this.Start, this.End, this.Enabled ? "Enabled" : "Disabled", this.Length, this.Value, this.Progress);
+            return string.Format("{0} to {1}, {2}, Length: {3}, Value: {4}, Progress {5}", Start, End, Enabled ? "Enabled" : "Disabled", Length, Value, Progress);
         }
 
         /// <summary>
@@ -225,7 +225,7 @@ namespace SMLimitless.Physics
         /// <returns>A string containing several useful values.</returns>
         public string ToString(string format, IFormatProvider formatProvider)
         {
-            return this.ToString();
+            return ToString();
         }
 
         /// <summary>
@@ -249,15 +249,15 @@ namespace SMLimitless.Physics
                 throw new ArgumentNullException("'scale' cannot be null.", "scale");
             }
 
-            this.Enabled = true;
-            this.Progress = 0;
-            this.Value = this.Start;
-            this.Start = startValue;
-            this.End = endValue;
-            this.Length = length;
-            this.Completed = completed;
-            this.Step = step;
-            this.Scale = scale;
+			Enabled = true;
+			Progress = 0;
+			Value = Start;
+			Start = startValue;
+			End = endValue;
+			Length = length;
+			Completed = completed;
+			Step = step;
+			Scale = scale;
         }
     }
 }

@@ -31,7 +31,7 @@ namespace SMLimitless.Sprites.Assemblies
         /// <param name="token">The JToken instance.</param>
         public JsonHelper(JToken token)
         {
-            this.Value = token;
+			Value = token;
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace SMLimitless.Sprites.Assemblies
         {
             try
             {
-                return (bool)this.Value[key];
+                return (bool)Value[key];
             }
             catch (Exception ex)
             {
@@ -70,7 +70,7 @@ namespace SMLimitless.Sprites.Assemblies
         {
             try
             {
-                return (byte)this.Value[key];
+                return (byte)Value[key];
             }
             catch (Exception ex)
             {
@@ -87,7 +87,7 @@ namespace SMLimitless.Sprites.Assemblies
         {
             try
             {
-                return (sbyte)this.Value[key];
+                return (sbyte)Value[key];
             }
             catch (Exception ex)
             {
@@ -104,7 +104,7 @@ namespace SMLimitless.Sprites.Assemblies
         {
             try
             {
-                return (short)this.Value[key];
+                return (short)Value[key];
             }
             catch (Exception ex)
             {
@@ -121,7 +121,7 @@ namespace SMLimitless.Sprites.Assemblies
         {
             try
             {
-                return (ushort)this.Value[key];
+                return (ushort)Value[key];
             }
             catch (Exception ex)
             {
@@ -138,7 +138,7 @@ namespace SMLimitless.Sprites.Assemblies
         {
             try
             {
-                return (int)this.Value[key];
+                return (int)Value[key];
             }
             catch (Exception ex)
             {
@@ -155,7 +155,7 @@ namespace SMLimitless.Sprites.Assemblies
         {
             try
             {
-                return (uint)this.Value[key];
+                return (uint)Value[key];
             }
             catch (Exception ex)
             {
@@ -172,7 +172,7 @@ namespace SMLimitless.Sprites.Assemblies
         {
             try
             {
-                return (long)this.Value[key];
+                return (long)Value[key];
             }
             catch (Exception ex)
             {
@@ -189,7 +189,7 @@ namespace SMLimitless.Sprites.Assemblies
         {
             try
             {
-                return (ulong)this.Value[key];
+                return (ulong)Value[key];
             }
             catch (Exception ex)
             {
@@ -206,7 +206,7 @@ namespace SMLimitless.Sprites.Assemblies
         {
             try
             {
-                return (float)this.Value[key];
+                return (float)Value[key];
             }
             catch (Exception ex)
             {
@@ -223,7 +223,7 @@ namespace SMLimitless.Sprites.Assemblies
         {
             try
             {
-                return (double)this.Value[key];
+                return (double)Value[key];
             }
             catch (Exception ex)
             {
@@ -240,7 +240,7 @@ namespace SMLimitless.Sprites.Assemblies
         {
             try
             {
-                return (decimal)this.Value[key];
+                return (decimal)Value[key];
             }
             catch (Exception ex)
             {
@@ -255,7 +255,7 @@ namespace SMLimitless.Sprites.Assemblies
         /// <returns>A UTF-16 character from the JToken.</returns>
         public char GetChar(string key)
         {
-            return (char)this.Value[key];
+            return (char)Value[key];
         }
 
 		/// <summary>
@@ -265,7 +265,7 @@ namespace SMLimitless.Sprites.Assemblies
 		/// <returns>A UTF-16 string from the JToken.</returns>
 		public string GetString(string key)
 		{
-			return (string)this.Value[key];
+			return (string)Value[key];
 		}
     }
 }

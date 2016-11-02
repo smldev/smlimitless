@@ -27,9 +27,9 @@ namespace SMLimitless.Screens
         /// <param name="parameters">This screen accepts no parameters, use String.Empty.</param>
         public override void Initialize(Screen owner, string parameters)
         {
-            this.Owner = owner;
-            this.Effect = new FadeEffect();
-            this.Effect.Set(EffectDirection.Forward, Color.BlueViolet);
+			Owner = owner;
+			Effect = new FadeEffect();
+			Effect.Set(EffectDirection.Forward, Color.BlueViolet);
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace SMLimitless.Screens
 
             if (Keyboard.GetState().IsKeyDown(Keys.X))
             {
-                this.Exit();
+				Exit();
             }
         }
 

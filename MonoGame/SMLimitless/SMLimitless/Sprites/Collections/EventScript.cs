@@ -38,8 +38,8 @@ namespace SMLimitless.Sprites.Collections
         {
             return new
             {
-                script = this.Script
-            };
+                script = Script
+			};
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace SMLimitless.Sprites.Collections
 		[Obsolete]
         public string Serialize()
         {
-            return JObject.FromObject(this.GetSerializableObjects()).ToString();
+            return JObject.FromObject(GetSerializableObjects()).ToString();
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace SMLimitless.Sprites.Collections
         public void Deserialize(string json)
         {
             JObject obj = JObject.Parse(json);
-            this.Script = (string)obj["script"];
+			Script = (string)obj["script"];
         }
     }
 }
