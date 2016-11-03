@@ -1,42 +1,45 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SMLimitless.Extensions;
 using SMLimitless.Physics;
 
 namespace SMLimitless.Sprites.Components
 {
 	/// <summary>
-	/// A component that indicates in which direction the nearest player is to a sprite.
+	///   A component that indicates in which direction the nearest player is to
+	///   a sprite.
 	/// </summary>
 	public sealed class ChasePlayerComponent : SpriteComponent
 	{
-		private int framesUntilNextCheck;
 		private List<float> distancesToPlayers = new List<float>();
+		private int framesUntilNextCheck;
 
 		/// <summary>
-		/// Gets the number of frames between any two checks of the nearest player's direction.
+		///   Gets the number of frames between any two checks of the nearest
+		///   player's direction.
 		/// </summary>
 		public int FramesBetweenDirectionChecks { get; private set; }
 
 		/// <summary>
-		/// Gets a value which indicates the direction the nearest player is to a sprite.
+		///   Gets a value which indicates the direction the nearest player is to
+		///   a sprite.
 		/// </summary>
 		public FlaggedDirection NearestPlayerDirection { get; private set; } = FlaggedDirection.None;
 
 		/// <summary>
-		/// An event raised when the direction of the nearest player has been updated.
+		///   An event raised when the direction of the nearest player has been updated.
 		/// </summary>
 		/// <remarks>
-		/// This event is raised any time that <see cref="PerformDirectionCheck"/> is called,
-		/// even if the direction itself doesn't change.
+		///   This event is raised any time that <see
+		///   cref="PerformDirectionCheck" /> is called, even if the direction
+		///   itself doesn't change.
 		/// </remarks>
 		public event EventHandler NearestPlayerDirectionUpdated;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ChasePlayerComponent"/> class.
+		///   Initializes a new instance of the <see cref="ChasePlayerComponent"
+		///   /> class.
 		/// </summary>
 		/// <param name="owner"></param>
 		/// <param name="framesBetweenChecks"></param>
@@ -47,7 +50,7 @@ namespace SMLimitless.Sprites.Components
 		}
 
 		/// <summary>
-		/// Updates this component.
+		///   Updates this component.
 		/// </summary>
 		public override void Update()
 		{
@@ -61,23 +64,6 @@ namespace SMLimitless.Sprites.Components
 			{
 				framesUntilNextCheck--;
 			}
-		}
-
-		private void PerformDirectionCheck()
-		{
-			var nearestPlayer = GetNearestPlayer();
-			var playerCenter = nearestPlayer.Hitbox.Center;
-			var ownerCenter = Owner.Hitbox.Center;
-
-			NearestPlayerDirection = FlaggedDirection.None;
-
-			if (playerCenter.X < ownerCenter.X) { NearestPlayerDirection |= FlaggedDirection.Left; }
-			else { NearestPlayerDirection |= FlaggedDirection.Right; }
-
-			if (playerCenter.Y < ownerCenter.Y) { NearestPlayerDirection |= FlaggedDirection.Up; }
-			else { NearestPlayerDirection |= FlaggedDirection.Down; }
-
-			OnNearestPlayerDirectionUpdated();
 		}
 
 		private Sprite GetNearestPlayer()
@@ -100,6 +86,23 @@ namespace SMLimitless.Sprites.Components
 			{
 				NearestPlayerDirectionUpdated(this, new EventArgs());
 			}
+		}
+
+		private void PerformDirectionCheck()
+		{
+			var nearestPlayer = GetNearestPlayer();
+			var playerCenter = nearestPlayer.Hitbox.Center;
+			var ownerCenter = Owner.Hitbox.Center;
+
+			NearestPlayerDirection = FlaggedDirection.None;
+
+			if (playerCenter.X < ownerCenter.X) { NearestPlayerDirection |= FlaggedDirection.Left; }
+			else { NearestPlayerDirection |= FlaggedDirection.Right; }
+
+			if (playerCenter.Y < ownerCenter.Y) { NearestPlayerDirection |= FlaggedDirection.Up; }
+			else { NearestPlayerDirection |= FlaggedDirection.Down; }
+
+			OnNearestPlayerDirectionUpdated();
 		}
 	}
 }

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json.Linq;
 using SMLimitless.Collections;
@@ -19,202 +17,6 @@ namespace SMLimitless.IO.LevelSerializers
 	internal sealed class Serializer003 : ILevelSerializer
 	{
 		public string SerializerVersion => "Version v0.03";
-
-		public string Serialize(Level level) => JObject.FromObject(GetSerializableObjects(level)).ToString();
-
-		internal object GetSerializableObjects(Level level)
-		{
-			return new
-			{
-				header = new
-				{
-					version = SerializerVersion,
-					name = level.Name,
-					author = level.Author
-				},
-				contentPackages = level.ContentFolderPaths,
-				levelExits = GetLevelExitObjects(level),
-				sections = GetSectionObjects(level),
-				script = level.EventScript.Script
-			};
-		}
-
-		internal object GetSectionObjects(Level level)
-		{
-			var result = new List<object>(level.Sections.Count);
-
-			foreach (var section in level.Sections)
-			{
-				result.Add(new
-				{
-					index = section.Index,
-					name = section.Name,
-					bounds = section.Bounds.Serialize(),
-					scrollSettings = GetAutoscrollSettingsObject(section),
-					background = GetBackgroundObject(section),
-					layers = GetLayerObjects(section),
-					sprites = GetSpriteObjects(section),
-					paths = GetPathObjects(section)
-				});
-			}
-
-			return result;
-		}
-
-		internal object GetAutoscrollSettingsObject(Section section)
-		{
-			return new
-			{
-				scrollType = (int)section.AutoscrollSettings.ScrollType,
-				speed = (section.AutoscrollSettings.ScrollType == CameraScrollType.AutoScroll) ? section.AutoscrollSettings.Speed.Serialize() : new Vector2(float.NaN).Serialize(),
-				pathName = (section.AutoscrollSettings.ScrollType == CameraScrollType.AutoScrollAlongPath) ? section.AutoscrollSettings.PathName : ""
-			};
-		}
-
-		internal object GetBackgroundObject(Section section)
-		{
-			return new
-			{
-				topColor = section.Background.TopColor.Serialize(),
-				bottomColor = section.Background.BottomColor.Serialize(),
-				layers = GetBackgroundLayerObjects(section.Background)
-			};
-		}
-
-		internal object GetBackgroundLayerObjects(Background background)
-		{
-			List<object> result = new List<object>(background.Layers.Count);
-
-			foreach (var layer in background.Layers)
-			{
-				result.Add(new
-				{
-					resourceName = layer.BackgroundTextureResourceName,
-					scrollDirection = (int)layer.ScrollDirection,
-					scrollRate = layer.ScrollRate
-				});
-			}
-
-			return result;
-		}
-
-		internal object GetLayerObjects(Section section)
-		{
-			var result = new List<object>(section.Layers.Count);
-
-			foreach (var layer in section.Layers)
-			{
-				LayerTileSaveData layerData = new LayerTileSaveData(layer);
-				result.Add(new
-				{
-					index = layer.Index,
-					name = layer.Name,
-					isMainLayer = layer.IsMainLayer,
-					position = layer.Tiles.Position.Serialize(),
-					gridWidth = layer.Tiles.Width,
-					gridHeight = layer.Tiles.Height,
-					uniqueTiles = GetUniqueTileObjects(layerData),
-					tilePositions = GetTilePositionCloudObjects(layerData)
-				});
-			}
-
-			return result;
-		}
-
-		internal object GetUniqueTileObjects(LayerTileSaveData layerData)
-		{
-			var result = new List<object>(layerData.Tiles.Count);
-
-			foreach (var uniqueTile in layerData.Tiles.Keys)
-			{
-				result.Add(new
-				{
-					id = uniqueTile.TileSaveID,
-					typeName = uniqueTile.TypeName,
-					solidSides = uniqueTile.SolidSides,
-					name = uniqueTile.Name,
-					graphicsResource = uniqueTile.GraphicsResourceName,
-					state = uniqueTile.InitialState,
-					customData = uniqueTile.CustomData
-				});
-			}
-
-			return result;
-		}
-
-		internal object GetTilePositionCloudObjects(LayerTileSaveData layerData)
-		{
-			var result = new List<object>(layerData.Tiles.Count);
-
-			foreach (var positionCloud in layerData.Tiles.Values)
-			{
-				result.Add(new
-				{
-					id = positionCloud.TileSaveID,
-					positions = positionCloud.CellNumbers.SerializeCompact(sorted: true)
-				});
-			}
-
-			
-			return result;
-		}
-
-		internal object GetSpriteObjects(Section section)
-		{
-			var result = new List<object>();
-
-			foreach (var sprite in section.SpritesGrid)
-			{
-				result.Add(new
-				{
-					typeName = sprite.GetType().FullName,
-					position = sprite.InitialPosition.Serialize(),
-					isActive = sprite.IsActive,
-					state = (int)sprite.InitialState,
-					collision = (int)sprite.TileCollisionMode,
-					name = sprite.Name,
-					message = sprite.Message,
-					isHostile = sprite.IsHostile,
-					isMoving = sprite.IsMoving,
-					direction = (int)sprite.Direction,
-					customObjects = sprite.GetCustomSerializableObjects()
-				});
-			}
-
-			return result;
-		}
-
-		internal object GetPathObjects(Section section)
-		{
-			var result = new List<object>(section.Paths.Count);
-
-			foreach (var path in section.Paths)
-			{
-				result.Add(new
-				{
-					points = path.Points.SerializeCompact()
-				});
-			}
-
-			return result;
-		}
-
-		internal object GetLevelExitObjects(Level level)
-		{
-			var result = new List<object>(level.LevelExits.Count);
-
-			foreach (var levelExit in level.LevelExits)
-			{
-				result.Add(new
-				{
-					exitIndex = levelExit.ExitIndex,
-					exitDirection = (int)levelExit.ExitDirection,
-					objectName = levelExit.ObjectName
-				});
-			}
-
-			return result;
-		}
 
 		public Level Deserialize(string json)
 		{
@@ -254,57 +56,7 @@ namespace SMLimitless.IO.LevelSerializers
 			return result;
 		}
 
-		internal List<LevelExit> DeserializeLevelExits(JArray levelExitObjects)
-		{
-			List<LevelExit> result = new List<LevelExit>();
-
-			foreach (var entry in levelExitObjects)
-			{
-				LevelExit levelExit = new LevelExit();
-
-				levelExit.ExitIndex = (int)entry["exitIndex"];
-				levelExit.ExitDirection = (Direction)(int)entry["exitDirection"];
-				levelExit.ObjectName = (string)entry["objectName"];
-
-				result.Add(levelExit);
-			}
-
-			return result;
-		}
-
-		internal List<Section> DeserializeSections(JArray sectionObjects, Level ownerLevel)
-		{
-			List<Section> result = new List<Section>();
-
-			foreach (var entry in sectionObjects)
-			{
-				Section section = new Section(ownerLevel);
-
-				section.Index = (int)entry["index"];
-				section.Name = (string)entry["name"];
-				section.Bounds = BoundingRectangle.FromSimpleString((string)entry["bounds"]);
-				section.AutoscrollSettings = DeserializeAutoscrollSettings((JObject)entry["scrollSettings"]);
-				section.Background = DeserializeBackground((JObject)entry["background"], section);
-
-				JArray layersData = (JArray)entry["layers"];
-				JArray spritesData = (JArray)entry["sprites"];
-				JArray pathsData = (JArray)entry["paths"];
-
-				List<Sprite> sectionSprites;
-				SparseCellGrid<Sprite> sectionSpriteGrid = DeserializeSprites(spritesData, out sectionSprites);
-
-				section.Layers = DeserializeLayers(layersData, section);
-				section.SpritesGrid = sectionSpriteGrid;
-				section.Sprites = sectionSprites;
-				section.Players.AddRange(section.Sprites.Where(s => s.IsPlayer));
-				section.Paths = DeserializePaths(pathsData);
-
-				section.IsLoaded = true;
-				result.Add(section);
-			}
-
-			return result;
-		}
+		public string Serialize(Level level) => JObject.FromObject(GetSerializableObjects(level)).ToString();
 
 		internal SectionAutoscrollSettings DeserializeAutoscrollSettings(JObject obj)
 		{
@@ -381,40 +133,72 @@ namespace SMLimitless.IO.LevelSerializers
 			return result;
 		}
 
-		internal List<TileSaveData> DeserializeTileSaveData(JArray tileSaveObjects)
+		internal List<LevelExit> DeserializeLevelExits(JArray levelExitObjects)
 		{
-			var result = new List<TileSaveData>();
+			List<LevelExit> result = new List<LevelExit>();
 
-			foreach (var entry in tileSaveObjects)
+			foreach (var entry in levelExitObjects)
 			{
-				TileSaveData saveData = new TileSaveData();
+				LevelExit levelExit = new LevelExit();
 
-				saveData.TileSaveID = (int)entry["id"];
-				saveData.TypeName = (string)entry["typeName"];
-				saveData.SolidSides = (int)entry["solidSides"];
-				saveData.Name = (string)entry["name"];
-				saveData.GraphicsResourceName = (string)entry["graphicsResource"];
-				saveData.InitialState = (string)entry["state"];
-				saveData.CustomData = entry["customData"];
+				levelExit.ExitIndex = (int)entry["exitIndex"];
+				levelExit.ExitDirection = (Direction)(int)entry["exitDirection"];
+				levelExit.ObjectName = (string)entry["objectName"];
 
-				result.Add(saveData);
+				result.Add(levelExit);
 			}
 
 			return result;
 		}
 
-		internal List<TilePositionCloud> DeserializeTilePositionClouds(JArray positionObjects)
+		internal List<Path> DeserializePaths(JArray pathObjects)
 		{
-			var result = new List<TilePositionCloud>();
+			List<Path> result = new List<Path>();
 
-			foreach (var entry in positionObjects)
+			foreach (var entry in pathObjects)
 			{
-				TilePositionCloud positionCloud = new TilePositionCloud();
+				Path path = new Path(null);
 
-				positionCloud.TileSaveID = (int)entry["id"];
-				positionCloud.CellNumbers = PointExtensions.DeserializeCompact((string)entry["positions"]);
+				JArray points = (JArray)entry["points"];
+				foreach (var point in points)
+				{
+					path.Points.Add(point.ToVector2());
+				}
+				result.Add(path);
+			}
 
-				result.Add(positionCloud);
+			return result;
+		}
+
+		internal List<Section> DeserializeSections(JArray sectionObjects, Level ownerLevel)
+		{
+			List<Section> result = new List<Section>();
+
+			foreach (var entry in sectionObjects)
+			{
+				Section section = new Section(ownerLevel);
+
+				section.Index = (int)entry["index"];
+				section.Name = (string)entry["name"];
+				section.Bounds = BoundingRectangle.FromSimpleString((string)entry["bounds"]);
+				section.AutoscrollSettings = DeserializeAutoscrollSettings((JObject)entry["scrollSettings"]);
+				section.Background = DeserializeBackground((JObject)entry["background"], section);
+
+				JArray layersData = (JArray)entry["layers"];
+				JArray spritesData = (JArray)entry["sprites"];
+				JArray pathsData = (JArray)entry["paths"];
+
+				List<Sprite> sectionSprites;
+				SparseCellGrid<Sprite> sectionSpriteGrid = DeserializeSprites(spritesData, out sectionSprites);
+
+				section.Layers = DeserializeLayers(layersData, section);
+				section.SpritesGrid = sectionSpriteGrid;
+				section.Sprites = sectionSprites;
+				section.Players.AddRange(section.Sprites.Where(s => s.IsPlayer));
+				section.Paths = DeserializePaths(pathsData);
+
+				section.IsLoaded = true;
+				result.Add(section);
 			}
 
 			return result;
@@ -448,20 +232,233 @@ namespace SMLimitless.IO.LevelSerializers
 			return result;
 		}
 
-		internal List<Path> DeserializePaths(JArray pathObjects)
+		internal List<TilePositionCloud> DeserializeTilePositionClouds(JArray positionObjects)
 		{
-			List<Path> result = new List<Path>();
+			var result = new List<TilePositionCloud>();
 
-			foreach (var entry in pathObjects)
+			foreach (var entry in positionObjects)
 			{
-				Path path = new Path(null);
+				TilePositionCloud positionCloud = new TilePositionCloud();
 
-				JArray points = (JArray)entry["points"];
-				foreach (var point in points)
+				positionCloud.TileSaveID = (int)entry["id"];
+				positionCloud.CellNumbers = PointExtensions.DeserializeCompact((string)entry["positions"]);
+
+				result.Add(positionCloud);
+			}
+
+			return result;
+		}
+
+		internal List<TileSaveData> DeserializeTileSaveData(JArray tileSaveObjects)
+		{
+			var result = new List<TileSaveData>();
+
+			foreach (var entry in tileSaveObjects)
+			{
+				TileSaveData saveData = new TileSaveData();
+
+				saveData.TileSaveID = (int)entry["id"];
+				saveData.TypeName = (string)entry["typeName"];
+				saveData.SolidSides = (int)entry["solidSides"];
+				saveData.Name = (string)entry["name"];
+				saveData.GraphicsResourceName = (string)entry["graphicsResource"];
+				saveData.InitialState = (string)entry["state"];
+				saveData.CustomData = entry["customData"];
+
+				result.Add(saveData);
+			}
+
+			return result;
+		}
+
+		internal object GetAutoscrollSettingsObject(Section section)
+		{
+			return new
+			{
+				scrollType = (int)section.AutoscrollSettings.ScrollType,
+				speed = (section.AutoscrollSettings.ScrollType == CameraScrollType.AutoScroll) ? section.AutoscrollSettings.Speed.Serialize() : new Vector2(float.NaN).Serialize(),
+				pathName = (section.AutoscrollSettings.ScrollType == CameraScrollType.AutoScrollAlongPath) ? section.AutoscrollSettings.PathName : ""
+			};
+		}
+
+		internal object GetBackgroundLayerObjects(Background background)
+		{
+			List<object> result = new List<object>(background.Layers.Count);
+
+			foreach (var layer in background.Layers)
+			{
+				result.Add(new
 				{
-					path.Points.Add(point.ToVector2());
-				}
-				result.Add(path);
+					resourceName = layer.BackgroundTextureResourceName,
+					scrollDirection = (int)layer.ScrollDirection,
+					scrollRate = layer.ScrollRate
+				});
+			}
+
+			return result;
+		}
+
+		internal object GetBackgroundObject(Section section)
+		{
+			return new
+			{
+				topColor = section.Background.TopColor.Serialize(),
+				bottomColor = section.Background.BottomColor.Serialize(),
+				layers = GetBackgroundLayerObjects(section.Background)
+			};
+		}
+
+		internal object GetLayerObjects(Section section)
+		{
+			var result = new List<object>(section.Layers.Count);
+
+			foreach (var layer in section.Layers)
+			{
+				LayerTileSaveData layerData = new LayerTileSaveData(layer);
+				result.Add(new
+				{
+					index = layer.Index,
+					name = layer.Name,
+					isMainLayer = layer.IsMainLayer,
+					position = layer.Tiles.Position.Serialize(),
+					gridWidth = layer.Tiles.Width,
+					gridHeight = layer.Tiles.Height,
+					uniqueTiles = GetUniqueTileObjects(layerData),
+					tilePositions = GetTilePositionCloudObjects(layerData)
+				});
+			}
+
+			return result;
+		}
+
+		internal object GetLevelExitObjects(Level level)
+		{
+			var result = new List<object>(level.LevelExits.Count);
+
+			foreach (var levelExit in level.LevelExits)
+			{
+				result.Add(new
+				{
+					exitIndex = levelExit.ExitIndex,
+					exitDirection = (int)levelExit.ExitDirection,
+					objectName = levelExit.ObjectName
+				});
+			}
+
+			return result;
+		}
+
+		internal object GetPathObjects(Section section)
+		{
+			var result = new List<object>(section.Paths.Count);
+
+			foreach (var path in section.Paths)
+			{
+				result.Add(new
+				{
+					points = path.Points.SerializeCompact()
+				});
+			}
+
+			return result;
+		}
+
+		internal object GetSectionObjects(Level level)
+		{
+			var result = new List<object>(level.Sections.Count);
+
+			foreach (var section in level.Sections)
+			{
+				result.Add(new
+				{
+					index = section.Index,
+					name = section.Name,
+					bounds = section.Bounds.Serialize(),
+					scrollSettings = GetAutoscrollSettingsObject(section),
+					background = GetBackgroundObject(section),
+					layers = GetLayerObjects(section),
+					sprites = GetSpriteObjects(section),
+					paths = GetPathObjects(section)
+				});
+			}
+
+			return result;
+		}
+
+		internal object GetSerializableObjects(Level level)
+		{
+			return new
+			{
+				header = new
+				{
+					version = SerializerVersion,
+					name = level.Name,
+					author = level.Author
+				},
+				contentPackages = level.ContentFolderPaths,
+				levelExits = GetLevelExitObjects(level),
+				sections = GetSectionObjects(level),
+				script = level.EventScript.Script
+			};
+		}
+
+		internal object GetSpriteObjects(Section section)
+		{
+			var result = new List<object>();
+
+			foreach (var sprite in section.SpritesGrid)
+			{
+				result.Add(new
+				{
+					typeName = sprite.GetType().FullName,
+					position = sprite.InitialPosition.Serialize(),
+					isActive = sprite.IsActive,
+					state = (int)sprite.InitialState,
+					collision = (int)sprite.TileCollisionMode,
+					name = sprite.Name,
+					message = sprite.Message,
+					isHostile = sprite.IsHostile,
+					isMoving = sprite.IsMoving,
+					direction = (int)sprite.Direction,
+					customObjects = sprite.GetCustomSerializableObjects()
+				});
+			}
+
+			return result;
+		}
+
+		internal object GetTilePositionCloudObjects(LayerTileSaveData layerData)
+		{
+			var result = new List<object>(layerData.Tiles.Count);
+
+			foreach (var positionCloud in layerData.Tiles.Values)
+			{
+				result.Add(new
+				{
+					id = positionCloud.TileSaveID,
+					positions = positionCloud.CellNumbers.SerializeCompact(sorted: true)
+				});
+			}
+
+			return result;
+		}
+
+		internal object GetUniqueTileObjects(LayerTileSaveData layerData)
+		{
+			var result = new List<object>(layerData.Tiles.Count);
+
+			foreach (var uniqueTile in layerData.Tiles.Keys)
+			{
+				result.Add(new
+				{
+					id = uniqueTile.TileSaveID,
+					typeName = uniqueTile.TypeName,
+					solidSides = uniqueTile.SolidSides,
+					name = uniqueTile.Name,
+					graphicsResource = uniqueTile.GraphicsResourceName,
+					state = uniqueTile.InitialState,
+					customData = uniqueTile.CustomData
+				});
 			}
 
 			return result;

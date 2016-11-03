@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using SMLimitless.Input;
@@ -11,50 +7,70 @@ using SMLimitless.Sprites.Assemblies;
 namespace SMLimitless.Sprites.InternalSprites
 {
 	/// <summary>
-	/// A sprite that controls the camera while the level editor is active.
-	/// The user can use the keyboard arrow keys to move the camera around.
-	/// The user can hold Shift to make the camera move faster.
+	///   A sprite that controls the camera while the level editor is active. The
+	///   user can use the keyboard arrow keys to move the camera around. The
+	///   user can hold Shift to make the camera move faster.
 	/// </summary>
 	public sealed class EditorCameraTrackingObject : Sprite
 	{
+		private const int DefaultMoveTimeout = 2;
 		private const float MoveDistance = 16f;
 		private const float ShiftMultiplier = 4f;
-		private const int DefaultMoveTimeout = 2;
-
 		private int moveTimeout = DefaultMoveTimeout;
 
 		/// <summary>
-		/// Gets the name of the category that this sprite is categorized within in the level editor.
+		///   Gets the name of the category that this sprite is categorized
+		///   within in the level editor.
 		/// </summary>
 		public override string EditorCategory => "Internal Sprites";
 
 		/// <summary>
-		/// Gets a value indicating whether this sprite is a player sprite.
+		///   Gets a value indicating whether this sprite is a player sprite.
 		/// </summary>
 		public override bool IsPlayer => false;
 
 		/// <summary>
-		/// Deserializes any objects that custom sprites have written to the level file.
+		///   Deserializes any objects that custom sprites have written to the
+		///   level file.
 		/// </summary>
-		/// <param name="customObjects">An object containing the objects of the custom sprites.</param>
+		/// <param name="customObjects">
+		///   An object containing the objects of the custom sprites.
+		/// </param>
 		public override void DeserializeCustomObjects(JsonHelper customObjects) { }
 
 		/// <summary>
-		/// This sprite has no graphics.
+		///   This sprite has no graphics.
 		/// </summary>
 		public override void Draw()
 		{
 		}
 
 		/// <summary>
-		/// This sprite has no graphics.
+		///   This sprite has no graphics.
 		/// </summary>
 		public override void Draw(Rectangle cropping)
 		{
 		}
 
 		/// <summary>
-		/// Updates this object.
+		///   Gets an anonymous object containing objects that need to be saved
+		///   to the level file.
+		/// </summary>
+		/// <returns></returns>
+		public override object GetCustomSerializableObjects()
+		{
+			return null;
+		}
+
+		/// <summary>
+		///   Loads the content for this sprite.
+		/// </summary>
+		public override void LoadContent()
+		{
+		}
+
+		/// <summary>
+		///   Updates this object.
 		/// </summary>
 		public override void Update()
 		{
@@ -97,22 +113,6 @@ namespace SMLimitless.Sprites.InternalSprites
 			}
 
 			base.Update();
-		}
-
-		/// <summary>
-		/// Gets an anonymous object containing objects that need to be saved to the level file.
-		/// </summary>
-		/// <returns></returns>
-		public override object GetCustomSerializableObjects()
-		{
-			return null;
-		}
-
-		/// <summary>
-		/// Loads the content for this sprite.
-		/// </summary>
-		public override void LoadContent()
-		{
 		}
 	}
 }

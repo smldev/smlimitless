@@ -151,7 +151,7 @@ namespace SMLimitless.Collections
 		/// <summary>
 		///   Adds an item to the grid.
 		///   WARNING: This will overwrite any items that are already present
-		///   where the item will be placed.
+		///            where the item will be placed.
 		/// </summary>
 		/// <param name="item">The item to add to the grid.</param>
 		public void Add(IPositionable2 item)

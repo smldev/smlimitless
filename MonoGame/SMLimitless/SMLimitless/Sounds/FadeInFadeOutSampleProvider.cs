@@ -1,20 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NAudio.Wave;
 
 namespace SMLimitless.Sounds
 {
 	/// <summary>
-	/// Provides samples for a sound that fades in or fades out.
+	///   Provides samples for a sound that fades in or fades out.
 	/// </summary>
 	public sealed class FadeInFadeOutSampleProvider : ISampleProvider
 	{
 		// Credit to Mark Heath (http://stackoverflow.com/a/9471208/2709212)
 
-		enum FadeState
+		private enum FadeState
 		{
 			Silence,
 			FadingIn,
@@ -24,12 +20,21 @@ namespace SMLimitless.Sounds
 
 		private readonly object lockObject = new object();
 		private readonly ISampleProvider source;
-		private int fadeSamplePosition;
 		private int fadeSampleCount;
+		private int fadeSamplePosition;
 		private FadeState fadeState;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="FadeInFadeOutSampleProvider"/> class.
+		///   Gets the <see cref="WaveFormat" /> for this provider.
+		/// </summary>
+		public WaveFormat WaveFormat
+		{
+			get { return source.WaveFormat; }
+		}
+
+		/// <summary>
+		///   Initializes a new instance of the <see
+		///   cref="FadeInFadeOutSampleProvider" /> class.
 		/// </summary>
 		/// <param name="source">A sample provider.</param>
 		public FadeInFadeOutSampleProvider(ISampleProvider source)
@@ -39,9 +44,11 @@ namespace SMLimitless.Sounds
 		}
 
 		/// <summary>
-		/// Begins a fade-in.
+		///   Begins a fade-in.
 		/// </summary>
-		/// <param name="fadeDurationInMilliseconds">How long the fade should last, in milliseconds.</param>
+		/// <param name="fadeDurationInMilliseconds">
+		///   How long the fade should last, in milliseconds.
+		/// </param>
 		public void BeginFadeIn(double fadeDurationInMilliseconds)
 		{
 			lock (lockObject)
@@ -53,9 +60,11 @@ namespace SMLimitless.Sounds
 		}
 
 		/// <summary>
-		/// Begins a fade-out.
+		///   Begins a fade-out.
 		/// </summary>
-		/// <param name="fadeDurationInMilliseconds">How long the fade should last, in milliseconds.</param>
+		/// <param name="fadeDurationInMilliseconds">
+		///   How long the fade should last, in milliseconds.
+		/// </param>
 		public void BeginFadeOut(double fadeDurationInMilliseconds)
 		{
 			lock (lockObject)
@@ -67,7 +76,7 @@ namespace SMLimitless.Sounds
 		}
 
 		/// <summary>
-		/// Reads samples from this provider into a buffer.
+		///   Reads samples from this provider into a buffer.
 		/// </summary>
 		/// <param name="buffer">A buffer to write samples into.</param>
 		/// <param name="offset">How many samples in the sound to skip.</param>
@@ -103,26 +112,6 @@ namespace SMLimitless.Sounds
 			}
 		}
 
-		private void FadeOut(float[] buffer, int offset, int sourceSamplesRead)
-		{
-			int sample = 0;
-			while (sample < sourceSamplesRead)
-			{
-				float multiplier = 1.0f - (fadeSamplePosition / (float)fadeSampleCount);
-				for (int ch = 0; ch < source.WaveFormat.Channels; ch++)
-				{
-					buffer[offset + sample++] *= multiplier;
-				}
-				fadeSamplePosition++;
-				if (fadeSamplePosition > fadeSampleCount)
-				{
-					fadeState = FadeState.Silence;
-					ClearBuffer(buffer, sample + offset, sourceSamplesRead - sample);
-					break;
-				}
-			}
-		}
-
 		private void FadeIn(float[] buffer, int offset, int sourceSamplesRead)
 		{
 			int sample = 0;
@@ -142,12 +131,24 @@ namespace SMLimitless.Sounds
 			}
 		}
 
-		/// <summary>
-		/// Gets the <see cref="WaveFormat"/> for this provider.
-		/// </summary>
-		public WaveFormat WaveFormat
+		private void FadeOut(float[] buffer, int offset, int sourceSamplesRead)
 		{
-			get { return source.WaveFormat; }
+			int sample = 0;
+			while (sample < sourceSamplesRead)
+			{
+				float multiplier = 1.0f - (fadeSamplePosition / (float)fadeSampleCount);
+				for (int ch = 0; ch < source.WaveFormat.Channels; ch++)
+				{
+					buffer[offset + sample++] *= multiplier;
+				}
+				fadeSamplePosition++;
+				if (fadeSamplePosition > fadeSampleCount)
+				{
+					fadeState = FadeState.Silence;
+					ClearBuffer(buffer, sample + offset, sourceSamplesRead - sample);
+					break;
+				}
+			}
 		}
 	}
 }

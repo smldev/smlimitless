@@ -1,57 +1,61 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SMLimitless.Sprites.Components
 {
 	/// <summary>
-	/// A component for a sprite that has health and can be damaged.
+	///   A component for a sprite that has health and can be damaged.
 	/// </summary>
 	public sealed class HealthComponent : SpriteComponent
 	{
 		/// <summary>
-		/// The number of hit points that this sprite starts with.
-		/// </summary>
-		public readonly int StartingHitPoints;
-
-		/// <summary>
-		/// The maximum number of hit points that this sprite can have.
+		///   The maximum number of hit points that this sprite can have.
 		/// </summary>
 		public readonly int MaximumHitPoints;
 
 		/// <summary>
-		/// A collection of damage type names that this sprite is immune to.
+		///   The number of hit points that this sprite starts with.
+		/// </summary>
+		public readonly int StartingHitPoints;
+
+		/// <summary>
+		///   A collection of damage type names that this sprite is immune to.
 		/// </summary>
 		public List<string> ImmuneTo;
 
 		/// <summary>
-		/// Gets the current number of hit points this sprite has.
+		///   Gets the current number of hit points this sprite has.
 		/// </summary>
 		public int HitPoints { get; private set; }
 
 		/// <summary>
-		/// An event that is raised when this sprite is damaged.
+		///   An event that is raised when this sprite is damaged.
 		/// </summary>
 		public event EventHandler<SpriteDamagedEventArgs> SpriteDamage;
 
 		/// <summary>
-		/// An event that is raised when this sprite is killed (hit points become 0).
+		///   An event that is raised when this sprite is healed.
+		/// </summary>
+		public event EventHandler<int> SpriteHealed;
+		/// <summary>
+		///   An event that is raised when this sprite is killed (hit points
+		///   become 0).
 		/// </summary>
 		public event EventHandler<SpriteDamagedEventArgs> SpriteKilled;
 
 		/// <summary>
-		/// An event that is raised when this sprite is healed.
+		///   Initializes a new instance of the <see cref="HealthComponent" /> class.
 		/// </summary>
-		public event EventHandler<int> SpriteHealed;
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="HealthComponent"/> class.
-		/// </summary>
-		/// <param name="maximumHP">The maximum number of hit points that this sprite can have.</param>
-		/// <param name="startingHP">The number of hit points that this sprite should start with.</param>
-		/// <param name="immuneTo">A collection of damage type names that this sprite is immune to.</param>
+		/// <param name="maximumHP">
+		///   The maximum number of hit points that this sprite can have.
+		/// </param>
+		/// <param name="startingHP">
+		///   The number of hit points that this sprite should start with.
+		/// </param>
+		/// <param name="immuneTo">
+		///   A collection of damage type names that this sprite is immune to.
+		/// </param>
 		public HealthComponent(int maximumHP, int startingHP, params string[] immuneTo)
 		{
 			MaximumHitPoints = maximumHP;
@@ -60,16 +64,11 @@ namespace SMLimitless.Sprites.Components
 		}
 
 		/// <summary>
-		/// Updates this component.
+		///   Damages this sprite.
 		/// </summary>
-		public override void Update()
-		{
-		}
-
-		/// <summary>
-		/// Damages this sprite.
-		/// </summary>
-		/// <param name="hpAmount">The amount of hit points to remove from the sprite.</param>
+		/// <param name="hpAmount">
+		///   The amount of hit points to remove from the sprite.
+		/// </param>
 		/// <param name="damageType">The name of the damage type.</param>
 		public void Damage(int hpAmount, string damageType)
 		{
@@ -92,7 +91,7 @@ namespace SMLimitless.Sprites.Components
 		}
 
 		/// <summary>
-		/// Heals this sprite, restoring hit points.
+		///   Heals this sprite, restoring hit points.
 		/// </summary>
 		/// <param name="hpAmount"></param>
 		public void Heal(int hpAmount)
@@ -108,6 +107,13 @@ namespace SMLimitless.Sprites.Components
 
 			HitPoints += hpAmount;
 			OnSpriteHealed();
+		}
+
+		/// <summary>
+		///   Updates this component.
+		/// </summary>
+		public override void Update()
+		{
 		}
 
 		private void OnSpriteDamaged(string damageType)
@@ -136,25 +142,28 @@ namespace SMLimitless.Sprites.Components
 	}
 
 	/// <summary>
-	/// Contains event data for when a sprite or tile damages another sprite.
+	///   Contains event data for when a sprite or tile damages another sprite.
 	/// </summary>
 	public sealed class SpriteDamagedEventArgs : EventArgs
 	{
 		/// <summary>
-		/// The type of damage.
+		///   The type of damage.
 		/// </summary>
 		public string DamageType { get; private set; }
 
 		/// <summary>
-		/// The number of remaining hit points on the damaged sprite.
+		///   The number of remaining hit points on the damaged sprite.
 		/// </summary>
 		public int RemainingHitPoints { get; private set; }
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SpriteDamagedEventArgs"/> class.
+		///   Initializes a new instance of the <see
+		///   cref="SpriteDamagedEventArgs" /> class.
 		/// </summary>
 		/// <param name="damageType">The type of damage.</param>
-		/// <param name="remainingHitPoints">The number of remaining hit points on the damaged sprite.</param>
+		/// <param name="remainingHitPoints">
+		///   The number of remaining hit points on the damaged sprite.
+		/// </param>
 		public SpriteDamagedEventArgs(string damageType, int remainingHitPoints)
 		{
 			DamageType = damageType;

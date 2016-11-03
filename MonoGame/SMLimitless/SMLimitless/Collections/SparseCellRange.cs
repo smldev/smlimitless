@@ -41,6 +41,28 @@ namespace SMLimitless.Collections
 		}
 
 		/// <summary>
+		///   Determines if two <see cref="SparseCellRange" /> objects are
+		///   inequal to each other.
+		/// </summary>
+		/// <param name="lhs">The first range.</param>
+		/// <param name="rhs">The second range.</param>
+		/// <returns>
+		///   True if all properties of both sides are not equal, false if otherwise.
+		/// </returns>
+		public static bool operator !=(SparseCellRange lhs, SparseCellRange rhs) => !lhs.Equals(rhs);
+
+		/// <summary>
+		///   Determines if two <see cref="SparseCellRange" /> objects are equal
+		///   to each other.
+		/// </summary>
+		/// <param name="lhs">The first range.</param>
+		/// <param name="rhs">The second range.</param>
+		/// <returns>
+		///   True if all properties of both sides are equal, false if otherwise.
+		/// </returns>
+		public static bool operator ==(SparseCellRange lhs, SparseCellRange rhs) => lhs.Equals(rhs);
+
+		/// <summary>
 		///   Determines if a given object is equal to this object.
 		/// </summary>
 		/// <param name="obj">The object to compare.</param>
@@ -68,22 +90,6 @@ namespace SMLimitless.Collections
 		{
 			return TopLeft == range.TopLeft && BottomRight == range.BottomRight;
 		}
-
-		/// <summary>
-		/// Determines if two <see cref="SparseCellRange"/> objects are equal to each other. 
-		/// </summary>
-		/// <param name="lhs">The first range.</param>
-		/// <param name="rhs">The second range.</param>
-		/// <returns>True if all properties of both sides are equal, false if otherwise.</returns>
-		public static bool operator ==(SparseCellRange lhs, SparseCellRange rhs) => lhs.Equals(rhs);
-
-		/// <summary>
-		/// Determines if two <see cref="SparseCellRange"/> objects are inequal to each other. 
-		/// </summary>
-		/// <param name="lhs">The first range.</param>
-		/// <param name="rhs">The second range.</param>
-		/// <returns>True if all properties of both sides are not equal, false if otherwise.</returns>
-		public static bool operator != (SparseCellRange lhs, SparseCellRange rhs) => !lhs.Equals(rhs);
 
 		/// <summary>
 		///   Gets a hash code for this <see cref="SparseCellRange" />.

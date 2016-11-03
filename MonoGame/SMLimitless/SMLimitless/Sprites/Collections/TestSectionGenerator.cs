@@ -1,23 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using SMLimitless.Sprites.Assemblies;
 
 namespace SMLimitless.Sprites.Collections
 {
 	/// <summary>
-	/// A class that generates a section for testing purposes.
+	///   A class that generates a section for testing purposes.
 	/// </summary>
 	public static class TestSectionGenerator
 	{
 		/// <summary>
-		/// Creates a test section.
+		///   Creates a test section.
 		/// </summary>
 		/// <param name="owner">The level that will own this section.</param>
-		/// <returns>A section consisting of randomly placed and sized rows of concrete blocks with a TestPlayer.</returns>
+		/// <returns>
+		///   A section consisting of randomly placed and sized rows of concrete
+		///   blocks with a TestPlayer.
+		/// </returns>
 		public static Section GenerateSection(Level owner)
 		{
 			// Create a section of randomly placed stretches of stone tiles.
@@ -37,19 +36,20 @@ namespace SMLimitless.Sprites.Collections
 			float tilePlacerY = 200f;
 
 			// really temporary
-			// AssemblyManager.LoadAssembly(System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "TestPackage", "SmlSample.dll"));
-			// hey it actually was temporary
-			// TODO: have ContentPackageManager ignore multiple attempts to add the same package
+			// AssemblyManager.LoadAssembly(System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(),
+			// "TestPackage", "SmlSample.dll")); hey it actually was temporary
+			// TODO: have ContentPackageManager ignore multiple attempts to add
+			//       the same package
 
 			Tile testTile3 = AssemblyManager.GetTileByFullName("SmlSample.TestTile3");
 			testTile3.GraphicsResourceName = "smw_concrete_block";
 
 			while (tilePlacerX < 1008f)
-            {
+			{
 				int runDistance = random.Next(3, 8);
 				tilePlacerY += (random.Next(1, 3) * 16f) * ((random.Next(0, 2) != 0) ? 1 : -1);
 				tilePlacerY -= (tilePlacerY % 16);
-                tilePlacerY = MathHelper.Clamp(tilePlacerY, 0, 1920);
+				tilePlacerY = MathHelper.Clamp(tilePlacerY, 0, 1920);
 
 				for (int i = 0; i < runDistance; i++)
 				{

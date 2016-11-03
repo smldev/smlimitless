@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
 using SMLimitless.Collections;
 using SMLimitless.Extensions;
@@ -12,50 +11,61 @@ using SMLimitless.Physics;
 namespace SMLimitless.Sprites.Collections
 {
 	/// <summary>
-	/// Represents a grid containing tiles, itself containing sprites.
+	///   Represents a grid containing tiles, itself containing sprites.
 	/// </summary>
 	public sealed class Layer : IName
 	{
-		/// <summary>
-		/// Gets a value indicating whether this layer is the main layer in its owner section.
-		/// </summary>
-		public bool IsMainLayer { get; internal set; }
-		private bool isInitialized;
-		private bool isContentLoaded;
 		private bool isActive;
 
-		internal Section Owner { get; private set; }
+		private bool isContentLoaded;
 
-		internal SizedGrid<Tile> Tiles { get; set; }
+		private bool isInitialized;
+
 		private List<Sprite> sprites = new List<Sprite>();
 
+		private Vector2 velocity = Vector2.Zero;
+
 		/// <summary>
-		/// Gets the bounds of this layer; the rectangle containing all tiles in the layer.
+		///   Gets the bounds of this layer; the rectangle containing all tiles
+		///   in the layer.
 		/// </summary>
 		public BoundingRectangle Bounds { get; private set; } = BoundingRectangle.NaN;
 
 		/// <summary>
-		/// Gets the position of the layer; the position of the top-left corner of the <see cref="Bounds"/>.
-		/// </summary>
-		public Vector2 Position { get; internal set; } = new Vector2(float.NaN);
-
-		/// <summary>
-		/// Gets the numeric index of this layer in its owner section.
+		///   Gets the numeric index of this layer in its owner section.
 		/// </summary>
 		public int Index { get; internal set; }
-		private Vector2 velocity = Vector2.Zero;
 
 		/// <summary>
-		/// Gets or sets the name of this layer.
+		///   Gets a value indicating whether this layer is the main layer in its
+		///   owner section.
+		/// </summary>
+		public bool IsMainLayer { get; internal set; }
+
+		/// <summary>
+		///   Gets or sets the name of this layer.
 		/// </summary>
 		[DefaultValue(""), Description("The name of this layer to be used in event scripting. This field is optional.")]
 		public string Name { get; set; }
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Layer"/> class.
+		///   Gets the position of the layer; the position of the top-left corner
+		///   of the <see cref="Bounds" />.
+		/// </summary>
+		public Vector2 Position { get; internal set; } = new Vector2(float.NaN);
+
+		internal Section Owner { get; private set; }
+
+		internal SizedGrid<Tile> Tiles { get; set; }
+
+		/// <summary>
+		///   Initializes a new instance of the <see cref="Layer" /> class.
 		/// </summary>
 		/// <param name="cOwner">The section that owns this layer.</param>
-		/// <param name="isMainLayer">A value indicating whether this layer is the main layer in its owner section. Defaults to false.</param>
+		/// <param name="isMainLayer">
+		///   A value indicating whether this layer is the main layer in its
+		///   owner section. Defaults to false.
+		/// </param>
 		public Layer(Section cOwner, bool isMainLayer = false)
 		{
 			Owner = cOwner;
@@ -64,7 +74,87 @@ namespace SMLimitless.Sprites.Collections
 		}
 
 		/// <summary>
-		/// Initializes the tiles and sprites in this layer.
+		///   Returns a value indicating whether a given cell number is within
+		///   the bounds of the layer's tile grid.
+		/// </summary>
+		/// <param name="cellNumber">The cell number to check.</param>
+		/// <returns>True if the cell is within bounds, false if it's not.</returns>
+		public bool CellWithinBounds(Vector2 cellNumber)
+		{
+			return cellNumber.X >= 0f && cellNumber.X < Tiles.Width && cellNumber.Y >= 0f && cellNumber.Y < Tiles.Height;
+		}
+
+		/// <summary>
+		///   Draws the outline of the <see cref="Bounds" /> of this layer.
+		/// </summary>
+		/// <param name="color">The color to draw the outline.</param>
+		public void Draw(Color color)
+		{
+			Bounds.DrawOutline(color);
+		}
+
+		/// <summary>
+		///   Gets the cell number at a given position.
+		/// </summary>
+		/// <param name="position">The given position.</param>
+		/// <returns>
+		///   A <see cref="Vector2" /> containing the cell number at the position.
+		/// </returns>
+		/// <remarks>
+		///   Returns cell numbers for positions outside the <see cref="Bounds"
+		///   /> of the layer.
+		/// </remarks>
+		public Vector2 GetCellNumberAtPosition(Vector2 position)
+		{
+			Vector2 adjustedPosition = position - Position;
+			return new Vector2((adjustedPosition.X / Tiles.CellWidth), (adjustedPosition.Y / Tiles.CellHeight)).Floor();
+		}
+
+		/// <summary>
+		///   Gets the cell number at a given position, or the cell number along
+		///   an edge or corner for out-of-bounds positions.
+		/// </summary>
+		/// <param name="position">The given position.</param>
+		/// <returns>
+		///   A <see cref="Vector2" /> representing a cell number within the layer.
+		/// </returns>
+		public Vector2 GetClampedCellNumberAtPosition(Vector2 position)
+		{
+			Vector2 cellNumber = GetCellNumberAtPosition(position);
+			cellNumber.X = MathHelper.Clamp(cellNumber.X, 0, Tiles.Width);
+			cellNumber.Y = MathHelper.Clamp(cellNumber.Y, 0, Tiles.Height);
+			return cellNumber;
+		}
+
+		/// <summary>
+		///   Gets a tile at a given cell number.
+		/// </summary>
+		/// <param name="x">
+		///   The X number of the cell; the cells away from the left-most cell.
+		/// </param>
+		/// <param name="y">
+		///   The Y number of the cell; the cells below the top-most cell.
+		/// </param>
+		/// <returns>A tile in the cell, or null if there is no tile there.</returns>
+		public Tile GetTile(int x, int y)
+		{
+			return Tiles[x, y];
+		}
+
+		/// <summary>
+		///   Gets a tile at a given cell number.
+		/// </summary>
+		/// <param name="cellNumber">
+		///   A <see cref="Vector2" /> containing the cell number.
+		/// </param>
+		/// <returns>A tile in the cell, or null if there is no tile there.</returns>
+		public Tile GetTile(Vector2 cellNumber)
+		{
+			return GetTile((int)cellNumber.X, (int)cellNumber.Y);
+		}
+
+		/// <summary>
+		///   Initializes the tiles and sprites in this layer.
 		/// </summary>
 		public void Initialize()
 		{
@@ -78,7 +168,7 @@ namespace SMLimitless.Sprites.Collections
 		}
 
 		/// <summary>
-		/// Loads the content of the tiles and sprites in this layer.
+		///   Loads the content of the tiles and sprites in this layer.
 		/// </summary>
 		public void LoadContent()
 		{
@@ -92,43 +182,116 @@ namespace SMLimitless.Sprites.Collections
 		}
 
 		/// <summary>
-		/// Updates the contents of this layer.
+		///   Moves this layer to a given position.
+		/// </summary>
+		/// <param name="position">The position to move the layer to.</param>
+		/// <exception cref="InvalidOperationException">
+		///   Thrown when attempting to move the main layer. The main layer
+		///   always has its position at the origin.
+		/// </exception>
+		public void Move(Vector2 position)
+		{
+			if (IsMainLayer) { throw new InvalidOperationException("Cannot move the main layer."); }
+
+			Vector2 distance = position - Position;
+			Translate(distance);
+		}
+
+		/// <summary>
+		///   Removes a tile from this layer.
+		/// </summary>
+		/// <param name="tile">The tile to remove.</param>
+		public void RemoveTile(Tile tile)
+		{
+			// Unlike when adding tiles, removing a tile doesn't shrink the grid
+			// even if the grid could shrink also holy cow the RemoveTile(Tile)
+			// implementation on master is *horrible*
+			Tiles.Remove(tile);
+		}
+
+		/// <summary>
+		///   Gets a tile in a given cell, or null if there is no tile in that
+		///   cell, or the given cell is out of bounds.
+		/// </summary>
+		/// <param name="cellNumber">The cell for which to get the tile.</param>
+		/// <returns>A Tile or null.</returns>
+		public Tile SafeGetTile(Vector2 cellNumber)
+		{
+			if (Tiles.IndexWithinBounds((int)cellNumber.X, (int)cellNumber.Y))
+			{
+				return GetTile(cellNumber);
+			}
+			return null;
+		}
+
+		/// <summary>
+		///   Moves the layer and its contents by a given distance.
+		/// </summary>
+		/// <param name="distance">The distance to move the layer.</param>
+		/// <exception cref="InvalidOperationException">
+		///   Thrown when attempting to translate the main layer. The main layer
+		///   always has its position at the origin.
+		/// </exception>
+		public void Translate(Vector2 distance)
+		{
+			if (IsMainLayer) { throw new InvalidOperationException("Cannot translate the main layer."); }
+
+			Position += distance;
+			Tiles.Position += distance;
+
+			// Move every tile and sprite first.
+			Tiles.ForEach(t => t.Position += distance);
+			sprites.ForEach(s => s.Position += distance);
+
+			// Finally, move the grid.
+			Tiles.Position += distance;
+		}
+
+		/// <summary>
+		///   Updates the contents of this layer.
 		/// </summary>
 		public void Update()
 		{
-			// TODO: change this method to account for active/inactive layers, tiles and sprites
+			// TODO: change this method to account for active/inactive layers,
+			//       tiles and sprites
 			Tiles.ForEach(t => t.Update());
 			sprites.ForEach(s => s.Update());
 		}
 
-		/// <summary>
-		/// Draws the outline of the <see cref="Bounds"/> of this layer.
-		/// </summary>
-		/// <param name="color">The color to draw the outline.</param>
-		public void Draw(Color color)
+		internal void AddSprite(Sprite sprite)
 		{
-			Bounds.DrawOutline(color);
+			sprites.Add(sprite);
+		}
+
+		internal void AddTile(Tile tile)
+		{
+			AddTiles(new[] { tile });
 		}
 
 		/// <summary>
-		/// Adds the tiles in an enumerable to this layer.
+		///   Adds the tiles in an enumerable to this layer.
 		/// </summary>
 		/// <param name="tiles">An enumerable of zero or more tiles.</param>
-		/// <exception cref="ArgumentException">Thrown if any tile in the enumerable is not grid-aligned.</exception>
+		/// <exception cref="ArgumentException">
+		///   Thrown if any tile in the enumerable is not grid-aligned.
+		/// </exception>
 		internal void AddTiles(IEnumerable<Tile> tiles)
 		{
-			// The sized grid, being a 2D array, suffers from the same un-resizability that the Array does.
-			// Adding a new tile will be O(n) worst case because we may have to resize the grid,
-			// but if we have a bunch of tiles to add at once, we only need to resize the grid once, if at all.
+			// The sized grid, being a 2D array, suffers from the same
+			// un-resizability that the Array does. Adding a new tile will be
+			// O(n) worst case because we may have to resize the grid, but if we
+			// have a bunch of tiles to add at once, we only need to resize the
+			// grid once, if at all.
 
 			if (!tiles.Any()) return;
 			if (!Tiles.DoesRangeAlignToGrid(tiles)) { throw new ArgumentException("Tried to add tiles to a grid that weren't grid aligned."); }
 
 			BoundingRectangle allTilesBound = tiles.Concat(Tiles).GetBoundsOfPositionables();
 
-			// so, here's probably a good point to talk about cell coordinate agnosticity
-			// Tiles will have cell coordinates since they're in a grid where each cell has coordinates,
-			// but you can't rely on them, and here's why:
+			// so, here's probably a good point to talk about cell coordinate
+			// agnosticity Tiles will have cell coordinates since they're in a
+			// grid where each cell has coordinates, but you can't rely on them,
+			// and here's why:
 			int allTilesBoundWidthInCells = (int)(allTilesBound.Width / Tiles.CellWidth);
 			int allTilesBoundHeightInCells = (int)(allTilesBound.Height / Tiles.CellHeight);
 
@@ -138,11 +301,11 @@ namespace SMLimitless.Sprites.Collections
 			int newGridWidth = (allTilesBoundWidthInCells * Tiles.CellWidth > Tiles.Width) ? allTilesBoundWidthInCells * Tiles.CellWidth : (Tiles.Width);
 			int newGridHeight = (allTilesBoundHeightInCells * Tiles.CellHeight > Tiles.Height) ? allTilesBoundHeightInCells * Tiles.CellHeight : (Tiles.Height);
 			Vector2 newGridOrigin = new Vector2(newGridOriginX, newGridOriginY);
-			SizedGrid<Tile> newGrid = new SizedGrid<Tile>(newGridOrigin, Tiles.CellWidth, Tiles.CellHeight, 
+			SizedGrid<Tile> newGrid = new SizedGrid<Tile>(newGridOrigin, Tiles.CellWidth, Tiles.CellHeight,
 														  newGridWidth, newGridHeight);
 
-			// ...forces a change of the cell coordinates of every tile already in the grid.
-			// We also have to move the layer's position accordingly.
+			// ...forces a change of the cell coordinates of every tile already
+			// in the grid. We also have to move the layer's position accordingly.
 			Position = newGridOrigin;
 
 			Tiles.ForEach(t => newGrid.Add(t));
@@ -163,7 +326,7 @@ namespace SMLimitless.Sprites.Collections
 					tile.AdjacencyFlags |= TileAdjacencyFlags.SlopeOnLeft;
 				}
 
-				if (tileRight != null && tileRight.TileShape == CollidableShape.RightTriangle && (tileRight.SlopedSides == RtSlopedSides.TopRight || tileRight.SlopedSides == RtSlopedSides.BottomRight)) 
+				if (tileRight != null && tileRight.TileShape == CollidableShape.RightTriangle && (tileRight.SlopedSides == RtSlopedSides.TopRight || tileRight.SlopedSides == RtSlopedSides.BottomRight))
 				{
 					tile.AdjacencyFlags |= TileAdjacencyFlags.SlopeOnRight;
 				}
@@ -173,97 +336,6 @@ namespace SMLimitless.Sprites.Collections
 			Bounds = Tiles.Bounds;
 
 			tiles.ForEach(t => Owner.Tiles.Add(t));
-		}
-
-		internal void AddTile(Tile tile)
-		{
-			AddTiles(new[] { tile });
-		}
-
-		/// <summary>
-		/// Removes a tile from this layer.
-		/// </summary>
-		/// <param name="tile">The tile to remove.</param>
-		public void RemoveTile(Tile tile)
-		{
-			// Unlike when adding tiles, removing a tile doesn't shrink the grid even if the grid could shrink
-			// also holy cow the RemoveTile(Tile) implementation on master is *horrible*
-			Tiles.Remove(tile);
-		}
-
-		internal void AddSprite(Sprite sprite)
-		{
-			sprites.Add(sprite);
-		}
-
-		/// <summary>
-		/// Gets the cell number at a given position.
-		/// </summary>
-		/// <param name="position">The given position.</param>
-		/// <returns>A <see cref="Vector2"/> containing the cell number at the position.</returns>
-		/// <remarks>Returns cell numbers for positions outside the <see cref="Bounds"/> of the layer.</remarks>
-		public Vector2 GetCellNumberAtPosition(Vector2 position)
-		{
-			Vector2 adjustedPosition = position - Position;
-			return new Vector2((adjustedPosition.X / Tiles.CellWidth), (adjustedPosition.Y / Tiles.CellHeight)).Floor();
-		}
-
-		/// <summary>
-		/// Gets the cell number at a given position, or the cell number along an edge or corner for out-of-bounds positions.
-		/// </summary>
-		/// <param name="position">The given position.</param>
-		/// <returns>A <see cref="Vector2"/> representing a cell number within the layer.</returns>
-		public Vector2 GetClampedCellNumberAtPosition(Vector2 position)
-		{
-			Vector2 cellNumber = GetCellNumberAtPosition(position);
-			cellNumber.X = MathHelper.Clamp(cellNumber.X, 0, Tiles.Width);
-			cellNumber.Y = MathHelper.Clamp(cellNumber.Y, 0, Tiles.Height);
-			return cellNumber;
-		}
-
-		/// <summary>
-		/// Returns a value indicating whether a given cell number is within the bounds of the layer's tile grid.
-		/// </summary>
-		/// <param name="cellNumber">The cell number to check.</param>
-		/// <returns>True if the cell is within bounds, false if it's not.</returns>
-		public bool CellWithinBounds(Vector2 cellNumber)
-		{
-			return cellNumber.X >= 0f && cellNumber.X < Tiles.Width && cellNumber.Y >= 0f && cellNumber.Y < Tiles.Height;
-		}
-
-		/// <summary>
-		/// Gets a tile at a given cell number.
-		/// </summary>
-		/// <param name="x">The X number of the cell; the cells away from the left-most cell.</param>
-		/// <param name="y">The Y number of the cell; the cells below the top-most cell.</param>
-		/// <returns>A tile in the cell, or null if there is no tile there.</returns>
-		public Tile GetTile(int x, int y)
-		{
-			return Tiles[x, y];
-		}
-		
-		/// <summary>
-		/// Gets a tile at a given cell number.
-		/// </summary>
-		/// <param name="cellNumber">A <see cref="Vector2"/> containing the cell number.</param>
-		/// <returns>A tile in the cell, or null if there is no tile there.</returns>
-		public Tile GetTile(Vector2 cellNumber)
-		{
-			return GetTile((int)cellNumber.X, (int)cellNumber.Y);
-		}
-
-		/// <summary>
-		/// Gets a tile in a given cell, or null if there is no tile in that cell, or the given cell is out of bounds.
-		/// </summary>
-		/// <param name="cellNumber">The cell for which to get the tile.</param>
-		/// <returns>A Tile or null.</returns>
-		public Tile SafeGetTile(Vector2 cellNumber)
-		{
-			if (Tiles.IndexWithinBounds((int)cellNumber.X, (int)cellNumber.Y))
-			{
-				return GetTile(cellNumber);
-			}
-			return null;
 		}
 
 		internal void SetMainLayer()
@@ -281,39 +353,6 @@ namespace SMLimitless.Sprites.Collections
 			Tiles = newGrid;
 			Owner.MainLayer = this;
 			Owner.Layers.Insert(0, this);
-		}
-
-		/// <summary>
-		/// Moves this layer to a given position.
-		/// </summary>
-		/// <param name="position">The position to move the layer to.</param>
-		/// <exception cref="InvalidOperationException">Thrown when attempting to move the main layer. The main layer always has its position at the origin.</exception>
-		public void Move(Vector2 position)
-		{
-			if (IsMainLayer) { throw new InvalidOperationException("Cannot move the main layer."); }
-
-			Vector2 distance = position - Position;
-			Translate(distance);
-		}
-
-		/// <summary>
-		/// Moves the layer and its contents by a given distance.
-		/// </summary>
-		/// <param name="distance">The distance to move the layer.</param>
-		/// <exception cref="InvalidOperationException">Thrown when attempting to translate the main layer. The main layer always has its position at the origin.</exception>
-		public void Translate(Vector2 distance)
-		{
-			if (IsMainLayer) { throw new InvalidOperationException("Cannot translate the main layer."); }
-
-			Position += distance;
-			Tiles.Position += distance;
-
-			// Move every tile and sprite first.
-			Tiles.ForEach(t => t.Position += distance);
-			sprites.ForEach(s => s.Position += distance);
-
-			// Finally, move the grid.
-			Tiles.Position += distance;
 		}
 	}
 }

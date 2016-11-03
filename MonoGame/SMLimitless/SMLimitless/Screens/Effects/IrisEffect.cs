@@ -1,42 +1,39 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using SMLimitless.Extensions;
 using SMLimitless.Graphics;
 using SMLimitless.Interfaces;
 
 namespace SMLimitless.Screens.Effects
 {
 	/// <summary>
-	/// An iris wipe effect.
+	///   An iris wipe effect.
 	/// </summary>
 	public sealed class IrisEffect : IEffect
 	{
-		private float fadeDelta;
-		private float currentFadeLevel;
-		private Vector2 irisCenter;
-		private float initialIrisRadius;
-		private float irisRadius;
-		private bool isRunning;
-		private bool isInitialized;
-		private EffectDirection dir;
 		private Color color;
+		private float currentFadeLevel;
+		private EffectDirection dir;
+		private float fadeDelta;
+		private float initialIrisRadius;
+		private Vector2 irisCenter;
+		private float irisRadius;
+		private bool isInitialized;
+		private bool isRunning;
 		private QuadRenderer quadRenderer;
 
 		/// <summary>
-		/// An event raised when this effect has completed.
+		///   An event raised when this effect has completed.
 		/// </summary>
 		public event EffectCompletedEventHandler EffectCompletedEvent;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="IrisEffect"/> class.
+		///   Initializes a new instance of the <see cref="IrisEffect" /> class.
 		/// </summary>
-		/// <param name="center">The point at which the iris should close to or open from.</param>
+		/// <param name="center">
+		///   The point at which the iris should close to or open from.
+		/// </param>
 		public IrisEffect(Vector2 center)
 		{
 			irisCenter = center;
@@ -48,9 +45,9 @@ namespace SMLimitless.Screens.Effects
 
 			isInitialized = true;
 		}
-		
+
 		/// <summary>
-		/// Draws this effect.
+		///   Draws this effect.
 		/// </summary>
 		public void Draw()
 		{
@@ -74,17 +71,16 @@ namespace SMLimitless.Screens.Effects
 		}
 
 		/// <summary>
-		/// Loads the content for this effect.
+		///   Loads the content for this effect.
 		/// </summary>
 		public void LoadContent()
 		{
 			GameServices.Effects.Add("IrisEffect", GameServices.GetService<ContentManager>().Load<Effect>("IrisEffect"));
 			quadRenderer = new QuadRenderer();
-			
 		}
 
 		/// <summary>
-		/// Sets this effect to be completed in any direction.
+		///   Sets this effect to be completed in any direction.
 		/// </summary>
 		/// <param name="direction">The direction to be set to.</param>
 		/// <param name="color">The color of the effect.</param>
@@ -102,11 +98,16 @@ namespace SMLimitless.Screens.Effects
 		}
 
 		/// <summary>
-		/// Starts this effect.
+		///   Starts this effect.
 		/// </summary>
 		/// <param name="length">How many frames this effect should last.</param>
-		/// <param name="direction">The direction in which to run the effect (forward is iris in, backwards is iris out).</param>
-		/// <param name="position">The position at which the iris should close/open.</param>
+		/// <param name="direction">
+		///   The direction in which to run the effect (forward is iris in,
+		///   backwards is iris out).
+		/// </param>
+		/// <param name="position">
+		///   The position at which the iris should close/open.
+		/// </param>
 		/// <param name="color">The color of the background after the iris-in.</param>
 		public void Start(int length, EffectDirection direction, Vector2 position, Color color)
 		{
@@ -127,7 +128,8 @@ namespace SMLimitless.Screens.Effects
 		}
 
 		/// <summary>
-		/// Stops the effect, filling the screen with the color specified in the <see cref="Start(int, EffectDirection, Vector2, Color)"/> method.
+		///   Stops the effect, filling the screen with the color specified in
+		///   the <see cref="Start(int, EffectDirection, Vector2, Color)" /> method.
 		/// </summary>
 		public void Stop()
 		{
@@ -137,7 +139,7 @@ namespace SMLimitless.Screens.Effects
 		}
 
 		/// <summary>
-		/// Updates this effect.
+		///   Updates this effect.
 		/// </summary>
 		public void Update()
 		{

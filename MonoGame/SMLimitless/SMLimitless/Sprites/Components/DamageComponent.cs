@@ -1,18 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SMLimitless.Sprites.Components
 {
 	/// <summary>
-	/// A component for a sprite that can damage other sprites.
+	///   A component for a sprite that can damage other sprites.
 	/// </summary>
 	public sealed class DamageComponent : SpriteComponent
 	{
 		/// <summary>
-		/// Performs damage to sprite with a <see cref="HealthComponent"/> instance.
+		///   Performs damage to sprite with a <see cref="HealthComponent" /> instance.
 		/// </summary>
 		/// <param name="sprite">The sprite to damage.</param>
 		/// <param name="damageType">The type of damage to perform.</param>
@@ -31,7 +27,7 @@ namespace SMLimitless.Sprites.Components
 		}
 
 		/// <summary>
-		/// Updates this component.
+		///   Updates this component.
 		/// </summary>
 		public override void Update()
 		{

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using SMLimitless.Extensions;
 using SMLimitless.Sprites;
@@ -11,20 +7,42 @@ using SMLimitless.Sprites.Assemblies;
 namespace SMLimitless.IO.LevelSerializers
 {
 	/// <summary>
-	/// Serializes and deserializes individual sprites without using the
-	/// LevelSerializer types.
+	///   Serializes and deserializes individual sprites without using the
+	///   LevelSerializer types.
 	/// </summary>
 	public static class TypeSerializer
 	{
 		/// <summary>
-		/// Gets the objects for serialization for a given sprite.
+		///   Deserializes a sprite, given a <see cref="JsonHelper" /> and a key
+		///   for the sprite.
+		/// </summary>
+		/// <param name="helper">
+		///   The <see cref="JsonHelper" /> that contains the sprite to deserialize
+		/// </param>
+		/// <param name="key">The key in which the sprite is stored.</param>
+		/// <returns>A deserialized (but uninitalized) sprite.</returns>
+		public static Sprite DeserializeSprite(JsonHelper helper, string key = "")
+		{
+			if (string.IsNullOrEmpty(key))
+			{
+				return DeserializeSprite((JObject)helper.Value);
+			}
+			else
+			{
+				if (helper.Value[key].Type == JTokenType.Null) { return null; }
+				return DeserializeSprite((JObject)helper.Value[key]);
+			}
+		}
+
+		/// <summary>
+		///   Gets the objects for serialization for a given sprite.
 		/// </summary>
 		/// <param name="sprite">The sprite to get the objects for.</param>
 		/// <returns>An anonymous object containing the objects for serialization.</returns>
 		public static object GetSpriteObjects(Sprite sprite)
 		{
 			if (sprite == null) { return null; }
-		
+
 			return new
 			{
 				typeName = sprite.GetType().FullName,
@@ -40,6 +58,7 @@ namespace SMLimitless.IO.LevelSerializers
 				customObjects = sprite.GetCustomSerializableObjects()
 			};
 		}
+
 		private static Sprite DeserializeSprite(JObject obj)
 		{
 			string typeName = (string)obj["typeName"];
@@ -57,25 +76,6 @@ namespace SMLimitless.IO.LevelSerializers
 			result.DeserializeCustomObjects(new JsonHelper(obj["customObjects"]));
 
 			return result;
-		}
-
-		/// <summary>
-		/// Deserializes a sprite, given a <see cref="JsonHelper"/> and a key for the sprite. 
-		/// </summary>
-		/// <param name="helper">The <see cref="JsonHelper"/> that contains the sprite to deserialize </param>
-		/// <param name="key">The key in which the sprite is stored.</param>
-		/// <returns>A deserialized (but uninitalized) sprite.</returns>
-		public static Sprite DeserializeSprite(JsonHelper helper, string key = "")
-		{
-			if (string.IsNullOrEmpty(key))
-			{
-				return DeserializeSprite((JObject)helper.Value);
-			}
-			else
-			{
-				if (helper.Value[key].Type == JTokenType.Null) { return null; }
-				return DeserializeSprite((JObject)helper.Value[key]);
-			}
 		}
 	}
 }

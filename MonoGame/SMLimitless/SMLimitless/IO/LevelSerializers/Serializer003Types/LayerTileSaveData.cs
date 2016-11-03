@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json.Linq;
 using SMLimitless.Sprites;
@@ -13,20 +11,15 @@ namespace SMLimitless.IO.LevelSerializers.Serializer003Types
 {
 	internal sealed class LayerTileSaveData
 	{
-		internal Dictionary<TileSaveData, TilePositionCloud> Tiles { get; set; }
 		private int id = 0;
-
-		private LayerTileSaveData()
-		{
-
-		}
+		internal Dictionary<TileSaveData, TilePositionCloud> Tiles { get; set; }
 
 		public LayerTileSaveData(Layer layer)
 		{
 			Tiles = new Dictionary<TileSaveData, TilePositionCloud>();
 			HashSet<TileSaveData> tilesProcessedSoFar = new HashSet<TileSaveData>();
 			var tileGrid = layer.Tiles;
-			
+
 			foreach (var gridCellWithTile in tileGrid.EnumerateItemsWithGridCells())
 			{
 				TileSaveData saveData = new TileSaveData(gridCellWithTile.Item3);
@@ -43,6 +36,10 @@ namespace SMLimitless.IO.LevelSerializers.Serializer003Types
 
 				Tiles[saveData].CellNumbers.Add(new Point(x: gridCellWithTile.Item1, y: gridCellWithTile.Item2));
 			}
+		}
+
+		private LayerTileSaveData()
+		{
 		}
 
 		public static LayerTileSaveData Merge(List<TileSaveData> tileData, List<TilePositionCloud> tilePositions)
@@ -74,7 +71,7 @@ namespace SMLimitless.IO.LevelSerializers.Serializer003Types
 				tile.InitialState = tileData.InitialState;
 				tile.Position = Vector2.Zero;
 				tile.InitialPosition = Vector2.Zero;
-				
+
 				if (tile.TileShape == Physics.CollidableShape.Rectangle)
 				{
 					tile.RectSolidSides = (TileRectSolidSides)tileData.SolidSides;

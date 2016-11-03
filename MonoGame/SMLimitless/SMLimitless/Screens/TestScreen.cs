@@ -4,49 +4,27 @@
 // </copyright>
 //-----------------------------------------------------------------------
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using SMLimitless.Collections;
-using SMLimitless.Extensions;
-using SMLimitless.Graphics;
-using SMLimitless.Input;
-using SMLimitless.Interfaces;
-using SMLimitless.Physics;
 using SMLimitless.Screens.Effects;
-using SMLimitless.Sprites.Collections;
 
 namespace SMLimitless.Screens
 {
 	/// <summary>
-	/// A "scratch pad" screen that can be used
-	/// to test anything. The contents of the screen
-	/// may change without warning.
+	///   A "scratch pad" screen that can be used to test anything. The contents
+	///   of the screen may change without warning.
 	/// </summary>
 	public class TestScreen : Screen
 	{
 		/// <summary>
-		/// Updates the screen.
+		///   Draws this screen.
 		/// </summary>
-		public override void Update()
+		public override void Draw()
 		{
-			Effect.Update();
+			Effect.Draw();
 		}
 
 		/// <summary>
-		/// Loads the content for this screen.
-		/// </summary>
-		public override void LoadContent()
-		{
-		}
-
-		/// <summary>
-		/// Initializes this screen.
+		///   Initializes this screen.
 		/// </summary>
 		/// <param name="owner">The screen that is creating this one.</param>
 		/// <param name="parameters">Parameters are unused.</param>
@@ -56,15 +34,14 @@ namespace SMLimitless.Screens
 		}
 
 		/// <summary>
-		/// Draws this screen.
+		///   Loads the content for this screen.
 		/// </summary>
-		public override void Draw()
+		public override void LoadContent()
 		{
-			Effect.Draw();
 		}
 
 		/// <summary>
-		/// Starts this screen.
+		///   Starts this screen.
 		/// </summary>
 		/// <param name="parameters">Parameters are unused.</param>
 		public override void Start(string parameters = "")
@@ -75,7 +52,15 @@ namespace SMLimitless.Screens
 		}
 
 		/// <summary>
-		/// Handles the EffectCompletedEvent.
+		///   Updates the screen.
+		/// </summary>
+		public override void Update()
+		{
+			Effect.Update();
+		}
+
+		/// <summary>
+		///   Handles the EffectCompletedEvent.
 		/// </summary>
 		/// <param name="sender">The object sending this event.</param>
 		/// <param name="direction">The direction of the completed effect.</param>

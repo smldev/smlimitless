@@ -1,44 +1,42 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using SMLimitless.Forms;
 
 namespace SMLimitless.Physics
 {
 	/// <summary>
-	/// Represents a physics setting which can be changed in a <see cref="Forms.PhysicsSettingsEditorForm"/>.
+	///   Represents a physics setting which can be changed in a <see
+	///   cref="Forms.PhysicsSettingsEditorForm" />.
 	/// </summary>
 	/// <typeparam name="T">The type of the value of the setting.</typeparam>
 	public sealed class PhysicsSetting<T> : IDisposable where T : struct, IComparable<T>
 	{
 		/// <summary>
-		/// Gets the setting's name.
-		/// </summary>
-		public string Name { get; }
-
-		/// <summary>
-		/// Gets or sets the current value of the setting.
-		/// </summary>
-		public T Value { get; set; }
-
-		/// <summary>
-		/// Gets the lowest value the value can be.
-		/// </summary>
-		public T Minimum { get;  }
-
-		/// <summary>
-		/// Gets the highest value the value can be.
+		///   Gets the highest value the value can be.
 		/// </summary>
 		public T Maximum { get; }
 
 		/// <summary>
-		/// Gets the type of value this setting has.
+		///   Gets the lowest value the value can be.
+		/// </summary>
+		public T Minimum { get; }
+
+		/// <summary>
+		///   Gets the setting's name.
+		/// </summary>
+		public string Name { get; }
+
+		/// <summary>
+		///   Gets the type of value this setting has.
 		/// </summary>
 		public PhysicsSettingType Type { get; }
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="PhysicsSetting{T}"/> class.
+		///   Gets or sets the current value of the setting.
+		/// </summary>
+		public T Value { get; set; }
+
+		/// <summary>
+		///   Initializes a new instance of the <see cref="PhysicsSetting{T}" /> class.
 		/// </summary>
 		/// <param name="name">The setting's name.</param>
 		/// <param name="minimum">The lowest value the value can be.</param>
@@ -58,11 +56,12 @@ namespace SMLimitless.Physics
 		}
 
 		/// <summary>
-		/// Unregisters this setting from the <see cref="PhysicsSettingsEditorForm"/>.
+		///   Unregisters this setting from the <see
+		///   cref="PhysicsSettingsEditorForm" />.
 		/// </summary>
 		public void Dispose()
 		{
 			// TODO: implement unregistering of this setting
 		}
-    }
+	}
 }

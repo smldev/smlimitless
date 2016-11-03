@@ -4,26 +4,24 @@
 // </copyright>
 //-----------------------------------------------------------------------
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace SMLimitless
 {
-    #if WINDOWS
-        /// <summary>
-        /// Contains the entry point to the program.
-        /// </summary>
-        public static class Program
-        {
-            /// <summary>
-            /// The main entry point for the application.
-            /// </summary>
-            /// <param name="args">Command-line arguments.</param>
-			[STAThread]
-            public static void Main(string[] args)
-            {
+#if WINDOWS
+
+	/// <summary>
+	///   Contains the entry point to the program.
+	/// </summary>
+	public static class Program
+	{
+		/// <summary>
+		///   The main entry point for the application.
+		/// </summary>
+		/// <param name="args">Command-line arguments.</param>
+		[STAThread]
+		public static void Main(string[] args)
+		{
 #if !DEBUG
                 try
                 {
@@ -40,12 +38,13 @@ namespace SMLimitless
                 }
 #endif
 
-                using (SmlProgram game = new SmlProgram())
-                {
-					if (args.Length == 1 && File.Exists(args[0])) { game.InitialLevelFilePath = args[0]; }
-                    game.Run();
-                }
-            }
-        }
-    #endif
+			using (SmlProgram game = new SmlProgram())
+			{
+				if (args.Length == 1 && File.Exists(args[0])) { game.InitialLevelFilePath = args[0]; }
+				game.Run();
+			}
+		}
+	}
+
+#endif
 }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using SMLimitless.Collections;
 using SMLimitless.Components;
 using SMLimitless.Editor;
@@ -17,7 +16,7 @@ using SMLimitless.Sprites.InternalSprites;
 namespace SMLimitless.Sprites.Collections
 {
 	/// <summary>
-	/// The main area of gameplay.
+	///   The main area of gameplay.
 	/// </summary>
 	public sealed class Section
 	{
@@ -34,56 +33,67 @@ namespace SMLimitless.Sprites.Collections
 		private bool isContentLoaded;
 		private bool isDeserialized;
 		private bool isInitialized;
+		private List<Particle> particlesToRemoveOnNextFrame = new List<Particle>();
 		private CollisionDebugSelectSprite selectorSprite = new CollisionDebugSelectSprite();
 
 		/// <summary>
-		/// Gets the settings used for automatic camera scrolling for this section.
+		///   Gets the settings used for automatic camera scrolling for this section.
 		/// </summary>
 		public SectionAutoscrollSettings AutoscrollSettings { get; internal set; }
 
 		/// <summary>
-		/// Gets the <see cref="Sprites.Collections.Background"/> for this section.
+		///   Gets the <see cref="Sprites.Collections.Background" /> for this section.
 		/// </summary>
 		public Background Background { get; internal set; }
 
 		/// <summary>
-		/// Gets the bounds of this section, the rectangular area to which the camera is restricted.
+		///   Gets the bounds of this section, the rectangular area to which the
+		///   camera is restricted.
 		/// </summary>
 		public BoundingRectangle Bounds { get; internal set; }
 
 		/// <summary>
-		/// Gets the camera viewing this section.
+		///   Gets the camera viewing this section.
 		/// </summary>
 		public Camera2D Camera { get; private set; }
 
 		/// <summary>
-		/// Gets the <see cref="Physics.CameraSystem"/> instance tracking objects in this section.
+		///   Gets the <see cref="Physics.CameraSystem" /> instance tracking
+		///   objects in this section.
 		/// </summary>
 		public CameraSystem CameraSystem { get; private set; }
 
 		/// <summary>
-		/// Gets a value indicating whether the level editor is currently enabled for this section.
+		///   Gets a value indicating whether the level editor is currently
+		///   enabled for this section.
 		/// </summary>
 		public bool EditorActive { get; internal set; }
 
 		/// <summary>
-		/// Gets or sets the numeric index of this section within its level.
+		///   Gets the <see cref="SMLimitless.Components.HUDInfo" /> for this section.
+		/// </summary>
+		public HUDInfo HUDInfo { get; private set; }
+
+		/// <summary>
+		///   Gets or sets the numeric index of this section within its level.
 		/// </summary>
 		public int Index { get; set; }
 
 		/// <summary>
-		/// Gets a value indicating whether first-stage loading (deserialization and game object initialization) has completed.
-		/// </summary>
-		public bool IsLoaded { get; internal set; }
-
-		/// <summary>
-		/// Gets a value indicating whether this section is active.
-		/// Inactive sections will be drawn but not updated.
+		///   Gets a value indicating whether this section is active. Inactive
+		///   sections will be drawn but not updated.
 		/// </summary>
 		public bool IsActive { get; internal set; } = true;
 
 		/// <summary>
-		/// Gets the current mouse position adjusted for the camera's position and zoom.
+		///   Gets a value indicating whether first-stage loading
+		///   (deserialization and game object initialization) has completed.
+		/// </summary>
+		public bool IsLoaded { get; internal set; }
+
+		/// <summary>
+		///   Gets the current mouse position adjusted for the camera's position
+		///   and zoom.
 		/// </summary>
 		public Vector2 MousePosition
 		{
@@ -103,42 +113,43 @@ namespace SMLimitless.Sprites.Collections
 		}
 
 		/// <summary>
-		/// Gets or sets the name of this section.
+		///   Gets or sets the name of this section.
 		/// </summary>
 		public string Name { get; set; }
 
 		/// <summary>
-		/// Gets the <see cref="Level"/> that owns this section.
+		///   Gets the <see cref="Level" /> that owns this section.
 		/// </summary>
 		public Level Owner { get; private set; }
+
+		/// <summary>
+		///   Gets a read-only list of players in the section.
+		/// </summary>
+		public IReadOnlyList<Sprite> PlayerList { get { return Players.AsReadOnly(); } }
+
+		/// <summary>
+		///   Gets a read-only list of sprites in this section.
+		/// </summary>
+		public IReadOnlyList<Sprite> SpriteList { get { return Sprites.AsReadOnly(); } }
 
 		internal Sprite CollisionDebugSelectedSprite { get; set; }
 
 		/// <summary>
-		/// Gets the <see cref="SMLimitless.Components.HUDInfo"/> for this section. 
+		///   Gets a section exit that a player has entered before other players have.
 		/// </summary>
-		public HUDInfo HUDInfo { get; private set; }
+		internal SectionExit ExitLock { get; set; } = null;
 
 		internal List<Layer> Layers { get; set; }
 
 		internal Layer MainLayer { get; set; }
 
+		internal List<Particle> Particles { get; private set; } = new List<Particle>();
 		internal List<Path> Paths { get; set; }
 
 		internal List<Sprite> Players { get; set; } = new List<Sprite>();
 
+		internal List<SectionExit> SectionExits { get; private set; } = new List<SectionExit>();
 		internal List<Sprite> Sprites { get; set; } = new List<Sprite>();
-
-		/// <summary>
-		/// Gets a read-only list of players in the section.
-		/// </summary>
-		public IReadOnlyList<Sprite> PlayerList { get { return Players.AsReadOnly(); } }
-		
-		/// <summary>
-		/// Gets a read-only list of sprites in this section.
-		/// </summary>
-		public IReadOnlyList<Sprite> SpriteList { get { return Sprites.AsReadOnly(); } }
-
 		internal SparseCellGrid<Sprite> SpritesGrid { get; set; }
 
 		internal List<Sprite> SpritesToAddOnNextFrame { get; } = new List<Sprite>();
@@ -146,21 +157,10 @@ namespace SMLimitless.Sprites.Collections
 
 		internal List<Tile> Tiles { get; private set; }
 
-		internal List<SectionExit> SectionExits { get; private set; } = new List<SectionExit>();
-
-		internal List<Particle> Particles { get; private set; } = new List<Particle>();
-		private List<Particle> particlesToRemoveOnNextFrame = new List<Particle>();
-
 		/// <summary>
-		/// Gets a section exit that a player has entered before other players
-		/// have.
+		///   Initializes a new instance of the <see cref="Section" /> class.
 		/// </summary>
-		internal SectionExit ExitLock { get; set; } = null;
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="Section"/> class.
-		/// </summary>
-		/// <param name="owner">The <see cref="Level"/> that owns this section.</param>
+		/// <param name="owner">The <see cref="Level" /> that owns this section.</param>
 		public Section(Level owner)
 		{
 			Camera = new Camera2D();
@@ -177,10 +177,29 @@ namespace SMLimitless.Sprites.Collections
 		}
 
 		/// <summary>
-		/// Adds a <see cref="Sprite"/> to this section.
+		///   Adds a particle to this section.
+		/// </summary>
+		/// <param name="particle">The particle to add.</param>
+		public void AddParticle(Particle particle)
+		{
+			if (particle == null) { throw new ArgumentNullException("The provided particle was null."); }
+			particle.LoadContent();
+
+			if (Particles.Count == MaximumParticles.Value)
+			{
+				Particles.RemoveAt(0);
+			}
+
+			Particles.Add(particle);
+		}
+
+		/// <summary>
+		///   Adds a <see cref="Sprite" /> to this section.
 		/// </summary>
 		/// <param name="sprite">The sprite to add.</param>
-		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="sprite"/> reference is null.</exception>
+		/// <exception cref="ArgumentNullException">
+		///   Thrown if the <paramref name="sprite" /> reference is null.
+		/// </exception>
 		public void AddSprite(Sprite sprite)
 		{
 			if (sprite == null)
@@ -198,10 +217,12 @@ namespace SMLimitless.Sprites.Collections
 		}
 
 		/// <summary>
-		/// Sets a sprite to be added to the section on the next frame.
+		///   Sets a sprite to be added to the section on the next frame.
 		/// </summary>
 		/// <param name="sprite">The sprite to add.</param>
-		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="sprite"/> reference is null.</exception>
+		/// <exception cref="ArgumentNullException">
+		///   Thrown if the <paramref name="sprite" /> reference is null.
+		/// </exception>
 		public void AddSpriteOnNextFrame(Sprite sprite)
 		{
 			if (sprite == null)
@@ -213,10 +234,12 @@ namespace SMLimitless.Sprites.Collections
 		}
 
 		/// <summary>
-		/// Adds a <see cref="Tile"/> to this section and to the main layer.
+		///   Adds a <see cref="Tile" /> to this section and to the main layer.
 		/// </summary>
 		/// <param name="tile">The tile to add.</param>
-		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="tile"/> reference is null.</exception>
+		/// <exception cref="ArgumentNullException">
+		///   Thrown if the <paramref name="tile" /> reference is null.
+		/// </exception>
 		public void AddTile(Tile tile)
 		{
 			if (tile == null)
@@ -232,7 +255,7 @@ namespace SMLimitless.Sprites.Collections
 		}
 
 		/// <summary>
-		/// Draws the game objects in this section.
+		///   Draws the game objects in this section.
 		/// </summary>
 		public void Draw()
 		{
@@ -268,15 +291,18 @@ namespace SMLimitless.Sprites.Collections
 		}
 
 		/// <summary>
-		/// Gets the tile at a given position on the topmost layer.
+		///   Gets the tile at a given position on the topmost layer.
 		/// </summary>
 		/// <param name="position">The position to get the tile at.</param>
-		/// <returns>A <see cref="Tile"/> instance, or null if there is no tile at <paramref name="position"/>.</returns>
+		/// <returns>
+		///   A <see cref="Tile" /> instance, or null if there is no tile at
+		///   <paramref name="position" />.
+		/// </returns>
 		public Tile GetTileAtPosition(Vector2 position)
 		{
-			// Gets a tile from the topmost layer at the given position.
-			// One layer is above another if its index within the Layers list is higher.
-			// The MainLayer is always the lowest layer.
+			// Gets a tile from the topmost layer at the given position. One
+			// layer is above another if its index within the Layers list is
+			// higher. The MainLayer is always the lowest layer.
 
 			int highestIndex = Layers.Count - 1;
 			for (int i = highestIndex; i >= 0; i--)
@@ -291,7 +317,7 @@ namespace SMLimitless.Sprites.Collections
 		}
 
 		/// <summary>
-		/// Initializes the game objects for this section.
+		///   Initializes the game objects for this section.
 		/// </summary>
 		public void Initialize()
 		{
@@ -338,7 +364,51 @@ namespace SMLimitless.Sprites.Collections
 		}
 
 		/// <summary>
-		/// Loads the content for the game objects in this section.
+		///   Plays an iris-in effect, turning the screen black.
+		/// </summary>
+		/// <param name="length">The number of frames the effect should last.</param>
+		/// <param name="position">The position the iris should close on.</param>
+		/// <param name="onEffectCompleted">
+		///   An action ran when the iris has closed.
+		/// </param>
+		public void IrisIn(int length, Vector2 position, Action<object, EffectCompletedEventArgs> onEffectCompleted)
+		{
+			EffectCompletedEventHandler handler = null;
+
+			handler = (sender, args) =>
+			{
+				onEffectCompleted(sender, args);
+				irisEffect.EffectCompletedEvent -= handler;
+			};
+
+			irisEffect.EffectCompletedEvent += handler;
+			irisEffect.Start(length, EffectDirection.Backward, position, Color.Black);
+		}
+
+		/// <summary>
+		///   Plays an iris-out effect, bringing the screen back.
+		/// </summary>
+		/// <param name="length">The number of frames the effect should last.</param>
+		/// <param name="position">The position the iris should open from.</param>
+		/// <param name="onEffectCompleted">
+		///   An action ran when the iris has opened.
+		/// </param>
+		public void IrisOut(int length, Vector2 position, Action<object, EffectCompletedEventArgs> onEffectCompleted)
+		{
+			EffectCompletedEventHandler handler = null;
+
+			handler = (sender, args) =>
+			{
+				onEffectCompleted(sender, args);
+				irisEffect.EffectCompletedEvent -= handler;
+			};
+
+			irisEffect.EffectCompletedEvent += handler;
+			irisEffect.Start(length, EffectDirection.Forward, position, Color.Black);
+		}
+
+		/// <summary>
+		///   Loads the content for the game objects in this section.
 		/// </summary>
 		public void LoadContent()
 		{
@@ -357,7 +427,7 @@ namespace SMLimitless.Sprites.Collections
 		}
 
 		/// <summary>
-		/// Handles the death of a player.
+		///   Handles the death of a player.
 		/// </summary>
 		/// <param name="player">The player that died.</param>
 		public void PlayerKilled(Sprite player)
@@ -376,10 +446,22 @@ namespace SMLimitless.Sprites.Collections
 		}
 
 		/// <summary>
-		/// Removes a sprite from this section.
+		///   Sets a particle to be removed from the section on the next frame.
+		/// </summary>
+		/// <param name="particle">The particle to remove.</param>
+		public void RemoveParticleOnNextFrame(Particle particle)
+		{
+			if (particle == null) { throw new ArgumentNullException("The provided particle was null."); }
+			particlesToRemoveOnNextFrame.Add(particle);
+		}
+
+		/// <summary>
+		///   Removes a sprite from this section.
 		/// </summary>
 		/// <param name="sprite">The sprite to remove.</param>
-		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="sprite"/> reference is null.</exception>
+		/// <exception cref="ArgumentNullException">
+		///   Thrown if the <paramref name="sprite" /> reference is null.
+		/// </exception>
 		public void RemoveSprite(Sprite sprite)
 		{
 			if (sprite == null) { throw new ArgumentNullException(nameof(sprite), "The sprite to remove from the section was not null."); }
@@ -392,7 +474,7 @@ namespace SMLimitless.Sprites.Collections
 		}
 
 		/// <summary>
-		/// Sets a sprite to be removed on the next frame.
+		///   Sets a sprite to be removed on the next frame.
 		/// </summary>
 		/// <param name="sprite">The sprite to remove.</param>
 		public void RemoveSpriteOnNextFrame(Sprite sprite)
@@ -403,10 +485,12 @@ namespace SMLimitless.Sprites.Collections
 		}
 
 		/// <summary>
-		/// Removes a tile from this section and all layers it may be in.
+		///   Removes a tile from this section and all layers it may be in.
 		/// </summary>
 		/// <param name="tile">The tile to remove.</param>
-		/// <exception cref="ArgumentNullException">Thrown if the <paramref name="tile"/> reference is null.</exception>
+		/// <exception cref="ArgumentNullException">
+		///   Thrown if the <paramref name="tile" /> reference is null.
+		/// </exception>
 		public void RemoveTile(Tile tile)
 		{
 			if (tile == null) { throw new ArgumentNullException(nameof(tile), "The tile to remove from the section was null."); }
@@ -416,7 +500,20 @@ namespace SMLimitless.Sprites.Collections
 		}
 
 		/// <summary>
-		/// Updates this section.
+		///   Sets the state of this iris effect.
+		/// </summary>
+		/// <param name="closed">
+		///   If this parameter is true, the iris will be closed and the screen
+		///   will be black. If this parameter is false, the iris will be open
+		///   and the screen will consist of the section.
+		/// </param>
+		public void SetIrisState(bool closed)
+		{
+			irisEffect.Set((closed) ? EffectDirection.Backward : EffectDirection.Forward, Color.Black);
+		}
+
+		/// <summary>
+		///   Updates this section.
 		/// </summary>
 		public void Update()
 		{
@@ -462,63 +559,6 @@ namespace SMLimitless.Sprites.Collections
 			TempUpdate();
 
 			stopwatch.Stop();
-		}
-
-		private void UpdateObjectActiveStates()
-		{
-			// The only objects that need to be updated are those that are active;
-			// that is, those within the CameraSystem.ActiveBounds rectangle.
-
-			if (EditorActive) { return; }
-
-			int updatedTiles = 0;
-			int updatedSprites = 0;
-
-			foreach (Tile tile in Tiles)
-			{
-				bool currentActiveState = tile.IsActive;
-				tile.IsActive = tile.Hitbox.Bounds.IntersectsIncludingEdges(CameraSystem.ActiveBounds);
-				if (tile.IsActive != currentActiveState)
-				{
-					updatedTiles++;
-				}
-			}
-
-			foreach (Sprite sprite in Sprites)
-			{
-				if (sprite.IsPlayer) { continue; }
-
-				SpriteActiveState currentActiveState = sprite.ActiveState;
-				bool withinBounds = sprite.Hitbox.IntersectsIncludingEdges(CameraSystem.ActiveBounds);
-				bool initialPositionWithinBounds = CameraSystem.ActiveBounds.Within(sprite.InitialPosition, true);
-
-				if (currentActiveState == SpriteActiveState.AlwaysActive) { continue; }
-				if (currentActiveState == SpriteActiveState.Active && !withinBounds)
-				{
-					if (!sprite.HasAttribute("DoNotRespawn"))
-					{
-						sprite.ActiveState = SpriteActiveState.WaitingToLeaveBounds;
-						sprite.Deactivate();
-						updatedSprites++;
-					}
-					else
-					{
-						RemoveSpriteOnNextFrame(sprite);
-					}
-				}
-				else if (currentActiveState == SpriteActiveState.WaitingToLeaveBounds && !initialPositionWithinBounds)
-				{
-					sprite.ActiveState = SpriteActiveState.Inactive;
-					sprite.Position = sprite.InitialPosition;
-					updatedSprites++;
-				}
-				else if (currentActiveState == SpriteActiveState.Inactive && initialPositionWithinBounds)
-				{
-					sprite.ActiveState = SpriteActiveState.Active;
-					sprite.Activate();
-					updatedSprites++;
-				}
-			}
 		}
 
 		internal void CollisionDebugSelectSprite(Sprite sprite)
@@ -584,6 +624,12 @@ namespace SMLimitless.Sprites.Collections
 			GameServices.CollisionDebuggerForm.Section = this;
 			SpritesGrid.Add(selectorSprite);
 			isCollisionDebuggingInitialized = true;
+		}
+
+		private void RemoveParticlesToRemoveOnNextFrame()
+		{
+			Particles.RemoveAll(p => particlesToRemoveOnNextFrame.Contains(p));
+			particlesToRemoveOnNextFrame.Clear();
 		}
 
 		private void ResolveSpriteCollisionWithSlopes(Sprite sprite, float delta, ref Vector2 spritePositionWithoutResolutions, ref int numberOfCollidingTiles, out bool slopeCollisionOccurred)
@@ -680,7 +726,8 @@ namespace SMLimitless.Sprites.Collections
 								if (tile.BreakOnCollision && sprite.BreakOnCollision) { System.Diagnostics.Debugger.Break(); }
 							}
 							HorizontalDirection horizontalResolutionDirection = (HorizontalDirection)Math.Sign(resolutionDistance.X);
-							// The horizontal resolution direction is equal to the sign of the resolution distance.
+							// The horizontal resolution direction is equal to
+							// the sign of the resolution distance.
 
 							if (resolutionDistance.X < 0f && (tile.AdjacencyFlags & TileAdjacencyFlags.SlopeOnLeft) == TileAdjacencyFlags.SlopeOnLeft) { continue; }
 							else if (resolutionDistance.X > 0f && (tile.AdjacencyFlags & TileAdjacencyFlags.SlopeOnRight) == TileAdjacencyFlags.SlopeOnRight) { continue; }
@@ -727,7 +774,8 @@ namespace SMLimitless.Sprites.Collections
 				{
 					Vector2 resolutionDistance = hitboxA.GetCollisionResolution(resolutionA);
 
-					// Move the sprite out of the other sprite if we don't move it into a tile.
+					// Move the sprite out of the other sprite if we don't move
+					// it into a tile.
 					if (sprite.SpriteCollisionMode == SpriteCollisionMode.OffsetNotify || sprite.SpriteCollisionMode == SpriteCollisionMode.OffsetOnly)
 					{
 						//if (Math.Sign(resolutionDistance.X) == Math.Sign(tileCollisionOffset.X)) { sprite.Position = new Vector2((sprite.Position.X + resolutionDistance.X), sprite.Position.Y); }
@@ -803,6 +851,18 @@ namespace SMLimitless.Sprites.Collections
 					}
 				}
 			}
+		}
+
+		private void SaveLevel()
+		{
+			SaveFileDialog sfd = new SaveFileDialog();
+			sfd.Title = "Super Mario Limitless";
+			sfd.Filter = "SML Level File (*.lvl)|*.lvl|All files (*.*)|*.*";
+
+			if (sfd.ShowDialog() == DialogResult.Cancel) { return; }
+
+			string json = new IO.LevelSerializers.Serializer003().Serialize(Owner);
+			System.IO.File.WriteAllText(sfd.FileName, json);
 		}
 
 		private void SnapToGround(Sprite sprite)
@@ -892,18 +952,6 @@ namespace SMLimitless.Sprites.Collections
 			}
 		}
 
-		private void SaveLevel()
-		{
-			SaveFileDialog sfd = new SaveFileDialog();
-			sfd.Title = "Super Mario Limitless";
-			sfd.Filter = "SML Level File (*.lvl)|*.lvl|All files (*.*)|*.*";
-
-			if (sfd.ShowDialog() == DialogResult.Cancel) { return; }
-
-			string json = new IO.LevelSerializers.Serializer003().Serialize(Owner);
-			System.IO.File.WriteAllText(sfd.FileName, json);
-		}
-
 		private void UninitializeCollisionDebugging()
 		{
 			selectorSprite.RemoveOnNextFrame = true;
@@ -925,37 +973,61 @@ namespace SMLimitless.Sprites.Collections
 			}
 		}
 
-		/// <summary>
-		/// Adds a particle to this section.
-		/// </summary>
-		/// <param name="particle">The particle to add.</param>
-		public void AddParticle(Particle particle)
+		private void UpdateObjectActiveStates()
 		{
-			if (particle == null) { throw new ArgumentNullException("The provided particle was null."); }
-			particle.LoadContent();
-		
-			if (Particles.Count == MaximumParticles.Value)
+			// The only objects that need to be updated are those that are
+			// active; that is, those within the CameraSystem.ActiveBounds rectangle.
+
+			if (EditorActive) { return; }
+
+			int updatedTiles = 0;
+			int updatedSprites = 0;
+
+			foreach (Tile tile in Tiles)
 			{
-				Particles.RemoveAt(0);
+				bool currentActiveState = tile.IsActive;
+				tile.IsActive = tile.Hitbox.Bounds.IntersectsIncludingEdges(CameraSystem.ActiveBounds);
+				if (tile.IsActive != currentActiveState)
+				{
+					updatedTiles++;
+				}
 			}
 
-			Particles.Add(particle);
-		}
+			foreach (Sprite sprite in Sprites)
+			{
+				if (sprite.IsPlayer) { continue; }
 
-		/// <summary>
-		/// Sets a particle to be removed from the section on the next frame.
-		/// </summary>
-		/// <param name="particle">The particle to remove.</param>
-		public void RemoveParticleOnNextFrame(Particle particle)
-		{
-			if (particle == null) { throw new ArgumentNullException("The provided particle was null."); }
-			particlesToRemoveOnNextFrame.Add(particle);
-		}
+				SpriteActiveState currentActiveState = sprite.ActiveState;
+				bool withinBounds = sprite.Hitbox.IntersectsIncludingEdges(CameraSystem.ActiveBounds);
+				bool initialPositionWithinBounds = CameraSystem.ActiveBounds.Within(sprite.InitialPosition, true);
 
-		private void RemoveParticlesToRemoveOnNextFrame()
-		{
-			Particles.RemoveAll(p => particlesToRemoveOnNextFrame.Contains(p));
-			particlesToRemoveOnNextFrame.Clear();
+				if (currentActiveState == SpriteActiveState.AlwaysActive) { continue; }
+				if (currentActiveState == SpriteActiveState.Active && !withinBounds)
+				{
+					if (!sprite.HasAttribute("DoNotRespawn"))
+					{
+						sprite.ActiveState = SpriteActiveState.WaitingToLeaveBounds;
+						sprite.Deactivate();
+						updatedSprites++;
+					}
+					else
+					{
+						RemoveSpriteOnNextFrame(sprite);
+					}
+				}
+				else if (currentActiveState == SpriteActiveState.WaitingToLeaveBounds && !initialPositionWithinBounds)
+				{
+					sprite.ActiveState = SpriteActiveState.Inactive;
+					sprite.Position = sprite.InitialPosition;
+					updatedSprites++;
+				}
+				else if (currentActiveState == SpriteActiveState.Inactive && initialPositionWithinBounds)
+				{
+					sprite.ActiveState = SpriteActiveState.Active;
+					sprite.Activate();
+					updatedSprites++;
+				}
+			}
 		}
 
 		private void UpdateParticles()
@@ -974,7 +1046,8 @@ namespace SMLimitless.Sprites.Collections
 		}
 
 		/// <summary>
-		/// Moves sprites according to their velocity and performs collision detection and resolution.
+		///   Moves sprites according to their velocity and performs collision
+		///   detection and resolution.
 		/// </summary>
 		private void UpdatePhysics()
 		{
@@ -1026,7 +1099,7 @@ namespace SMLimitless.Sprites.Collections
 						Tile tile = layer.SafeGetTile(new Vector2(x, y));
 
 						if (tile == null) { continue; }
-						
+
 						// Is the tile solid on the left and/or right sides?
 						if (tile.TileShape == CollidableShape.Rectangle)
 						{
@@ -1047,56 +1120,6 @@ namespace SMLimitless.Sprites.Collections
 
 				sprite.IsEmbedded = false;
 			}
-		}
-
-		/// <summary>
-		/// Plays an iris-in effect, turning the screen black.
-		/// </summary>
-		/// <param name="length">The number of frames the effect should last.</param>
-		/// <param name="position">The position the iris should close on.</param>
-		/// <param name="onEffectCompleted">An action ran when the iris has closed.</param>
-		public void IrisIn(int length, Vector2 position, Action<object, EffectCompletedEventArgs> onEffectCompleted)
-		{
-			EffectCompletedEventHandler handler = null;
-		
-			handler = (sender, args) =>
-			{
-				onEffectCompleted(sender, args);
-				irisEffect.EffectCompletedEvent -= handler;
-			};
-
-			irisEffect.EffectCompletedEvent += handler;
-			irisEffect.Start(length, EffectDirection.Backward, position, Color.Black);
-		}
-
-		/// <summary>
-		/// Plays an iris-out effect, bringing the screen back.
-		/// </summary>
-		/// <param name="length">The number of frames the effect should last.</param>
-		/// <param name="position">The position the iris should open from.</param>
-		/// <param name="onEffectCompleted">An action ran when the iris has opened.</param>
-		public void IrisOut(int length, Vector2 position, Action<object, EffectCompletedEventArgs> onEffectCompleted)
-		{
-			EffectCompletedEventHandler handler = null;
-
-			handler = (sender, args) =>
-			{
-				onEffectCompleted(sender, args);
-				irisEffect.EffectCompletedEvent -= handler;
-			};
-
-			irisEffect.EffectCompletedEvent += handler;
-			irisEffect.Start(length, EffectDirection.Forward, position, Color.Black);
-		}
-
-		/// <summary>
-		/// Sets the state of this iris effect.
-		/// </summary>
-		/// <param name="closed">If this parameter is true, the iris will be closed and the screen will be black.
-		/// If this parameter is false, the iris will be open and the screen will consist of the section.</param>
-		public void SetIrisState(bool closed)
-		{
-			irisEffect.Set((closed) ? EffectDirection.Backward : EffectDirection.Forward, Color.Black);
 		}
 	}
 }

@@ -281,11 +281,13 @@ namespace SMLimitless.Graphics
 		}
 
 		/// <summary>
-		/// Draws this <see cref="AnimatedGraphicsObject"/> to the screen. 
+		///   Draws this <see cref="AnimatedGraphicsObject" /> to the screen.
 		/// </summary>
 		/// <param name="position">The position to draw this object at.</param>
 		/// <param name="cropping">The portion of this object to draw.</param>
-		/// <param name="color">The color to shade this object. Use Color.White for no shading.</param>
+		/// <param name="color">
+		///   The color to shade this object. Use Color.White for no shading.
+		/// </param>
 		/// <param name="effects">How to mirror this object.</param>
 		public void Draw(Vector2 position, Rectangle cropping, Color color, SpriteEffects effects)
 		{
@@ -298,13 +300,18 @@ namespace SMLimitless.Graphics
 		}
 
 		/// <summary>
-		/// Draws this <see cref="AnimatedGraphicsObject"/> to the screen. 
+		///   Draws this <see cref="AnimatedGraphicsObject" /> to the screen.
 		/// </summary>
 		/// <param name="position">The position to draw this object at.</param>
 		/// <param name="cropping">The portion of this object to draw.</param>
-		/// <param name="color">The color to shade this object. Use Color.White for no shading.</param>
+		/// <param name="color">
+		///   The color to shade this object. Use Color.White for no shading.
+		/// </param>
 		/// <param name="effects">How to mirror this object.</param>
-		/// <param name="debug">If true, the frame index will be drawn in the top-left corner of the sprite.</param>
+		/// <param name="debug">
+		///   If true, the frame index will be drawn in the top-left corner of
+		///   the sprite.
+		/// </param>
 		public void Draw(Vector2 position, Rectangle cropping, Color color, SpriteEffects effects, bool debug)
 		{
 			Draw(position, cropping, color, effects);

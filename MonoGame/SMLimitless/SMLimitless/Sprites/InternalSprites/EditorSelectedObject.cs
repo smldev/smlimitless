@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json.Linq;
 using SMLimitless.Editor;
@@ -13,30 +10,52 @@ using SMLimitless.Sprites.Assemblies;
 namespace SMLimitless.Sprites.InternalSprites
 {
 	/// <summary>
-	/// A <see cref="Sprite"/> that is used to place tiles and sprites in a section.
+	///   Enumerates the kinds of objects editors can select.
+	/// </summary>
+	public enum EditorSelectedObjectType
+	{
+		/// <summary>
+		///   Nothing has been selected.
+		/// </summary>
+		Nothing,
+
+		/// <summary>
+		///   The editor will delete any object under the cursor on a left-click.
+		/// </summary>
+		Delete,
+
+		/// <summary>
+		///   A tile has been selected.
+		/// </summary>
+		Tile,
+
+		/// <summary>
+		///   A sprite has been selected.
+		/// </summary>
+		Sprite
+	}
+
+	/// <summary>
+	///   A <see cref="Sprite" /> that is used to place tiles and sprites in a section.
 	/// </summary>
 	public sealed class EditorSelectedObject : Sprite
 	{
-		internal EditorSelectedObjectType SelectedObjectType{ get; set; } = EditorSelectedObjectType.Nothing;
-		private Tile selectedTile = null;
 		private Sprite selectedSprite = null;
+		private Tile selectedTile = null;
 
 		/// <summary>
-		/// Gets the tile that will be placed on left-click,
-		/// or throws an <see cref="InvalidOperationException"/> if a tile is not selected. 
+		///   Gets the category to place this sprite in the editor's object selector.
 		/// </summary>
-		public Tile SelectedTile
-		{
-			get
-			{
-				if (SelectedObjectType == EditorSelectedObjectType.Tile) { return selectedTile; }
-				throw new InvalidOperationException("The currently selected object is not a tile.");
-			}
-		}
+		public override string EditorCategory => "Internal Sprites";
 
 		/// <summary>
-		/// Gets the sprite that will be placed on left-click,
-		/// or throws an <see cref="InvalidOperationException"/> if a sprite is not selected. 
+		///   Gets a value indicating whether this sprite is a player.
+		/// </summary>
+		public override bool IsPlayer => false;
+
+		/// <summary>
+		///   Gets the sprite that will be placed on left-click, or throws an
+		///   <see cref="InvalidOperationException" /> if a sprite is not selected.
 		/// </summary>
 		public Sprite SelectedSprite
 		{
@@ -48,33 +67,31 @@ namespace SMLimitless.Sprites.InternalSprites
 		}
 
 		/// <summary>
-		/// An event fired any time the selected object changes.
+		///   Gets the tile that will be placed on left-click, or throws an <see
+		///   cref="InvalidOperationException" /> if a tile is not selected.
+		/// </summary>
+		public Tile SelectedTile
+		{
+			get
+			{
+				if (SelectedObjectType == EditorSelectedObjectType.Tile) { return selectedTile; }
+				throw new InvalidOperationException("The currently selected object is not a tile.");
+			}
+		}
+
+		internal EditorSelectedObjectType SelectedObjectType { get; set; } = EditorSelectedObjectType.Nothing;
+		/// <summary>
+		///   An event fired any time the selected object changes.
 		/// </summary>
 		/// <remarks>
-		/// This event will fire even if the same kind of object (i.e. tile to tile) is selected.
+		///   This event will fire even if the same kind of object (i.e. tile to
+		///   tile) is selected.
 		/// </remarks>
 		public event EventHandler SelectedObjectChanged;
 
 		/// <summary>
-		/// Gets the category to place this sprite in the editor's object selector.
-		/// </summary>
-		public override string EditorCategory => "Internal Sprites";
-
-		/// <summary>
-		/// Gets a value indicating whether this sprite is a player.
-		/// </summary>
-		public override bool IsPlayer => false;
-
-		/// <summary>
-		/// Deserializes any objects that custom sprites have written to the level file.
-		/// </summary>
-		/// <param name="customObjects">An object containing the objects of the custom sprites.</param>
-		public override void DeserializeCustomObjects(JsonHelper customObjects)
-		{
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="EditorSelectedObject"/> class. 
+		///   Initializes a new instance of the <see cref="EditorSelectedObject"
+		///   /> class.
 		/// </summary>
 		public EditorSelectedObject()
 		{
@@ -82,7 +99,18 @@ namespace SMLimitless.Sprites.InternalSprites
 		}
 
 		/// <summary>
-		/// Draws the selected object to screen.
+		///   Deserializes any objects that custom sprites have written to the
+		///   level file.
+		/// </summary>
+		/// <param name="customObjects">
+		///   An object containing the objects of the custom sprites.
+		/// </param>
+		public override void DeserializeCustomObjects(JsonHelper customObjects)
+		{
+		}
+
+		/// <summary>
+		///   Draws the selected object to screen.
 		/// </summary>
 		public override void Draw()
 		{
@@ -105,7 +133,7 @@ namespace SMLimitless.Sprites.InternalSprites
 		}
 
 		/// <summary>
-		/// Draws a portion of this selected object to screen.
+		///   Draws a portion of this selected object to screen.
 		/// </summary>
 		/// <param name="cropping">The portion to draw.</param>
 		public override void Draw(Rectangle cropping)
@@ -116,7 +144,8 @@ namespace SMLimitless.Sprites.InternalSprites
 		}
 
 		/// <summary>
-		/// Gets an anonymous object containing objects that need to be saved to the level file.
+		///   Gets an anonymous object containing objects that need to be saved
+		///   to the level file.
 		/// </summary>
 		/// <returns></returns>
 		public override object GetCustomSerializableObjects()
@@ -125,14 +154,83 @@ namespace SMLimitless.Sprites.InternalSprites
 		}
 
 		/// <summary>
-		/// Loads the content for this sprite.
+		///   Loads the content for this sprite.
 		/// </summary>
 		public override void LoadContent()
 		{
 		}
 
 		/// <summary>
-		/// Updates this sprite.
+		///   Selects a sprite already in a section.
+		/// </summary>
+		/// <param name="sprite">The sprite being selected.</param>
+		public void SelectExistingSprite(Sprite sprite)
+		{
+			SelectedObjectType = EditorSelectedObjectType.Sprite;
+			selectedSprite = AssemblyManager.GetSpriteByFullName(sprite.GetType().FullName);
+			selectedSprite.Initialize(Owner);
+			selectedSprite.LoadContent();
+			OnSelectedObjectChanged();
+		}
+
+		/// <summary>
+		///   Selects a tile already in a section.
+		/// </summary>
+		/// <param name="tile">The tile being selected.</param>
+		public void SelectExistingTile(Tile tile)
+		{
+			SelectedObjectType = EditorSelectedObjectType.Tile;
+			selectedTile = tile.Clone();
+			selectedTile.Initialize(Owner);
+			selectedTile.LoadContent();
+			OnSelectedObjectChanged();
+		}
+
+		/// <summary>
+		///   Selects a sprite from the level editor.
+		/// </summary>
+		/// <param name="spriteData">The default properties for this sprite.</param>
+		public void SelectSpriteFromEditor(SpriteData spriteData)
+		{
+			Sprite sprite = AssemblyManager.GetSpriteByFullName(spriteData.TypeName);
+
+			sprite.State = sprite.InitialState = (SpriteState)spriteData.State;
+			sprite.TileCollisionMode = (SpriteCollisionMode)spriteData.Collision;
+			sprite.DeserializeCustomObjects(new JsonHelper(spriteData.CustomData));
+
+			sprite.Initialize(Owner);
+			sprite.LoadContent();
+			SelectedObjectType = EditorSelectedObjectType.Sprite;
+			selectedSprite = sprite;
+			selectedTile = null;
+
+			OnSelectedObjectChanged();
+		}
+
+		/// <summary>
+		///   Selects a tile from the level editor.
+		/// </summary>
+		/// <param name="defaultState">The default properties for this tile.</param>
+		public void SelectTileFromEditor(TileDefaultState defaultState)
+		{
+			Tile tile = AssemblyManager.GetTileByFullName(defaultState.TypeName);
+
+			tile.SolidSides = defaultState.SolidSides;
+			tile.GraphicsResourceName = defaultState.GraphicsResource;
+			tile.State = tile.InitialState = defaultState.State;
+			tile.DeserializeCustomObjects(new JsonHelper((JToken)defaultState.CustomData));
+
+			tile.Initialize(Owner);
+			tile.LoadContent();
+			SelectedObjectType = EditorSelectedObjectType.Tile;
+			selectedTile = tile;
+			selectedSprite = null;
+
+			OnSelectedObjectChanged();
+		}
+
+		/// <summary>
+		///   Updates this sprite.
 		/// </summary>
 		public override void Update()
 		{
@@ -157,75 +255,6 @@ namespace SMLimitless.Sprites.InternalSprites
 		internal void UnsubscribeAllHandlers()
 		{
 			SelectedObjectChanged = null;
-		}
-
-		/// <summary>
-		/// Selects a tile already in a section.
-		/// </summary>
-		/// <param name="tile">The tile being selected.</param>
-		public void SelectExistingTile(Tile tile)
-		{
-			SelectedObjectType = EditorSelectedObjectType.Tile;
-			selectedTile = tile.Clone();
-			selectedTile.Initialize(Owner);
-			selectedTile.LoadContent();
-			OnSelectedObjectChanged();
-		}
-
-		/// <summary>
-		/// Selects a sprite already in a section.
-		/// </summary>
-		/// <param name="sprite">The sprite being selected.</param>
-		public void SelectExistingSprite(Sprite sprite)
-		{
-			SelectedObjectType = EditorSelectedObjectType.Sprite;
-			selectedSprite = AssemblyManager.GetSpriteByFullName(sprite.GetType().FullName);
-			selectedSprite.Initialize(Owner);
-			selectedSprite.LoadContent();
-			OnSelectedObjectChanged();
-		}
-
-		/// <summary>
-		/// Selects a tile from the level editor.
-		/// </summary>
-		/// <param name="defaultState">The default properties for this tile.</param>
-		public void SelectTileFromEditor(TileDefaultState defaultState)
-		{
-			Tile tile = AssemblyManager.GetTileByFullName(defaultState.TypeName);
-
-			tile.SolidSides = defaultState.SolidSides;
-			tile.GraphicsResourceName = defaultState.GraphicsResource;
-			tile.State = tile.InitialState = defaultState.State;
-			tile.DeserializeCustomObjects(new JsonHelper((JToken)defaultState.CustomData));
-
-			tile.Initialize(Owner);
-			tile.LoadContent();
-			SelectedObjectType = EditorSelectedObjectType.Tile;
-			selectedTile = tile;
-			selectedSprite = null;
-
-			OnSelectedObjectChanged();
-		}
-
-		/// <summary>
-		/// Selects a sprite from the level editor.
-		/// </summary>
-		/// <param name="spriteData">The default properties for this sprite.</param>
-		public void SelectSpriteFromEditor(SpriteData spriteData)
-		{
-			Sprite sprite = AssemblyManager.GetSpriteByFullName(spriteData.TypeName);
-
-			sprite.State = sprite.InitialState = (SpriteState)spriteData.State;
-			sprite.TileCollisionMode = (SpriteCollisionMode)spriteData.Collision;
-			sprite.DeserializeCustomObjects(new JsonHelper(spriteData.CustomData));
-
-			sprite.Initialize(Owner);
-			sprite.LoadContent();
-			SelectedObjectType = EditorSelectedObjectType.Sprite;
-			selectedSprite = sprite;
-			selectedTile = null;
-
-			OnSelectedObjectChanged();
 		}
 
 		private void OnLeftClick()
@@ -298,31 +327,5 @@ namespace SMLimitless.Sprites.InternalSprites
 				SelectedObjectChanged(this, new EventArgs());
 			}
 		}
-	}
-
-	/// <summary>
-	/// Enumerates the kinds of objects editors can select.
-	/// </summary>
-	public enum EditorSelectedObjectType
-	{
-		/// <summary>
-		/// Nothing has been selected.
-		/// </summary>
-		Nothing,
-
-		/// <summary>
-		/// The editor will delete any object under the cursor on a left-click.
-		/// </summary>
-		Delete,
-
-		/// <summary>
-		/// A tile has been selected.
-		/// </summary>
-		Tile,
-
-		/// <summary>
-		/// A sprite has been selected.
-		/// </summary>
-		Sprite
 	}
 }

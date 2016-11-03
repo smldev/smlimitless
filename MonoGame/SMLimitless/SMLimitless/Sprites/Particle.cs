@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using SMLimitless.Content;
 using SMLimitless.Extensions;
@@ -12,52 +8,57 @@ using SMLimitless.Sprites.Collections;
 namespace SMLimitless.Sprites
 {
 	/// <summary>
-	/// A small visual effect.
+	///   A small visual effect.
 	/// </summary>
 	public sealed class Particle
 	{
 		private const float MaxGravitationalVelocity = 350f;
-		
-		private Section owner;	
+
+		private Section owner;
 
 		/// <summary>
-		/// Gets the current position of this particle, in pixels.
-		/// </summary>
-		public Vector2 Position { get; private set; }
-
-		/// <summary>
-		/// Gets the current velocity of this particle, in pixels per second.
-		/// </summary>
-		public Vector2 Velocity { get; private set; }
-
-		/// <summary>
-		/// Gets the current acceleration of this particle, in pixels per second squared.
+		///   Gets the current acceleration of this particle, in pixels per
+		///   second squared.
 		/// </summary>
 		public Vector2 Acceleration { get; private set; }
 
 		/// <summary>
-		/// Gets a value indicating whether this particle will fall.
+		///   Gets a value indicating whether this particle will fall.
 		/// </summary>
 		public bool AffectedByGravity { get; private set; }
 
 		/// <summary>
-		/// Gets the lifespan of this particle, in seconds.
-		/// </summary>
-		public float Life { get; private set; }
-
-		/// <summary>
-		/// Gets the <see cref="IGraphicsObject"/> of this particle. 
+		///   Gets the <see cref="IGraphicsObject" /> of this particle.
 		/// </summary>
 		public IGraphicsObject Graphics { get; private set; }
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Particle"/> class. 
+		///   Gets the lifespan of this particle, in seconds.
+		/// </summary>
+		public float Life { get; private set; }
+
+		/// <summary>
+		///   Gets the current position of this particle, in pixels.
+		/// </summary>
+		public Vector2 Position { get; private set; }
+
+		/// <summary>
+		///   Gets the current velocity of this particle, in pixels per second.
+		/// </summary>
+		public Vector2 Velocity { get; private set; }
+
+		/// <summary>
+		///   Initializes a new instance of the <see cref="Particle" /> class.
 		/// </summary>
 		/// <param name="owner">The section this particle appears in.</param>
-		/// <param name="graphicsResourceName">The name of the graphics resource to use for this particle.</param>
+		/// <param name="graphicsResourceName">
+		///   The name of the graphics resource to use for this particle.
+		/// </param>
 		/// <param name="position">The position of this particle onscreen.</param>
 		/// <param name="velocity">The velocity of this particle.</param>
-		/// <param name="affectedByGravity">A value indicating whether this particle will fall.</param>
+		/// <param name="affectedByGravity">
+		///   A value indicating whether this particle will fall.
+		/// </param>
 		/// <param name="lifespan">The lifespan of this particle.</param>
 		public Particle(Section owner, string graphicsResourceName, Vector2 position, Vector2 velocity, bool affectedByGravity = false, float lifespan = -1f)
 		{
@@ -73,7 +74,15 @@ namespace SMLimitless.Sprites
 		}
 
 		/// <summary>
-		/// Loads the content for the <see cref="Graphics"/> property. 
+		///   Draws this particle to the screen.
+		/// </summary>
+		public void Draw()
+		{
+			Graphics.Draw(Position, Color.White);
+		}
+
+		/// <summary>
+		///   Loads the content for the <see cref="Graphics" /> property.
 		/// </summary>
 		public void LoadContent()
 		{
@@ -81,7 +90,7 @@ namespace SMLimitless.Sprites
 		}
 
 		/// <summary>
-		/// Updates this particle.
+		///   Updates this particle.
 		/// </summary>
 		public void Update()
 		{
@@ -110,14 +119,6 @@ namespace SMLimitless.Sprites
 
 			Velocity += Acceleration * delta;
 			Position += Velocity * delta;
-		}
-
-		/// <summary>
-		/// Draws this particle to the screen.
-		/// </summary>
-		public void Draw()
-		{
-			Graphics.Draw(Position, Color.White);
 		}
 	}
 }

@@ -9,11 +9,10 @@ namespace SMLimitless.Graphics
 	{
 		// http://gamedev.stackexchange.com/questions/87150/rendering-a-fullscreen-quad-is-leaving-a-one-pixel-line-on-the-left-and-top
 
-		private VertexPositionTexture[] triangles;
-		private short[] indexData = new short[] { 0, 1, 2, 2, 3, 0 };
 		private GraphicsDevice gfx;
-
+		private short[] indexData = new short[] { 0, 1, 2, 2, 3, 0 };
 		private Texture2D transparentTexture = new Texture2D(GameServices.Graphics, 1, 1);
+		private VertexPositionTexture[] triangles;
 
 		public QuadRenderer()
 		{

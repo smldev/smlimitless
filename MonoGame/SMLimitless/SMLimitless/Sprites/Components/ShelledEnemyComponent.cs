@@ -1,87 +1,85 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using SMLimitless.Components;
 
 namespace SMLimitless.Sprites.Components
 {
 	/// <summary>
-	/// A component for an enemy that is shelled (i.e. behaves like
-	/// a Koopa Troopa or Buzzy Beetle.)
+	///   A component for an enemy that is shelled (i.e. behaves like a Koopa
+	///   Troopa or Buzzy Beetle.)
 	/// </summary>
 	public sealed class ShelledEnemyComponent : SpriteComponent
 	{
 		/// <summary>
-		/// Enumerates the behaviors of this component.
+		///   Enumerates the behaviors of this component.
 		/// </summary>
 		public enum ShelledEnemyBehavior
 		{
 			/// <summary>
-			/// The enemy will not turn when it reaches a cliff (i.e. green Koopa).
+			///   The enemy will not turn when it reaches a cliff (i.e. green Koopa).
 			/// </summary>
 			DontTurnOnCliffs = 0,
 
 			/// <summary>
-			/// The enemy will turn when it reaches a cliff (i.e. red Koopa).
+			///   The enemy will turn when it reaches a cliff (i.e. red Koopa).
 			/// </summary>
 			TurnOnCliffs = 1,
 
 			/// <summary>
-			/// The enemy will chase the nearest player (i.e. yellow Koopa).
+			///   The enemy will chase the nearest player (i.e. yellow Koopa).
 			/// </summary>
 			ChasePlayer = 2
 		}
 
 		/// <summary>
-		/// Enumerates the states a shelled enemy can be in.
+		///   Enumerates the states a shelled enemy can be in.
 		/// </summary>
 		public enum ShelledEnemyState
 		{
 			/// <summary>
-			/// The default; the shelled enemy is walking.
+			///   The default; the shelled enemy is walking.
 			/// </summary>
 			Walking,
 
 			/// <summary>
-			/// The shelled enemy has retreated to its shell.
+			///   The shelled enemy has retreated to its shell.
 			/// </summary>
 			Shell,
 
 			/// <summary>
-			/// The shelled enemy is emerging and will soon switch to the <see cref="Walking"/> state.
+			///   The shelled enemy is emerging and will soon switch to the <see
+			///   cref="Walking" /> state.
 			/// </summary>
 			Emerging,
 
 			/// <summary>
-			/// The shelled enemy has retreated to its spinning shell, able to damage other sprites and players.
+			///   The shelled enemy has retreated to its spinning shell, able to
+			///   damage other sprites and players.
 			/// </summary>
 			ShellSpinning
 		}
 
-		private const int StateTransitionWaitTime = 5;	// 5 frames = 0.8333 seconds
+		private const int StateTransitionWaitTime = 5;  // 5 frames = 0.8333 seconds
 
 		private ShelledEnemyBehavior behavior;
-		private ShelledEnemyState state;
-		private float walkingVelocity;
-		private float shellSpinningVelocity;
-		private int framesFromShellToEmerging;
-		private int framesFromEmergingToWalking;
 		private ActionScheduler.ScheduledAction emergeAction;
-		private FrameTimer stateTransitionWaitTimer = new FrameTimer();
-
-		// The components below are NOT owned by this component;
-		// components cannot own other components. These components
-		// are owned by the Owner sprite, we just need to hold on to
-		// the references to them.
-		private WalkerComponent spriteWalker;
-		private DamageComponent spriteDamage;
+		private int framesFromEmergingToWalking;
+		private int framesFromShellToEmerging;
+		private float shellSpinningVelocity;
 		private ChasePlayerComponent spriteChasePlayer;
+		private DamageComponent spriteDamage;
+
+		// The components below are NOT owned by this component; components
+		// cannot own other components. These components are owned by the Owner
+		// sprite, we just need to hold on to the references to them.
+		private WalkerComponent spriteWalker;
+
+		private ShelledEnemyState state;
+		private FrameTimer stateTransitionWaitTimer = new FrameTimer();
+		private float walkingVelocity;
 
 		/// <summary>
-		/// Gets or sets the behavior of this component.
+		///   Gets or sets the behavior of this component.
 		/// </summary>
 		public ShelledEnemyBehavior Behavior
 		{
@@ -95,7 +93,7 @@ namespace SMLimitless.Sprites.Components
 		}
 
 		/// <summary>
-		/// Gets or sets the state of this component.
+		///   Gets or sets the state of this component.
 		/// </summary>
 		public ShelledEnemyState State
 		{
@@ -126,18 +124,29 @@ namespace SMLimitless.Sprites.Components
 		}
 
 		/// <summary>
-		/// An event raised when this component's state changes.
+		///   An event raised when this component's state changes.
 		/// </summary>
 		public event EventHandler StateChanged;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ShelledEnemyComponent"/> sprite.
+		///   Initializes a new instance of the <see cref="ShelledEnemyComponent"
+		///   /> sprite.
 		/// </summary>
 		/// <param name="owner">The sprite that owns this component.</param>
-		/// <param name="walkingVelocity">The horizontal velocity at which the owner will walk.</param>
-		/// <param name="shellSpinningVelocity">The horizontal velocity at which the owner will spin.</param>
-		/// <param name="framesFromShellToEmerging">The number of frames between entering the Shell state and entering the Emerging state.</param>
-		/// <param name="framesFromEmergingToWalking">The number of frames between entering the Emerging state and entering the Walking state.</param>
+		/// <param name="walkingVelocity">
+		///   The horizontal velocity at which the owner will walk.
+		/// </param>
+		/// <param name="shellSpinningVelocity">
+		///   The horizontal velocity at which the owner will spin.
+		/// </param>
+		/// <param name="framesFromShellToEmerging">
+		///   The number of frames between entering the Shell state and entering
+		///   the Emerging state.
+		/// </param>
+		/// <param name="framesFromEmergingToWalking">
+		///   The number of frames between entering the Emerging state and
+		///   entering the Walking state.
+		/// </param>
 		public ShelledEnemyComponent(Sprite owner, float walkingVelocity, float shellSpinningVelocity, int framesFromShellToEmerging, int framesFromEmergingToWalking)
 		{
 			WalkerComponent walker = owner.GetComponent<WalkerComponent>();
@@ -167,9 +176,11 @@ namespace SMLimitless.Sprites.Components
 		}
 
 		/// <summary>
-		/// Handles a collision with another sprite.
+		///   Handles a collision with another sprite.
 		/// </summary>
-		/// <param name="collidingSprite">The sprite that has collided with the owner sprite.</param>
+		/// <param name="collidingSprite">
+		///   The sprite that has collided with the owner sprite.
+		/// </param>
 		/// <param name="resolutionDistance">The depth of the collision.</param>
 		public override void HandleSpriteCollision(Sprite collidingSprite, Vector2 resolutionDistance)
 		{
@@ -192,27 +203,35 @@ namespace SMLimitless.Sprites.Components
 			}
 		}
 
-		private void HandleSpriteCollisionWhileWalking(Sprite sprite, Vector2 resolutionDistance)
+		/// <summary>
+		///   Updates this component.
+		/// </summary>
+		public override void Update()
 		{
-			if (sprite.IsPlayer)
+			stateTransitionWaitTimer.Update();
+		}
+
+		private void GoToShell()
+		{
+			State = ShelledEnemyState.Shell;
+			spriteChasePlayer.IsActive = false;
+			emergeAction = ActionScheduler.Instance.ScheduleAction(() =>
 			{
-				// so the Player gets updated before the shelled enemy does,
-				// and since the Player bounces off sprites, when we get here,
-				// the player has upward velocity. So a stomp doesn't look like a
-				// stomp.
-				if (Sprite.IsStomping(sprite, Owner))
+				State = ShelledEnemyState.Emerging;
+				emergeAction = ActionScheduler.Instance.ScheduleActionOnNextFrame(() =>
 				{
-					GoToShell();
-				}
-			}
+					State = ShelledEnemyState.Walking;
+					spriteChasePlayer.IsActive = (Behavior == ShelledEnemyBehavior.ChasePlayer);
+				}, framesFromEmergingToWalking);
+			}, framesFromShellToEmerging);
 		}
 
 		private void HandleSpriteCollisionWhileShell(Sprite sprite, Vector2 resolutionDistance)
 		{
 			if (sprite.IsPlayer)
 			{
-				// If the player's center is to the right (or equal to) our center, go left
-				// Otherwise, go right
+				// If the player's center is to the right (or equal to) our
+				// center, go left Otherwise, go right
 				spriteWalker.Direction = (sprite.Hitbox.Center.X >= Owner.Hitbox.X) ? Direction.Left : Direction.Right;
 				State = ShelledEnemyState.ShellSpinning;
 				ActionScheduler.Instance.CancelScheduledAction(emergeAction);
@@ -248,27 +267,18 @@ namespace SMLimitless.Sprites.Components
 			}
 		}
 
-		private void GoToShell()
+		private void HandleSpriteCollisionWhileWalking(Sprite sprite, Vector2 resolutionDistance)
 		{
-			State = ShelledEnemyState.Shell;
-			spriteChasePlayer.IsActive = false;
-			emergeAction = ActionScheduler.Instance.ScheduleAction(() =>
+			if (sprite.IsPlayer)
 			{
-				State = ShelledEnemyState.Emerging;
-				emergeAction = ActionScheduler.Instance.ScheduleActionOnNextFrame(() =>
+				// so the Player gets updated before the shelled enemy does, and
+				// since the Player bounces off sprites, when we get here, the
+				// player has upward velocity. So a stomp doesn't look like a stomp.
+				if (Sprite.IsStomping(sprite, Owner))
 				{
-					State = ShelledEnemyState.Walking;
-					spriteChasePlayer.IsActive = (Behavior == ShelledEnemyBehavior.ChasePlayer);
-				}, framesFromEmergingToWalking);
-			}, framesFromShellToEmerging);
-		}
-
-		/// <summary>
-		/// Updates this component.
-		/// </summary>
-		public override void Update()
-		{
-			stateTransitionWaitTimer.Update();
+					GoToShell();
+				}
+			}
 		}
 
 		private void OnStateChanged()

@@ -1,25 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SMLimitless.Sprites;
 using SMLimitless.Physics;
+using SMLimitless.Sprites;
 
 namespace SMLimitless.IO.LevelSerializers.Serializer003Types
 {
 	internal sealed class TileSaveData
 	{
-		internal string TypeName { get; set; }
-		internal int SolidSides { get; set; }	// Is an instance of TileRectSolidSides or TileTriSolidSides based on what the tile is
-		internal string Name { get; set; }
+		public int TileSaveID { get; set; }
+		internal object CustomData { get; set; }
 		internal string GraphicsResourceName { get; set; }
 		internal string InitialState { get; set; }
-		internal object CustomData { get; set; }
-
-		public int TileSaveID { get; set; }
-
-		internal TileSaveData() { }
+		internal string Name { get; set; }
+		internal int SolidSides { get; set; }
+		internal string TypeName { get; set; }
 
 		public TileSaveData(Tile tile)
 		{
@@ -30,6 +23,10 @@ namespace SMLimitless.IO.LevelSerializers.Serializer003Types
 			InitialState = tile.InitialState;
 			CustomData = tile.GetCustomSerializableObjects();
 		}
+
+		// Is an instance of TileRectSolidSides or TileTriSolidSides based on
+		// what the tile is
+		internal TileSaveData() { }
 
 		public override bool Equals(object obj)
 		{
