@@ -58,29 +58,17 @@ namespace SMLimitless
 		///   Gets the standard size for a game object (tile/sprite/etc). Subject
 		///   to change.
 		/// </summary>
-		public static Vector2 GameObjectSize
-		{
-			get
-			{
-				return new Vector2(16f);
-			}
-		}
+		public static Vector2 GameObjectSize => new Vector2(16f);
 
 		/// <summary>
 		///   Gets a reference to the GameTime instance.
 		/// </summary>
-		public static GameTime GameTime
-		{
-			get { return GetService<GameTime>(); }
-		}
+		public static GameTime GameTime => GetService<GameTime>();
 
 		/// <summary>
 		///   Gets a reference to the GraphicsDevice.
 		/// </summary>
-		public static GraphicsDevice Graphics
-		{
-			get { return GetService<GraphicsDevice>(); }
-		}
+		public static GraphicsDevice Graphics => GetService<GraphicsDevice>();
 
 		/// <summary>
 		///   Gets a form used to edit global physics settings for game objects.
@@ -90,13 +78,7 @@ namespace SMLimitless
 		/// <summary>
 		///   Gets the size, in pixels, of a QuadTree cell.
 		/// </summary>
-		public static Vector2 QuadTreeCellSize
-		{
-			get
-			{
-				return new Vector2(64f, 64f);
-			}
-		}
+		public static Vector2 QuadTreeCellSize => new Vector2(64f);
 
 		/// <summary>
 		///   Gets or sets the size of the window in pixels.
@@ -106,27 +88,13 @@ namespace SMLimitless
 		/// <summary>
 		///   Gets a reference to the SpriteBatch.
 		/// </summary>
-		public static SpriteBatch SpriteBatch
-		{
-			get { return GetService<SpriteBatch>(); }
-		}
+		public static SpriteBatch SpriteBatch => GetService<SpriteBatch>();
 
 		/// <summary>
 		///   Gets the GameServicesContainer that stores references to the
 		///   services added.
 		/// </summary>
-		internal static GameServiceContainer Container
-		{
-			get
-			{
-				if (container == null)
-				{
-					container = new GameServiceContainer();
-				}
-
-				return container;
-			}
-		}
+		internal static GameServiceContainer Container => container ?? (container = new GameServiceContainer());
 
 		static GameServices()
 		{
@@ -139,33 +107,21 @@ namespace SMLimitless
 		/// </summary>
 		/// <typeparam name="T">The type of the service to add.</typeparam>
 		/// <param name="service">The service to add.</param>
-		public static void AddService<T>(T service)
-		{
-			Container.AddService(typeof(T), service);
-		}
+		public static void AddService<T>(T service) => Container.AddService(service);
 
 		/// <summary>
 		///   Draws a given string using the debug font at {X: 16, Y:16} at
 		///   double scale.
 		/// </summary>
 		/// <param name="text">The text to draw.</param>
-		public static void DrawStringDefault(string text)
-		{
-			if (DebugFont != null)
-			{
-				DebugFont.DrawString(text, new Vector2(16f, 16f), 2f);
-			}
-		}
+		public static void DrawStringDefault(string text) => DebugFont?.DrawString(text, new Vector2(16f), 2f);
 
 		/// <summary>
 		///   Returns a game service.
 		/// </summary>
 		/// <typeparam name="T">The type of game service to retrieve.</typeparam>
 		/// <returns>A game service of the specified type.</returns>
-		public static T GetService<T>()
-		{
-			return (T)Container.GetService(typeof(T));
-		}
+		public static T GetService<T>() where T : class => Container.GetService<T>();
 
 		/// <summary>
 		///   Initializes the debug font.
@@ -199,9 +155,6 @@ namespace SMLimitless
 		///   Removes a service from the container.
 		/// </summary>
 		/// <typeparam name="T">The type of the service to remove.</typeparam>
-		public static void RemoveService<T>()
-		{
-			Container.RemoveService(typeof(T));
-		}
+		public static void RemoveService<T>() => Container.RemoveService(typeof(T));
 	}
 }

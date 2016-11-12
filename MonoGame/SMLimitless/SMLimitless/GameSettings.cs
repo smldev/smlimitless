@@ -36,7 +36,7 @@ namespace SMLimitless
 
 			if (!File.Exists(settingsPath))
 			{
-				throw new FileNotFoundException(string.Format("GameSettings.Initialize(): The settings file at {0} could not be found.", settingsPath));
+				throw new FileNotFoundException(string.Format("The settings file at {0} could not be found.", settingsPath));
 			}
 
 			settingsReader = new DataReader(settingsPath);
@@ -51,9 +51,6 @@ namespace SMLimitless
 		/// <returns>
 		///   A Dictionary{string, string} containing the keys and their values.
 		/// </returns>
-		public static Dictionary<string, string> GetSection(string sectionName)
-		{
-			return settingsReader.ReadFullSection(sectionName);
-		}
+		public static Dictionary<string, string> GetSection(string sectionName) => settingsReader.ReadFullSection(sectionName);
 	}
 }
