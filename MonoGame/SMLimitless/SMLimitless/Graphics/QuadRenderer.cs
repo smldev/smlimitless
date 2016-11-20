@@ -33,20 +33,20 @@ namespace SMLimitless.Graphics
 						 };
 		}
 
-		public void Render(Effect effect)
+		public void Render(Effect effect, Vector2 position)
 		{
 			foreach (EffectPass p in effect.CurrentTechnique.Passes)
 				p.Apply();
 
-			Render();
+			Render(position);
 		}
 
-		private void Render()
+		private void Render(Vector2 position)
 		{
 			//gfx.DrawUserIndexedPrimitives(PrimitiveType.TriangleList,
 			//								   triangles, 0, 4,
 			//								   indexData, 0, 2);
-			GameServices.SpriteBatch.DrawRectangle(Vector2.Zero.ToRectangle(GameServices.ScreenSize), Color.Transparent);
+			GameServices.SpriteBatch.DrawRectangle(position.ToRectangle(GameServices.ScreenSize), Color.Transparent);
 		}
 	}
 }

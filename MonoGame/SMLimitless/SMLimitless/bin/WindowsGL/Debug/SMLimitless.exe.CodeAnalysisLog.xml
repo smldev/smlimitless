@@ -6,27 +6,12 @@
    <Modules>
     <Module Name="smlimitless.exe">
      <Namespaces>
-      <Namespace Name="SMLimitless.Collections">
-       <Types>
-        <Type Name="SparseCellRange" Kind="Struct" Accessibility="Public" ExternallyVisible="True">
-         <Members>
-          <Member Name="#Equals(System.Object)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
-           <Messages>
-            <Message TypeName="OverloadOperatorEqualsOnOverridingValueTypeEquals" Category="Microsoft.Usage" CheckId="CA2231" Status="Active" Created="2016-11-02 23:08:30Z" FixCategory="NonBreaking">
-             <Issue Certainty="75" Level="Warning" Path="C:\Users\Chris\Documents\GitHub\smlimitless\MonoGame\SMLimitless\SMLimitless\Collections" File="SparseCellRange.cs" Line="52">Because 'SparseCellRange' is a value type that overrides ValueType.Equals, it should also overload the equality and inequality operators (== and !=).</Issue>
-            </Message>
-           </Messages>
-          </Member>
-         </Members>
-        </Type>
-       </Types>
-      </Namespace>
       <Namespace Name="SMLimitless.Content">
        <Types>
         <Type Name="ResourceNotFoundException" Kind="Class" Accessibility="Public" ExternallyVisible="True">
          <Messages>
-          <Message TypeName="MarkISerializableTypesWithSerializable" Category="Microsoft.Usage" CheckId="CA2237" Status="Active" Created="2016-11-02 23:08:30Z" FixCategory="NonBreaking">
-           <Issue Certainty="95" Level="Error">Add [Serializable] to 'ResourceNotFoundException' as this type implements ISerializable.</Issue>
+          <Message TypeName="ImplementISerializableCorrectly" Category="Microsoft.Usage" CheckId="CA2240" Status="Active" Created="2016-11-20 03:07:11Z" FixCategory="NonBreaking">
+           <Issue Certainty="60" Level="Error">Add an implementation of GetObjectData to type 'ResourceNotFoundException'.</Issue>
           </Message>
          </Messages>
         </Type>
@@ -36,7 +21,7 @@
        <Types>
         <Type Name="QuadRenderer" Kind="Class" Accessibility="Assembly" ExternallyVisible="False">
          <Messages>
-          <Message TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001" Status="Active" Created="2016-11-02 23:08:30Z" FixCategory="NonBreaking">
+          <Message TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001" Status="Active" Created="2016-11-20 03:07:11Z" FixCategory="NonBreaking">
            <Issue Name="NonBreaking" Certainty="95" Level="CriticalError">Implement IDisposable on 'QuadRenderer' because it creates members of the following IDisposable types: 'Texture2D'.</Issue>
           </Message>
          </Messages>
@@ -49,7 +34,7 @@
          <Members>
           <Member Name="#EffectCompletedEvent" Kind="Event" Static="False" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="DeclareEventHandlersCorrectly" Category="Microsoft.Design" CheckId="CA1009" Status="Active" Created="2016-11-02 23:08:30Z" FixCategory="Breaking">
+            <Message TypeName="DeclareEventHandlersCorrectly" Category="Microsoft.Design" CheckId="CA1009" Status="Active" Created="2016-11-20 03:07:11Z" FixCategory="Breaking">
              <Issue Name="Second" Certainty="95" Level="Error">Declare the second parameter of 'EffectCompletedEventHandler' as an EventArgs, or an instance of a type that extends EventArgs, named 'e'.</Issue>
             </Message>
            </Messages>
@@ -64,7 +49,7 @@
          <Members>
           <Member Name="#PointNotifierEvent" Kind="Event" Static="False" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="DeclareEventHandlersCorrectly" Category="Microsoft.Design" CheckId="CA1009" Status="Active" Created="2016-11-02 23:08:30Z" FixCategory="Breaking">
+            <Message TypeName="DeclareEventHandlersCorrectly" Category="Microsoft.Design" CheckId="CA1009" Status="Active" Created="2016-11-20 03:07:11Z" FixCategory="Breaking">
              <Issue Name="First" Certainty="95" Level="Error">Declare the first parameter of 'PointNotifierEventHandler' as an object named 'sender'.</Issue>
              <Issue Name="Second" Certainty="95" Level="Error">Declare the second parameter of 'PointNotifierEventHandler' as an EventArgs, or an instance of a type that extends EventArgs, named 'e'.</Issue>
             </Message>
@@ -78,14 +63,14 @@
        <Types>
         <Type Name="Background" Kind="Class" Accessibility="Public" ExternallyVisible="True">
          <Messages>
-          <Message TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001" Status="Active" Created="2016-11-02 23:08:30Z" FixCategory="DependsOnFix">
+          <Message TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001" Status="Active" Created="2016-11-20 03:07:11Z" FixCategory="DependsOnFix">
            <Issue Name="DependsOnFix" Certainty="95" Level="CriticalError">Implement IDisposable on 'Background' because it creates members of the following IDisposable types: 'Texture2D'. If 'Background' has previously shipped, adding new members that implement IDisposable to this type is considered a breaking change to existing consumers.</Issue>
           </Message>
          </Messages>
         </Type>
         <Type Name="Section" Kind="Class" Accessibility="Public" ExternallyVisible="True">
          <Messages>
-          <Message TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001" Status="Active" Created="2016-11-02 23:08:30Z" FixCategory="DependsOnFix">
+          <Message TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001" Status="Active" Created="2016-11-20 03:07:11Z" FixCategory="DependsOnFix">
            <Issue Name="DependsOnFix" Certainty="95" Level="CriticalError">Implement IDisposable on 'Section' because it creates members of the following IDisposable types: 'DebugForm', 'EditorForm'. If 'Section' has previously shipped, adding new members that implement IDisposable to this type is considered a breaking change to existing consumers.</Issue>
           </Message>
          </Messages>
@@ -98,7 +83,7 @@
          <Members>
           <Member Name="#SpriteHealed" Kind="Event" Static="False" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="DeclareEventHandlersCorrectly" Category="Microsoft.Design" CheckId="CA1009" Status="Active" Created="2016-11-02 23:08:30Z" FixCategory="Breaking">
+            <Message TypeName="DeclareEventHandlersCorrectly" Category="Microsoft.Design" CheckId="CA1009" Status="Active" Created="2016-11-20 03:07:11Z" FixCategory="Breaking">
              <Issue Name="Second" Certainty="95" Level="Error">Declare the second parameter of 'EventHandler&lt;int&gt;' as an EventArgs, or an instance of a type that extends EventArgs, named 'e'.</Issue>
             </Message>
            </Messages>
@@ -124,24 +109,14 @@
    <MessageLevel Certainty="95">Error</MessageLevel>
    <File Name="designrules.dll" Version="14.0.0.0" />
   </Rule>
-  <Rule TypeName="MarkISerializableTypesWithSerializable" Category="Microsoft.Usage" CheckId="CA2237">
-   <Name>Mark ISerializable types with SerializableAttribute</Name>
-   <Description>The System.Runtime.Serialization.ISerializable interface allows the type to customize its serialization, while the Serializable attribute enables the runtime to recognize the type as being serializable.</Description>
-   <Resolution Name="Default">Add [Serializable] to {0} as this type implements ISerializable.</Resolution>
+  <Rule TypeName="ImplementISerializableCorrectly" Category="Microsoft.Usage" CheckId="CA2240">
+   <Name>Implement ISerializable correctly</Name>
+   <Description>If a type is assignable to ISerializable, it should implement GetObjectData. For unsealed types, the GetObjectData method should be callable and overridable by derived types.</Description>
+   <Resolution Name="Default">Add an implementation of GetObjectData to type {0}.</Resolution>
    <Owner />
-   <Url>http://msdn.microsoft.com/library/ms182350.aspx</Url>
+   <Url>http://msdn.microsoft.com/library/ms182342.aspx</Url>
    <Email>[none]</Email>
-   <MessageLevel Certainty="75">Warning</MessageLevel>
-   <File Name="usagerules.dll" Version="14.0.0.0" />
-  </Rule>
-  <Rule TypeName="OverloadOperatorEqualsOnOverridingValueTypeEquals" Category="Microsoft.Usage" CheckId="CA2231">
-   <Name>Overload operator equals on overriding ValueType.Equals</Name>
-   <Description>Value types that redefine System.ValueType.Equals should redefine the equality operator as well to ensure that these members return the same results. This helps ensure that types that rely on Equals (such as ArrayList and Hashtable) behave in a manner that is expected and consistent with the equality operator.</Description>
-   <Resolution Name="Default">Because {0} is a value type that overrides ValueType.Equals, it should also overload the equality and inequality operators (== and !=).</Resolution>
-   <Owner />
-   <Url>http://msdn.microsoft.com/library/ms182359.aspx</Url>
-   <Email>[none]</Email>
-   <MessageLevel Certainty="75">Warning</MessageLevel>
+   <MessageLevel Certainty="60">Error</MessageLevel>
    <File Name="usagerules.dll" Version="14.0.0.0" />
   </Rule>
   <Rule TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001">

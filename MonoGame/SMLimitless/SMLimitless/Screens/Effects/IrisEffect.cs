@@ -66,7 +66,7 @@ namespace SMLimitless.Screens.Effects
 				irisEffect.Parameters["radius"].SetValue(irisRadius);
 				irisEffect.Parameters["backColor"].SetValue(new Vector4(r, g, b, a));
 
-				quadRenderer.Render(irisEffect);
+				quadRenderer.Render(irisEffect, GameServices.Camera.Position);
 			}
 		}
 

@@ -260,6 +260,13 @@ namespace SMLimitless.Sprites.Collections
 		public void Draw()
 		{
 			Background.Draw();
+
+			foreach (SectionExit exit in SectionExits)
+			{
+				exit.Draw();
+			}
+
+
 			foreach (Tile tile in Tiles)
 			{
 				tile.Draw();
@@ -276,9 +283,10 @@ namespace SMLimitless.Sprites.Collections
 				particle.Draw();
 			}
 
+			
 			foreach (SectionExit exit in SectionExits)
 			{
-				exit.Draw();
+				exit.DebugDraw();
 			}
 
 			editorSelectedObject.Draw();
@@ -524,6 +532,7 @@ namespace SMLimitless.Sprites.Collections
 			if (!IsActive)
 			{
 				foreach (var exit in SectionExits) { exit.Update(); }
+				Background.Update();
 				stopwatch.Stop();
 				return;
 			}
@@ -557,6 +566,8 @@ namespace SMLimitless.Sprites.Collections
 			CameraSystem.Update();
 			Background.Update();
 			TempUpdate();
+
+			debugText = $"Delta: {Background.Layers.First().Delta}";
 
 			stopwatch.Stop();
 		}

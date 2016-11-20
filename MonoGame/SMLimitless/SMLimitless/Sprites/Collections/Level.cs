@@ -166,12 +166,21 @@ namespace SMLimitless.Sprites.Collections
 
 		private void ChangeActiveSectionForExit(Section section, Vector2 irisOutPosition, SectionExit source, SectionExit destination)
 		{
+			float halfScreenWidth = GameServices.ScreenSize.X / 2f;
+			float halfScreenHeight = GameServices.ScreenSize.Y / 2f;
+			Vector2 newCameraPosition = new Vector2(destination.Hitbox.Center.X - halfScreenWidth,
+			destination.Hitbox.Center.Y - halfScreenHeight);
+
 			ActiveSection = section;
 			ActiveSection.SetIrisState(closed: true);
+			ActiveSection.CameraSystem.IsFrozen = true;
+			ActiveSection.CameraSystem.MoveIfFrozen(newCameraPosition);
 			ActiveSection.IrisOut(90, irisOutPosition, (sender, e) =>
 			{
 				ActiveSection.IsActive = true;
 				destination.Emerge(source.PlayersInExit);
+				source.PlayersInExit.Clear();
+				ActiveSection.CameraSystem.IsFrozen = false;
 			});
 		}
 

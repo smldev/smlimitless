@@ -108,13 +108,11 @@ namespace SMLimitless.Physics
 		/// </summary>
 		public void Update()
 		{
-			if (IsFrozen) { return; }
-
 			float delta = GameServices.GameTime.GetElapsedSeconds();
 
 			// Calculate the center point of all tracking objects.
 			Vector2 center = GetCenterOfAllTrackingObjects();
-			if (center.IsNaN()) { center = Vector2.Zero; }
+			if (center.IsNaN()) { center = camera.Viewport.Center; }
 
 			// Determine if any tracking objects have exited the zoom-out
 			// distance boundary and thus if we need to zoom out.
@@ -154,25 +152,33 @@ namespace SMLimitless.Physics
 			}
 
 			// Calculate the new origin of the camera viewport.
-			Vector2 newCameraOrigin = Vector2.Zero;
-			float cameraOriginMaxX = totalBounds.Right - camera.Viewport.Width;
-			float cameraOriginMaxY = totalBounds.Bottom - camera.Viewport.Height;
-			if (StayInBounds)
-			{
-				newCameraOrigin.X = MathHelper.Clamp(camera.Position.X + cameraXTranslation, totalBounds.X, cameraOriginMaxX);
-				newCameraOrigin.Y = MathHelper.Clamp(camera.Position.Y + cameraYTranslation, totalBounds.Y, cameraOriginMaxY);
-			}
-			else
-			{
-				newCameraOrigin.X = camera.Position.X + cameraXTranslation;
-				newCameraOrigin.Y = camera.Position.Y + cameraYTranslation;
-			}
+			Vector2 newCameraOrigin = new Vector2(camera.Position.X + cameraXTranslation, camera.Position.Y + cameraYTranslation);
+			newCameraOrigin = GetPositionWithinBounds(newCameraOrigin);
 
 			// Move the camera.
 			camera.Position = newCameraOrigin;
 
 			// Update the ActiveBounds.
 			ActiveBounds = CreateActiveBounds(camera.Viewport);
+		}
+
+		private Vector2 GetPositionWithinBounds(Vector2 desiredNewPosition)
+		{
+			Vector2 newCameraOrigin = Vector2.Zero;
+			float cameraOriginMaxX = totalBounds.Right - camera.Viewport.Width;
+			float cameraOriginMaxY = totalBounds.Bottom - camera.Viewport.Height;
+
+			if (StayInBounds)
+			{
+				newCameraOrigin.X = MathHelper.Clamp(desiredNewPosition.X, totalBounds.X, cameraOriginMaxX);
+				newCameraOrigin.Y = MathHelper.Clamp(desiredNewPosition.Y, totalBounds.Y, cameraOriginMaxY);
+			}
+			else
+			{
+				newCameraOrigin = desiredNewPosition;
+			}
+
+			return newCameraOrigin;
 		}
 
 		private static BoundingRectangle CreateActiveBounds(BoundingRectangle viewport)
@@ -223,6 +229,14 @@ namespace SMLimitless.Physics
 
 			sum /= TrackingObjects.Count;
 			return sum;
+		}
+
+		public void MoveIfFrozen(Vector2 newPosition)
+		{
+			if (IsFrozen)
+			{
+				camera.Position = GetPositionWithinBounds(newPosition);
+			}
 		}
 
 		private bool ZoomInRequired()

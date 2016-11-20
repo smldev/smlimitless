@@ -41,7 +41,7 @@ namespace SMLimitless.Sprites.Collections
 			/// <summary>
 			///   Gets the distance the player must move laterally on each frame.
 			/// </summary>
-			public float LateralShiftDelta => (TotalLateralShiftDistance / 60f) * 2f;
+			public float LateralShiftDelta => (TotalLateralShiftDistance / StandardDurationFrames) * 2f;
 
 			/// <summary>
 			///   Gets the number of frames remaining in the effect.
@@ -65,8 +65,8 @@ namespace SMLimitless.Sprites.Collections
 			{
 				get
 				{
-					if (TotalLateralShiftDistance > 0f) { return (TotalShiftDistance / 60f) * 2f; }
-					else { return TotalShiftDistance / 60f; }
+					if (Math.Abs(TotalLateralShiftDistance) > 0f) { return (TotalShiftDistance / StandardDurationFrames) * 2f; }
+					else { return TotalShiftDistance / StandardDurationFrames; }
 				}
 			}
 
@@ -117,7 +117,7 @@ namespace SMLimitless.Sprites.Collections
 				else
 				{
 					// Lateral movement required
-					TotalLateralShiftDistance = player.Hitbox.Center.X - exitHitbox.Center.X;
+					TotalLateralShiftDistance = exitHitbox.Center.X - player.Hitbox.Center.X;
 					RemainingLateralShiftDistance = TotalLateralShiftDistance;
 				}
 
@@ -147,9 +147,10 @@ namespace SMLimitless.Sprites.Collections
 				{
 					RemainingEffectFrames--;
 
-					if (Math.Abs(RemainingLateralShiftDistance) > 0.1f)
+					if (TotalLateralShiftDistance != 0f && Math.Sign(TotalLateralShiftDistance) == Math.Sign(RemainingLateralShiftDistance))
 					{
 						player.Position = new Vector2(player.Position.X + LateralShiftDelta, player.Position.Y);
+						RemainingLateralShiftDistance -= LateralShiftDelta;
 					}
 					else
 					{
@@ -347,6 +348,11 @@ namespace SMLimitless.Sprites.Collections
 		/// </summary>
 		public void Draw()
 		{
+			exitEffect?.Draw();
+		}
+
+		public void DebugDraw()
+		{
 			GameServices.SpriteBatch.DrawRectangleEdges(new Rectangle(Position.ToPoint(), Size.ToPoint()), Color.AliceBlue);
 		}
 
@@ -379,6 +385,7 @@ namespace SMLimitless.Sprites.Collections
 				else
 				{
 					Owner.AddSprite(e);
+					Owner.CameraSystem.IsFrozen = false;
 					exitEffect = null;
 				}
 			};
@@ -436,6 +443,7 @@ namespace SMLimitless.Sprites.Collections
 					: ExitTransitionState.IrisIn;
 			Owner.RemoveSpriteOnNextFrame(player);
 			PlayersInExit.Enqueue(player);
+			Owner.CameraSystem.IsFrozen = true;
 
 			if (SourceBehavior != ExitSourceBehavior.Door)
 			{
