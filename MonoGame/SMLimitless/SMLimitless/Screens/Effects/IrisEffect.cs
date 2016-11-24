@@ -75,7 +75,8 @@ namespace SMLimitless.Screens.Effects
 		/// </summary>
 		public void LoadContent()
 		{
-			GameServices.Effects.Add("IrisEffect", GameServices.GetService<ContentManager>().Load<Effect>("IrisEffect"));
+			if (!GameServices.Effects.ContainsKey("IrisEffect"))
+			{ GameServices.Effects.Add("IrisEffect", GameServices.GetService<ContentManager>().Load<Effect>("IrisEffect")); }
 			quadRenderer = new QuadRenderer();
 		}
 

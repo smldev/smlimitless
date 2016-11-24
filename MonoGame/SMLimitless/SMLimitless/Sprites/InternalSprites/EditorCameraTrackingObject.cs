@@ -38,6 +38,13 @@ namespace SMLimitless.Sprites.InternalSprites
 		/// </param>
 		public override void DeserializeCustomObjects(JsonHelper customObjects) { }
 
+		public EditorCameraTrackingObject()
+		{
+			// A size of 0.1,0.1 is small enough that the camera won't move to
+			// a subpixel boundary
+			Size = new Vector2(0.1f);
+		}
+
 		/// <summary>
 		///   This sprite has no graphics.
 		/// </summary>
@@ -110,6 +117,7 @@ namespace SMLimitless.Sprites.InternalSprites
 
 				if (isShiftDown) { moveDistance *= ShiftMultiplier; }
 				Position += moveDistance;
+				Owner.LastEditorCameraPosition = Position;
 			}
 
 			base.Update();

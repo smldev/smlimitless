@@ -44,33 +44,17 @@
 			this.PropertyLevel = new System.Windows.Forms.PropertyGrid();
 			this.StaticLabelLevelSettings = new System.Windows.Forms.Label();
 			this.TabPageSections = new System.Windows.Forms.TabPage();
-			this.StaticLabelSections = new System.Windows.Forms.Label();
-			this.listView1 = new System.Windows.Forms.ListView();
+			this.TextSectionName = new System.Windows.Forms.TextBox();
+			this.StaticLabelName = new System.Windows.Forms.Label();
+			this.ButtonSwitchTo = new System.Windows.Forms.Button();
+			this.ButtonSetAsStart = new System.Windows.Forms.Button();
+			this.ButtonRemoveSection = new System.Windows.Forms.Button();
+			this.ButtonUpdateName = new System.Windows.Forms.Button();
+			this.ListSections = new System.Windows.Forms.ListView();
 			this.ColumnID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.ColumnName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-			this.ButtonUpdateName = new System.Windows.Forms.Button();
-			this.ButtonRemoveSection = new System.Windows.Forms.Button();
-			this.ButtonSetAsStart = new System.Windows.Forms.Button();
-			this.ButtonSwitchTo = new System.Windows.Forms.Button();
-			this.StaticLabelName = new System.Windows.Forms.Label();
-			this.textBox1 = new System.Windows.Forms.TextBox();
+			this.StaticLabelSections = new System.Windows.Forms.Label();
 			this.TabPageSectionExits = new System.Windows.Forms.TabPage();
-			this.ButtonNew = new System.Windows.Forms.Button();
-			this.ButtonDeleteExit = new System.Windows.Forms.Button();
-			this.GroupSourceSettings = new System.Windows.Forms.GroupBox();
-			this.StaticLabelSourceBehavior = new System.Windows.Forms.Label();
-			this.RadioSourcePipeDown = new System.Windows.Forms.RadioButton();
-			this.RadioSourcePipeUp = new System.Windows.Forms.RadioButton();
-			this.RadioSourcePipeLeft = new System.Windows.Forms.RadioButton();
-			this.RadioSourcePipeRight = new System.Windows.Forms.RadioButton();
-			this.RadioSourceDoor = new System.Windows.Forms.RadioButton();
-			this.StaticLabelSourceX = new System.Windows.Forms.Label();
-			this.TextSourceX = new System.Windows.Forms.TextBox();
-			this.label2 = new System.Windows.Forms.Label();
-			this.TestSourceY = new System.Windows.Forms.TextBox();
-			this.LabelSourceSectionName = new System.Windows.Forms.Label();
-			this.TextSourceSectionID = new System.Windows.Forms.TextBox();
-			this.StaticLabelSourceSectionID = new System.Windows.Forms.Label();
 			this.GroupDestination = new System.Windows.Forms.GroupBox();
 			this.StaticLabelDestinationSectionID = new System.Windows.Forms.Label();
 			this.TextDestinationSectionID = new System.Windows.Forms.TextBox();
@@ -85,14 +69,31 @@
 			this.RadioDestinationPipeUp = new System.Windows.Forms.RadioButton();
 			this.RadioDestinationPipeDown = new System.Windows.Forms.RadioButton();
 			this.StaticLabelDestinationBehavior = new System.Windows.Forms.Label();
+			this.GroupSourceSettings = new System.Windows.Forms.GroupBox();
+			this.StaticLabelSourceSectionID = new System.Windows.Forms.Label();
+			this.TextSourceSectionID = new System.Windows.Forms.TextBox();
+			this.LabelSourceSectionName = new System.Windows.Forms.Label();
+			this.TestSourceY = new System.Windows.Forms.TextBox();
+			this.label2 = new System.Windows.Forms.Label();
+			this.TextSourceX = new System.Windows.Forms.TextBox();
+			this.StaticLabelSourceX = new System.Windows.Forms.Label();
+			this.RadioSourceDoor = new System.Windows.Forms.RadioButton();
+			this.RadioSourcePipeRight = new System.Windows.Forms.RadioButton();
+			this.RadioSourcePipeLeft = new System.Windows.Forms.RadioButton();
+			this.RadioSourcePipeUp = new System.Windows.Forms.RadioButton();
+			this.RadioSourcePipeDown = new System.Windows.Forms.RadioButton();
+			this.StaticLabelSourceBehavior = new System.Windows.Forms.Label();
+			this.ButtonDeleteExit = new System.Windows.Forms.Button();
+			this.ButtonNew = new System.Windows.Forms.Button();
+			this.ButtonUpdate = new System.Windows.Forms.Button();
 			this.tabControl1.SuspendLayout();
 			this.TabPageTiles.SuspendLayout();
 			this.TabPageSprites.SuspendLayout();
 			this.TabPageSettings.SuspendLayout();
 			this.TabPageSections.SuspendLayout();
 			this.TabPageSectionExits.SuspendLayout();
-			this.GroupSourceSettings.SuspendLayout();
 			this.GroupDestination.SuspendLayout();
+			this.GroupSourceSettings.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// ButtonCursor
@@ -216,13 +217,13 @@
 			// 
 			// TabPageSections
 			// 
-			this.TabPageSections.Controls.Add(this.textBox1);
+			this.TabPageSections.Controls.Add(this.TextSectionName);
 			this.TabPageSections.Controls.Add(this.StaticLabelName);
 			this.TabPageSections.Controls.Add(this.ButtonSwitchTo);
 			this.TabPageSections.Controls.Add(this.ButtonSetAsStart);
 			this.TabPageSections.Controls.Add(this.ButtonRemoveSection);
 			this.TabPageSections.Controls.Add(this.ButtonUpdateName);
-			this.TabPageSections.Controls.Add(this.listView1);
+			this.TabPageSections.Controls.Add(this.ListSections);
 			this.TabPageSections.Controls.Add(this.StaticLabelSections);
 			this.TabPageSections.Location = new System.Drawing.Point(4, 22);
 			this.TabPageSections.Name = "TabPageSections";
@@ -232,26 +233,74 @@
 			this.TabPageSections.Text = "Sections";
 			this.TabPageSections.UseVisualStyleBackColor = true;
 			// 
-			// StaticLabelSections
+			// TextSectionName
 			// 
-			this.StaticLabelSections.AutoSize = true;
-			this.StaticLabelSections.Location = new System.Drawing.Point(7, 7);
-			this.StaticLabelSections.Name = "StaticLabelSections";
-			this.StaticLabelSections.Size = new System.Drawing.Size(53, 13);
-			this.StaticLabelSections.TabIndex = 0;
-			this.StaticLabelSections.Text = "Sections:";
+			this.TextSectionName.Location = new System.Drawing.Point(266, 24);
+			this.TextSectionName.Name = "TextSectionName";
+			this.TextSectionName.Size = new System.Drawing.Size(156, 22);
+			this.TextSectionName.TabIndex = 7;
 			// 
-			// listView1
+			// StaticLabelName
 			// 
-			this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+			this.StaticLabelName.AutoSize = true;
+			this.StaticLabelName.Location = new System.Drawing.Point(216, 29);
+			this.StaticLabelName.Name = "StaticLabelName";
+			this.StaticLabelName.Size = new System.Drawing.Size(39, 13);
+			this.StaticLabelName.TabIndex = 6;
+			this.StaticLabelName.Text = "Name:";
+			// 
+			// ButtonSwitchTo
+			// 
+			this.ButtonSwitchTo.Location = new System.Drawing.Point(266, 54);
+			this.ButtonSwitchTo.Name = "ButtonSwitchTo";
+			this.ButtonSwitchTo.Size = new System.Drawing.Size(75, 23);
+			this.ButtonSwitchTo.TabIndex = 5;
+			this.ButtonSwitchTo.Text = "&Switch To";
+			this.ButtonSwitchTo.UseVisualStyleBackColor = true;
+			this.ButtonSwitchTo.Click += new System.EventHandler(this.ButtonSwitchTo_Click);
+			// 
+			// ButtonSetAsStart
+			// 
+			this.ButtonSetAsStart.Location = new System.Drawing.Point(347, 54);
+			this.ButtonSetAsStart.Name = "ButtonSetAsStart";
+			this.ButtonSetAsStart.Size = new System.Drawing.Size(75, 23);
+			this.ButtonSetAsStart.TabIndex = 4;
+			this.ButtonSetAsStart.Text = "S&et as Start";
+			this.ButtonSetAsStart.UseVisualStyleBackColor = true;
+			// 
+			// ButtonRemoveSection
+			// 
+			this.ButtonRemoveSection.Location = new System.Drawing.Point(428, 54);
+			this.ButtonRemoveSection.Name = "ButtonRemoveSection";
+			this.ButtonRemoveSection.Size = new System.Drawing.Size(75, 23);
+			this.ButtonRemoveSection.TabIndex = 3;
+			this.ButtonRemoveSection.Text = "&Remove";
+			this.ButtonRemoveSection.UseVisualStyleBackColor = true;
+			// 
+			// ButtonUpdateName
+			// 
+			this.ButtonUpdateName.Location = new System.Drawing.Point(428, 24);
+			this.ButtonUpdateName.Name = "ButtonUpdateName";
+			this.ButtonUpdateName.Size = new System.Drawing.Size(75, 23);
+			this.ButtonUpdateName.TabIndex = 2;
+			this.ButtonUpdateName.Text = "&Update";
+			this.ButtonUpdateName.UseVisualStyleBackColor = true;
+			this.ButtonUpdateName.Click += new System.EventHandler(this.ButtonUpdateName_Click);
+			// 
+			// ListSections
+			// 
+			this.ListSections.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.ColumnID,
             this.ColumnName});
-			this.listView1.Location = new System.Drawing.Point(10, 24);
-			this.listView1.Name = "listView1";
-			this.listView1.Size = new System.Drawing.Size(200, 233);
-			this.listView1.TabIndex = 1;
-			this.listView1.UseCompatibleStateImageBehavior = false;
-			this.listView1.View = System.Windows.Forms.View.Details;
+			this.ListSections.HideSelection = false;
+			this.ListSections.Location = new System.Drawing.Point(10, 24);
+			this.ListSections.MultiSelect = false;
+			this.ListSections.Name = "ListSections";
+			this.ListSections.Size = new System.Drawing.Size(200, 233);
+			this.ListSections.TabIndex = 1;
+			this.ListSections.UseCompatibleStateImageBehavior = false;
+			this.ListSections.View = System.Windows.Forms.View.Details;
+			this.ListSections.SelectedIndexChanged += new System.EventHandler(this.ListSections_SelectedIndexChanged);
 			// 
 			// ColumnID
 			// 
@@ -263,60 +312,18 @@
 			this.ColumnName.Text = "Name";
 			this.ColumnName.Width = 156;
 			// 
-			// ButtonUpdateName
+			// StaticLabelSections
 			// 
-			this.ButtonUpdateName.Location = new System.Drawing.Point(428, 24);
-			this.ButtonUpdateName.Name = "ButtonUpdateName";
-			this.ButtonUpdateName.Size = new System.Drawing.Size(75, 23);
-			this.ButtonUpdateName.TabIndex = 2;
-			this.ButtonUpdateName.Text = "&Update";
-			this.ButtonUpdateName.UseVisualStyleBackColor = true;
-			// 
-			// ButtonRemoveSection
-			// 
-			this.ButtonRemoveSection.Location = new System.Drawing.Point(428, 54);
-			this.ButtonRemoveSection.Name = "ButtonRemoveSection";
-			this.ButtonRemoveSection.Size = new System.Drawing.Size(75, 23);
-			this.ButtonRemoveSection.TabIndex = 3;
-			this.ButtonRemoveSection.Text = "&Remove";
-			this.ButtonRemoveSection.UseVisualStyleBackColor = true;
-			// 
-			// ButtonSetAsStart
-			// 
-			this.ButtonSetAsStart.Location = new System.Drawing.Point(347, 54);
-			this.ButtonSetAsStart.Name = "ButtonSetAsStart";
-			this.ButtonSetAsStart.Size = new System.Drawing.Size(75, 23);
-			this.ButtonSetAsStart.TabIndex = 4;
-			this.ButtonSetAsStart.Text = "S&et as Start";
-			this.ButtonSetAsStart.UseVisualStyleBackColor = true;
-			// 
-			// ButtonSwitchTo
-			// 
-			this.ButtonSwitchTo.Location = new System.Drawing.Point(266, 54);
-			this.ButtonSwitchTo.Name = "ButtonSwitchTo";
-			this.ButtonSwitchTo.Size = new System.Drawing.Size(75, 23);
-			this.ButtonSwitchTo.TabIndex = 5;
-			this.ButtonSwitchTo.Text = "&Switch To";
-			this.ButtonSwitchTo.UseVisualStyleBackColor = true;
-			// 
-			// StaticLabelName
-			// 
-			this.StaticLabelName.AutoSize = true;
-			this.StaticLabelName.Location = new System.Drawing.Point(216, 29);
-			this.StaticLabelName.Name = "StaticLabelName";
-			this.StaticLabelName.Size = new System.Drawing.Size(39, 13);
-			this.StaticLabelName.TabIndex = 6;
-			this.StaticLabelName.Text = "Name:";
-			// 
-			// textBox1
-			// 
-			this.textBox1.Location = new System.Drawing.Point(266, 24);
-			this.textBox1.Name = "textBox1";
-			this.textBox1.Size = new System.Drawing.Size(156, 22);
-			this.textBox1.TabIndex = 7;
+			this.StaticLabelSections.AutoSize = true;
+			this.StaticLabelSections.Location = new System.Drawing.Point(7, 7);
+			this.StaticLabelSections.Name = "StaticLabelSections";
+			this.StaticLabelSections.Size = new System.Drawing.Size(53, 13);
+			this.StaticLabelSections.TabIndex = 0;
+			this.StaticLabelSections.Text = "Sections:";
 			// 
 			// TabPageSectionExits
 			// 
+			this.TabPageSectionExits.Controls.Add(this.ButtonUpdate);
 			this.TabPageSectionExits.Controls.Add(this.GroupDestination);
 			this.TabPageSectionExits.Controls.Add(this.GroupSourceSettings);
 			this.TabPageSectionExits.Controls.Add(this.ButtonDeleteExit);
@@ -328,168 +335,6 @@
 			this.TabPageSectionExits.TabIndex = 4;
 			this.TabPageSectionExits.Text = "Section Exits";
 			this.TabPageSectionExits.UseVisualStyleBackColor = true;
-			// 
-			// ButtonNew
-			// 
-			this.ButtonNew.Location = new System.Drawing.Point(7, 7);
-			this.ButtonNew.Name = "ButtonNew";
-			this.ButtonNew.Size = new System.Drawing.Size(75, 23);
-			this.ButtonNew.TabIndex = 0;
-			this.ButtonNew.Text = "&New...";
-			this.ButtonNew.UseVisualStyleBackColor = true;
-			// 
-			// ButtonDeleteExit
-			// 
-			this.ButtonDeleteExit.Location = new System.Drawing.Point(88, 7);
-			this.ButtonDeleteExit.Name = "ButtonDeleteExit";
-			this.ButtonDeleteExit.Size = new System.Drawing.Size(75, 23);
-			this.ButtonDeleteExit.TabIndex = 1;
-			this.ButtonDeleteExit.Text = "&Delete";
-			this.ButtonDeleteExit.UseVisualStyleBackColor = true;
-			// 
-			// GroupSourceSettings
-			// 
-			this.GroupSourceSettings.Controls.Add(this.StaticLabelSourceSectionID);
-			this.GroupSourceSettings.Controls.Add(this.TextSourceSectionID);
-			this.GroupSourceSettings.Controls.Add(this.LabelSourceSectionName);
-			this.GroupSourceSettings.Controls.Add(this.TestSourceY);
-			this.GroupSourceSettings.Controls.Add(this.label2);
-			this.GroupSourceSettings.Controls.Add(this.TextSourceX);
-			this.GroupSourceSettings.Controls.Add(this.StaticLabelSourceX);
-			this.GroupSourceSettings.Controls.Add(this.RadioSourceDoor);
-			this.GroupSourceSettings.Controls.Add(this.RadioSourcePipeRight);
-			this.GroupSourceSettings.Controls.Add(this.RadioSourcePipeLeft);
-			this.GroupSourceSettings.Controls.Add(this.RadioSourcePipeUp);
-			this.GroupSourceSettings.Controls.Add(this.RadioSourcePipeDown);
-			this.GroupSourceSettings.Controls.Add(this.StaticLabelSourceBehavior);
-			this.GroupSourceSettings.Location = new System.Drawing.Point(7, 37);
-			this.GroupSourceSettings.Name = "GroupSourceSettings";
-			this.GroupSourceSettings.Size = new System.Drawing.Size(227, 159);
-			this.GroupSourceSettings.TabIndex = 2;
-			this.GroupSourceSettings.TabStop = false;
-			this.GroupSourceSettings.Text = "Source";
-			// 
-			// StaticLabelSourceBehavior
-			// 
-			this.StaticLabelSourceBehavior.AutoSize = true;
-			this.StaticLabelSourceBehavior.Location = new System.Drawing.Point(6, 18);
-			this.StaticLabelSourceBehavior.Name = "StaticLabelSourceBehavior";
-			this.StaticLabelSourceBehavior.Size = new System.Drawing.Size(52, 13);
-			this.StaticLabelSourceBehavior.TabIndex = 0;
-			this.StaticLabelSourceBehavior.Text = "Behavior";
-			// 
-			// RadioSourcePipeDown
-			// 
-			this.RadioSourcePipeDown.AutoSize = true;
-			this.RadioSourcePipeDown.Location = new System.Drawing.Point(9, 35);
-			this.RadioSourcePipeDown.Name = "RadioSourcePipeDown";
-			this.RadioSourcePipeDown.Size = new System.Drawing.Size(81, 17);
-			this.RadioSourcePipeDown.TabIndex = 1;
-			this.RadioSourcePipeDown.TabStop = true;
-			this.RadioSourcePipeDown.Text = "&Pipe Down";
-			this.RadioSourcePipeDown.UseVisualStyleBackColor = true;
-			// 
-			// RadioSourcePipeUp
-			// 
-			this.RadioSourcePipeUp.AutoSize = true;
-			this.RadioSourcePipeUp.Location = new System.Drawing.Point(9, 59);
-			this.RadioSourcePipeUp.Name = "RadioSourcePipeUp";
-			this.RadioSourcePipeUp.Size = new System.Drawing.Size(65, 17);
-			this.RadioSourcePipeUp.TabIndex = 2;
-			this.RadioSourcePipeUp.TabStop = true;
-			this.RadioSourcePipeUp.Text = "P&ipe Up";
-			this.RadioSourcePipeUp.UseVisualStyleBackColor = true;
-			// 
-			// RadioSourcePipeLeft
-			// 
-			this.RadioSourcePipeLeft.AutoSize = true;
-			this.RadioSourcePipeLeft.Location = new System.Drawing.Point(9, 83);
-			this.RadioSourcePipeLeft.Name = "RadioSourcePipeLeft";
-			this.RadioSourcePipeLeft.Size = new System.Drawing.Size(69, 17);
-			this.RadioSourcePipeLeft.TabIndex = 3;
-			this.RadioSourcePipeLeft.TabStop = true;
-			this.RadioSourcePipeLeft.Text = "Pip&e Left";
-			this.RadioSourcePipeLeft.UseVisualStyleBackColor = true;
-			// 
-			// RadioSourcePipeRight
-			// 
-			this.RadioSourcePipeRight.AutoSize = true;
-			this.RadioSourcePipeRight.Location = new System.Drawing.Point(9, 107);
-			this.RadioSourcePipeRight.Name = "RadioSourcePipeRight";
-			this.RadioSourcePipeRight.Size = new System.Drawing.Size(78, 17);
-			this.RadioSourcePipeRight.TabIndex = 4;
-			this.RadioSourcePipeRight.TabStop = true;
-			this.RadioSourcePipeRight.Text = "Pipe &Right";
-			this.RadioSourcePipeRight.UseVisualStyleBackColor = true;
-			// 
-			// RadioSourceDoor
-			// 
-			this.RadioSourceDoor.AutoSize = true;
-			this.RadioSourceDoor.Location = new System.Drawing.Point(9, 131);
-			this.RadioSourceDoor.Name = "RadioSourceDoor";
-			this.RadioSourceDoor.Size = new System.Drawing.Size(51, 17);
-			this.RadioSourceDoor.TabIndex = 5;
-			this.RadioSourceDoor.TabStop = true;
-			this.RadioSourceDoor.Text = "&Door";
-			this.RadioSourceDoor.UseVisualStyleBackColor = true;
-			// 
-			// StaticLabelSourceX
-			// 
-			this.StaticLabelSourceX.AutoSize = true;
-			this.StaticLabelSourceX.Location = new System.Drawing.Point(97, 85);
-			this.StaticLabelSourceX.Name = "StaticLabelSourceX";
-			this.StaticLabelSourceX.Size = new System.Drawing.Size(16, 13);
-			this.StaticLabelSourceX.TabIndex = 6;
-			this.StaticLabelSourceX.Text = "X:";
-			// 
-			// TextSourceX
-			// 
-			this.TextSourceX.Location = new System.Drawing.Point(119, 82);
-			this.TextSourceX.Name = "TextSourceX";
-			this.TextSourceX.Size = new System.Drawing.Size(100, 22);
-			this.TextSourceX.TabIndex = 7;
-			// 
-			// label2
-			// 
-			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(97, 109);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(15, 13);
-			this.label2.TabIndex = 8;
-			this.label2.Text = "Y:";
-			// 
-			// TestSourceY
-			// 
-			this.TestSourceY.Location = new System.Drawing.Point(119, 106);
-			this.TestSourceY.Name = "TestSourceY";
-			this.TestSourceY.Size = new System.Drawing.Size(100, 22);
-			this.TestSourceY.TabIndex = 9;
-			// 
-			// LabelSourceSectionName
-			// 
-			this.LabelSourceSectionName.AutoSize = true;
-			this.LabelSourceSectionName.Location = new System.Drawing.Point(97, 61);
-			this.LabelSourceSectionName.Name = "LabelSourceSectionName";
-			this.LabelSourceSectionName.Size = new System.Drawing.Size(62, 13);
-			this.LabelSourceSectionName.TabIndex = 10;
-			this.LabelSourceSectionName.Text = "Name: \"{0}\"";
-			// 
-			// TextSourceSectionID
-			// 
-			this.TextSourceSectionID.Location = new System.Drawing.Point(164, 34);
-			this.TextSourceSectionID.Name = "TextSourceSectionID";
-			this.TextSourceSectionID.Size = new System.Drawing.Size(54, 22);
-			this.TextSourceSectionID.TabIndex = 11;
-			this.TextSourceSectionID.Text = "198";
-			// 
-			// StaticLabelSourceSectionID
-			// 
-			this.StaticLabelSourceSectionID.AutoSize = true;
-			this.StaticLabelSourceSectionID.Location = new System.Drawing.Point(96, 37);
-			this.StaticLabelSourceSectionID.Name = "StaticLabelSourceSectionID";
-			this.StaticLabelSourceSectionID.Size = new System.Drawing.Size(62, 13);
-			this.StaticLabelSourceSectionID.TabIndex = 12;
-			this.StaticLabelSourceSectionID.Text = "Section ID:";
 			// 
 			// GroupDestination
 			// 
@@ -635,6 +480,177 @@
 			this.StaticLabelDestinationBehavior.TabIndex = 0;
 			this.StaticLabelDestinationBehavior.Text = "Behavior";
 			// 
+			// GroupSourceSettings
+			// 
+			this.GroupSourceSettings.Controls.Add(this.StaticLabelSourceSectionID);
+			this.GroupSourceSettings.Controls.Add(this.TextSourceSectionID);
+			this.GroupSourceSettings.Controls.Add(this.LabelSourceSectionName);
+			this.GroupSourceSettings.Controls.Add(this.TestSourceY);
+			this.GroupSourceSettings.Controls.Add(this.label2);
+			this.GroupSourceSettings.Controls.Add(this.TextSourceX);
+			this.GroupSourceSettings.Controls.Add(this.StaticLabelSourceX);
+			this.GroupSourceSettings.Controls.Add(this.RadioSourceDoor);
+			this.GroupSourceSettings.Controls.Add(this.RadioSourcePipeRight);
+			this.GroupSourceSettings.Controls.Add(this.RadioSourcePipeLeft);
+			this.GroupSourceSettings.Controls.Add(this.RadioSourcePipeUp);
+			this.GroupSourceSettings.Controls.Add(this.RadioSourcePipeDown);
+			this.GroupSourceSettings.Controls.Add(this.StaticLabelSourceBehavior);
+			this.GroupSourceSettings.Location = new System.Drawing.Point(7, 37);
+			this.GroupSourceSettings.Name = "GroupSourceSettings";
+			this.GroupSourceSettings.Size = new System.Drawing.Size(227, 159);
+			this.GroupSourceSettings.TabIndex = 2;
+			this.GroupSourceSettings.TabStop = false;
+			this.GroupSourceSettings.Text = "Source";
+			// 
+			// StaticLabelSourceSectionID
+			// 
+			this.StaticLabelSourceSectionID.AutoSize = true;
+			this.StaticLabelSourceSectionID.Location = new System.Drawing.Point(96, 37);
+			this.StaticLabelSourceSectionID.Name = "StaticLabelSourceSectionID";
+			this.StaticLabelSourceSectionID.Size = new System.Drawing.Size(62, 13);
+			this.StaticLabelSourceSectionID.TabIndex = 12;
+			this.StaticLabelSourceSectionID.Text = "Section ID:";
+			// 
+			// TextSourceSectionID
+			// 
+			this.TextSourceSectionID.Location = new System.Drawing.Point(164, 34);
+			this.TextSourceSectionID.Name = "TextSourceSectionID";
+			this.TextSourceSectionID.Size = new System.Drawing.Size(54, 22);
+			this.TextSourceSectionID.TabIndex = 11;
+			this.TextSourceSectionID.Text = "198";
+			// 
+			// LabelSourceSectionName
+			// 
+			this.LabelSourceSectionName.AutoSize = true;
+			this.LabelSourceSectionName.Location = new System.Drawing.Point(97, 61);
+			this.LabelSourceSectionName.Name = "LabelSourceSectionName";
+			this.LabelSourceSectionName.Size = new System.Drawing.Size(62, 13);
+			this.LabelSourceSectionName.TabIndex = 10;
+			this.LabelSourceSectionName.Text = "Name: \"{0}\"";
+			// 
+			// TestSourceY
+			// 
+			this.TestSourceY.Location = new System.Drawing.Point(119, 106);
+			this.TestSourceY.Name = "TestSourceY";
+			this.TestSourceY.Size = new System.Drawing.Size(100, 22);
+			this.TestSourceY.TabIndex = 9;
+			// 
+			// label2
+			// 
+			this.label2.AutoSize = true;
+			this.label2.Location = new System.Drawing.Point(97, 109);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(15, 13);
+			this.label2.TabIndex = 8;
+			this.label2.Text = "Y:";
+			// 
+			// TextSourceX
+			// 
+			this.TextSourceX.Location = new System.Drawing.Point(119, 82);
+			this.TextSourceX.Name = "TextSourceX";
+			this.TextSourceX.Size = new System.Drawing.Size(100, 22);
+			this.TextSourceX.TabIndex = 7;
+			// 
+			// StaticLabelSourceX
+			// 
+			this.StaticLabelSourceX.AutoSize = true;
+			this.StaticLabelSourceX.Location = new System.Drawing.Point(97, 85);
+			this.StaticLabelSourceX.Name = "StaticLabelSourceX";
+			this.StaticLabelSourceX.Size = new System.Drawing.Size(16, 13);
+			this.StaticLabelSourceX.TabIndex = 6;
+			this.StaticLabelSourceX.Text = "X:";
+			// 
+			// RadioSourceDoor
+			// 
+			this.RadioSourceDoor.AutoSize = true;
+			this.RadioSourceDoor.Location = new System.Drawing.Point(9, 131);
+			this.RadioSourceDoor.Name = "RadioSourceDoor";
+			this.RadioSourceDoor.Size = new System.Drawing.Size(51, 17);
+			this.RadioSourceDoor.TabIndex = 5;
+			this.RadioSourceDoor.TabStop = true;
+			this.RadioSourceDoor.Text = "&Door";
+			this.RadioSourceDoor.UseVisualStyleBackColor = true;
+			// 
+			// RadioSourcePipeRight
+			// 
+			this.RadioSourcePipeRight.AutoSize = true;
+			this.RadioSourcePipeRight.Location = new System.Drawing.Point(9, 107);
+			this.RadioSourcePipeRight.Name = "RadioSourcePipeRight";
+			this.RadioSourcePipeRight.Size = new System.Drawing.Size(78, 17);
+			this.RadioSourcePipeRight.TabIndex = 4;
+			this.RadioSourcePipeRight.TabStop = true;
+			this.RadioSourcePipeRight.Text = "Pipe &Right";
+			this.RadioSourcePipeRight.UseVisualStyleBackColor = true;
+			// 
+			// RadioSourcePipeLeft
+			// 
+			this.RadioSourcePipeLeft.AutoSize = true;
+			this.RadioSourcePipeLeft.Location = new System.Drawing.Point(9, 83);
+			this.RadioSourcePipeLeft.Name = "RadioSourcePipeLeft";
+			this.RadioSourcePipeLeft.Size = new System.Drawing.Size(69, 17);
+			this.RadioSourcePipeLeft.TabIndex = 3;
+			this.RadioSourcePipeLeft.TabStop = true;
+			this.RadioSourcePipeLeft.Text = "Pip&e Left";
+			this.RadioSourcePipeLeft.UseVisualStyleBackColor = true;
+			// 
+			// RadioSourcePipeUp
+			// 
+			this.RadioSourcePipeUp.AutoSize = true;
+			this.RadioSourcePipeUp.Location = new System.Drawing.Point(9, 59);
+			this.RadioSourcePipeUp.Name = "RadioSourcePipeUp";
+			this.RadioSourcePipeUp.Size = new System.Drawing.Size(65, 17);
+			this.RadioSourcePipeUp.TabIndex = 2;
+			this.RadioSourcePipeUp.TabStop = true;
+			this.RadioSourcePipeUp.Text = "P&ipe Up";
+			this.RadioSourcePipeUp.UseVisualStyleBackColor = true;
+			// 
+			// RadioSourcePipeDown
+			// 
+			this.RadioSourcePipeDown.AutoSize = true;
+			this.RadioSourcePipeDown.Location = new System.Drawing.Point(9, 35);
+			this.RadioSourcePipeDown.Name = "RadioSourcePipeDown";
+			this.RadioSourcePipeDown.Size = new System.Drawing.Size(81, 17);
+			this.RadioSourcePipeDown.TabIndex = 1;
+			this.RadioSourcePipeDown.TabStop = true;
+			this.RadioSourcePipeDown.Text = "&Pipe Down";
+			this.RadioSourcePipeDown.UseVisualStyleBackColor = true;
+			// 
+			// StaticLabelSourceBehavior
+			// 
+			this.StaticLabelSourceBehavior.AutoSize = true;
+			this.StaticLabelSourceBehavior.Location = new System.Drawing.Point(6, 18);
+			this.StaticLabelSourceBehavior.Name = "StaticLabelSourceBehavior";
+			this.StaticLabelSourceBehavior.Size = new System.Drawing.Size(52, 13);
+			this.StaticLabelSourceBehavior.TabIndex = 0;
+			this.StaticLabelSourceBehavior.Text = "Behavior";
+			// 
+			// ButtonDeleteExit
+			// 
+			this.ButtonDeleteExit.Location = new System.Drawing.Point(88, 7);
+			this.ButtonDeleteExit.Name = "ButtonDeleteExit";
+			this.ButtonDeleteExit.Size = new System.Drawing.Size(75, 23);
+			this.ButtonDeleteExit.TabIndex = 1;
+			this.ButtonDeleteExit.Text = "&Delete";
+			this.ButtonDeleteExit.UseVisualStyleBackColor = true;
+			// 
+			// ButtonNew
+			// 
+			this.ButtonNew.Location = new System.Drawing.Point(7, 7);
+			this.ButtonNew.Name = "ButtonNew";
+			this.ButtonNew.Size = new System.Drawing.Size(75, 23);
+			this.ButtonNew.TabIndex = 0;
+			this.ButtonNew.Text = "&New...";
+			this.ButtonNew.UseVisualStyleBackColor = true;
+			// 
+			// ButtonUpdate
+			// 
+			this.ButtonUpdate.Location = new System.Drawing.Point(391, 203);
+			this.ButtonUpdate.Name = "ButtonUpdate";
+			this.ButtonUpdate.Size = new System.Drawing.Size(75, 23);
+			this.ButtonUpdate.TabIndex = 14;
+			this.ButtonUpdate.Text = "&Update";
+			this.ButtonUpdate.UseVisualStyleBackColor = true;
+			// 
 			// EditorForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -659,10 +675,10 @@
 			this.TabPageSections.ResumeLayout(false);
 			this.TabPageSections.PerformLayout();
 			this.TabPageSectionExits.ResumeLayout(false);
-			this.GroupSourceSettings.ResumeLayout(false);
-			this.GroupSourceSettings.PerformLayout();
 			this.GroupDestination.ResumeLayout(false);
 			this.GroupDestination.PerformLayout();
+			this.GroupSourceSettings.ResumeLayout(false);
+			this.GroupSourceSettings.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -682,13 +698,13 @@
 		private System.Windows.Forms.PropertyGrid PropertyLevel;
 		private System.Windows.Forms.Label StaticLabelLevelSettings;
 		private System.Windows.Forms.TabPage TabPageSections;
-		private System.Windows.Forms.TextBox textBox1;
+		private System.Windows.Forms.TextBox TextSectionName;
 		private System.Windows.Forms.Label StaticLabelName;
 		private System.Windows.Forms.Button ButtonSwitchTo;
 		private System.Windows.Forms.Button ButtonSetAsStart;
 		private System.Windows.Forms.Button ButtonRemoveSection;
 		private System.Windows.Forms.Button ButtonUpdateName;
-		private System.Windows.Forms.ListView listView1;
+		private System.Windows.Forms.ListView ListSections;
 		private System.Windows.Forms.ColumnHeader ColumnID;
 		private System.Windows.Forms.ColumnHeader ColumnName;
 		private System.Windows.Forms.Label StaticLabelSections;
@@ -723,5 +739,6 @@
 		private System.Windows.Forms.RadioButton RadioSourcePipeLeft;
 		private System.Windows.Forms.RadioButton RadioSourcePipeUp;
 		private System.Windows.Forms.RadioButton RadioSourcePipeDown;
+		private System.Windows.Forms.Button ButtonUpdate;
 	}
 }

@@ -10,7 +10,9 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using SMLimitless.Components;
 using SMLimitless.Content;
+using SMLimitless.Editor;
 using SMLimitless.Physics;
+using SMLimitless.Sprites.InternalSprites;
 
 namespace SMLimitless.Sprites.Collections
 {
@@ -24,6 +26,8 @@ namespace SMLimitless.Sprites.Collections
 		///   per second.
 		/// </summary>
 		public static PhysicsSetting<float> GravityAcceleration = new PhysicsSetting<float>("Gravity Acceleration (px/sec²)", 0f, 10000f, 700f, PhysicsSettingType.FloatingPoint);
+
+		private Section activeSection;
 
 		/// <summary>
 		///   Gets a string placed in all level files indicating the version of
@@ -53,10 +57,26 @@ namespace SMLimitless.Sprites.Collections
 		/// </summary>
 		public string Path { get; internal set; }
 
+		internal EditorForm EditorForm { get; set; }
+		internal bool EditorActive { get; private set; }
+		private EditorCameraTrackingObject trackingObject = null;
+		private EditorSelectedObject selectedObject = new EditorSelectedObject();
+
 		/// <summary>
 		///   Gets or sets the section that the player is currently in.
 		/// </summary>
-		internal Section ActiveSection { get; set; }
+		internal Section ActiveSection 
+		{
+			get
+			{
+				return activeSection;
+			}
+			set
+			{
+				activeSection = value;
+				GameServices.Camera = value.Camera;
+			}
+		}
 
 		/// <summary>
 		///   Gets or sets a collection of all the paths to the content package
@@ -96,6 +116,8 @@ namespace SMLimitless.Sprites.Collections
 		/// </summary>
 		public void Draw()
 		{
+			if (EditorActive) { selectedObject.Draw(); }
+
 			ActiveSection.Draw();
 		}
 
@@ -106,6 +128,7 @@ namespace SMLimitless.Sprites.Collections
 		{
 			LoadOverrides();
 			Sections.ForEach(s => s.Initialize());
+			selectedObject.Initialize(ActiveSection);
 			// ContentFolderPaths.ForEach(f => Content.ContentPackageManager.AddPackageFromFolder(f));
 		}
 
@@ -117,7 +140,7 @@ namespace SMLimitless.Sprites.Collections
 		/// </param>
 		public void LevelExitCleared(string exitSpriteName)
 		{
-			// Look in this.levelExits for an exit with the sprite name Notify
+			// Look in this.levelExits for an exit with the sprite name. Notify
 			// the owner (world/levelpack/whatever) that this exit has been
 			// cleared Give the owner the LevelExit tied to the exitSpriteName
 		}
@@ -128,6 +151,7 @@ namespace SMLimitless.Sprites.Collections
 		public void LoadContent()
 		{
 			Sections.ForEach(s => s.LoadContent());
+			selectedObject.LoadContent();
 		}
 
 		/// <summary>
@@ -136,6 +160,12 @@ namespace SMLimitless.Sprites.Collections
 		public void Update()
 		{
 			ActiveSection.Update();
+
+			if (EditorActive)
+			{
+				trackingObject.Update();
+				selectedObject.Update();
+			}
 		}
 
 		internal SectionExit GetSectionExitByID(int id)
@@ -182,6 +212,68 @@ namespace SMLimitless.Sprites.Collections
 				source.PlayersInExit.Clear();
 				ActiveSection.CameraSystem.IsFrozen = false;
 			});
+		}
+
+		internal Section GetSectionByIndex(int sectionIndex)
+		{
+			Section sectionWithIndex = Sections.FirstOrDefault(s => s.Index == sectionIndex);
+			if (sectionWithIndex == null)
+			{
+				throw new ArgumentException($"No section in this level has an index of {sectionIndex}.");
+			}
+			return sectionWithIndex;
+		}
+
+		internal void ChangeSection(int sectionIndex)
+		{
+			Section sectionToSwitchTo = GetSectionByIndex(sectionIndex);
+			ActiveSection = sectionToSwitchTo;
+		}
+
+		internal void ToggleEditor()
+		{
+			if (!EditorActive)
+			{
+				EditorActive = true;
+
+				trackingObject = new EditorCameraTrackingObject();
+				trackingObject.Initialize(ActiveSection);
+				trackingObject.Position = ActiveSection.Camera.Viewport.Center;
+
+				ActiveSection.ActivateEditor(trackingObject, selectedObject);
+
+				EditorForm = new EditorForm(this, ActiveSection, selectedObject);
+				EditorForm.Show();
+			}
+			else
+			{
+				EditorActive = false;
+
+				trackingObject = null;
+				ActiveSection.DeactivateEditor();
+
+				EditorForm.Close();
+				EditorForm.Dispose();
+				EditorForm = null;
+			}
+		}
+
+		internal void TransferEditorControlToSection(Section oldSection, Section newSection)
+		{
+			if (!EditorActive) { return; }
+
+			oldSection.RemoveSpriteOnNextFrame(trackingObject);
+			oldSection.RemoveSpriteOnNextFrame(selectedObject);
+
+			trackingObject.Owner = newSection;
+			selectedObject.Owner = newSection;
+
+			oldSection.DeactivateEditor();
+			newSection.ActivateEditor(trackingObject, selectedObject);
+
+			EditorForm.SwitchToSection(newSection);
+
+			ActiveSection = newSection;
 		}
 
 		private void LoadOverrides()

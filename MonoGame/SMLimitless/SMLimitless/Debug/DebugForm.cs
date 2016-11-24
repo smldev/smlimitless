@@ -210,5 +210,14 @@ namespace SMLimitless.Debug
 				displayedCommandNumber = -1;
 			}
 		}
+
+		private void DebugForm_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			if (e.CloseReason == CloseReason.UserClosing)
+			{
+				Hide();
+				e.Cancel = true;
+			}
+		}
 	}
 }

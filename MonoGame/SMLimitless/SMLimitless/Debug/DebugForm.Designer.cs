@@ -82,6 +82,7 @@
 			this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.Name = "DebugForm";
 			this.Text = "Debug Window";
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DebugForm_FormClosing);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

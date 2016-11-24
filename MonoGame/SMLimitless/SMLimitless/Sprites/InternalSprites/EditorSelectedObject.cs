@@ -6,6 +6,7 @@ using SMLimitless.Editor;
 using SMLimitless.Extensions;
 using SMLimitless.Input;
 using SMLimitless.Sprites.Assemblies;
+using SMLimitless.Sprites.Collections;
 
 namespace SMLimitless.Sprites.InternalSprites
 {
@@ -268,7 +269,7 @@ namespace SMLimitless.Sprites.InternalSprites
 					{
 						SelectExistingTile(tileUnderCursor);
 					}
-					else if (spriteUnderCursor != null)
+					else if (spriteUnderCursor != null && !(spriteUnderCursor is EditorSelectedObject) && !(spriteUnderCursor is EditorCameraTrackingObject))
 					{
 						SelectExistingSprite(spriteUnderCursor);
 					}
@@ -322,10 +323,7 @@ namespace SMLimitless.Sprites.InternalSprites
 
 		private void OnSelectedObjectChanged()
 		{
-			if (SelectedObjectChanged != null)
-			{
-				SelectedObjectChanged(this, new EventArgs());
-			}
+			SelectedObjectChanged?.Invoke(this, new EventArgs());
 		}
 	}
 }

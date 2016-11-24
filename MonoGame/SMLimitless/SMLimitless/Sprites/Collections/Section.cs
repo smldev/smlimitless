@@ -21,12 +21,8 @@ namespace SMLimitless.Sprites.Collections
 	public sealed class Section
 	{
 		internal static PhysicsSetting<int> MaximumParticles = new PhysicsSetting<int>("Section: Maximum Particles", 1, 1000, 200, PhysicsSettingType.FloatingPoint);
-
-		internal EditorSelectedObject editorSelectedObject = new EditorSelectedObject();
 		private List<Tile> collisionDebugCollidedTiles = new List<Tile>();
 		private string debugText = "";
-		private EditorForm editorForm = null;
-		private EditorCameraTrackingObject editorTrackingObject = null;
 		private Debug.DebugForm form = new Debug.DebugForm();
 		private IrisEffect irisEffect;
 		private bool isCollisionDebuggingInitialized = false;
@@ -35,6 +31,9 @@ namespace SMLimitless.Sprites.Collections
 		private bool isInitialized;
 		private List<Particle> particlesToRemoveOnNextFrame = new List<Particle>();
 		private CollisionDebugSelectSprite selectorSprite = new CollisionDebugSelectSprite();
+
+		internal Vector2 LastEditorCameraPosition { get; set; } = Vector2.Zero;
+		public bool IsStartSection { get; internal set; } = false;
 
 		/// <summary>
 		///   Gets the settings used for automatic camera scrolling for this section.
@@ -289,7 +288,6 @@ namespace SMLimitless.Sprites.Collections
 				exit.DebugDraw();
 			}
 
-			editorSelectedObject.Draw();
 			CameraSystem.Draw(debug: false);
 			GameServices.DebugFont.DrawString($"{HUDInfo.Score:D9}", new Vector2(120f, 16f) + Camera.Position, 1f);
 			GameServices.DebugFont.DrawString($"{HUDInfo.Coins:D2}", new Vector2(600f, 16f) + Camera.Position, 1f);
@@ -334,38 +332,12 @@ namespace SMLimitless.Sprites.Collections
 				Background.Initialize();
 				Layers.ForEach(l => l.Initialize());
 				SpritesGrid.ForEach(s => s.Initialize(this));
-				editorSelectedObject.Initialize(this);
 				selectorSprite.Initialize(this);
 
 				CameraSystem = new CameraSystem(Camera, Bounds);
 				irisEffect = new IrisEffect(Camera.Viewport.Center);
 
 				CameraSystem.TrackingObjects.AddRange(Players);
-
-				// Temporary: testing section exits
-				var tilesWithNothingAbove = Tiles.Where(t => GetTileAtPosition(new Vector2(t.Position.X, t.Position.Y - 16f)) == null).ToList();
-				var random = new Random();
-
-				Vector2 sourceExitPosition = Players.First().Position + new Vector2(0f, 16f);
-				Vector2 destinationExitPosition = tilesWithNothingAbove[random.Next(tilesWithNothingAbove.Count)].Position;
-
-				SectionExit source = new SectionExit(this);
-				source.Position = sourceExitPosition;
-				source.Size = GameServices.GameObjectSize;
-				source.ID = 0;
-				source.OtherID = 1;
-				source.ExitType = SectionExitType.Source;
-				source.SourceBehavior = ExitSourceBehavior.PipeDown;
-				SectionExits.Add(source);
-
-				SectionExit destination = new SectionExit(this);
-				destination.Position = destinationExitPosition;
-				destination.Size = GameServices.GameObjectSize;
-				destination.ID = 1;
-				destination.OtherID = 0;
-				destination.ExitType = SectionExitType.Destination;
-				destination.DestinationBehavior = ExitDestinationBehavior.PipeUp;
-				SectionExits.Add(destination);
 
 				isInitialized = true;
 			}
@@ -425,7 +397,6 @@ namespace SMLimitless.Sprites.Collections
 				Background.LoadContent();
 				Layers.ForEach(l => l.LoadContent());
 				SpritesGrid.ForEach(s => s.LoadContent());
-				editorSelectedObject.LoadContent();
 
 				irisEffect.LoadContent();
 				irisEffect.Start(90, EffectDirection.Forward, Vector2.Zero, Color.Black);
@@ -539,7 +510,7 @@ namespace SMLimitless.Sprites.Collections
 
 			AddAndRemoveSpritesForNextFrame();
 
-			if (!EditorActive)
+			if (!Owner.EditorActive)
 			{
 				if (GameServices.CollisionDebuggerActive && !isCollisionDebuggingInitialized) { InitializeCollisionDebugging(); }
 				else if (!GameServices.CollisionDebuggerActive && isCollisionDebuggingInitialized) { UninitializeCollisionDebugging(); }
@@ -554,11 +525,6 @@ namespace SMLimitless.Sprites.Collections
 				SpritesGrid.Update();
 				UpdateParticles();
 				SectionExits.ForEach(s => s.Update());
-			}
-			else
-			{
-				editorTrackingObject.Update();
-				editorSelectedObject.Update();
 			}
 
 			SpritesGrid.RemoveAllWhere(s => s.RemoveOnNextFrame);
@@ -899,7 +865,7 @@ namespace SMLimitless.Sprites.Collections
 			}
 			else if (InputManager.IsNewKeyPress(Microsoft.Xna.Framework.Input.Keys.E))
 			{
-				ToggleEditor();
+				Owner.ToggleEditor();
 			}
 			else if (InputManager.IsNewKeyPress(Microsoft.Xna.Framework.Input.Keys.G))
 			{
@@ -928,39 +894,26 @@ namespace SMLimitless.Sprites.Collections
 			}
 		}
 
-		private void ToggleEditor()
+		internal void ActivateEditor(EditorCameraTrackingObject trackingObject, EditorSelectedObject selectedObject)
 		{
-			if (!EditorActive)
-			{
-				// Enable the level editor.
-				EditorActive = true;
+			CameraSystem.StayInBounds = false;
+			CameraSystem.TrackingObjects.Clear();
+			CameraSystem.TrackingObjects.Add(trackingObject);
 
-				editorTrackingObject = new EditorCameraTrackingObject();
-				editorTrackingObject.Initialize(this);
-				editorTrackingObject.Position = Camera.Viewport.Center;
+			trackingObject.Position = LastEditorCameraPosition;
 
-				CameraSystem.StayInBounds = false;
-				CameraSystem.TrackingObjects.Clear();
-				CameraSystem.TrackingObjects.Add(editorTrackingObject);
+			AddSpriteOnNextFrame(trackingObject);
+			AddSpriteOnNextFrame(selectedObject);
+		}
 
-				editorForm = new EditorForm(Owner, this, editorSelectedObject);
-				editorForm.Show();
-			}
-			else
-			{
-				// Disable the level editor.
-				EditorActive = false;
+		internal void DeactivateEditor()
+		{
+			CameraSystem.StayInBounds = true;
+			CameraSystem.TrackingObjects.Clear();
+			CameraSystem.TrackingObjects.AddRange(Players.Where(p => !p.HasAttribute("Dead")));
 
-				editorTrackingObject = null;
-
-				CameraSystem.StayInBounds = true;
-				CameraSystem.TrackingObjects.Clear();
-				CameraSystem.TrackingObjects.AddRange(Players.Where(p => !p.HasAttribute("Dead")));
-
-				editorForm.Close();
-				editorForm.Dispose();
-				editorForm = null;
-			}
+			SpriteList.Where(s => s is EditorCameraTrackingObject || s is EditorSelectedObject)
+			.ForEach(s => RemoveSpriteOnNextFrame(s));
 		}
 
 		private void UninitializeCollisionDebugging()

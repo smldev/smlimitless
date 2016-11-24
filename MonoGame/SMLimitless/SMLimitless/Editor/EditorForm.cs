@@ -23,6 +23,7 @@ namespace SMLimitless.Editor
 		private PropertyForm propertyForm;
 		private Section section;
 		private EditorSelectedObject selectedObject;
+		private Section selectedSection;
 
 		/// <summary>
 		///   Gets the state of the level editor.
@@ -55,6 +56,17 @@ namespace SMLimitless.Editor
 			};
 
 			PopulateObjectTabs();
+			LoadSections();
+		}
+
+		private void LoadSections()
+		{
+			foreach (Section section in level.Sections)
+			{
+				var item = new ListViewItem(new string[] { section.Index.ToString(), section.Name.ToString() });
+				if (section.IsStartSection) { item.Font = new Font(item.Font, FontStyle.Bold); }
+				ListSections.Items.Add(item);
+			}
 		}
 
 		private void ButtonCursor_Click(object sender, EventArgs e)
@@ -173,6 +185,55 @@ namespace SMLimitless.Editor
 					}
 				}
 			}
+		}
+
+		private void ListSections_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			if (ListSections.SelectedItems.Count > 0)
+			{
+				var selectedItem = ListSections.SelectedItems[0];
+				Section section = level.GetSectionByIndex(int.Parse(selectedItem.Text));
+				TextSectionName.Text = section.Name;
+				SetEnabledOnButtons(true, ButtonUpdateName, ButtonSwitchTo, ButtonSetAsStart, ButtonRemoveSection);
+				selectedSection = section;
+			}
+			else
+			{
+				SetEnabledOnButtons(false, ButtonUpdateName, ButtonSwitchTo, ButtonSetAsStart, ButtonRemoveSection);
+				selectedSection = null;
+			}
+		}
+
+		private void SetEnabledOnButtons(bool enabled, params Button[] buttons)
+		{
+			foreach (var button in buttons)
+			{
+				button.Enabled = enabled;
+			}
+		}
+
+		private void ButtonUpdateName_Click(object sender, EventArgs e)
+		{
+			Section sectionBeingUpdated = selectedSection;
+			sectionBeingUpdated.Name = TextSectionName.Text;
+			var oldItem = ListSections.FindItemWithText(sectionBeingUpdated.Index.ToString());
+			int sectionIndexInListBox = ListSections.Items.IndexOf(oldItem);
+			ListSections.Items.RemoveAt(sectionIndexInListBox);
+
+			ListViewItem newItem = new ListViewItem(new string[] { sectionBeingUpdated.Index.ToString(), sectionBeingUpdated.Name });
+			ListSections.Items.Insert(sectionIndexInListBox, newItem);
+			newItem.Selected = true;
+		}
+
+		private void ButtonSwitchTo_Click(object sender, EventArgs e)
+		{
+			level.TransferEditorControlToSection(level.ActiveSection, selectedSection);
+		}
+
+		internal void SwitchToSection(Section newSection)
+		{
+			section = newSection;
+			PropertySection.SelectedObject = newSection;
 		}
 	}
 }

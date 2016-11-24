@@ -318,7 +318,42 @@
         }
       ],
       "paths": []
-    }
+    },
+	{
+	  "index": 1,
+      "name": "Secondary Section",
+      "bounds": "0, 0, 3840, 2160",
+      "scrollSettings": {
+        "scrollType": 0,
+        "speed": "NaN, NaN",
+        "pathName": ""
+      },
+      "background": {
+        "topColor": "0, 0, 0, 0",
+        "bottomColor": "0, 0, 0, 0",
+        "layers": [
+          {
+            "resourceName": "BackgroundSMBHills",
+            "scrollDirection": 1,
+            "scrollRate": 0.5
+          }
+        ]
+      },
+      "layers": [
+        {
+          "index": 0,
+          "name": "Main Layer",
+          "isMainLayer": true,
+          "position": "0, 0",
+          "gridWidth": 2144,
+          "gridHeight": 496,
+          "uniqueTiles": [],
+		  "tilePositions": [],
+		}
+	  ],
+	  "sprites": [],
+	  "paths": []
+	}
   ],
   "script": null
 }

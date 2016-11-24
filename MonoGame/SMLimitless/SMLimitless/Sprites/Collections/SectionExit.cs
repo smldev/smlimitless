@@ -377,6 +377,7 @@ namespace SMLimitless.Sprites.Collections
 				if (PlayersInExit.Count > 0)
 				{
 					Owner.AddSprite(e);
+					e.Owner = Owner;
 					var next = PlayersInExit.Dequeue();
 					exitEffect = new ExitEffect(next, GetEmergeHitbox(next), GetDestinationShiftDirection());
 					exitEffect.EffectCompletedEvent += recursiveHandler;
@@ -385,6 +386,7 @@ namespace SMLimitless.Sprites.Collections
 				else
 				{
 					Owner.AddSprite(e);
+					e.Owner = Owner;
 					Owner.CameraSystem.IsFrozen = false;
 					exitEffect = null;
 				}
