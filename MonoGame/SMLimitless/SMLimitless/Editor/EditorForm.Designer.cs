@@ -55,6 +55,7 @@
 			this.ColumnName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.StaticLabelSections = new System.Windows.Forms.Label();
 			this.TabPageSectionExits = new System.Windows.Forms.TabPage();
+			this.ButtonUpdate = new System.Windows.Forms.Button();
 			this.GroupDestination = new System.Windows.Forms.GroupBox();
 			this.StaticLabelDestinationSectionID = new System.Windows.Forms.Label();
 			this.TextDestinationSectionID = new System.Windows.Forms.TextBox();
@@ -85,7 +86,6 @@
 			this.StaticLabelSourceBehavior = new System.Windows.Forms.Label();
 			this.ButtonDeleteExit = new System.Windows.Forms.Button();
 			this.ButtonNew = new System.Windows.Forms.Button();
-			this.ButtonUpdate = new System.Windows.Forms.Button();
 			this.tabControl1.SuspendLayout();
 			this.TabPageTiles.SuspendLayout();
 			this.TabPageSprites.SuspendLayout();
@@ -267,6 +267,7 @@
 			this.ButtonSetAsStart.TabIndex = 4;
 			this.ButtonSetAsStart.Text = "S&et as Start";
 			this.ButtonSetAsStart.UseVisualStyleBackColor = true;
+			this.ButtonSetAsStart.Click += new System.EventHandler(this.ButtonSetAsStart_Click);
 			// 
 			// ButtonRemoveSection
 			// 
@@ -335,6 +336,16 @@
 			this.TabPageSectionExits.TabIndex = 4;
 			this.TabPageSectionExits.Text = "Section Exits";
 			this.TabPageSectionExits.UseVisualStyleBackColor = true;
+			// 
+			// ButtonUpdate
+			// 
+			this.ButtonUpdate.Location = new System.Drawing.Point(391, 203);
+			this.ButtonUpdate.Name = "ButtonUpdate";
+			this.ButtonUpdate.Size = new System.Drawing.Size(75, 23);
+			this.ButtonUpdate.TabIndex = 14;
+			this.ButtonUpdate.Text = ";";
+			this.ButtonUpdate.UseVisualStyleBackColor = true;
+			this.ButtonUpdate.Click += new System.EventHandler(this.ButtonUpdate_Click);
 			// 
 			// GroupDestination
 			// 
@@ -641,15 +652,6 @@
 			this.ButtonNew.TabIndex = 0;
 			this.ButtonNew.Text = "&New...";
 			this.ButtonNew.UseVisualStyleBackColor = true;
-			// 
-			// ButtonUpdate
-			// 
-			this.ButtonUpdate.Location = new System.Drawing.Point(391, 203);
-			this.ButtonUpdate.Name = "ButtonUpdate";
-			this.ButtonUpdate.Size = new System.Drawing.Size(75, 23);
-			this.ButtonUpdate.TabIndex = 14;
-			this.ButtonUpdate.Text = "&Update";
-			this.ButtonUpdate.UseVisualStyleBackColor = true;
 			// 
 			// EditorForm
 			// 

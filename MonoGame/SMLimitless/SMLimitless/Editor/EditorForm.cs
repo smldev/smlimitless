@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework.Graphics;
 using SMLimitless.Content;
@@ -234,6 +235,39 @@ namespace SMLimitless.Editor
 		{
 			section = newSection;
 			PropertySection.SelectedObject = newSection;
+		}
+
+		private void ButtonSetAsStart_Click(object sender, EventArgs e)
+		{
+			if (selectedSection != null)
+			{
+				var selectedItem = ListSections.SelectedItems[0];
+				var oldStartSection = level.Sections.First(s => s.IsStartSection);
+				var oldStartSectionItem = GetItemBySection(oldStartSection);
+
+				selectedSection.IsStartSection = true;
+				oldStartSection.IsStartSection = false;
+
+				selectedItem.Font = new Font(selectedItem.Font, FontStyle.Bold);
+				oldStartSectionItem.Font = new Font(oldStartSectionItem.Font, FontStyle.Regular);
+			}
+		}
+
+		private ListViewItem GetItemBySection(Section section)
+		{
+			string index = section.Index.ToString();
+			for (int i = 0; i < ListSections.Items.Count; i++)
+			{
+				var item = ListSections.Items[i];
+				if (item.Text == index) { return item; }
+			}
+
+			throw new ArgumentException($"Couldn't find section with index {index} in the list.");
+		}
+
+		private void ButtonUpdate_Click(object sender, EventArgs e)
+		{
+
 		}
 	}
 }

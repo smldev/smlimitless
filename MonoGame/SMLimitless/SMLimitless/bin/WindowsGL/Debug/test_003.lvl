@@ -12,6 +12,7 @@
     {
       "index": 0,
       "name": "Main Section",
+      "isStart": true,
       "bounds": "0, 0, 3200, 960",
       "scrollSettings": {
         "scrollType": 0,
@@ -319,9 +320,10 @@
       ],
       "paths": []
     },
-	{
-	  "index": 1,
+    {
+      "index": 1,
       "name": "Secondary Section",
+      "isStart": false,
       "bounds": "0, 0, 3840, 2160",
       "scrollSettings": {
         "scrollType": 0,
@@ -348,12 +350,12 @@
           "gridWidth": 2144,
           "gridHeight": 496,
           "uniqueTiles": [],
-		  "tilePositions": [],
-		}
-	  ],
-	  "sprites": [],
-	  "paths": []
-	}
+          "tilePositions": []
+        }
+      ],
+      "sprites": [],
+      "paths": []
+    }
   ],
   "script": null
 }

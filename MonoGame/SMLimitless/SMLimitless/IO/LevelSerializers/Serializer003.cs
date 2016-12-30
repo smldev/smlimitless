@@ -51,7 +51,7 @@ namespace SMLimitless.IO.LevelSerializers
 			result.Sections = DeserializeSections(sectionObjects, result);
 			result.LevelExits = DeserializeLevelExits(levelExitObjects);
 
-			result.ActiveSection = result.Sections.First(s => s.Index == 0);
+			result.ActiveSection = result.Sections.First(s => s.IsStartSection);
 
 			return result;
 		}
@@ -180,6 +180,7 @@ namespace SMLimitless.IO.LevelSerializers
 
 				section.Index = (int)entry["index"];
 				section.Name = (string)entry["name"];
+				section.IsStartSection = (bool)entry["isStart"];
 				section.Bounds = BoundingRectangle.FromSimpleString((string)entry["bounds"]);
 				section.AutoscrollSettings = DeserializeAutoscrollSettings((JObject)entry["scrollSettings"]);
 				section.Background = DeserializeBackground((JObject)entry["background"], section);
@@ -373,6 +374,7 @@ namespace SMLimitless.IO.LevelSerializers
 				{
 					index = section.Index,
 					name = section.Name,
+					isStart = section.IsStartSection,
 					bounds = section.Bounds.Serialize(),
 					scrollSettings = GetAutoscrollSettingsObject(section),
 					background = GetBackgroundObject(section),
@@ -408,6 +410,11 @@ namespace SMLimitless.IO.LevelSerializers
 
 			foreach (var sprite in section.SpritesGrid)
 			{
+				if (sprite.GetType().AssemblyQualifiedName.Contains("SMLimitless"))
+				{
+					continue;
+				}
+
 				result.Add(new
 				{
 					typeName = sprite.GetType().FullName,
