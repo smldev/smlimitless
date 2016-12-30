@@ -41,7 +41,6 @@
 			this.TabPageSettings = new System.Windows.Forms.TabPage();
 			this.StaticLabelSectionSettings = new System.Windows.Forms.Label();
 			this.PropertySection = new System.Windows.Forms.PropertyGrid();
-			this.PropertyLevel = new System.Windows.Forms.PropertyGrid();
 			this.StaticLabelLevelSettings = new System.Windows.Forms.Label();
 			this.TabPageSections = new System.Windows.Forms.TabPage();
 			this.TextSectionName = new System.Windows.Forms.TextBox();
@@ -86,6 +85,7 @@
 			this.StaticLabelSourceBehavior = new System.Windows.Forms.Label();
 			this.ButtonDeleteExit = new System.Windows.Forms.Button();
 			this.ButtonNew = new System.Windows.Forms.Button();
+			this.PanelLevelSettings = new System.Windows.Forms.Panel();
 			this.tabControl1.SuspendLayout();
 			this.TabPageTiles.SuspendLayout();
 			this.TabPageSprites.SuspendLayout();
@@ -171,9 +171,9 @@
 			// 
 			// TabPageSettings
 			// 
+			this.TabPageSettings.Controls.Add(this.PanelLevelSettings);
 			this.TabPageSettings.Controls.Add(this.StaticLabelSectionSettings);
 			this.TabPageSettings.Controls.Add(this.PropertySection);
-			this.TabPageSettings.Controls.Add(this.PropertyLevel);
 			this.TabPageSettings.Controls.Add(this.StaticLabelLevelSettings);
 			this.TabPageSettings.Location = new System.Drawing.Point(4, 22);
 			this.TabPageSettings.Name = "TabPageSettings";
@@ -198,13 +198,6 @@
 			this.PropertySection.Name = "PropertySection";
 			this.PropertySection.Size = new System.Drawing.Size(321, 233);
 			this.PropertySection.TabIndex = 2;
-			// 
-			// PropertyLevel
-			// 
-			this.PropertyLevel.Location = new System.Drawing.Point(10, 24);
-			this.PropertyLevel.Name = "PropertyLevel";
-			this.PropertyLevel.Size = new System.Drawing.Size(308, 233);
-			this.PropertyLevel.TabIndex = 1;
 			// 
 			// StaticLabelLevelSettings
 			// 
@@ -653,6 +646,15 @@
 			this.ButtonNew.Text = "&New...";
 			this.ButtonNew.UseVisualStyleBackColor = true;
 			// 
+			// PanelLevelSettings
+			// 
+			this.PanelLevelSettings.AutoScroll = true;
+			this.PanelLevelSettings.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+			this.PanelLevelSettings.Location = new System.Drawing.Point(10, 24);
+			this.PanelLevelSettings.Name = "PanelLevelSettings";
+			this.PanelLevelSettings.Size = new System.Drawing.Size(308, 233);
+			this.PanelLevelSettings.TabIndex = 4;
+			// 
 			// EditorForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -697,7 +699,6 @@
 		private System.Windows.Forms.TabPage TabPageSettings;
 		private System.Windows.Forms.Label StaticLabelSectionSettings;
 		private System.Windows.Forms.PropertyGrid PropertySection;
-		private System.Windows.Forms.PropertyGrid PropertyLevel;
 		private System.Windows.Forms.Label StaticLabelLevelSettings;
 		private System.Windows.Forms.TabPage TabPageSections;
 		private System.Windows.Forms.TextBox TextSectionName;
@@ -742,5 +743,6 @@
 		private System.Windows.Forms.RadioButton RadioSourcePipeUp;
 		private System.Windows.Forms.RadioButton RadioSourcePipeDown;
 		private System.Windows.Forms.Button ButtonUpdate;
+		private System.Windows.Forms.Panel PanelLevelSettings;
 	}
 }

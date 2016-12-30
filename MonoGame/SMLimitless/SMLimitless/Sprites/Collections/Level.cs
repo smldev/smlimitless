@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework;
 using SMLimitless.Components;
 using SMLimitless.Content;
 using SMLimitless.Editor;
+using SMLimitless.Editor.Attributes;
 using SMLimitless.Physics;
 using SMLimitless.Sprites.InternalSprites;
 
@@ -19,15 +20,22 @@ namespace SMLimitless.Sprites.Collections
 	/// <summary>
 	///   The main unit of gameplay.
 	/// </summary>
+	[HasUserEditableProperties]
 	public sealed class Level
 	{
 		/// <summary>
 		///   The acceleration caused by gravity, measured in pixels per second
 		///   per second.
 		/// </summary>
-		public static PhysicsSetting<float> GravityAcceleration = new PhysicsSetting<float>("Gravity Acceleration (px/sec²)", 0f, 10000f, 700f, PhysicsSettingType.FloatingPoint);
+		public static PhysicsSetting<float> GravityAcceleration =
+			new PhysicsSetting<float>("Gravity Acceleration (px/sec²)", 0f, 10000f, 700f,
+				PhysicsSettingType.FloatingPoint);
 
 		private Section activeSection;
+
+		private EditorSelectedObject selectedObject = new EditorSelectedObject();
+
+		private EditorCameraTrackingObject trackingObject = null;
 
 		/// <summary>
 		///   Gets a string placed in all level files indicating the version of
@@ -57,15 +65,16 @@ namespace SMLimitless.Sprites.Collections
 		/// </summary>
 		public string Path { get; internal set; }
 
-		internal EditorForm EditorForm { get; set; }
-		internal bool EditorActive { get; private set; }
-		private EditorCameraTrackingObject trackingObject = null;
-		private EditorSelectedObject selectedObject = new EditorSelectedObject();
+		[LongIntegerProperty("Test Property", "A test.", -1024, 1024)]
+		public long TestProperty { get; set; }
+
+		[LongIntegerProperty("Test Read-Only Property", "Another test.", 0, 1000)]
+		public long TestReadOnlyProperty { get; private set; }
 
 		/// <summary>
 		///   Gets or sets the section that the player is currently in.
 		/// </summary>
-		internal Section ActiveSection 
+		internal Section ActiveSection
 		{
 			get
 			{
@@ -83,6 +92,9 @@ namespace SMLimitless.Sprites.Collections
 		///   folders used in this level.
 		/// </summary>
 		internal List<string> ContentFolderPaths { get; set; }
+
+		internal bool EditorActive { get; private set; }
+		internal EditorForm EditorForm { get; set; }
 
 		/// <summary>
 		///   Gets or sets the event script of this level.
@@ -168,11 +180,30 @@ namespace SMLimitless.Sprites.Collections
 			}
 		}
 
+		internal void ChangeSection(int sectionIndex)
+		{
+			Section sectionToSwitchTo = GetSectionByIndex(sectionIndex);
+			ActiveSection = sectionToSwitchTo;
+		}
+
+		internal Section GetSectionByIndex(int sectionIndex)
+		{
+			Section sectionWithIndex = Sections.FirstOrDefault(s => s.Index == sectionIndex);
+			if (sectionWithIndex == null)
+			{
+				throw new ArgumentException($"No section in this level has an index of {sectionIndex}.");
+			}
+			return sectionWithIndex;
+		}
+
 		internal SectionExit GetSectionExitByID(int id)
 		{
 			foreach (Section section in Sections)
 			{
-				if (section.SectionExits.Any(e => e.ID == id)) { return section.SectionExits.First(e => e.ID == id); }
+				if (section.SectionExits.Any(e => e.ID == id))
+				{
+					return section.SectionExits.First(e => e.ID == id);
+				}
 			}
 
 			return null;
@@ -192,42 +223,6 @@ namespace SMLimitless.Sprites.Collections
 			}
 
 			ChangeActiveSectionForExit(destinationSection, destination.IrisPoint, source, destination);
-		}
-
-		private void ChangeActiveSectionForExit(Section section, Vector2 irisOutPosition, SectionExit source, SectionExit destination)
-		{
-			float halfScreenWidth = GameServices.ScreenSize.X / 2f;
-			float halfScreenHeight = GameServices.ScreenSize.Y / 2f;
-			Vector2 newCameraPosition = new Vector2(destination.Hitbox.Center.X - halfScreenWidth,
-			destination.Hitbox.Center.Y - halfScreenHeight);
-
-			ActiveSection = section;
-			ActiveSection.SetIrisState(closed: true);
-			ActiveSection.CameraSystem.IsFrozen = true;
-			ActiveSection.CameraSystem.MoveIfFrozen(newCameraPosition);
-			ActiveSection.IrisOut(90, irisOutPosition, (sender, e) =>
-			{
-				ActiveSection.IsActive = true;
-				destination.Emerge(source.PlayersInExit);
-				source.PlayersInExit.Clear();
-				ActiveSection.CameraSystem.IsFrozen = false;
-			});
-		}
-
-		internal Section GetSectionByIndex(int sectionIndex)
-		{
-			Section sectionWithIndex = Sections.FirstOrDefault(s => s.Index == sectionIndex);
-			if (sectionWithIndex == null)
-			{
-				throw new ArgumentException($"No section in this level has an index of {sectionIndex}.");
-			}
-			return sectionWithIndex;
-		}
-
-		internal void ChangeSection(int sectionIndex)
-		{
-			Section sectionToSwitchTo = GetSectionByIndex(sectionIndex);
-			ActiveSection = sectionToSwitchTo;
 		}
 
 		internal void ToggleEditor()
@@ -276,11 +271,33 @@ namespace SMLimitless.Sprites.Collections
 			ActiveSection = newSection;
 		}
 
+		private void ChangeActiveSectionForExit(Section section, Vector2 irisOutPosition, SectionExit source,
+							SectionExit destination)
+		{
+			float halfScreenWidth = GameServices.ScreenSize.X / 2f;
+			float halfScreenHeight = GameServices.ScreenSize.Y / 2f;
+			Vector2 newCameraPosition = new Vector2(destination.Hitbox.Center.X - halfScreenWidth,
+			destination.Hitbox.Center.Y - halfScreenHeight);
+
+			ActiveSection = section;
+			ActiveSection.SetIrisState(closed: true);
+			ActiveSection.CameraSystem.IsFrozen = true;
+			ActiveSection.CameraSystem.MoveIfFrozen(newCameraPosition);
+			ActiveSection.IrisOut(90, irisOutPosition, (sender, e) =>
+			{
+				ActiveSection.IsActive = true;
+				destination.Emerge(source.PlayersInExit);
+				source.PlayersInExit.Clear();
+				ActiveSection.CameraSystem.IsFrozen = false;
+			});
+		}
+
 		private void LoadOverrides()
 		{
 			string levelFolderAbsolutePath = System.IO.Path.GetDirectoryName(Path);
 			string levelFileNameWithoutExt = System.IO.Path.GetFileNameWithoutExtension(Path);
-			string pathToOverridesFile = Directory.GetFiles(levelFolderAbsolutePath, "overrides.txt", SearchOption.TopDirectoryOnly).FirstOrDefault();
+			string pathToOverridesFile = Directory.GetFiles(levelFolderAbsolutePath, "overrides.txt",
+				SearchOption.TopDirectoryOnly).FirstOrDefault();
 			if (pathToOverridesFile == null) { return; }
 
 			var contentOverrides = OverrideReader.GetOverridesFromFile(pathToOverridesFile);

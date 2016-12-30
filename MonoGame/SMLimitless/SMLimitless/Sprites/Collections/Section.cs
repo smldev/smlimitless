@@ -5,7 +5,6 @@ using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using SMLimitless.Collections;
 using SMLimitless.Components;
-using SMLimitless.Editor;
 using SMLimitless.Extensions;
 using SMLimitless.Input;
 using SMLimitless.Interfaces;
@@ -31,9 +30,6 @@ namespace SMLimitless.Sprites.Collections
 		private bool isInitialized;
 		private List<Particle> particlesToRemoveOnNextFrame = new List<Particle>();
 		private CollisionDebugSelectSprite selectorSprite = new CollisionDebugSelectSprite();
-
-		internal Vector2 LastEditorCameraPosition { get; set; } = Vector2.Zero;
-		public bool IsStartSection { get; internal set; } = false;
 
 		/// <summary>
 		///   Gets the settings used for automatic camera scrolling for this section.
@@ -90,6 +86,8 @@ namespace SMLimitless.Sprites.Collections
 		/// </summary>
 		public bool IsLoaded { get; internal set; }
 
+		public bool IsStartSection { get; internal set; } = false;
+
 		/// <summary>
 		///   Gets the current mouse position adjusted for the camera's position
 		///   and zoom.
@@ -138,6 +136,7 @@ namespace SMLimitless.Sprites.Collections
 		/// </summary>
 		internal SectionExit ExitLock { get; set; } = null;
 
+		internal Vector2 LastEditorCameraPosition { get; set; } = Vector2.Zero;
 		internal List<Layer> Layers { get; set; }
 
 		internal Layer MainLayer { get; set; }
@@ -265,7 +264,6 @@ namespace SMLimitless.Sprites.Collections
 				exit.Draw();
 			}
 
-
 			foreach (Tile tile in Tiles)
 			{
 				tile.Draw();
@@ -282,7 +280,6 @@ namespace SMLimitless.Sprites.Collections
 				particle.Draw();
 			}
 
-			
 			foreach (SectionExit exit in SectionExits)
 			{
 				exit.DebugDraw();
@@ -538,6 +535,18 @@ namespace SMLimitless.Sprites.Collections
 			stopwatch.Stop();
 		}
 
+		internal void ActivateEditor(EditorCameraTrackingObject trackingObject, EditorSelectedObject selectedObject)
+		{
+			CameraSystem.StayInBounds = false;
+			CameraSystem.TrackingObjects.Clear();
+			CameraSystem.TrackingObjects.Add(trackingObject);
+
+			trackingObject.Position = LastEditorCameraPosition;
+
+			AddSpriteOnNextFrame(trackingObject);
+			AddSpriteOnNextFrame(selectedObject);
+		}
+
 		internal void CollisionDebugSelectSprite(Sprite sprite)
 		{
 			if (sprite == null) { throw new ArgumentNullException(nameof(sprite), "The sprite to select for collision debugging was null."); }
@@ -546,6 +555,16 @@ namespace SMLimitless.Sprites.Collections
 			CameraSystem.TrackingObjects.Clear();
 			CameraSystem.TrackingObjects.Add(sprite);
 			GameServices.CollisionDebuggerForm.SelectedSprite = sprite;
+		}
+
+		internal void DeactivateEditor()
+		{
+			CameraSystem.StayInBounds = true;
+			CameraSystem.TrackingObjects.Clear();
+			CameraSystem.TrackingObjects.AddRange(Players.Where(p => !p.HasAttribute("Dead")));
+
+			SpriteList.Where(s => s is EditorCameraTrackingObject || s is EditorSelectedObject)
+			.ForEach(s => RemoveSpriteOnNextFrame(s));
 		}
 
 		private void AddAndRemoveSpritesForNextFrame()
@@ -892,28 +911,6 @@ namespace SMLimitless.Sprites.Collections
 					}
 				}
 			}
-		}
-
-		internal void ActivateEditor(EditorCameraTrackingObject trackingObject, EditorSelectedObject selectedObject)
-		{
-			CameraSystem.StayInBounds = false;
-			CameraSystem.TrackingObjects.Clear();
-			CameraSystem.TrackingObjects.Add(trackingObject);
-
-			trackingObject.Position = LastEditorCameraPosition;
-
-			AddSpriteOnNextFrame(trackingObject);
-			AddSpriteOnNextFrame(selectedObject);
-		}
-
-		internal void DeactivateEditor()
-		{
-			CameraSystem.StayInBounds = true;
-			CameraSystem.TrackingObjects.Clear();
-			CameraSystem.TrackingObjects.AddRange(Players.Where(p => !p.HasAttribute("Dead")));
-
-			SpriteList.Where(s => s is EditorCameraTrackingObject || s is EditorSelectedObject)
-			.ForEach(s => RemoveSpriteOnNextFrame(s));
 		}
 
 		private void UninitializeCollisionDebugging()

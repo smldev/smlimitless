@@ -9,13 +9,12 @@ to build Mario courses, as well as provide a way to add new objects to the game.
 A development wiki can be found at tinyurl.com/smlwiki
 
 Computer Requirements:
-- Microsoft .Net Framework 4.0 or later
-- Microsoft XNA Framework Redistributable 4 or later (XNA Game Studio is not required).
+- Microsoft .Net Framework 4.6 or later
+- MonoGame 3.5.1
 
 Maintainers:
-- Celarix (smcgamer1@gmail.com)
+- Chris Akridge (cakridge2 at gmail.com)
 Please feel free to contact with any questions.
 
-
 ------
-Last updated: December 30, 2012
+Last updated: December 30, 2016

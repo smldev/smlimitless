@@ -1430,6 +1430,51 @@
               the game.
             </summary>
         </member>
+        <member name="M:SMLimitless.Editor.Attributes.DoublePropertyAttribute.#ctor(System.String,System.String,System.Double,System.Double)">
+            <summary>
+              Initializes a new instance of the <see
+              cref="T:SMLimitless.Editor.Attributes.DoublePropertyAttribute" /> class.
+            </summary>
+            <param name="name">
+              The display name of the property as it appears to the user.
+            </param>
+            <param name="description">
+              A description of the property as it appears to the user.
+            </param>
+            <param name="minValue">
+              The lowest legal value for this property. Set to <see
+              cref="F:System.Double.NegativeInfinity" /> for no minimum value.
+            </param>
+            <param name="maxValue">
+              The highest legal value for this property. Set to <see
+              cref="F:System.Double.PositiveInfinity" /> for no maximum value.
+            </param>
+        </member>
+        <member name="M:SMLimitless.Editor.Attributes.FloatingPointPropertyAttribute.#ctor(System.String,System.String,System.Single,System.Single)">
+            <summary>
+              Initializes a new instance of the <see
+              cref="T:SMLimitless.Editor.Attributes.FloatingPointPropertyAttribute" /> class.
+            </summary>
+            <param name="name">
+              The display name of the property as it appears to the user.
+            </param>
+            <param name="description">
+              A description of the property as it appears to the user.
+            </param>
+            <param name="minValue">
+              The lowest legal value for this property. Set to <see
+              cref="F:System.Single.NegativeInfinity" /> for no minimum value.
+            </param>
+            <param name="maxValue">
+              The highest legal value for this property. Set to <see
+              cref="F:System.Single.PositiveInfinity" /> for no maximum value.
+            </param>
+        </member>
+        <member name="T:SMLimitless.Editor.Attributes.HasUserEditablePropertiesAttribute">
+            <summary>
+              An attribute that decorates classes or structs that have user-editable properties.
+            </summary>
+        </member>
         <member name="T:SMLimitless.Editor.EditorForm">
             <summary>
               A form that can be used to select, place, and modify game objects in levels.

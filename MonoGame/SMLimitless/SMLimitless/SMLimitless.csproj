@@ -80,6 +80,20 @@
       <DependentUpon>DebugForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Debug\Logger.cs" />
+    <Compile Include="Editor\Attributes\BooleanPropertyAttribute.cs" />
+    <Compile Include="Editor\Attributes\BoundingRectanglePropertyAttribute.cs" />
+    <Compile Include="Editor\Attributes\ColorPropertyAttribute.cs" />
+    <Compile Include="Editor\Attributes\DoublePropertyAttribute.cs" />
+    <Compile Include="Editor\Attributes\FloatingPointPropertyAttribute.cs" />
+    <Compile Include="Editor\Attributes\HasEditablePropertiesAttribute.cs" />
+    <Compile Include="Editor\Attributes\IntegerPropertyAttribute.cs" />
+    <Compile Include="Editor\Attributes\LongIntegerPropertyAttribute.cs" />
+    <Compile Include="Editor\Attributes\NestedPropertyAttribute.cs" />
+    <Compile Include="Editor\Attributes\PointPropertyAttribute.cs" />
+    <Compile Include="Editor\Attributes\RectanglePropertyAttribute.cs" />
+    <Compile Include="Editor\Attributes\StringPropertyAttribute.cs" />
+    <Compile Include="Editor\Attributes\Vector2PropertyAttribute.cs" />
+    <Compile Include="Editor\DynamicPropertyControlGenerator.cs" />
     <Compile Include="Editor\EditorForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -92,6 +106,7 @@
     <Compile Include="Editor\PropertyForm.Designer.cs">
       <DependentUpon>PropertyForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Editor\PropertySetters.cs" />
     <Compile Include="Editor\SpriteData.cs" />
     <Compile Include="Editor\TileData.cs" />
     <Compile Include="Enums.cs" />

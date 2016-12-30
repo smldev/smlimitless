@@ -1,0 +1,17 @@
+How to add new user-editable property types:
+
+Given a type named "T":
+	1. Create a new class called TPropertyAttribute : Attribute in the SMLimitless.Editor.Attributes namespace.
+		a. With [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)].
+		b. That has properties "string Name {get;}" and "string Description {get;}"
+	2. Add more properties to this type as required.
+	3. In the constructor, add the following validation logic:
+		if (string.IsNullOrEmpty(name)) { throw new ArgumentException($"User-editable property was not given a name."); }
+		if (description == null) { description = ""; }
+	4. Add validation logic for all other properties.
+	5. Add setters for all properties.
+	6. Add typeof(T) to the SMLimitless.Editor.DynamicPropertyControlGenerator.validPropertyTypes array.
+	7. Add a new conditional to the bottom of the foreach loop in GenerateControls(Panel, object). Copy the form of the other conditionals.
+	8. Create a method GenerateTControls(Panel, ref int, object, PropertyInfo) that makes a GroupBox (label being the attribute's name, ToolTip being its description), a "Set" button, and controls needed for the property. Copy the form of other methods.
+	9. Create a method in PropertySetters called SetTProperty that receives the relevant control(s), the object with the property, the property info, and any special attribute properties. Retrieve the value from the control(s), validate that it is correct, and call SetValue on the property info.
+	10. Create an event handler for the "Set" button click event that calls the method made in step 9.

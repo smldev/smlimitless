@@ -36,13 +36,15 @@ The following attributes will be added to the `SMLimitless.Editor.Attributes` na
 * `StringPropertyAttribute` with arguments `string name`, `string description`
 * `NestedPropertyAttribute` with arguments `string name`, `string description`
 
-Why are there so many different attributes? While something like a `PropertyAttribute(Type, ...)` would work, not every type can easily have controls generated to edit it. The above types represent most of the property types that developers would need, and, in a pinch, the `StringPropertyAttribute` can be used to send stringly-typed data.
+Why are there so many different attributes? While something like a `PropertyAttribute(Type, ...)` would work, not every type can easily have controls generated to edit it. The above types represent most of the property types that developers would need most of the time, and, in a pinch, the `StringPropertyAttribute` can be used to send stringly-typed data.
 
 The `HasEditablePropertiesAttribute` attribute is to only be applied to types. Only types decorated with this attribute will be searched for user-editable properties.
 
 The `NestedPropertyAttribute` is applied to any property that is decorated with the `HasEditablePropertiesAttribute`. Limitless will search for properties in this property decorated with any of the above attributes and dynamically generate controls for them (see below). Controls for nested properties are only generated when the user opens a property form, so infinite loops are not a concern.
 
 All the other `...PropertyAttribute` attributes are applied to properties of those types. These properties must be public and at least have a getter. If any of these attributes decorate properties that aren't the correct type, an exception is thrown at runtime.
+
+Read-only properties will display the information of the property but all fields will be disabled and cannot be changed. Additionally, controls for properties will not update with new values, as the level editor should be the only one to change such properties while the game is in editor mode.
 
 These attributes define a few arguments: name, description, `minValue` and `maxValue`. The name is displayed as the label on the property form, the description resides in the tooltip shown when mousing over the label, and the `minValue` and `maxValue` define a reasonable range for the property.
  
@@ -56,7 +58,7 @@ For types with this attribute, Limitless will check every property (including no
 
 Limitless will generate controls for each property along a single row. New controls will be placed on a new row, with the rows extending continuously downward on a `Panel` that has a scrollbar, much like the `PhysicsSettingEditorForm`.
 
-Each user-editable property will have a `Label` instance that displays the name of the property. The label will display a tooltip on mouseover which contains the description of the property and its type. Each property will also have an `Action<string, ...>` (arguments: property name, new value) called from the applicable event handler that, after user input validation, sets the property. Each property will have controls generated for it as follows:
+Each user-editable property will have a `Label` instance that displays the name of the property. The label will display a tooltip on mouseover which contains the description of the property and its type. Each property will also have an `Action<string, ...>` (arguments: property name, new value) called from the applicable event handler that, after user input validation, sets the property. Each property will have a "Set" button that commits changes to the property. Each property will have controls generated for it as follows:
 
 * `BooleanPropertyAttribute`: Two radio buttons "True" and "False".
 * `IntegerPropertyAttribute`: A `NumericUpDown` control.
@@ -68,7 +70,7 @@ Each user-editable property will have a `Label` instance that displays the name 
 * `BoundingRectanglePropertyAttribute`: Four labels "X", "Y", "Width", and "Height" and four `TextBox` controls into which numbers can be typed.
 * `RectanglePropertyAttribute`: Four labels "X", "Y", "Width", and "Height" and four `NumericUpDown` controls.
 * `ColorPropertyAttribute`: Four labels "R", "G", "B", and "A", four `NumericUpDown` controls, and a small panel that displays the currently selected color.
-* `StringPropertyAttribute`: A `TextBox`.
+* `StringPropertyAttribute`: A `TextBox`.e
 * `NestedPropertyAttribute`: A button with an ellipsis. Clicking this button opens another `PropertyForm`, populated by a call to `DynamicPropertyControlGenerator.GenerateControls(Panel, object)` that displays the properties of the nested property.
 
 #### Changes to `EditorForm` and `PropertyForm`
