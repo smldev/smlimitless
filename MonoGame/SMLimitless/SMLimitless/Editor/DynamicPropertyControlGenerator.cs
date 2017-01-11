@@ -68,6 +68,26 @@ namespace SMLimitless.Editor
 						if (property.GetCustomAttribute<LongIntegerPropertyAttribute>() != null)
 						{ GenerateLongIntegerControls(panel, ref newControlY, obj, property); }
 					}
+					else if (property.PropertyType == typeof(float))
+					{
+						if (property.GetCustomAttribute<FloatingPointPropertyAttribute>() != null)
+						{ GenerateFloatingPointControls(panel, ref newControlY, obj, property); }
+					}
+					else if (property.PropertyType == typeof(double))
+					{
+						if (property.GetCustomAttribute<DoublePropertyAttribute>() != null)
+						{ GenerateDoubleControls(panel, ref newControlY, obj, property); }
+					}
+					else if (property.PropertyType == typeof(Vector2))
+					{
+						if (property.GetCustomAttribute<Vector2PropertyAttribute>() != null)
+						{ GenerateVector2Controls(panel, ref newControlY, obj, property); }
+					}
+					else if (property.PropertyType == typeof(Point))
+					{
+						if (property.GetCustomAttribute<PointPropertyAttribute>() != null)
+						{ GeneratePointControls(panel, ref newControlY, obj, property); }
+					}
 				}
 			}
 		}
@@ -187,6 +207,185 @@ namespace SMLimitless.Editor
 				PropertySetters.SetLongIntegerProperty(textBox, obj, property, attribute.MinValue, attribute.MaxValue);
 			};
 			group.Controls.Add(buttonSet);
+
+			newControlY += group.Height + DefaultSidePadding;
+		}
+
+		private static void GenerateFloatingPointControls(Panel panel, ref int newControlY, object obj,
+			PropertyInfo property)
+		{
+			var attribute = GetPropertyAttribute<FloatingPointPropertyAttribute>(obj, property);
+
+			ThrowIfWriteOnlyProperty(property);
+			bool isReadonlyProperty = IsReadOnlyProperty(property);
+
+			GroupBox group = GenerateDefaultGroupBox(panel, newControlY);
+			group.Text = attribute.Name;
+			ToolTip toolTip = new ToolTip();
+			toolTip.SetToolTip(group, attribute.Description);
+			panel.Controls.Add(group);
+
+			TextBox textBox = new TextBox();
+			textBox.Text = ((float)property.GetValue(obj)).ToString();
+			textBox.Location = new DrawPoint(DefaultSidePadding, GroupControlY);
+			textBox.Size = new System.Drawing.Size(200, ButtonSetHeight);
+			textBox.Enabled = !isReadonlyProperty;
+			group.Controls.Add(textBox);
+
+			Button buttonSet = GenerateDefaultSetButton(textBox.Right + DefaultSidePadding, !isReadonlyProperty);
+			buttonSet.Click += (sender, e) =>
+			{
+				PropertySetters.SetFloatingPointProperty(textBox, obj, property, attribute);
+			};
+			group.Controls.Add(buttonSet);
+
+			newControlY += group.Height + DefaultSidePadding;
+		}
+
+		private static void GenerateDoubleControls(Panel panel, ref int newControlY, object obj, PropertyInfo property)
+		{
+			var attribute = GetPropertyAttribute<DoublePropertyAttribute>(obj, property);
+
+			ThrowIfWriteOnlyProperty(property);
+			bool isReadonlyProperty = IsReadOnlyProperty(property);
+
+			GroupBox group = GenerateDefaultGroupBox(panel, newControlY);
+			group.Text = attribute.Name;
+			ToolTip toolTip = new ToolTip();
+			toolTip.SetToolTip(group, attribute.Description);
+			panel.Controls.Add(group);
+
+			TextBox textBox = new TextBox();
+			textBox.Text = ((double)property.GetValue(obj)).ToString();
+			textBox.Location = new DrawPoint(DefaultSidePadding, GroupControlY);
+			textBox.Size = new System.Drawing.Size(200, ButtonSetHeight);
+			textBox.Enabled = !isReadonlyProperty;
+			group.Controls.Add(textBox);
+
+			Button buttonSet = GenerateDefaultSetButton(textBox.Right + DefaultSidePadding, !isReadonlyProperty);
+			buttonSet.Click += (sender, e) =>
+			{
+				PropertySetters.SetDoubleProperty(textBox, obj, property, attribute);
+			};
+			group.Controls.Add(buttonSet);
+
+			newControlY += group.Height + DefaultSidePadding;
+		}
+
+		private static void GenerateVector2Controls(Panel panel, ref int newControlY, object obj, 
+			PropertyInfo property)
+		{
+			var attribute = GetPropertyAttribute<Vector2PropertyAttribute>(obj, property);
+
+			ThrowIfWriteOnlyProperty(property);
+			bool isReadonlyProperty = IsReadOnlyProperty(property);
+
+			GroupBox group = GenerateDefaultGroupBox(panel, newControlY);
+			group.Text = attribute.Name;
+			ToolTip toolTip = new ToolTip();
+			toolTip.SetToolTip(group, attribute.Description);
+			panel.Controls.Add(group);
+
+			int controlX = DefaultSidePadding;
+
+			Label labelX = new Label();
+			labelX.Text = "X";
+			labelX.AutoSize = true;
+			labelX.Location = new DrawPoint(controlX, GroupControlY);
+			labelX.Enabled = !isReadonlyProperty;
+			group.Controls.Add(labelX);
+			controlX += labelX.Width + DefaultSidePadding;
+
+			TextBox textX = new TextBox();
+			textX.Text = (((Vector2)property.GetValue(obj)).X).ToString();
+			textX.Location = new DrawPoint(controlX, GroupControlY);
+			textX.Size = new System.Drawing.Size(80, ButtonSetHeight);
+			textX.Enabled = !isReadonlyProperty;
+			group.Controls.Add(textX);
+			controlX += textX.Width + DefaultSidePadding;
+
+			Label labelY = new Label();
+			labelY.Text = "Y";
+			labelY.AutoSize = true;
+			labelY.Location = new DrawPoint(controlX, GroupControlY);
+			labelY.Enabled = !isReadonlyProperty;
+			group.Controls.Add(labelY);
+			controlX += labelY.Width + DefaultSidePadding;
+
+			TextBox textY = new TextBox();
+			textY.Text = (((Vector2)property.GetValue(obj)).Y).ToString();
+			textY.Location = new DrawPoint(controlX, GroupControlY);
+			textY.Size = new System.Drawing.Size(80, ButtonSetHeight);
+			textY.Enabled = !isReadonlyProperty;
+			group.Controls.Add(textY);
+			controlX += textY.Width + DefaultSidePadding;
+
+			Button buttonSet = GenerateDefaultSetButton(controlX, !isReadonlyProperty);
+			buttonSet.Click += (sender, e) =>
+			{
+				PropertySetters.SetVector2Property(textX, textY, obj, property);
+			};
+			group.Controls.Add(buttonSet);
+
+			newControlY += group.Height + DefaultSidePadding;
+		}
+
+		private static void GeneratePointControls(Panel panel, ref int newControlY, object obj,
+			PropertyInfo property)
+		{
+			var attribute = GetPropertyAttribute<PointPropertyAttribute>(obj, property);
+
+			ThrowIfWriteOnlyProperty(property);
+			bool isReadonlyProperty = IsReadOnlyProperty(property);
+
+			GroupBox group = GenerateDefaultGroupBox(panel, newControlY);
+			group.Text = attribute.Name;
+			ToolTip toolTip = new ToolTip();
+			toolTip.SetToolTip(group, attribute.Description);
+			panel.Controls.Add(group);
+
+			int controlX = DefaultSidePadding;
+
+			Label labelX = new Label();
+			labelX.Text = "X";
+			labelX.AutoSize = true;
+			labelX.Location = new DrawPoint(controlX, GroupControlY);
+			labelX.Enabled = !isReadonlyProperty;
+			group.Controls.Add(labelX);
+			controlX += labelX.Width + DefaultSidePadding;
+
+			TextBox textX = new TextBox();
+			textX.Text = (((Vector2)property.GetValue(obj)).X).ToString();
+			textX.Location = new DrawPoint(controlX, GroupControlY);
+			textX.Size = new System.Drawing.Size(80, ButtonSetHeight);
+			textX.Enabled = !isReadonlyProperty;
+			group.Controls.Add(textX);
+			controlX += textX.Width + DefaultSidePadding;
+
+			Label labelY = new Label();
+			labelY.Text = "Y";
+			labelY.AutoSize = true;
+			labelY.Location = new DrawPoint(controlX, GroupControlY);
+			labelY.Enabled = !isReadonlyProperty;
+			group.Controls.Add(labelY);
+			controlX += labelY.Width + DefaultSidePadding;
+
+			TextBox textY = new TextBox();
+			textY.Text = (((Vector2)property.GetValue(obj)).Y).ToString();
+			textY.Location = new DrawPoint(controlX, GroupControlY);
+			textY.Size = new System.Drawing.Size(80, ButtonSetHeight);
+			textY.Enabled = !isReadonlyProperty;
+			group.Controls.Add(textY);
+			controlX += textY.Width + DefaultSidePadding;
+
+			Button buttonSet = GenerateDefaultSetButton(controlX, !isReadonlyProperty);
+			buttonSet.Click += (sender, e) =>
+			{
+				PropertySetters.SetPointProperty(textX, textY, obj, property);
+			};
+			group.Controls.Add(buttonSet);
+
+			newControlY += group.Height + DefaultSidePadding;
 		}
 
 		private static T GetPropertyAttribute<T>(object obj, PropertyInfo property) where T : Attribute
