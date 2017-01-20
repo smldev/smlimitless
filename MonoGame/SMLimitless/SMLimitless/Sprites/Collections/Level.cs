@@ -65,11 +65,11 @@ namespace SMLimitless.Sprites.Collections
 		/// </summary>
 		public string Path { get; internal set; }
 
-		[PointProperty("Test", "Test_")]
-		public Point TestProperty { get; set; }
+		[StringProperty("Test", "Test_")]
+		public string TestProperty { get; set; }
 
-		[PointProperty("Test2", "Test2_")]
-		public Point TestReadOnlyProperty { get; private set; }
+		[StringProperty("Test2", "Test2_")]
+		public string TestReadOnlyProperty { get; private set; }
 
 		/// <summary>
 		///   Gets or sets the section that the player is currently in.

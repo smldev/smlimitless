@@ -7,6 +7,7 @@ using SMLimitless.Editor.Attributes;
 using SMLimitless.Physics;
 
 using DrawPoint = System.Drawing.Point;
+using DrawSize = System.Drawing.Size;
 
 namespace SMLimitless.Editor
 {
@@ -88,6 +89,26 @@ namespace SMLimitless.Editor
 						if (property.GetCustomAttribute<PointPropertyAttribute>() != null)
 						{ GeneratePointControls(panel, ref newControlY, obj, property); }
 					}
+					else if (property.PropertyType == typeof(BoundingRectangle))
+					{
+						if (property.GetCustomAttribute<BoundingRectanglePropertyAttribute>() != null)
+						{ GenerateBoudingRectangleControls(panel, ref newControlY, obj, property); }
+					}
+					else if (property.PropertyType == typeof(Rectangle))
+					{
+						if (property.GetCustomAttribute<RectanglePropertyAttribute>() != null)
+						{ GenerateRectangleControls(panel, ref newControlY, obj, property); }
+					}
+					else if (property.PropertyType == typeof(Color))
+					{
+						if (property.GetCustomAttribute<ColorPropertyAttribute>() != null)
+						{ GenerateColorControls(panel, ref newControlY, obj, property); }
+					}
+					else if (property.PropertyType == typeof(string))
+					{
+						if (property.GetCustomAttribute<StringPropertyAttribute>() != null)
+						{ GenerateStringControls(panel, ref newControlY, obj, property); }
+					}
 				}
 			}
 		}
@@ -134,7 +155,7 @@ namespace SMLimitless.Editor
 			GroupBox group = new GroupBox();
 			group.AutoSize = false;
 			group.Location = new DrawPoint(DefaultSidePadding, newControlY);
-			group.Size = new System.Drawing.Size(panel.Width - (DefaultSidePadding * 2),
+			group.Size = new DrawSize(panel.Width - (DefaultSidePadding * 2),
 				GroupHeight);
 
 			return group;
@@ -145,7 +166,7 @@ namespace SMLimitless.Editor
 			Button button = new Button();
 			button.Text = "Set";
 			button.Location = new DrawPoint(locationX, GroupControlY);
-			button.Size = new System.Drawing.Size(ButtonSetWidth, ButtonSetHeight);
+			button.Size = new DrawSize(ButtonSetWidth, ButtonSetHeight);
 			button.Enabled = enabled;
 
 			return button;
@@ -197,7 +218,7 @@ namespace SMLimitless.Editor
 			TextBox textBox = new TextBox();
 			textBox.Text = ((long)property.GetValue(obj)).ToString();
 			textBox.Location = new DrawPoint(DefaultSidePadding, GroupControlY);
-			textBox.Size = new System.Drawing.Size(200, ButtonSetHeight);
+			textBox.Size = new DrawSize(200, ButtonSetHeight);
 			textBox.Enabled = !isReadonlyProperty;
 			group.Controls.Add(textBox);
 
@@ -228,7 +249,7 @@ namespace SMLimitless.Editor
 			TextBox textBox = new TextBox();
 			textBox.Text = ((float)property.GetValue(obj)).ToString();
 			textBox.Location = new DrawPoint(DefaultSidePadding, GroupControlY);
-			textBox.Size = new System.Drawing.Size(200, ButtonSetHeight);
+			textBox.Size = new DrawSize(200, ButtonSetHeight);
 			textBox.Enabled = !isReadonlyProperty;
 			group.Controls.Add(textBox);
 
@@ -258,7 +279,7 @@ namespace SMLimitless.Editor
 			TextBox textBox = new TextBox();
 			textBox.Text = ((double)property.GetValue(obj)).ToString();
 			textBox.Location = new DrawPoint(DefaultSidePadding, GroupControlY);
-			textBox.Size = new System.Drawing.Size(200, ButtonSetHeight);
+			textBox.Size = new DrawSize(200, ButtonSetHeight);
 			textBox.Enabled = !isReadonlyProperty;
 			group.Controls.Add(textBox);
 
@@ -299,7 +320,7 @@ namespace SMLimitless.Editor
 			TextBox textX = new TextBox();
 			textX.Text = (((Vector2)property.GetValue(obj)).X).ToString();
 			textX.Location = new DrawPoint(controlX, GroupControlY);
-			textX.Size = new System.Drawing.Size(80, ButtonSetHeight);
+			textX.Size = new DrawSize(80, ButtonSetHeight);
 			textX.Enabled = !isReadonlyProperty;
 			group.Controls.Add(textX);
 			controlX += textX.Width + DefaultSidePadding;
@@ -315,7 +336,7 @@ namespace SMLimitless.Editor
 			TextBox textY = new TextBox();
 			textY.Text = (((Vector2)property.GetValue(obj)).Y).ToString();
 			textY.Location = new DrawPoint(controlX, GroupControlY);
-			textY.Size = new System.Drawing.Size(80, ButtonSetHeight);
+			textY.Size = new DrawSize(80, ButtonSetHeight);
 			textY.Enabled = !isReadonlyProperty;
 			group.Controls.Add(textY);
 			controlX += textY.Width + DefaultSidePadding;
@@ -357,7 +378,7 @@ namespace SMLimitless.Editor
 			TextBox textX = new TextBox();
 			textX.Text = (((Vector2)property.GetValue(obj)).X).ToString();
 			textX.Location = new DrawPoint(controlX, GroupControlY);
-			textX.Size = new System.Drawing.Size(80, ButtonSetHeight);
+			textX.Size = new DrawSize(80, ButtonSetHeight);
 			textX.Enabled = !isReadonlyProperty;
 			group.Controls.Add(textX);
 			controlX += textX.Width + DefaultSidePadding;
@@ -373,7 +394,7 @@ namespace SMLimitless.Editor
 			TextBox textY = new TextBox();
 			textY.Text = (((Vector2)property.GetValue(obj)).Y).ToString();
 			textY.Location = new DrawPoint(controlX, GroupControlY);
-			textY.Size = new System.Drawing.Size(80, ButtonSetHeight);
+			textY.Size = new DrawSize(80, ButtonSetHeight);
 			textY.Enabled = !isReadonlyProperty;
 			group.Controls.Add(textY);
 			controlX += textY.Width + DefaultSidePadding;
@@ -384,6 +405,280 @@ namespace SMLimitless.Editor
 				PropertySetters.SetPointProperty(textX, textY, obj, property);
 			};
 			group.Controls.Add(buttonSet);
+
+			newControlY += group.Height + DefaultSidePadding;
+		}
+
+		private static void GenerateBoudingRectangleControls(Panel panel, ref int newControlY, object obj,
+			PropertyInfo property)
+		{
+			var attribute = GetPropertyAttribute<BoundingRectanglePropertyAttribute>(obj, property);
+
+			ThrowIfWriteOnlyProperty(property);
+			bool isReadonlyProperty = IsReadOnlyProperty(property);
+
+			GroupBox group = GenerateDefaultGroupBox(panel, newControlY);
+			group.Text = attribute.Name;
+			ToolTip toolTip = new ToolTip();
+			toolTip.SetToolTip(group, attribute.Description);
+
+			int controlX = DefaultSidePadding;
+
+			Label labelX, labelY, labelWidth, labelHeight;
+			labelX = new Label();
+			labelY = new Label();
+			labelWidth = new Label();
+			labelHeight = new Label();
+
+			labelX.AutoSize = labelY.AutoSize = labelWidth.AutoSize = labelHeight.AutoSize = true;
+			labelX.Enabled = labelY.Enabled = labelWidth.Enabled = labelHeight.Enabled = !isReadonlyProperty;
+
+			labelX.Text = "X";
+			labelY.Text = "Y";
+			labelWidth.Text = "W";
+			labelHeight.Text = "H";
+
+			group.Controls.AddRange(new Label[] { labelX, labelY, labelWidth, labelHeight });
+
+			TextBox textX, textY, textWidth, textHeight;
+			textX = new TextBox();
+			textY = new TextBox();
+			textWidth = new TextBox();
+			textHeight = new TextBox();
+
+			BoundingRectangle value = (BoundingRectangle)property.GetValue(obj);
+			textX.Text = value.X.ToString();
+			textY.Text = value.Y.ToString();
+			textWidth.Text = value.Width.ToString();
+			textHeight.Text = value.Height.ToString();
+
+			group.Controls.AddRange(new TextBox[] { textX, textY, textWidth, textHeight });
+
+			textX.Enabled = textY.Enabled = textWidth.Enabled = textHeight.Enabled = !isReadonlyProperty;
+			textX.Size = textY.Size = textWidth.Size = textHeight.Size = new DrawSize(80, ButtonSetHeight);
+
+			// There are three rows of controls for rectangles:
+			// Row 1: labelX, textX, labelY, textY
+			// Row 2: labelWidth, textWidth, labelHeight, textHeight
+			// Row 3: buttonSet
+			labelX.Location = new DrawPoint(controlX, GroupControlY);
+			textX.Location = new DrawPoint(labelX.Right + DefaultSidePadding, GroupControlY);
+			labelY.Location = new DrawPoint(textX.Right + DefaultSidePadding, GroupControlY);
+			textY.Location = new DrawPoint(labelY.Right + DefaultSidePadding, GroupControlY);
+
+			int row2Y = textX.Bottom + DefaultSidePadding;
+			labelWidth.Location = new DrawPoint(controlX, row2Y);
+			textWidth.Location = new DrawPoint(labelWidth.Right + DefaultSidePadding, row2Y);
+			labelHeight.Location = new DrawPoint(textWidth.Right + DefaultSidePadding, row2Y);
+			textHeight.Location = new DrawPoint(labelHeight.Right + DefaultSidePadding, row2Y);
+
+			int row3Y = textWidth.Bottom + DefaultSidePadding;
+			Button buttonSet = GenerateDefaultSetButton(controlX, !isReadonlyProperty);
+			buttonSet.Size = new DrawSize(labelX.Width + (DefaultSidePadding * 3) + textX.Width + labelY.Width 
+				+ textY.Width, ButtonSetHeight);
+			buttonSet.Location = new DrawPoint(DefaultSidePadding, row3Y);
+			buttonSet.Click += (sender, e) =>
+			{
+				PropertySetters.SetBoundingRectangleProperty(textX, textY, textWidth, textHeight, obj, property);
+			};
+
+			group.Controls.Add(buttonSet);
+			group.Size = new DrawSize(buttonSet.Right + DefaultSidePadding, buttonSet.Bottom + DefaultSidePadding);
+			panel.Controls.Add(group);
+
+			newControlY += group.Height + DefaultSidePadding;
+		}
+
+		private static void GenerateRectangleControls(Panel panel, ref int newControlY, object obj,
+			PropertyInfo property)
+		{
+			var attribute = GetPropertyAttribute<RectanglePropertyAttribute>(obj, property);
+
+			ThrowIfWriteOnlyProperty(property);
+			bool isReadonlyProperty = IsReadOnlyProperty(property);
+
+			GroupBox group = GenerateDefaultGroupBox(panel, newControlY);
+			group.Text = attribute.Name;
+			ToolTip toolTip = new ToolTip();
+			toolTip.SetToolTip(group, attribute.Description);
+
+			int controlX = DefaultSidePadding;
+
+			Label labelX, labelY, labelWidth, labelHeight;
+			labelX = new Label();
+			labelY = new Label();
+			labelWidth = new Label();
+			labelHeight = new Label();
+
+			labelX.AutoSize = labelY.AutoSize = labelWidth.AutoSize = labelHeight.AutoSize = true;
+			labelX.Enabled = labelY.Enabled = labelWidth.Enabled = labelHeight.Enabled = !isReadonlyProperty;
+
+			labelX.Text = "X";
+			labelY.Text = "Y";
+			labelWidth.Text = "W";
+			labelHeight.Text = "H";
+
+			group.Controls.AddRange(new Label[] { labelX, labelY, labelWidth, labelHeight });
+
+			TextBox textX, textY, textWidth, textHeight;
+			textX = new TextBox();
+			textY = new TextBox();
+			textWidth = new TextBox();
+			textHeight = new TextBox();
+
+			Rectangle value = (Rectangle)property.GetValue(obj);
+			textX.Text = value.X.ToString();
+			textY.Text = value.Y.ToString();
+			textWidth.Text = value.Width.ToString();
+			textHeight.Text = value.Height.ToString();
+
+			group.Controls.AddRange(new TextBox[] { textX, textY, textWidth, textHeight });
+
+			textX.Enabled = textY.Enabled = textWidth.Enabled = textHeight.Enabled = !isReadonlyProperty;
+			textX.Size = textY.Size = textWidth.Size = textHeight.Size = new DrawSize(80, ButtonSetHeight);
+
+			// There are three rows of controls for rectangles:
+			// Row 1: labelX, textX, labelY, textY
+			// Row 2: labelWidth, textWidth, labelHeight, textHeight
+			// Row 3: buttonSet
+			labelX.Location = new DrawPoint(controlX, GroupControlY);
+			textX.Location = new DrawPoint(labelX.Right + DefaultSidePadding, GroupControlY);
+			labelY.Location = new DrawPoint(textX.Right + DefaultSidePadding, GroupControlY);
+			textY.Location = new DrawPoint(labelY.Right + DefaultSidePadding, GroupControlY);
+
+			int row2Y = textX.Bottom + DefaultSidePadding;
+			labelWidth.Location = new DrawPoint(controlX, row2Y);
+			textWidth.Location = new DrawPoint(labelWidth.Right + DefaultSidePadding, row2Y);
+			labelHeight.Location = new DrawPoint(textWidth.Right + DefaultSidePadding, row2Y);
+			textHeight.Location = new DrawPoint(labelHeight.Right + DefaultSidePadding, row2Y);
+
+			int row3Y = textWidth.Bottom + DefaultSidePadding;
+			Button buttonSet = GenerateDefaultSetButton(controlX, !isReadonlyProperty);
+			buttonSet.Size = new DrawSize(labelX.Width + (DefaultSidePadding * 3) + textX.Width + labelY.Width
+				+ textY.Width, ButtonSetHeight);
+			buttonSet.Location = new DrawPoint(DefaultSidePadding, row3Y);
+			buttonSet.Click += (sender, e) =>
+			{
+				PropertySetters.SetRectangleProperty(textX, textY, textWidth, textHeight, obj, property);
+			};
+
+			group.Controls.Add(buttonSet);
+			group.Size = new DrawSize(buttonSet.Right + DefaultSidePadding, buttonSet.Bottom + DefaultSidePadding);
+			panel.Controls.Add(group);
+
+			newControlY += group.Height + DefaultSidePadding;
+		}
+
+		private static void GenerateColorControls(Panel panel, ref int newControlY, object obj,
+			PropertyInfo property)
+		{
+			var attribute = property.GetCustomAttribute<ColorPropertyAttribute>();
+
+			ThrowIfWriteOnlyProperty(property);
+			bool isReadonlyProperty = IsReadOnlyProperty(property);
+
+			GroupBox group = GenerateDefaultGroupBox(panel, newControlY);
+			group.Text = attribute.Name;
+			ToolTip toolTip = new ToolTip();
+			toolTip.SetToolTip(group, attribute.Description);
+			panel.Controls.Add(group);
+
+			Label labelR, labelG, labelB, labelA;
+			labelR = new Label();
+			labelG = new Label();
+			labelB = new Label();
+			labelA = new Label();
+
+			labelR.AutoSize = labelG.AutoSize = labelB.AutoSize = labelA.AutoSize = true;
+			labelR.Enabled = labelG.Enabled = labelB.Enabled = labelA.Enabled = !isReadonlyProperty;
+
+			labelR.Text = "R";
+			labelG.Text = "G";
+			labelB.Text = "B";
+			labelA.Text = "A";
+
+			NumericUpDown nudR, nudG, nudB, nudA;
+			nudR = new NumericUpDown();
+			nudG = new NumericUpDown();
+			nudB = new NumericUpDown();
+			nudA = new NumericUpDown();
+
+			nudR.Enabled = nudG.Enabled = nudB.Enabled = nudA.Enabled = !isReadonlyProperty;
+			nudR.Minimum = nudG.Minimum = nudB.Minimum = nudA.Minimum = 0;
+			nudR.Maximum = nudG.Maximum = nudB.Maximum = nudA.Maximum = 255;
+
+			Color value = (Color)property.GetValue(obj);
+			nudR.Value = value.R;
+			nudG.Value = value.G;
+			nudB.Value = value.B;
+			nudA.Value = value.A;
+
+			Panel panelColorPreview = new Panel();
+			panelColorPreview.BorderStyle = BorderStyle.Fixed3D;
+			panelColorPreview.BackColor = System.Drawing.Color.FromArgb(value.A, value.R, value.G, value.B);
+
+			Button buttonSet = GenerateDefaultSetButton(DefaultSidePadding, !isReadonlyProperty);
+			buttonSet.Click += (sender, e) =>
+			{
+				var color = PropertySetters.SetColorProperty(nudR, nudG, nudB, nudA, obj, property);
+				panelColorPreview.BackColor = color;
+			};
+
+			group.Controls.AddRange(new Control[] { labelR, labelG, labelB, labelA, nudR, nudG, nudB, nudA, buttonSet,
+			panelColorPreview});
+
+			// Row 1: labelR, nudR, labelG, nudG, labelB, nudB, labelA, nudA
+			// Row 2: buttonSet, panelColorPreview
+			var nudSize = new DrawSize(45, ButtonSetHeight);
+			nudR.Size = nudG.Size = nudB.Size = nudA.Size = nudSize;
+
+			labelR.Location = new DrawPoint(DefaultSidePadding, GroupControlY);
+			nudR.Location = new DrawPoint(labelR.Right + DefaultSidePadding, GroupControlY);
+			labelG.Location = new DrawPoint(nudR.Right + DefaultSidePadding, GroupControlY);
+			nudG.Location = new DrawPoint(labelG.Right + DefaultSidePadding, GroupControlY);
+			labelB.Location = new DrawPoint(nudG.Right + DefaultSidePadding, GroupControlY);
+			nudB.Location = new DrawPoint(labelB.Right + DefaultSidePadding, GroupControlY);
+			labelA.Location = new DrawPoint(nudB.Right + DefaultSidePadding, GroupControlY);
+			nudA.Location = new DrawPoint(labelA.Right + DefaultSidePadding, GroupControlY);
+
+			int row2Y = nudA.Bottom + DefaultSidePadding;
+			buttonSet.Size = new DrawSize(nudB.Right - labelR.Left, ButtonSetHeight);
+			buttonSet.Location = new DrawPoint(DefaultSidePadding, row2Y);
+
+			panelColorPreview.Size = new DrawSize(nudA.Right - labelA.Left, ButtonSetHeight);
+			panelColorPreview.Location = new DrawPoint(buttonSet.Right + DefaultSidePadding, row2Y);
+
+			group.Size = new DrawSize(nudA.Right + DefaultSidePadding, buttonSet.Bottom + DefaultSidePadding);
+			newControlY += group.Height + DefaultSidePadding;
+		}
+
+		private static void GenerateStringControls(Panel panel, ref int newControlY, object obj,
+			PropertyInfo property)
+		{
+			var attribute = GetPropertyAttribute<StringPropertyAttribute>(obj, property);
+
+			ThrowIfWriteOnlyProperty(property);
+			bool isReadonlyProperty = IsReadOnlyProperty(property);
+
+			GroupBox group = GenerateDefaultGroupBox(panel, newControlY);
+			group.Text = attribute.Name;
+			ToolTip toolTip = new ToolTip();
+			toolTip.SetToolTip(group, attribute.Description);
+			panel.Controls.Add(group);
+
+			Button buttonSet = GenerateDefaultSetButton(0, !isReadonlyProperty);
+			buttonSet.Location = new DrawPoint(group.Width - buttonSet.Width - DefaultSidePadding, GroupControlY);
+			group.Controls.Add(buttonSet);
+
+			TextBox textString = new TextBox();
+			textString.Location = new DrawPoint(DefaultSidePadding, GroupControlY);
+			textString.Size = new DrawSize(buttonSet.Left - DefaultSidePadding, ButtonSetHeight);
+			group.Controls.Add(textString);
+
+			buttonSet.Click += (sender, e) =>
+			{
+				PropertySetters.SetStringProperty(textString, obj, property);
+			};
 
 			newControlY += group.Height + DefaultSidePadding;
 		}
