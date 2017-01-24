@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json.Linq;
+using SMLimitless.Editor.Attributes;
 using SMLimitless.Extensions;
 using SMLimitless.Interfaces;
 using SMLimitless.Physics;
@@ -20,7 +21,7 @@ namespace SMLimitless.Sprites
 	/// <summary>
 	///   The base type for all sprites.
 	/// </summary>
-	[DefaultProperty("Name")]
+	[HasUserEditableProperties]
 	public abstract class Sprite : IName, IEditorObject, IPositionable, IPositionable2
 	{
 		/// <summary>
@@ -62,7 +63,6 @@ namespace SMLimitless.Sprites
 		/// <summary>
 		///   Gets or sets the current <see cref="SpriteActiveState" /> of this sprite.
 		/// </summary>
-		[Browsable(false)]
 		public virtual SpriteActiveState ActiveState { get; set; } = SpriteActiveState.Active;
 
 		/// <summary>
@@ -75,115 +75,93 @@ namespace SMLimitless.Sprites
 		///   sprite and a tile should break the debugger if collision debugging
 		///   is enabled.
 		/// </summary>
-		[Browsable(false)]
 		public bool BreakOnCollision { get; set; }
 
 		/// <summary>
 		///   Gets a list of all the components used by this sprite instance.
 		/// </summary>
-		[Browsable(false)]
 		public List<SpriteComponent> Components { get; private set; } = new List<SpriteComponent>();
 
 		/// <summary>
 		///   Gets or sets an editor property representing which direction this
 		///   sprite is facing.
 		/// </summary>
-		[DefaultValue(SpriteDirection.FacePlayer), Description("The direction that this sprite faces when it loads.")]
+		// TODO: add enum control generator
 		public SpriteDirection Direction { get; set; }
 
 		/// <summary>
 		///   Gets the name of the category that this sprite is categorized
 		///   within in the level editor.
 		/// </summary>
-		[Browsable(false)]
 		public abstract string EditorCategory { get; }
 
 		/// <summary>
 		///   Gets or sets the name of this sprite used in the level editor.
 		/// </summary>
-		[Browsable(false)]
 		public string EditorLabel { get; protected set; }
 
 		/// <summary>
 		///   Gets or sets a value indicating whether the sprite has moved during
 		///   this frame.
 		/// </summary>
-		[Browsable(false)]
-		public bool HasMoved
-		{
-			get; set;
-		}
+		public bool HasMoved { get; set; }
 
 		/// <summary>
 		///   Gets a rectangle representing this sprite's hitbox.
 		/// </summary>
-		[Browsable(false)]
-		public BoundingRectangle Hitbox
-		{
-			get
-			{
-				return hitbox;
-			}
-		}
+		public BoundingRectangle Hitbox => hitbox;
 
 		/// <summary>
 		///   Gets or sets an identification number that identifies all sprites
 		///   of this kind.
 		/// </summary>
-		[Browsable(false)]
 		public uint ID { get; set; }
 
 		/// <summary>
 		///   Gets or sets the position of this sprite when it was first loaded
 		///   into the level, measured in pixels.
 		/// </summary>
-		[Browsable(false)]
 		public Vector2 InitialPosition { get; set; }
 
 		/// <summary>
 		///   Gets the state of this sprite when it was first loaded into the level.
 		/// </summary>
-		[Browsable(false)]
 		public SpriteState InitialState { get; internal set; }
 
 		/// <summary>
 		///   Gets or sets a value indicating whether this sprite is actively
 		///   updating or not.
 		/// </summary>
-		[Obsolete]
 		public bool IsActive { get; set; }
 
 		/// <summary>
 		///   Gets or sets a value indicating whether this sprite is embedded
 		///   inside of a tile.
 		/// </summary>
-		[Browsable(false)]
 		public bool IsEmbedded { get; set; }
 
 		/// <summary>
 		///   Gets or sets a value indicating whether this sprite will injure the
 		///   player if the player hits it.
 		/// </summary>
-		[DefaultValue(true), Description("Determines if the sprite will injure the player if the player hits it.")]
+		[BooleanProperty("Is Hostile", "A value indicating whether contact with this sprite will harm players.")]
 		public bool IsHostile { get; set; }
 
 		/// <summary>
 		///   Gets or sets a value indicating whether this sprite is moving.
 		/// </summary>
-		[DefaultValue(true), Description("Determines if the sprite is moving.")]
+		[BooleanProperty("Is Moving", "A value indicating whether this sprite is moving in the section.")]
 		public bool IsMoving { get; set; }
 
 		/// <summary>
 		///   Gets or sets a value indicating whether this sprite is resting on
 		///   the ground.
 		/// </summary>
-		[Browsable(false)]
 		public bool IsOnGround { get; internal set; }
 
 		/// <summary>
 		///   Gets a value indicating whether this sprite is a player sprite.
 		/// </summary>
-		[Browsable(false)]
 		public virtual bool IsPlayer { get { return false; } }
 
 		/// <summary>
@@ -191,27 +169,24 @@ namespace SMLimitless.Sprites
 		///   for this sprite that is displayed if the player presses Up while
 		///   near the sprite.
 		/// </summary>
-		[DefaultValue(""), Description("An optional message that will be displayed if the user presses Up while near the sprite.")]
+		[StringProperty("Message", "An optional message that will be displayed if the user presses Up while near the sprite.")]
 		public string Message { get; set; }
 
 		/// <summary>
 		///   Gets or sets an editor property representing an optional name for
 		///   this sprite, used by event scripting to reference this object.
 		/// </summary>
-		[DefaultValue(""), Description("The name of this sprite to be used in event scripting.  This field is optional.")]
+		[StringProperty("Name", "The name of this sprite to be used in event scripting.")]
 		public string Name { get; set; }
 
 		/// <summary>
 		///   Gets or sets the section that owns this sprite.
 		/// </summary>
-		[Browsable(false)]
 		public Section Owner { get; set; }
 
 		/// <summary>
 		///   Gets or sets the current position of this sprite, measured in pixels.
 		/// </summary>
-		[Description("The position of this sprite in the level.")]
-		[Category("Physics")]
 		public Vector2 Position
 		{
 			get
@@ -241,46 +216,39 @@ namespace SMLimitless.Sprites
 		/// <summary>
 		///   Gets or sets the last position of this sprite, measured in pixels.
 		/// </summary>
-		[Browsable(false)]
 		public Vector2 PreviousPosition { get; protected set; }
 
 		/// <summary>
 		///   Gets or sets the last velocity of the sprite, measured in pixels
 		///   per second.
 		/// </summary>
-		[Browsable(false)]
 		public Vector2 PreviousVelocity { get; protected set; }
 
 		/// <summary>
 		///   Gets or sets a value indicating whether this sprite should be
 		///   removed from its owner section on the next frame.
 		/// </summary>
-		[Browsable(false)]
 		public bool RemoveOnNextFrame { get; set; }
 
 		/// <summary>
 		///   Gets or sets the size in pixels of this sprite.
 		/// </summary>
-		[Browsable(false)]
 		public Vector2 Size { get; protected set; }
 
 		/// <summary>
 		///   Gets or sets the current collision mode of this sprite for other sprites.
 		/// </summary>
-		[Browsable(false)]
 		public SpriteCollisionMode SpriteCollisionMode { get; protected internal set; }
 
 		/// <summary>
 		///   Gets or sets a string representing the state of this sprite. Please
 		///   see http://smlimitless.wikia.com/wiki/Sprite_State for more information.
 		/// </summary>
-		[Browsable(false)]
 		public SpriteState State { get; protected internal set; }
 
 		/// <summary>
 		///   Gets the tile directly beneath the sprite, or null if there isn't one.
 		/// </summary>
-		[Browsable(false)]
 		public Tile TileBeneathSprite
 		{
 			get
@@ -309,13 +277,11 @@ namespace SMLimitless.Sprites
 		///   Gets or sets the current collision mode of this sprite. Please see
 		///   the SpriteCollisionMode documentation for more information.
 		/// </summary>
-		[Browsable(false)]
 		public SpriteCollisionMode TileCollisionMode { get; protected internal set; }
 
 		/// <summary>
 		///   Gets or sets the velocity of this sprite, measured in pixels per second.
 		/// </summary>
-		[Browsable(false)]
 		public Vector2 Velocity
 		{
 			get

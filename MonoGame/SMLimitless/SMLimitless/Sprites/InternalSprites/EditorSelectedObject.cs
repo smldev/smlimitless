@@ -115,7 +115,7 @@ namespace SMLimitless.Sprites.InternalSprites
 		/// </summary>
 		public override void Draw()
 		{
-			if (!Owner.EditorActive) { return; }
+			if (!Owner.Owner.EditorActive) { return; }
 
 			switch (SelectedObjectType)
 			{
@@ -261,7 +261,17 @@ namespace SMLimitless.Sprites.InternalSprites
 		private void OnLeftClick()
 		{
 			Tile tileUnderCursor = Owner.GetTileAtPosition(Position);
-			Sprite spriteUnderCursor = Owner.SpritesGrid.FirstOrDefault(s => s.Hitbox.Within(Hitbox.Center, adjacentPointsAreWithin: true));
+
+			Func<Sprite, bool> spriteSelector = s =>
+			{
+				bool within = s.Hitbox.Within(Hitbox.Center, adjacentPointsAreWithin: true);
+				bool isNotInternal = !s.GetType().Namespace.Contains("Internal");
+				return within && isNotInternal;
+			};
+			Sprite spriteUnderCursor = Owner.SpritesGrid.FirstOrDefault(spriteSelector);
+
+			
+
 			switch (SelectedObjectType)
 			{
 				case EditorSelectedObjectType.Nothing:

@@ -39,8 +39,8 @@
 			this.TabPageSprites = new System.Windows.Forms.TabPage();
 			this.PanelSprites = new System.Windows.Forms.Panel();
 			this.TabPageSettings = new System.Windows.Forms.TabPage();
+			this.PanelLevelSettings = new System.Windows.Forms.Panel();
 			this.StaticLabelSectionSettings = new System.Windows.Forms.Label();
-			this.PropertySection = new System.Windows.Forms.PropertyGrid();
 			this.StaticLabelLevelSettings = new System.Windows.Forms.Label();
 			this.TabPageSections = new System.Windows.Forms.TabPage();
 			this.TextSectionName = new System.Windows.Forms.TextBox();
@@ -85,7 +85,7 @@
 			this.StaticLabelSourceBehavior = new System.Windows.Forms.Label();
 			this.ButtonDeleteExit = new System.Windows.Forms.Button();
 			this.ButtonNew = new System.Windows.Forms.Button();
-			this.PanelLevelSettings = new System.Windows.Forms.Panel();
+			this.PanelSectionSettings = new System.Windows.Forms.Panel();
 			this.tabControl1.SuspendLayout();
 			this.TabPageTiles.SuspendLayout();
 			this.TabPageSprites.SuspendLayout();
@@ -171,9 +171,9 @@
 			// 
 			// TabPageSettings
 			// 
+			this.TabPageSettings.Controls.Add(this.PanelSectionSettings);
 			this.TabPageSettings.Controls.Add(this.PanelLevelSettings);
 			this.TabPageSettings.Controls.Add(this.StaticLabelSectionSettings);
-			this.TabPageSettings.Controls.Add(this.PropertySection);
 			this.TabPageSettings.Controls.Add(this.StaticLabelLevelSettings);
 			this.TabPageSettings.Location = new System.Drawing.Point(4, 22);
 			this.TabPageSettings.Name = "TabPageSettings";
@@ -183,6 +183,15 @@
 			this.TabPageSettings.Text = "Settings";
 			this.TabPageSettings.UseVisualStyleBackColor = true;
 			// 
+			// PanelLevelSettings
+			// 
+			this.PanelLevelSettings.AutoScroll = true;
+			this.PanelLevelSettings.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+			this.PanelLevelSettings.Location = new System.Drawing.Point(10, 24);
+			this.PanelLevelSettings.Name = "PanelLevelSettings";
+			this.PanelLevelSettings.Size = new System.Drawing.Size(308, 233);
+			this.PanelLevelSettings.TabIndex = 4;
+			// 
 			// StaticLabelSectionSettings
 			// 
 			this.StaticLabelSectionSettings.AutoSize = true;
@@ -191,13 +200,6 @@
 			this.StaticLabelSectionSettings.Size = new System.Drawing.Size(93, 13);
 			this.StaticLabelSectionSettings.TabIndex = 3;
 			this.StaticLabelSectionSettings.Text = "Section Settings:";
-			// 
-			// PropertySection
-			// 
-			this.PropertySection.Location = new System.Drawing.Point(324, 24);
-			this.PropertySection.Name = "PropertySection";
-			this.PropertySection.Size = new System.Drawing.Size(321, 233);
-			this.PropertySection.TabIndex = 2;
 			// 
 			// StaticLabelLevelSettings
 			// 
@@ -646,14 +648,14 @@
 			this.ButtonNew.Text = "&New...";
 			this.ButtonNew.UseVisualStyleBackColor = true;
 			// 
-			// PanelLevelSettings
+			// PanelSectionSettings
 			// 
-			this.PanelLevelSettings.AutoScroll = true;
-			this.PanelLevelSettings.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-			this.PanelLevelSettings.Location = new System.Drawing.Point(10, 24);
-			this.PanelLevelSettings.Name = "PanelLevelSettings";
-			this.PanelLevelSettings.Size = new System.Drawing.Size(308, 233);
-			this.PanelLevelSettings.TabIndex = 4;
+			this.PanelSectionSettings.AutoScroll = true;
+			this.PanelSectionSettings.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+			this.PanelSectionSettings.Location = new System.Drawing.Point(325, 24);
+			this.PanelSectionSettings.Name = "PanelSectionSettings";
+			this.PanelSectionSettings.Size = new System.Drawing.Size(320, 233);
+			this.PanelSectionSettings.TabIndex = 5;
 			// 
 			// EditorForm
 			// 
@@ -698,7 +700,6 @@
 		private System.Windows.Forms.Panel PanelSprites;
 		private System.Windows.Forms.TabPage TabPageSettings;
 		private System.Windows.Forms.Label StaticLabelSectionSettings;
-		private System.Windows.Forms.PropertyGrid PropertySection;
 		private System.Windows.Forms.Label StaticLabelLevelSettings;
 		private System.Windows.Forms.TabPage TabPageSections;
 		private System.Windows.Forms.TextBox TextSectionName;
@@ -744,5 +745,6 @@
 		private System.Windows.Forms.RadioButton RadioSourcePipeDown;
 		private System.Windows.Forms.Button ButtonUpdate;
 		private System.Windows.Forms.Panel PanelLevelSettings;
+		private System.Windows.Forms.Panel PanelSectionSettings;
 	}
 }

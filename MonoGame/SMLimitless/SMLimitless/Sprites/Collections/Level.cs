@@ -53,23 +53,19 @@ namespace SMLimitless.Sprites.Collections
 		/// <summary>
 		///   Gets the name of the author who created this level.
 		/// </summary>
+		[StringProperty("Author", "The name or names of the people who made this level.")]
 		public string Author { get; internal set; }
 
 		/// <summary>
 		///   Gets the name of the level, which is presented on menu screens.
 		/// </summary>
+		[StringProperty("Name", "The name of this level.")]
 		public string Name { get; internal set; }
 
 		/// <summary>
 		///   Gets the absolute path to the file this level was loaded from.
 		/// </summary>
 		public string Path { get; internal set; }
-
-		[StringProperty("Test", "Test_")]
-		public string TestProperty { get; set; }
-
-		[StringProperty("Test2", "Test2_")]
-		public string TestReadOnlyProperty { get; private set; }
 
 		/// <summary>
 		///   Gets or sets the section that the player is currently in.

@@ -35,8 +35,12 @@ namespace SMLimitless.Editor
 			}
 			if (obj == null)
 			{
-				throw new ArgumentNullException(nameof(obj), "The provided object was null.");
+				// Sometimes the EditorSelectedObject hasn't selected anything,
+				// so we need to just show nothing here
+				return;
 			}
+
+			panel.Controls.Clear();
 
 			Type objType = obj.GetType();
 			var attribute = objType.GetCustomAttribute<HasUserEditablePropertiesAttribute>();
@@ -49,6 +53,13 @@ namespace SMLimitless.Editor
 
 			var properties = objType.GetProperties();
 			int newControlY = DefaultSidePadding;
+
+			Label labelTypeName = new Label();
+			labelTypeName.AutoSize = true;
+			labelTypeName.Text = objType.Name;
+			labelTypeName.Location = new DrawPoint(DefaultSidePadding, newControlY);
+			panel.Controls.Add(labelTypeName);
+			newControlY += labelTypeName.Height + DefaultSidePadding;
 
 			foreach (var property in properties)
 			{
@@ -673,6 +684,7 @@ namespace SMLimitless.Editor
 			TextBox textString = new TextBox();
 			textString.Location = new DrawPoint(DefaultSidePadding, GroupControlY);
 			textString.Size = new DrawSize(buttonSet.Left - DefaultSidePadding, ButtonSetHeight);
+			textString.Text = (string)property.GetValue(obj);
 			group.Controls.Add(textString);
 
 			buttonSet.Click += (sender, e) =>

@@ -51,7 +51,7 @@ namespace SMLimitless.Editor
 			this.selectedObject = selectedObject;
 
 			DynamicPropertyControlGenerator.GenerateControls(PanelLevelSettings, level);
-			PropertySection.SelectedObject = section;
+			DynamicPropertyControlGenerator.GenerateControls(PanelSectionSettings, section);
 
 			propertyForm = new PropertyForm(GetSelectedObject(selectedObject));
 			selectedObject.SelectedObjectChanged += (sender, e) =>
@@ -66,7 +66,7 @@ namespace SMLimitless.Editor
 		internal void SwitchToSection(Section newSection)
 		{
 			section = newSection;
-			PropertySection.SelectedObject = newSection;
+			DynamicPropertyControlGenerator.GenerateControls(PanelSectionSettings, newSection);
 		}
 
 		private void ButtonCursor_Click(object sender, EventArgs e)
@@ -229,7 +229,7 @@ namespace SMLimitless.Editor
 			{
 				case EditorSelectedObjectType.Nothing:
 				case EditorSelectedObjectType.Delete:
-					return new object();
+					return null;
 				case EditorSelectedObjectType.Tile:
 					return selectedObject.SelectedTile;
 				case EditorSelectedObjectType.Sprite:

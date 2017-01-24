@@ -28,23 +28,23 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.PropertyGridSelectedObject = new System.Windows.Forms.PropertyGrid();
+			this.PanelSettings = new System.Windows.Forms.Panel();
 			this.SuspendLayout();
 			// 
-			// PropertyGridSelectedObject
+			// PanelSettings
 			// 
-			this.PropertyGridSelectedObject.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.PropertyGridSelectedObject.Location = new System.Drawing.Point(13, 13);
-			this.PropertyGridSelectedObject.Name = "PropertyGridSelectedObject";
-			this.PropertyGridSelectedObject.Size = new System.Drawing.Size(259, 386);
-			this.PropertyGridSelectedObject.TabIndex = 0;
+			this.PanelSettings.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+			this.PanelSettings.Location = new System.Drawing.Point(12, 12);
+			this.PanelSettings.Name = "PanelSettings";
+			this.PanelSettings.Size = new System.Drawing.Size(259, 386);
+			this.PanelSettings.TabIndex = 0;
 			// 
 			// PropertyForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(284, 411);
-			this.Controls.Add(this.PropertyGridSelectedObject);
+			this.Controls.Add(this.PanelSettings);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.MaximizeBox = false;
 			this.Name = "PropertyForm";
@@ -56,6 +56,6 @@
 
 		#endregion
 
-		private System.Windows.Forms.PropertyGrid PropertyGridSelectedObject;
+		private System.Windows.Forms.Panel PanelSettings;
 	}
 }

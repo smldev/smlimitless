@@ -21,7 +21,7 @@ namespace SMLimitless.Editor
 			internal set
 			{
 				displayedObject = value;
-				if (PropertyGridSelectedObject != null) { PropertyGridSelectedObject.SelectedObject = value; }
+				DynamicPropertyControlGenerator.GenerateControls(PanelSettings, value);
 			}
 		}
 
@@ -37,9 +37,8 @@ namespace SMLimitless.Editor
 		/// </param>
 		public PropertyForm(object displayedObject, bool showDialogButtons = false)
 		{
-			DisplayedObject = displayedObject;
 			InitializeComponent();
-			PropertyGridSelectedObject.SelectedObject = displayedObject;
+			DisplayedObject = displayedObject;
 
 			if (showDialogButtons)
 			{

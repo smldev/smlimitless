@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using SMLimitless.Collections;
 using SMLimitless.Components;
+using SMLimitless.Editor.Attributes;
 using SMLimitless.Extensions;
 using SMLimitless.Input;
 using SMLimitless.Interfaces;
@@ -17,6 +18,7 @@ namespace SMLimitless.Sprites.Collections
 	/// <summary>
 	///   The main area of gameplay.
 	/// </summary>
+	[HasUserEditableProperties]
 	public sealed class Section
 	{
 		internal static PhysicsSetting<int> MaximumParticles = new PhysicsSetting<int>("Section: Maximum Particles", 1, 1000, 200, PhysicsSettingType.FloatingPoint);
@@ -45,6 +47,7 @@ namespace SMLimitless.Sprites.Collections
 		///   Gets the bounds of this section, the rectangular area to which the
 		///   camera is restricted.
 		/// </summary>
+		[BoundingRectangleProperty("Bounds", "The rectangle within which all the elements of the section exist.")]
 		public BoundingRectangle Bounds { get; internal set; }
 
 		/// <summary>
@@ -112,6 +115,7 @@ namespace SMLimitless.Sprites.Collections
 		/// <summary>
 		///   Gets or sets the name of this section.
 		/// </summary>
+		[StringProperty("Name", "The name of this section.")]
 		public string Name { get; set; }
 
 		/// <summary>
@@ -530,7 +534,7 @@ namespace SMLimitless.Sprites.Collections
 			Background.Update();
 			TempUpdate();
 
-			debugText = $"Delta: {Background.Layers.First().Delta}";
+			debugText = $"{EditorActive}";
 
 			stopwatch.Stop();
 		}
