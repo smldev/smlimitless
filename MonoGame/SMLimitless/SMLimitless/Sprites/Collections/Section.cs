@@ -53,6 +53,7 @@ namespace SMLimitless.Sprites.Collections
 		/// <summary>
 		///   Gets the camera viewing this section.
 		/// </summary>
+		[NestedProperty("Camera", "camera")]
 		public Camera2D Camera { get; private set; }
 
 		/// <summary>

@@ -61,6 +61,7 @@ namespace SMLimitless.Editor
 
 		private void OkButton_Click(object sender, EventArgs e)
 		{
+			DialogResult = DialogResult.OK;
 			Close();
 		}
 

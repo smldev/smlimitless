@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
@@ -25,7 +27,11 @@ namespace SMLimitless.Editor
 		private static Type[] validPropertyTypes = new Type[]
 			{typeof(bool), typeof(int), typeof(long), typeof(float),
 			 typeof(double), typeof(Vector2), typeof(Point),
-			 typeof(BoundingRectangle), typeof(Rectangle), typeof(Color), typeof(string)};
+			 typeof(BoundingRectangle), typeof(Rectangle), typeof(Color),
+			 typeof(string), typeof(Enum)};
+
+		private static Dictionary<Type, IDictionary<object, string>> allEnumDescriptions = 
+			new Dictionary<Type, IDictionary<object, string>>();
 
 		public static void GenerateControls(Panel panel, object obj)
 		{
@@ -119,6 +125,15 @@ namespace SMLimitless.Editor
 					{
 						if (property.GetCustomAttribute<StringPropertyAttribute>() != null)
 						{ GenerateStringControls(panel, ref newControlY, obj, property); }
+					}
+					else if (property.PropertyType.IsEnum)
+					{
+						if (property.GetCustomAttribute<EnumPropertyAttribute>() != null)
+						{ GenerateEnumControls(panel, ref newControlY, obj, property); }
+					}
+					else if (property.GetCustomAttribute<NestedPropertyAttribute>() != null)
+					{
+						GeneratedNestedPropertyControls(panel, ref newControlY, obj, property);
 					}
 				}
 			}
@@ -695,6 +710,105 @@ namespace SMLimitless.Editor
 			newControlY += group.Height + DefaultSidePadding;
 		}
 
+		private static void GenerateEnumControls(Panel panel, ref int newControlY, object obj,
+			PropertyInfo property)
+		{
+			var attribute = GetPropertyAttribute<EnumPropertyAttribute>(obj, property);
+			var enumType = property.PropertyType;
+
+			if (enumType.GetCustomAttribute<FlagsAttribute>() != null)
+			{
+				// We'll add this later. With checkboxes!
+				throw new NotImplementedException();
+			}
+
+			ThrowIfWriteOnlyProperty(property);
+			bool isReadonlyProperty = IsReadOnlyProperty(property);
+
+			if (!allEnumDescriptions.ContainsKey(enumType))
+			{
+				var enumDescriptions = GetEnumValueDescriptions(enumType);
+				allEnumDescriptions.Add(enumType, enumDescriptions);
+			}
+
+			GroupBox group = GenerateDefaultGroupBox(panel, newControlY);
+			group.Text = attribute.Name;
+			ToolTip toolTip = new ToolTip();
+			toolTip.SetToolTip(group, attribute.Description);
+			panel.Controls.Add(group);
+
+			// Get all the names of the enum.
+			var enumNames = Enum.GetNames(enumType);
+
+			ComboBox comboEnumNames = new ComboBox();
+			comboEnumNames.Items.AddRange(enumNames);
+			int indexOfPropertyValue = comboEnumNames.Items.IndexOf(property.GetValue(obj).ToString());
+			comboEnumNames.SelectedIndex = indexOfPropertyValue;
+			comboEnumNames.Location = new DrawPoint(DefaultSidePadding, GroupControlY);
+			comboEnumNames.Size = new DrawSize(200, ButtonSetHeight);
+			comboEnumNames.Enabled = !isReadonlyProperty;
+			group.Controls.Add(comboEnumNames);
+
+
+			// Create a set button.
+			Button buttonSet = GenerateDefaultSetButton(comboEnumNames.Right + DefaultSidePadding, 
+				!isReadonlyProperty);
+			group.Controls.Add(buttonSet);
+
+			// Create the enum value description label.
+			Label labelDescription = new Label();
+			labelDescription.Location = new DrawPoint(DefaultSidePadding, comboEnumNames.Bottom + DefaultSidePadding);
+			labelDescription.Size = new DrawSize(group.Width - (DefaultSidePadding * 2), ButtonSetHeight * 2);
+			group.Controls.Add(labelDescription);
+			group.Size = new DrawSize(group.Width, labelDescription.Bottom + DefaultSidePadding);
+
+			// Create a handler for the combo box selected index change event. This updates the
+			// description label.
+			comboEnumNames.SelectedIndexChanged += (sender, e) =>
+			{
+				string selectedItem = (string)comboEnumNames.SelectedItem;
+				UpdateEnumDescriptionLabel(enumType, selectedItem, labelDescription);
+			};
+			
+			// Create the set button handler.
+			buttonSet.Click += (sender, e) =>
+			{
+				PropertySetters.SetEnumProperty(comboEnumNames, obj, property, enumType);
+			};
+
+			newControlY += group.Height + DefaultSidePadding;
+		}
+
+		private static void GeneratedNestedPropertyControls(Panel panel, ref int newControlY,
+			object obj, PropertyInfo property)
+		{
+			var attribute = GetPropertyAttribute<NestedPropertyAttribute>(obj, property);
+
+			ThrowIfWriteOnlyProperty(property);
+			bool isReadonlyProperty = IsReadOnlyProperty(property);
+
+			GroupBox group = GenerateDefaultGroupBox(panel, newControlY);
+			group.Text = attribute.Name;
+			ToolTip toolTip = new ToolTip();
+			toolTip.SetToolTip(group, attribute.Description);
+			panel.Controls.Add(group);
+
+			Button buttonOpenPropertyEditor = new Button();
+			buttonOpenPropertyEditor.Location = new DrawPoint(DefaultSidePadding, GroupControlY);
+			buttonOpenPropertyEditor.Size = new DrawSize(group.Width - (DefaultSidePadding * 2),
+				group.Height - DefaultSidePadding - GroupControlY);
+			buttonOpenPropertyEditor.Text = "Edit Properties...";
+			buttonOpenPropertyEditor.Enabled = !isReadonlyProperty;
+			buttonOpenPropertyEditor.Click += (sender, e) =>
+			{
+				var propForm = new PropertyForm(property.GetValue(obj), true);
+				propForm.Show();
+			};
+			group.Controls.Add(buttonOpenPropertyEditor);
+
+			newControlY += group.Height + DefaultSidePadding;
+		}
+
 		private static T GetPropertyAttribute<T>(object obj, PropertyInfo property) where T : Attribute
 		{
 			var attribute = property.GetCustomAttribute<T>();
@@ -708,11 +822,43 @@ namespace SMLimitless.Editor
 			return attribute;
 		}
 
+		private static IDictionary<object, string> GetEnumValueDescriptions(Type enumType)
+		{
+			Dictionary<object, string> result = new Dictionary<object, string>();
+
+			foreach (var value in Enum.GetValues(enumType))
+			{
+				var attribute = GetEnumValueAttribute(enumType, value);
+				if (attribute != null) { result.Add(value, attribute.Description); }
+				else { result.Add(value, ""); }
+			}
+
+			return result;
+		}
+
+		private static EnumValueAttribute GetEnumValueAttribute(Type enumType, object enumValue)
+		{
+			// http://stackoverflow.com/a/1799401/2709212
+			var member = enumType.GetMember(enumValue.ToString());
+			var attribute = member[0].GetCustomAttribute(typeof(EnumValueAttribute));
+
+			return (EnumValueAttribute)attribute;
+		}
+
+		private static void UpdateEnumDescriptionLabel(Type enumType, string enumValueName, Label labelDescription)
+		{
+			var descriptions = allEnumDescriptions[enumType];
+			var value = Enum.Parse(enumType, enumValueName);
+			labelDescription.Text = descriptions[value];
+		}
+
 		private static bool IsReadOnlyProperty(PropertyInfo info) => (info.GetSetMethod() == null);
 
 		private static bool IsUserEditablePropertyType(PropertyInfo property)
 		{
 			var propertyType = property.PropertyType;
+			if (propertyType.IsEnum) { return true; }
+
 			bool isNestedProperty = property.GetCustomAttribute<NestedPropertyAttribute>() != null;
 
 			return validPropertyTypes.Contains(propertyType) || isNestedProperty;

@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 using System;
 using Microsoft.Xna.Framework;
+using SMLimitless.Editor.Attributes;
 
 namespace SMLimitless.Physics
 {
@@ -46,6 +47,7 @@ namespace SMLimitless.Physics
 		/// <summary>
 		///   Gets or sets the rotation of the camera in degrees.
 		/// </summary>
+		[FloatingPointProperty("Rotation", "rot", 0f, 360f)]
 		public float Rotation { get; set; }
 
 		/// <summary>
@@ -73,6 +75,7 @@ namespace SMLimitless.Physics
 		/// <summary>
 		///   Gets or sets the zoom of the camera.
 		/// </summary>
+		[FloatingPointProperty("Zoom", "zoom", 0f, 100f)]
 		public float Zoom
 		{
 			get

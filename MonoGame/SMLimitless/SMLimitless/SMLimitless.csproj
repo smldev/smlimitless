@@ -84,6 +84,8 @@
     <Compile Include="Editor\Attributes\BoundingRectanglePropertyAttribute.cs" />
     <Compile Include="Editor\Attributes\ColorPropertyAttribute.cs" />
     <Compile Include="Editor\Attributes\DoublePropertyAttribute.cs" />
+    <Compile Include="Editor\Attributes\EnumPropertyAttribute.cs" />
+    <Compile Include="Editor\Attributes\EnumValueAttribute.cs" />
     <Compile Include="Editor\Attributes\FloatingPointPropertyAttribute.cs" />
     <Compile Include="Editor\Attributes\HasEditablePropertiesAttribute.cs" />
     <Compile Include="Editor\Attributes\IntegerPropertyAttribute.cs" />

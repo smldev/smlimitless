@@ -235,5 +235,14 @@ namespace SMLimitless.Editor
 
 			property.SetValue(obj, s);
 		}
+
+		public static void SetEnumProperty(ComboBox comboEnumValues, object obj, PropertyInfo property,
+			Type enumType)
+		{
+			string selectedItem = (string)comboEnumValues.SelectedItem;
+			object enumValue = Enum.Parse(enumType, selectedItem);
+
+			property.SetValue(obj, enumValue);
+		}
 	}
 }

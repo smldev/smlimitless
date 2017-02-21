@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 using System;
+using SMLimitless.Editor.Attributes;
 
 namespace SMLimitless
 {
@@ -258,6 +259,7 @@ namespace SMLimitless.Physics
 		/// <summary>
 		///   The area within the rectangle.
 		/// </summary>
+		[EnumValue("Within!")]
 		Within,
 
 		/// <summary>
@@ -268,6 +270,7 @@ namespace SMLimitless.Physics
 		/// <summary>
 		///   The area directly below the rectangle.
 		/// </summary>
+		[EnumValue("Below!")]
 		Below,
 
 		/// <summary>
@@ -278,11 +281,13 @@ namespace SMLimitless.Physics
 		/// <summary>
 		///   The area directly to the right of the rectangle.
 		/// </summary>
+		[EnumValue("Right!")]
 		Right,
 
 		/// <summary>
 		///   The area above and to the left of the rectangle.
 		/// </summary>
+		[EnumValue("Above and to the left!")]
 		AboveLeft,
 
 		/// <summary>
