@@ -33,7 +33,12 @@ namespace SMLimitless.Sprites.InternalSprites
 		/// <summary>
 		///   A sprite has been selected.
 		/// </summary>
-		Sprite
+		Sprite,
+
+		/// <summary>
+		/// A section exit has been selected.
+		/// </summary>
+		SectionExit
 	}
 
 	/// <summary>
@@ -43,6 +48,7 @@ namespace SMLimitless.Sprites.InternalSprites
 	{
 		private Sprite selectedSprite = null;
 		private Tile selectedTile = null;
+		private SectionExit selectedExit = null;
 
 		/// <summary>
 		///   Gets the category to place this sprite in the editor's object selector.
@@ -77,6 +83,15 @@ namespace SMLimitless.Sprites.InternalSprites
 			{
 				if (SelectedObjectType == EditorSelectedObjectType.Tile) { return selectedTile; }
 				throw new InvalidOperationException("The currently selected object is not a tile.");
+			}
+		}
+
+		public SectionExit SelectedExit
+		{
+			get
+			{
+				if (SelectedObjectType == EditorSelectedObjectType.SectionExit) { return selectedExit; }
+				throw new InvalidOperationException("The currently selected object is not a section exit.");
 			}
 		}
 
@@ -127,6 +142,9 @@ namespace SMLimitless.Sprites.InternalSprites
 					break;
 				case EditorSelectedObjectType.Sprite:
 					selectedSprite.Draw();
+					break;
+				case EditorSelectedObjectType.SectionExit:
+					selectedExit.DebugDraw();
 					break;
 				default:
 					break;
@@ -184,6 +202,13 @@ namespace SMLimitless.Sprites.InternalSprites
 			selectedTile = tile.Clone();
 			selectedTile.Initialize(Owner);
 			selectedTile.LoadContent();
+			OnSelectedObjectChanged();
+		}
+
+		public void SelectExistingSectionExit(SectionExit exit)
+		{
+			SelectedObjectType = EditorSelectedObjectType.SectionExit;
+			selectedExit = exit.Clone();
 			OnSelectedObjectChanged();
 		}
 
@@ -246,6 +271,7 @@ namespace SMLimitless.Sprites.InternalSprites
 			Position = newPosition;
 			if (selectedTile != null) { selectedTile.Position = newPosition; }
 			else if (selectedSprite != null) { selectedSprite.Position = newPosition; }
+			else if (selectedExit != null) { selectedExit.Position = newPosition; }
 
 			if (InputManager.IsCurrentMousePress(MouseButtons.LeftButton))
 			{
@@ -270,12 +296,18 @@ namespace SMLimitless.Sprites.InternalSprites
 			};
 			Sprite spriteUnderCursor = Owner.SpritesGrid.FirstOrDefault(spriteSelector);
 
-			
+			SectionExit exitUnderCursor = Owner.SectionExits.FirstOrDefault(e => 
+				e.Hitbox.IntersectsIncludingEdges(Position));
 
 			switch (SelectedObjectType)
 			{
 				case EditorSelectedObjectType.Nothing:
-					if (tileUnderCursor != null)
+					if (exitUnderCursor != null)
+					{
+						SelectExistingSectionExit(exitUnderCursor);
+						Owner.SectionExits.Remove(exitUnderCursor);
+					}
+					else if (tileUnderCursor != null)
 					{
 						SelectExistingTile(tileUnderCursor);
 					}
@@ -325,6 +357,11 @@ namespace SMLimitless.Sprites.InternalSprites
 						sprite.DeserializeCustomObjects(new JsonHelper(JObject.FromObject(selectedSprite.GetCustomSerializableObjects())));
 						tileUnderCursor.OnEditorDrop(sprite);
 					}
+					break;
+				case EditorSelectedObjectType.SectionExit:
+					if (exitUnderCursor != null) { return; }
+					SectionExit exit = selectedExit.Clone();
+					Owner.SectionExits.Add(exit);
 					break;
 				default:
 					break;

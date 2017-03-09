@@ -1,6 +1,0 @@
-List of Attributes
-
-The following is a list of known attributes that sprites within the SmlSprites and SMLimitless assemblies have. They are duplicated character-for-character here.
-
-GroundPounding
-FreeImmediatelyFromItemBlock

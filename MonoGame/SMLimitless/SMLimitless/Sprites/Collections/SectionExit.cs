@@ -308,7 +308,7 @@ namespace SMLimitless.Sprites.Collections
 		{
 			if (!player.IsPlayer) { return false; }
 			if (ExitType != SectionExitType.Source && ExitType != SectionExitType.TwoWay) { return false; }
-			if (!player.Hitbox.Intersects(Hitbox)) { return false; }
+			if (!player.Hitbox.IntersectsIncludingEdges(Hitbox)) { return false; }
 			if (Owner.ExitLock != null && Owner.ExitLock != this) { return false; }
 
 			bool onGround = player.IsOnGround;
@@ -624,6 +624,19 @@ namespace SMLimitless.Sprites.Collections
 			};
 
 			Owner.IrisIn(90, IrisPoint, onIrisClose);
+		}
+
+		internal SectionExit Clone()
+		{
+			SectionExit clone = new SectionExit(Owner);
+			clone.DestinationBehavior = DestinationBehavior;
+			clone.ExitType = ExitType;
+			clone.ID = ID;
+			clone.OtherID = OtherID;
+			clone.Position = Position;
+			clone.Size = Size;
+			clone.SourceBehavior = SourceBehavior;
+			return clone;
 		}
 	}
 }

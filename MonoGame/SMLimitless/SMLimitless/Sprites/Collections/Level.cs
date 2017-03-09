@@ -102,7 +102,7 @@ namespace SMLimitless.Sprites.Collections
 		/// </summary>
 		internal List<LevelExit> LevelExits { get; set; }
 
-		internal IDGenerator SectionExitIDGenerator { get; private set; }
+        internal IDGenerator SectionExitIDGenerator { get; private set; } = new IDGenerator();
 
 		/// <summary>
 		///   Gets or sets a collection of all the sections in this level.
@@ -180,6 +180,11 @@ namespace SMLimitless.Sprites.Collections
 		{
 			Section sectionToSwitchTo = GetSectionByIndex(sectionIndex);
 			ActiveSection = sectionToSwitchTo;
+		}
+
+		internal bool HasSection(int sectionIndex)
+		{
+			return Sections.Any(s => s.Index == sectionIndex);
 		}
 
 		internal Section GetSectionByIndex(int sectionIndex)

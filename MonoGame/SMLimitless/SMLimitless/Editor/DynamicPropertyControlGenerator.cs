@@ -53,8 +53,7 @@ namespace SMLimitless.Editor
 
 			if (attribute == null)
 			{
-				string message = $"The type {objType.Name} is not marked as containing user-editable properties.";
-				throw new ArgumentException(message, nameof(obj));
+                return;
 			}
 
 			var properties = objType.GetProperties();

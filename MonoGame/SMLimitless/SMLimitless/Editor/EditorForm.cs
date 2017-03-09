@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SMLimitless.Content;
 using SMLimitless.Extensions;
@@ -90,8 +90,8 @@ namespace SMLimitless.Editor
 				selectedSection.IsStartSection = true;
 				oldStartSection.IsStartSection = false;
 
-				selectedItem.Font = new Font(selectedItem.Font, FontStyle.Bold);
-				oldStartSectionItem.Font = new Font(oldStartSectionItem.Font, FontStyle.Regular);
+				selectedItem.Font = new System.Drawing.Font(selectedItem.Font, System.Drawing.FontStyle.Bold);
+				oldStartSectionItem.Font = new System.Drawing.Font(oldStartSectionItem.Font, System.Drawing.FontStyle.Regular);
 			}
 		}
 
@@ -99,11 +99,6 @@ namespace SMLimitless.Editor
 		{
 			level.TransferEditorControlToSection(level.ActiveSection, selectedSection);
 		}
-
-		private void ButtonUpdate_Click(object sender, EventArgs e)
-		{
-		}
-
 		private void ButtonUpdateName_Click(object sender, EventArgs e)
 		{
 			Section sectionBeingUpdated = selectedSection;
@@ -144,15 +139,15 @@ namespace SMLimitless.Editor
 			foreach (var spriteObject in objectData.SpriteData)
 			{
 				Button button = new Button();
-				button.Size = new Size(DefaultButtonSize, DefaultButtonSize);
-				button.Location = new Point(spriteButtonX, spriteButtonY);
+				button.Size = new System.Drawing.Size(DefaultButtonSize, DefaultButtonSize);
+				button.Location = new System.Drawing.Point(spriteButtonX, spriteButtonY);
 				button.TabIndex = spriteButtonIndex++;
 
 				IGraphicsObject graphicsObject =
 					ContentPackageManager.GetGraphicsResource(spriteObject.EditorResourceName);
 				graphicsObject.LoadContent();
 				Texture2D editorGraphic = graphicsObject.GetEditorGraphics();
-				Image editorGraphicImage = editorGraphic.ToImage();
+                System.Drawing.Image editorGraphicImage = editorGraphic.ToImage();
 				button.Click += (sender, e) => { selectedObject.SelectSpriteFromEditor(spriteObject); };
 				button.Image = editorGraphicImage;
 
@@ -182,15 +177,15 @@ namespace SMLimitless.Editor
 				foreach (var defaultState in tileObject.DefaultStates)
 				{
 					Button button = new Button();
-					button.Size = new Size(DefaultButtonSize, DefaultButtonSize);
-					button.Location = new Point(tileButtonX, tileButtonY);
+					button.Size = new System.Drawing.Size(DefaultButtonSize, DefaultButtonSize);
+					button.Location = new System.Drawing.Point(tileButtonX, tileButtonY);
 					button.TabIndex = tileButtonIndex;
 
 					IGraphicsObject graphicsObject =
 						ContentPackageManager.GetGraphicsResource(defaultState.GraphicsResource);
 					graphicsObject.LoadContent();
 					Texture2D editorGraphic = graphicsObject.GetEditorGraphics();
-					Image editorGraphicImage = editorGraphic.ToImage();
+                    System.Drawing.Image editorGraphicImage = editorGraphic.ToImage();
 					button.Click += (sender, e) => { selectedObject.SelectTileFromEditor(defaultState); };
 					button.Image = editorGraphicImage;
 
@@ -261,7 +256,7 @@ namespace SMLimitless.Editor
 			foreach (Section section in level.Sections)
 			{
 				var item = new ListViewItem(new[] { section.Index.ToString(), section.Name.ToString() });
-				if (section.IsStartSection) { item.Font = new Font(item.Font, FontStyle.Bold); }
+				if (section.IsStartSection) { item.Font = new System.Drawing.Font(item.Font, System.Drawing.FontStyle.Bold); }
 				ListSections.Items.Add(item);
 			}
 		}
@@ -284,5 +279,76 @@ namespace SMLimitless.Editor
 				button.Enabled = enabled;
 			}
 		}
+
+		private void ButtonNew_Click(object sender, EventArgs e)
+		{
+            // Create a new exit pair.
+            SectionExitFormData exitData = new SectionExitFormData(this, level);
+
+            if (!exitData.ParseSucceded) { return; }
+
+            if (!level.HasSection(exitData.SourceSectionID))
+            {
+                MessageBox.Show($"There is no section with the ID {exitData.SourceSectionID}.",
+                    "Super Mario Limitless", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (!level.HasSection(exitData.DestinationSectionID))
+            {
+                MessageBox.Show($"There is no section with the ID {exitData.DestinationSectionID}.",
+                    "Super Mario Limitless", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            LabelSourceSectionName.Text = $"Name: {level.GetSectionByIndex(exitData.SourceSectionID).Name}";
+            LabelDestinationSectionName.Text = $"Name: {level.GetSectionByIndex(exitData.DestinationSectionID).Name}";
+
+			SectionExit source = new SectionExit(level.GetSectionByIndex(exitData.SourceSectionID));
+			source.ExitType = SectionExitType.Source;
+			source.ID = exitData.SourceID;
+			source.OtherID = exitData.DestinationID;
+			source.SourceBehavior = exitData.SourceBehavior;
+			source.Position = new Vector2(exitData.SourceX, exitData.SourceY);
+			source.Size = GameServices.GameObjectSize;
+
+			SectionExit destination = new SectionExit(level.GetSectionByIndex(exitData.DestinationSectionID));
+			destination.ExitType = SectionExitType.Destination;
+			destination.ID = exitData.DestinationID;
+			destination.OtherID = exitData.SourceID;
+			destination.DestinationBehavior = exitData.DestinationBehavior;
+			destination.Position = new Vector2(exitData.DestinationX, exitData.DestinationY);
+			destination.Size = GameServices.GameObjectSize;
+
+			level.GetSectionByIndex(exitData.SourceSectionID).SectionExits.Add(source);
+			level.GetSectionByIndex(exitData.DestinationSectionID).SectionExits.Add(destination);
+        }
+
+        private void ButtonUpdate_Click(object sender, EventArgs e)
+        {
+            if (selectedObject.SelectedObjectType != EditorSelectedObjectType.SectionExit) { return; }
+
+            var selectedExit = selectedObject.SelectedExit;
+            SectionExit otherExit = level.GetSectionExitByID(selectedExit.OtherID);
+
+            SectionExitFormData exitData = new SectionExitFormData(this, level);
+            if (!exitData.ParseSucceded) { return; }
+
+            var source = (selectedExit.SourceBehavior != ExitSourceBehavior.NotASource)
+                ? selectedExit : otherExit;
+            var destination = (source == selectedExit) ? otherExit : selectedExit;
+
+            source.ExitType = SectionExitType.Source;
+            source.ID = exitData.SourceID;
+            source.OtherID = exitData.DestinationID;
+            source.SourceBehavior = exitData.SourceBehavior;
+            source.Position = new Vector2(exitData.SourceX, exitData.SourceY);
+
+            destination.ExitType = SectionExitType.Destination;
+            destination.ID = exitData.DestinationID;
+            destination.OtherID = exitData.SourceID;
+            destination.DestinationBehavior = exitData.DestinationBehavior;
+            destination.Position = new Vector2(exitData.DestinationX, exitData.DestinationY);
+        }
 	}
 }

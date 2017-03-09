@@ -109,6 +109,7 @@
       <DependentUpon>PropertyForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Editor\PropertySetters.cs" />
+    <Compile Include="Editor\SectionExitFormData.cs" />
     <Compile Include="Editor\SpriteData.cs" />
     <Compile Include="Editor\TileData.cs" />
     <Compile Include="Enums.cs" />

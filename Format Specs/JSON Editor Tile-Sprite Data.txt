@@ -1,0 +1,32 @@
+Super Mario Limitless
+JSON Editor Tile/Sprite Default Data Example
+
+{
+    "tileData": [
+        {
+            "typeName": "SmlSprites.TestTile",
+            "defaultStates": [
+                "solidSides": 15,
+                "collisionType": 0,
+                "graphicsResource": "smwGrassCenter",
+                "state": null,
+                "customData": {
+                    "widthInGridCells": 1,
+                    "heightInGridCells": 1
+                }
+            ]
+        }
+    ]
+    "spriteData": [
+        {
+            "typeName": "SmlSample.TestSprite",
+            "editorResourceName": "smwGoomba",
+            "editorTextureSourceRectangle": "0, 0, 16, 16"
+            "state": 0,
+            "collision": 0,
+            "customObjects": {
+                "palette": 0
+            }
+        }
+    ]
+}

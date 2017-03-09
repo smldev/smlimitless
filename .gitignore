@@ -57,7 +57,6 @@ Thumbs.db
 *.etl
 [Tt]humbs.db
 Ankh.NoLoad
-MonoGame/SMLimitless/SMLimitless/bin/WindowsGL/Debug/SmlSprites/Fonts/tags.db
-MonoGame/SMLimitless/SMLimitless/bin/WindowsGL/Debug/SMLimitless.exe.CodeAnalysisLog.xml
-MonoGame/SMLimitless/SMLimitless/bin/WindowsGL/Debug/SMLimitless.exe.CodeAnalysisLog.xml
-MonoGame/SMLimitless/SMLimitless/bin/WindowsGL/Debug/SMLimitless.exe.CodeAnalysisLog.xml
+tags.db
+tags2.db
+*CodeAnalysisLog*

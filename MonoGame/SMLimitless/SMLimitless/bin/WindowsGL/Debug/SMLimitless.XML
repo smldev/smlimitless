@@ -5995,6 +5995,11 @@
               A sprite has been selected.
             </summary>
         </member>
+        <member name="F:SMLimitless.Sprites.InternalSprites.EditorSelectedObjectType.SectionExit">
+            <summary>
+            A section exit has been selected.
+            </summary>
+        </member>
         <member name="T:SMLimitless.Sprites.InternalSprites.EditorSelectedObject">
             <summary>
               A <see cref="T:SMLimitless.Sprites.Sprite" /> that is used to place tiles and sprites in a section.

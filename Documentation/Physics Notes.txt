@@ -1,15 +1,18 @@
+Player Physics Settings
+Units are in pixels per second squared unless otherwise specified
+
 Gravity Acceleration: 700
-Walk Speed: 50
-Run Speed: 75
-Sprint Speed: 100
+Walk Speed: 50 px/sec
+Run Speed: 75 px/sec
+Sprint Speed: 100 px/sec
 Jump Impulse: 245
 Additional Impulse: 60
-Jump Gravity Multiplier: 0.65
+Jump Gravity Multiplier: 0.65x
 Spin Jump Impulse: 245
-Ground Pound Spin Timer: 20
-Ground Pound Velocity: 300
-Ground Pound Horizontal Multiplier: 0.25
-In-Air Spin Gravity Multiplier: 0.6
-Slide Down Wall Velocity: 75
+Ground Pound Spin Timer: 20 frames
+Ground Pound Velocity: 300 px/sec
+Ground Pound Horizontal Multiplier: 0.25x
+In-Air Spin Gravity Multiplier: 0.6x
+Slide Down Wall Velocity: 75 px/sec
 Wall Jump Vertical Impulse: 200
 Wall Jump Horizontal Impulse: 100

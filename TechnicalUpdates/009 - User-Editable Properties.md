@@ -83,19 +83,19 @@ The `PropertyGrid` instances already present in these two forms will be replaced
   * Sealed class `[AttributeUsage(inherited = true)] HasEditablePropertiesAttribute : Attribute`
   * Sealed classes, all with attribute `[AttributeUsage(inherited = true)]` and deriving from `Attribute`:
     * `BooleanPropertyAttribute`
-	* `IntegerPropertyAttribute`
-	* `LongIntegerPropertyAttribute`
-	* `FloatingPointPropertyAttribute`
-	* `DoublePropertyAttribute`
-	* `Vector2PropertyAttribute`
-	* `PointPropertyAttribute`
-	* `BoundingRectanglePropertyAttribute`
-	* `RectanglePropertyAttribute`
-	* `ColorPropertyAttribute`
-	* `StringPropertyAttribute`
-	* `NestedPropertyAttribute`
-	* All types have constructor arguments `string name, string description`
-	* `IntegerPropertyAttribute`, `LongIntegerPropertyAttribute`, `FloatingPointPropertyAttribute`, and `DoublePropertyAttribute` have constructor arguments `T minValue, T maxValue`
+    * `IntegerPropertyAttribute`
+    * `LongIntegerPropertyAttribute`
+    * `FloatingPointPropertyAttribute`
+    * `DoublePropertyAttribute`
+    * `Vector2PropertyAttribute`
+    * `PointPropertyAttribute`
+    * `BoundingRectanglePropertyAttribute`
+    * `RectanglePropertyAttribute`
+    * `ColorPropertyAttribute`
+    * `StringPropertyAttribute`
+    * `NestedPropertyAttribute`
+    * All types have constructor arguments `string name, string description`
+    * `IntegerPropertyAttribute`, `LongIntegerPropertyAttribute`, `FloatingPointPropertyAttribute`, and `DoublePropertyAttribute` have constructor arguments `T minValue, T maxValue`
 * In namespace `SMLimitless.Editor`
   * Static class `DynamicPropertyControlGenerator`
     * With static method `void GenerateControls(Panel, object)`
