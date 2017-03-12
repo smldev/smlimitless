@@ -54,10 +54,18 @@ namespace SMLimitless.Screens
 			level.LoadContent();
 		}
 
-		/// <summary>
-		///   Updates this screen.
-		/// </summary>
-		public override void Update()
+        /// <summary>
+        /// Unloads the content for this screen.
+        /// </summary>
+        public override void UnloadContent()
+        {
+            level.UnloadContent();
+        }
+
+        /// <summary>
+        ///   Updates this screen.
+        /// </summary>
+        public override void Update()
 		{
 			level.Update();
 		}

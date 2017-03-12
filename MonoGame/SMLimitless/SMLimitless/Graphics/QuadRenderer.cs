@@ -5,7 +5,7 @@ using SMLimitless.Extensions;
 
 namespace SMLimitless.Graphics
 {
-	internal sealed class QuadRenderer
+	internal sealed class QuadRenderer : IDisposable
 	{
 		// http://gamedev.stackexchange.com/questions/87150/rendering-a-fullscreen-quad-is-leaving-a-one-pixel-line-on-the-left-and-top
 
@@ -14,6 +14,11 @@ namespace SMLimitless.Graphics
 		private Texture2D transparentTexture = new Texture2D(GameServices.Graphics, 1, 1);
 		private VertexPositionTexture[] triangles;
 
+        /// <summary>
+        /// Gets a value indicating whether the resources for this object have been released.
+        /// </summary>
+        public bool IsDisposed { get; private set; }
+
 		public QuadRenderer()
 		{
 			gfx = GameServices.Graphics;
@@ -21,16 +26,16 @@ namespace SMLimitless.Graphics
 
 			// texture coordinates semantic not used or needed
 			triangles = new VertexPositionTexture[]
-						 {
-					   new VertexPositionTexture(new Vector3(1, -1, 0),
+						{
+					    new VertexPositionTexture(new Vector3(1, -1, 0),
 												 Vector2.Zero),
-					   new VertexPositionTexture(new Vector3(-1, -1, 0),
+					    new VertexPositionTexture(new Vector3(-1, -1, 0),
 												 Vector2.Zero),
-					   new VertexPositionTexture(new Vector3(-1, 1, 0),
+					    new VertexPositionTexture(new Vector3(-1, 1, 0),
 												 Vector2.Zero),
-					   new VertexPositionTexture(new Vector3(1, 1, 0),
+					    new VertexPositionTexture(new Vector3(1, 1, 0),
 												 Vector2.Zero)
-						 };
+						};
 		}
 
 		public void Render(Effect effect, Vector2 position)
@@ -48,5 +53,27 @@ namespace SMLimitless.Graphics
 			//								   indexData, 0, 2);
 			GameServices.SpriteBatch.DrawRectangle(position.ToRectangle(GameServices.ScreenSize), Color.Transparent);
 		}
-	}
+
+
+        void Dispose(bool disposing)
+        {
+            if (!IsDisposed)
+            {
+                if (disposing)
+                {
+                    if (transparentTexture != null && !transparentTexture.IsDisposed)
+                    {
+                        transparentTexture.Dispose();
+                    }
+                }
+
+                IsDisposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+    }
 }

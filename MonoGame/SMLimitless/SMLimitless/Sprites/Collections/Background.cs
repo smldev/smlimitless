@@ -15,7 +15,7 @@ namespace SMLimitless.Sprites.Collections
 	/// <summary>
 	///   A tileable, moving, optionally parallax background image used in sections.
 	/// </summary>
-	public sealed class Background
+	public sealed class Background : IDisposable
 	{
 		/// <summary>
 		///   The gradient texture, composed from the top and bottom colors.
@@ -31,6 +31,11 @@ namespace SMLimitless.Sprites.Collections
 		///   A reference to the section that owns this background.
 		/// </summary>
 		private Section owner;
+
+        /// <summary>
+        /// Gets a value indicating whether the resources of this object have been released.
+        /// </summary>
+        public bool IsDisposed { get; private set; }
 
 		/// <summary>
 		///   Gets the color at the bottom of the screen.
@@ -179,5 +184,25 @@ namespace SMLimitless.Sprites.Collections
 		{
 			Layers.ForEach(l => l.Update());
 		}
+
+        private void Dispose(bool disposing)
+        {
+            if (IsDisposed) { return; }
+
+            if (disposing)
+            {
+                if (backgroundGradient != null && !backgroundGradient.IsDisposed)
+                {
+                    backgroundGradient.Dispose();
+                }
+            }
+
+            IsDisposed = true;
+        }
+
+        /// <summary>
+        /// Releases all resources used by this <see cref="Background"/> instance. 
+        /// </summary>
+        public void Dispose() => Dispose(true);
 	}
 }

@@ -10,7 +10,7 @@ namespace SMLimitless.Screens.Effects
 	/// <summary>
 	///   An iris wipe effect.
 	/// </summary>
-	public sealed class IrisEffect : IEffect
+	public sealed class IrisEffect : IEffect, IDisposable
 	{
 		private Color color;
 		private float currentFadeLevel;
@@ -22,6 +22,11 @@ namespace SMLimitless.Screens.Effects
 		private bool isInitialized;
 		private bool isRunning;
 		private QuadRenderer quadRenderer;
+
+        /// <summary>
+        /// Gets a value indicating whether the resources for this object have been released.
+        /// </summary>
+        public bool IsDisposed { get; private set; }
 
 		/// <summary>
 		///   An event raised when this effect has completed.
@@ -180,5 +185,25 @@ namespace SMLimitless.Screens.Effects
 			fadeDelta = 0f;
 			EffectCompletedEvent?.Invoke(this, new EffectCompletedEventArgs(dir));
 		}
+
+        private void Dispose(bool disposing)
+        {
+            if (IsDisposed) { return; }
+
+            if (disposing)
+            {
+                if (quadRenderer != null && !quadRenderer.IsDisposed)
+                {
+                    quadRenderer.Dispose();
+                }
+            }
+
+            IsDisposed = true;
+        }
+
+        /// <summary>
+        /// Releases resources used by this <see cref="IrisEffect"/> instance. 
+        /// </summary>
+        public void Dispose() => Dispose(true);
 	}
 }

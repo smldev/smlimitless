@@ -19,7 +19,7 @@ namespace SMLimitless.Sprites.Collections
 	///   The main area of gameplay.
 	/// </summary>
 	[HasUserEditableProperties]
-	public sealed class Section
+	public sealed class Section : IDisposable
 	{
 		internal static PhysicsSetting<int> MaximumParticles = new PhysicsSetting<int>("Section: Maximum Particles", 1, 1000, 200, PhysicsSettingType.FloatingPoint);
 		private List<Tile> collisionDebugCollidedTiles = new List<Tile>();
@@ -90,6 +90,9 @@ namespace SMLimitless.Sprites.Collections
 		/// </summary>
 		public bool IsLoaded { get; internal set; }
 
+        /// <summary>
+        /// Gets a value indicating whether this section is the first loaded when a level begins.
+        /// </summary>
 		public bool IsStartSection { get; internal set; } = false;
 
 		/// <summary>
@@ -1087,5 +1090,38 @@ namespace SMLimitless.Sprites.Collections
 				sprite.IsEmbedded = false;
 			}
 		}
-	}
+
+        /// <summary>
+        /// Gets a value indicating whether the resources of this object have been released.
+        /// </summary>
+        public bool IsDisposed { get; private set; }
+
+        private void Dispose(bool disposing)
+        {
+            if (!IsDisposed)
+            {
+                if (disposing)
+                {
+                    if (form != null && !form.IsDisposed) { form.Dispose(); }
+                    if (Background != null && !Background.IsDisposed) { Background.Dispose(); }
+                    if (irisEffect != null && !irisEffect.IsDisposed) { irisEffect.Dispose(); }
+                }
+
+                Tiles = null;
+                Sprites = null;
+                SpritesGrid = null;
+                Players = null;
+
+                IsDisposed = true;
+            }
+        }
+
+        /// <summary>
+        /// Releases resources used by this <see cref="Section"/> class. 
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+    }
 }

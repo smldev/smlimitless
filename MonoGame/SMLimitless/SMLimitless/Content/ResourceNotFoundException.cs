@@ -6,6 +6,8 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 
 namespace SMLimitless.Content
 {
@@ -14,7 +16,7 @@ namespace SMLimitless.Content
 	///   the loaded ContentPackages in ContentPackageManager.
 	/// </summary>
 	[Serializable]
-	public sealed class ResourceNotFoundException : Exception
+	public class ResourceNotFoundException : Exception, ISerializable
 	{
 		/// <summary>
 		///   Gets a read-only collection of data concerning content packages
@@ -97,5 +99,33 @@ namespace SMLimitless.Content
 		internal ResourceNotFoundException(string message, IList<ContentPackage> loadedPackages) : this(message, null, loadedPackages)
 		{
 		}
+
+        /// <summary>
+        /// Populates a <see cref="SerializationInfo"/> with the data needed to serialize the target object. 
+        /// </summary>
+        /// <param name="info">The <see cref="SerializationInfo"/> to populate with data.</param>
+        /// <param name="context">The destination (see <see cref="StreamingContext"/>) for this serialization. </param>
+        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("Message", Message);
+
+            int i = 0;
+            foreach (var package in LoadedPackagesStrings)
+            {
+                info.AddValue($"Package{i}", package);
+                i++;
+            }
+
+            base.GetObjectData(info, context);
+        }
+
+        [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.SerializationFormatter)]
+        void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            if (info == null) { throw new ArgumentNullException("info"); }
+
+            GetObjectData(info, context);
+        }
 	}
 }

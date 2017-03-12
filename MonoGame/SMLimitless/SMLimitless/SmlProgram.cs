@@ -154,7 +154,7 @@ namespace SMLimitless
 				GameServices.AddService<GameTime>(gameTime);
 			}
 
-			System.Windows.Forms.Application.DoEvents();
+            Application.DoEvents();
 
 			InputManager.Update();
 			ScreenManager.Update();

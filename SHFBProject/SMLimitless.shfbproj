@@ -26,7 +26,8 @@
     <CleanIntermediates>True</CleanIntermediates>
     <DocumentationSources>
       <DocumentationSource sourceFile="..\MonoGame\SMLimitless\SMLimitless\bin\WindowsGL\Debug\SMLimitless.exe" xmlns="" />
-<DocumentationSource sourceFile="..\MonoGame\SMLimitless\SMLimitless\bin\WindowsGL\Debug\SMLimitless.XML" xmlns="" /></DocumentationSources>
+      <DocumentationSource sourceFile="..\MonoGame\SMLimitless\SMLimitless\bin\WindowsGL\Debug\SMLimitless.XML" xmlns="" />
+    </DocumentationSources>
     <MaximumGroupParts>2</MaximumGroupParts>
     <NamespaceGrouping>False</NamespaceGrouping>
     <SyntaxFilters>Standard</SyntaxFilters>
@@ -36,28 +37,29 @@
     <Preliminary>False</Preliminary>
     <NamingMethod>Guid</NamingMethod>
     <HelpTitle>Super Mario Limitless: Source Code Documentation</HelpTitle>
-    <CopyrightText>Copyright &amp;#169%3b 2012-2014 The Limitless Development Team</CopyrightText>
+    <CopyrightText>Copyright &amp;#169%3b 2012-2017 The Limitless Development Team</CopyrightText>
     <ContentPlacement>AboveNamespaces</ContentPlacement>
     <VisibleItems>Attributes, ExplicitInterfaceImplementations, InheritedMembers, InheritedFrameworkMembers, Internals, Protected, ProtectedInternalAsProtected</VisibleItems>
     <MissingTags>Summary, Parameter, Returns, AutoDocumentCtors, Namespace, TypeParameter, AutoDocumentDispose</MissingTags>
     <NamespaceSummaries>
       <NamespaceSummaryItem name="(global)" isDocumented="False" xmlns="" />
-<NamespaceSummaryItem name="SMLimitless" isDocumented="True" xmlns="">The core namespace for Super Mario Limitless types.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="SMLimitless.Collections" isDocumented="True" xmlns="">A namespace containing custom collection types.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="SMLimitless.Content" isDocumented="True" xmlns="">A namespace containing types to load and manage game content.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="SMLimitless.Editor" isDocumented="True" xmlns="">A namespace containing types used for the level editor.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="SMLimitless.Extensions" isDocumented="True" xmlns="">A namespace containing types that add extension methods to other types.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="SMLimitless.Graphics" isDocumented="True" xmlns="">A namespace containing types used for storing and drawing graphics.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="SMLimitless.Input" isDocumented="True" xmlns="">A namespace containing types used for handling keyboard and mouse input.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="SMLimitless.Interfaces" isDocumented="True" xmlns="">A namespace containing interfaces used by types in this game.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="SMLimitless.IO" isDocumented="True" xmlns="">A namespace containing types used to load files.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="SMLimitless.Physics" isDocumented="True" xmlns="">A namespace containing types used in game physics.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="SMLimitless.Screens" isDocumented="True" xmlns="">A namespace containing types used to load and manage screens.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="SMLimitless.Screens.Effects" isDocumented="True" xmlns="">A namespace containing screen effects.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="SMLimitless.Sounds" isDocumented="True" xmlns="">A namespace containing types used to load and play sounds.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="SMLimitless.Sprites" isDocumented="True" xmlns="">A namespace containing the core types for tiles and sprites.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="SMLimitless.Sprites.Assemblies" isDocumented="True" xmlns="">A namespace containing types used to load and manage custom sprite/tile assemblies.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="SMLimitless.Sprites.Collections" isDocumented="True" xmlns="">A namespace containing types that contain sprites, such as levels and world maps.</NamespaceSummaryItem></NamespaceSummaries>
+      <NamespaceSummaryItem name="SMLimitless" isDocumented="True" xmlns="">The core namespace for Super Mario Limitless types.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="SMLimitless.Collections" isDocumented="True" xmlns="">A namespace containing custom collection types.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="SMLimitless.Content" isDocumented="True" xmlns="">A namespace containing types to load and manage game content.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="SMLimitless.Editor" isDocumented="True" xmlns="">A namespace containing types used for the level editor.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="SMLimitless.Extensions" isDocumented="True" xmlns="">A namespace containing types that add extension methods to other types.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="SMLimitless.Graphics" isDocumented="True" xmlns="">A namespace containing types used for storing and drawing graphics.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="SMLimitless.Input" isDocumented="True" xmlns="">A namespace containing types used for handling keyboard and mouse input.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="SMLimitless.Interfaces" isDocumented="True" xmlns="">A namespace containing interfaces used by types in this game.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="SMLimitless.IO" isDocumented="True" xmlns="">A namespace containing types used to load files.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="SMLimitless.Physics" isDocumented="True" xmlns="">A namespace containing types used in game physics.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="SMLimitless.Screens" isDocumented="True" xmlns="">A namespace containing types used to load and manage screens.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="SMLimitless.Screens.Effects" isDocumented="True" xmlns="">A namespace containing screen effects.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="SMLimitless.Sounds" isDocumented="True" xmlns="">A namespace containing types used to load and play sounds.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="SMLimitless.Sprites" isDocumented="True" xmlns="">A namespace containing the core types for tiles and sprites.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="SMLimitless.Sprites.Assemblies" isDocumented="True" xmlns="">A namespace containing types used to load and manage custom sprite/tile assemblies.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="SMLimitless.Sprites.Collections" isDocumented="True" xmlns="">A namespace containing types that contain sprites, such as levels and world maps.</NamespaceSummaryItem>
+    </NamespaceSummaries>
   </PropertyGroup>
   <!-- There are no properties for these groups.  AnyCPU needs to appear in order for Visual Studio to perform
 			 the build.  The others are optional common platform types that may appear. -->

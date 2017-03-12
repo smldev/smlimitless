@@ -38,6 +38,9 @@ namespace SMLimitless.Sprites.InternalSprites
 		/// </param>
 		public override void DeserializeCustomObjects(JsonHelper customObjects) { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EditorCameraTrackingObject"/> class. 
+        /// </summary>
 		public EditorCameraTrackingObject()
 		{
 			// A size of 0.1,0.1 is small enough that the camera won't move to

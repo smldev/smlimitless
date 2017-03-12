@@ -37,7 +37,7 @@ namespace SMLimitless.Sprites.Components
 		/// <summary>
 		///   An event that is raised when this sprite is healed.
 		/// </summary>
-		public event EventHandler<int> SpriteHealed;
+		public event EventHandler<SpriteHealedEventArgs> SpriteHealed;
 		/// <summary>
 		///   An event that is raised when this sprite is killed (hit points
 		///   become 0).
@@ -118,28 +118,41 @@ namespace SMLimitless.Sprites.Components
 
 		private void OnSpriteDamaged(string damageType)
 		{
-			if (SpriteDamage != null)
-			{
-				SpriteDamage(this, new SpriteDamagedEventArgs(damageType, HitPoints));
-			}
-		}
+            SpriteDamage?.Invoke(this, new SpriteDamagedEventArgs(damageType, HitPoints));
+        }
 
 		private void OnSpriteDeath(string damageType)
 		{
-			if (SpriteKilled != null)
-			{
-				SpriteKilled(this, new SpriteDamagedEventArgs(damageType, 0));
-			}
-		}
+            SpriteKilled?.Invoke(this, new SpriteDamagedEventArgs(damageType, 0));
+        }
 
 		private void OnSpriteHealed()
 		{
-			if (SpriteHealed != null)
-			{
-				SpriteHealed(this, HitPoints);
-			}
-		}
+            SpriteHealed?.Invoke(this, new SpriteHealedEventArgs(HitPoints));
+        }
 	}
+
+    /// <summary>
+    /// Contains event data for when a sprite is healed.
+    /// </summary>
+    public sealed class SpriteHealedEventArgs : EventArgs
+    {
+        /// <summary>
+        /// Gets the number of remaining hit points on the healed sprite.
+        /// </summary>
+        public int RemainingHitPoints { get; private set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SpriteHealedEventArgs"/> class. 
+        /// </summary>
+        /// <param name="remainingHitPoints">
+        /// The number of remaining hit points on the healed sprite.
+        /// </param>
+        public SpriteHealedEventArgs(int remainingHitPoints)
+        {
+            RemainingHitPoints = remainingHitPoints;
+        }
+    }
 
 	/// <summary>
 	///   Contains event data for when a sprite or tile damages another sprite.

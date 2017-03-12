@@ -57,13 +57,77 @@ namespace SMLimitless.Editor
 			selectedObject.SelectedObjectChanged += (sender, e) =>
 			{
 				propertyForm.DisplayedObject = GetSelectedObject(selectedObject);
+
+                if (selectedObject.SelectedObjectType == EditorSelectedObjectType.SectionExit)
+                {
+                    LoadSectionExitInformation(selectedObject.SelectedExit);
+                }
 			};
 
 			PopulateObjectTabs();
 			LoadSections();
 		}
 
-		internal void SwitchToSection(Section newSection)
+        private void LoadSectionExitInformation(SectionExit exit)
+        {
+            var otherExit = level.GetSectionExitByID(exit.OtherID);
+
+            var source = (exit.SourceBehavior == ExitSourceBehavior.NotASource) ? otherExit : exit;
+            var destination = (exit == source) ? otherExit : exit;
+
+            Section sourceSection = level.GetSectionWithExit(source);
+            Section destinationSection = level.GetSectionWithExit(destination);
+
+            TextSourceSectionID.Text = sourceSection.Index.ToString();
+            TextDestinationSectionID.Text = destinationSection.Index.ToString();
+            LabelSourceSectionName.Text = sourceSection.Name;
+            LabelDestinationSectionName.Text = destinationSection.Name;
+
+            TextSourceX.Text = ((int)source.Position.X).ToString();
+            TextSourceY.Text = ((int)source.Position.Y).ToString();
+            TextDestinationX.Text = ((int)destination.Position.X).ToString();
+            TextDestinationY.Text = ((int)destination.Position.Y).ToString();
+
+            switch (source.SourceBehavior)
+            {
+                case ExitSourceBehavior.PipeDown:
+                    RadioSourcePipeDown.Enabled = true; break;
+                case ExitSourceBehavior.PipeUp:
+                    RadioSourcePipeUp.Enabled = true; break;
+                case ExitSourceBehavior.PipeLeft:
+                    RadioSourcePipeLeft.Enabled = true; break;
+                case ExitSourceBehavior.PipeRight:
+                    RadioSourcePipeRight.Enabled = true; break;
+                case ExitSourceBehavior.Door:
+                    RadioSourceDoor.Enabled = true; break;
+                case ExitSourceBehavior.Immediate:
+                    throw new NotImplementedException();
+                case ExitSourceBehavior.Default:
+                case ExitSourceBehavior.NotASource:
+                default:
+                    throw new InvalidOperationException($"Invalid source behavior {source.SourceBehavior}");
+            }
+
+            switch (destination.DestinationBehavior)
+            {
+                case ExitDestinationBehavior.PipeUp:
+                    RadioDestinationPipeUp.Enabled = true; break;
+                case ExitDestinationBehavior.PipeDown:
+                    RadioDestinationPipeDown.Enabled = true; break;
+                case ExitDestinationBehavior.PipeRight:
+                    RadioDestinationPipeRight.Enabled = true; break;
+                case ExitDestinationBehavior.PipeLeft:
+                    RadioDestinationPipeLeft.Enabled = true; break;
+                case ExitDestinationBehavior.None:
+                    RadioDestinationDoor.Enabled = true; break;
+                case ExitDestinationBehavior.Default:
+                case ExitDestinationBehavior.NotADestination:
+                default:
+                    throw new InvalidOperationException($"Invalid destination behavior {destination.DestinationBehavior}");
+            }
+        }
+
+        internal void SwitchToSection(Section newSection)
 		{
 			section = newSection;
 			DynamicPropertyControlGenerator.GenerateControls(PanelSectionSettings, newSection);
@@ -229,6 +293,8 @@ namespace SMLimitless.Editor
 					return selectedObject.SelectedTile;
 				case EditorSelectedObjectType.Sprite:
 					return selectedObject.SelectedSprite;
+                case EditorSelectedObjectType.SectionExit:
+                    return selectedObject.SelectedExit;
 				default:
 					throw new InvalidOperationException();
 			}

@@ -194,11 +194,8 @@ namespace SMLimitless.Physics
 		/// <param name="b">The second point.</param>
 		private void OnPointNotifier(Vector2 a, Vector2 b)
 		{
-			if (PointNotifierEvent != null)
-			{
-				PointNotifierEvent(new PointNotifierEventArgs(CalculateVelocityMultiplier(a, b)));
-			}
-		}
+            PointNotifierEvent?.Invoke(this, new PointNotifierEventArgs(CalculateVelocityMultiplier(a, b)));
+        }
 	}
 
 	/// <summary>
@@ -229,8 +226,11 @@ namespace SMLimitless.Physics
 	/// <summary>
 	///   A delegate for the PointNotifier event.
 	/// </summary>
+    /// <param name="sender">
+    ///   The object that raised this event.
+    /// </param>
 	/// <param name="e">
 	///   Event arguments containing the new velocity multiplier for the attached object.
 	/// </param>
-	public delegate void PointNotifierEventHandler(PointNotifierEventArgs e);
+	public delegate void PointNotifierEventHandler(object sender, PointNotifierEventArgs e);
 }

@@ -86,6 +86,11 @@ namespace SMLimitless.Sprites.InternalSprites
 			}
 		}
 
+        /// <summary>
+        /// Gets the section exit that has been selected, and whose properties are visible in the
+        /// "Section Exits" tab of the section's <see cref="EditorForm"/>. Throws an
+        /// <see cref="InvalidOperationException"/> if an exit is not selected.
+        /// </summary>
 		public SectionExit SelectedExit
 		{
 			get
@@ -205,10 +210,20 @@ namespace SMLimitless.Sprites.InternalSprites
 			OnSelectedObjectChanged();
 		}
 
+        /// <summary>
+        /// Selects a section exit already in a section.
+        /// </summary>
+        /// <param name="exit">The exit being selected.</param>
+        /// <remarks>
+        /// Unlike the <see cref="SelectExistingTile(Tile)"/> and 
+        /// <see cref="SelectExistingSprite(Sprite)"/> methods, this method does not pick up the
+        /// exit being selected; rather, it populates the exit's properties in the "Section Exits"
+        /// tab of the section's <see cref="EditorForm"/>. 
+        /// </remarks>
 		public void SelectExistingSectionExit(SectionExit exit)
 		{
 			SelectedObjectType = EditorSelectedObjectType.SectionExit;
-			selectedExit = exit.Clone();
+            selectedExit = exit;
 			OnSelectedObjectChanged();
 		}
 
@@ -271,7 +286,7 @@ namespace SMLimitless.Sprites.InternalSprites
 			Position = newPosition;
 			if (selectedTile != null) { selectedTile.Position = newPosition; }
 			else if (selectedSprite != null) { selectedSprite.Position = newPosition; }
-			else if (selectedExit != null) { selectedExit.Position = newPosition; }
+			// else if (selectedExit != null) { selectedExit.Position = newPosition; }
 
 			if (InputManager.IsCurrentMousePress(MouseButtons.LeftButton))
 			{
@@ -305,7 +320,6 @@ namespace SMLimitless.Sprites.InternalSprites
 					if (exitUnderCursor != null)
 					{
 						SelectExistingSectionExit(exitUnderCursor);
-						Owner.SectionExits.Remove(exitUnderCursor);
 					}
 					else if (tileUnderCursor != null)
 					{
@@ -359,9 +373,6 @@ namespace SMLimitless.Sprites.InternalSprites
 					}
 					break;
 				case EditorSelectedObjectType.SectionExit:
-					if (exitUnderCursor != null) { return; }
-					SectionExit exit = selectedExit.Clone();
-					Owner.SectionExits.Add(exit);
 					break;
 				default:
 					break;

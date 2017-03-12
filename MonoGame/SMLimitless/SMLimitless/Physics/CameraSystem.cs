@@ -231,6 +231,11 @@ namespace SMLimitless.Physics
 			return sum;
 		}
 
+        /// <summary>
+        /// Forces the camera to move to a position (within bounds if <see cref="StayInBounds"/> is
+        /// set) even if the camera is frozen in place.
+        /// </summary>
+        /// <param name="newPosition">The position to move the camera to.</param>
 		public void MoveIfFrozen(Vector2 newPosition)
 		{
 			if (IsFrozen)

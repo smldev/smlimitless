@@ -1285,6 +1285,13 @@
               A collection of content packages to retrieve data from.
             </param>
         </member>
+        <member name="M:SMLimitless.Content.ResourceNotFoundException.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Populates a <see cref="T:System.Runtime.Serialization.SerializationInfo"/> with the data needed to serialize the target object. 
+            </summary>
+            <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> to populate with data.</param>
+            <param name="context">The destination (see <see cref="T:System.Runtime.Serialization.StreamingContext"/>) for this serialization. </param>
+        </member>
         <member name="T:SMLimitless.Debug.DebugAttribute">
             <summary>
               Signifies that a member is used for debugging purposes.
@@ -1430,6 +1437,112 @@
               the game.
             </summary>
         </member>
+        <member name="T:SMLimitless.Editor.Attributes.BooleanPropertyAttribute">
+            <summary>
+            An attribute for properties of type <see cref="T:System.Boolean"/>. 
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.Attributes.BooleanPropertyAttribute.Description">
+            <summary>
+            The property's description, as it appears in the property's tooltip.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.Attributes.BooleanPropertyAttribute.Name">
+            <summary>
+            The property's name, as it appears in the property panel.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Editor.Attributes.BooleanPropertyAttribute.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see
+            cref="T:SMLimitless.Editor.Attributes.BooleanPropertyAttribute" /> class.
+            </summary>
+            <param name="name">
+            The property's name. This will be presented to the user.
+            </param>
+            <param name="description">
+            The property's description. This will be presented to the user.
+            </param>
+        </member>
+        <member name="T:SMLimitless.Editor.Attributes.BoundingRectanglePropertyAttribute">
+            <summary>
+            An attribute for properties of type <see cref="T:SMLimitless.Physics.BoundingRectangle"/>. 
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.Attributes.BoundingRectanglePropertyAttribute.Description">
+            <summary>
+            The property's description, as it appears in the property's tooltip.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.Attributes.BoundingRectanglePropertyAttribute.Name">
+            <summary>
+            The property's name, as it appears in the property panel.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Editor.Attributes.BoundingRectanglePropertyAttribute.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see
+            cref="T:SMLimitless.Editor.Attributes.BoundingRectanglePropertyAttribute" /> class.
+            </summary>
+            <param name="name">
+            The property's name. This will be presented to the user.
+            </param>
+            <param name="description">
+            The property's description. This will be presented to the user.
+            </param>
+        </member>
+        <member name="T:SMLimitless.Editor.Attributes.ColorPropertyAttribute">
+            <summary>
+            An attribute for properties of type <see cref="T:Microsoft.Xna.Framework.Color"/>. 
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.Attributes.ColorPropertyAttribute.Description">
+            <summary>
+            The property's description, as it appears in the property's tooltip.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.Attributes.ColorPropertyAttribute.Name">
+            <summary>
+            The property's name, as it appears in the property panel.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Editor.Attributes.ColorPropertyAttribute.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see
+            cref="T:SMLimitless.Editor.Attributes.ColorPropertyAttribute" /> class.
+            </summary>
+            <param name="name">
+            The property's name. This will be presented to the user.
+            </param>
+            <param name="description">
+            The property's description. This will be presented to the user.
+            </param>
+        </member>
+        <member name="T:SMLimitless.Editor.Attributes.DoublePropertyAttribute">
+            <summary>
+            An attribute for properties of type <see cref="T:System.Double"/>. 
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.Attributes.DoublePropertyAttribute.Description">
+            <summary>
+            The property's description, as it appears in the property's tooltip.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.Attributes.DoublePropertyAttribute.Name">
+            <summary>
+            The property's name, as it appears in the property panel.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.Attributes.DoublePropertyAttribute.MaxValue">
+            <summary>
+            The maximum allowable value for the property, inclusive.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.Attributes.DoublePropertyAttribute.MinValue">
+            <summary>
+            The minimum allowable value for the property, inclusive.
+            </summary>
+        </member>
         <member name="M:SMLimitless.Editor.Attributes.DoublePropertyAttribute.#ctor(System.String,System.String,System.Double,System.Double)">
             <summary>
               Initializes a new instance of the <see
@@ -1449,6 +1562,74 @@
               The highest legal value for this property. Set to <see
               cref="F:System.Double.PositiveInfinity" /> for no maximum value.
             </param>
+        </member>
+        <member name="T:SMLimitless.Editor.Attributes.EnumPropertyAttribute">
+            <summary>
+            An attribute for enumerated properties.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.Attributes.EnumPropertyAttribute.Description">
+            <summary>
+            The property's description, as it appears in the property's tooltip.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.Attributes.EnumPropertyAttribute.Name">
+            <summary>
+            The property's name, as it appears in the property panel.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Editor.Attributes.EnumPropertyAttribute.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see
+            cref="T:SMLimitless.Editor.Attributes.EnumPropertyAttribute" /> class.
+            </summary>
+            <param name="name">
+            The property's name. This will be presented to the user.
+            </param>
+            <param name="description">
+            The property's description. This will be presented to the user.
+            </param>
+        </member>
+        <member name="T:SMLimitless.Editor.Attributes.EnumValueAttribute">
+            <summary>
+            An attribute for attaching user-displayed descriptions to enumeration values.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.Attributes.EnumValueAttribute.Description">
+            <summary>
+            The value's description, as it appears in the property's tooltip.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Editor.Attributes.EnumValueAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SMLimitless.Editor.Attributes.EnumValueAttribute"/> class. 
+            </summary>
+            <param name="description">The value's description. This will be presented to the user.</param>
+        </member>
+        <member name="T:SMLimitless.Editor.Attributes.FloatingPointPropertyAttribute">
+            <summary>
+            An attribute for properties of type <see cref="T:System.Single"/>. 
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.Attributes.FloatingPointPropertyAttribute.Description">
+            <summary>
+            The property's description, as it appears in the property's tooltip.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.Attributes.FloatingPointPropertyAttribute.Name">
+            <summary>
+            The property's name, as it appears in the property panel.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.Attributes.FloatingPointPropertyAttribute.MaxValue">
+            <summary>
+            The maximum allowable value for the property, inclusive.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.Attributes.FloatingPointPropertyAttribute.MinValue">
+            <summary>
+            The minimum allowable value for the property, inclusive.
+            </summary>
         </member>
         <member name="M:SMLimitless.Editor.Attributes.FloatingPointPropertyAttribute.#ctor(System.String,System.String,System.Single,System.Single)">
             <summary>
@@ -1474,6 +1655,227 @@
             <summary>
               An attribute that decorates classes or structs that have user-editable properties.
             </summary>
+        </member>
+        <member name="T:SMLimitless.Editor.Attributes.IntegerPropertyAttribute">
+            <summary>
+            An attribute for properties of type <see cref="T:System.Int32"/>. 
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.Attributes.IntegerPropertyAttribute.Description">
+            <summary>
+            The property's description, as it appears in the property's tooltip.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.Attributes.IntegerPropertyAttribute.Name">
+            <summary>
+            The property's name, as it appears in the property panel.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.Attributes.IntegerPropertyAttribute.MaxValue">
+            <summary>
+            The maximum allowable value for the property, inclusive.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.Attributes.IntegerPropertyAttribute.MinValue">
+            <summary>
+            The minimum allowable value for the property, inclusive.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Editor.Attributes.IntegerPropertyAttribute.#ctor(System.String,System.String,System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see
+            cref="T:SMLimitless.Editor.Attributes.IntegerPropertyAttribute" /> class.
+            </summary>
+            <param name="name">
+            The property's name. This will be presented to the user.
+            </param>
+            <param name="description">
+            The property's description. This will be presented to the user.
+            </param>
+            <param name="maxValue">
+            The maximum allowable value for the property, inclusive.
+            </param>
+            <param name="minValue">
+            The minimum allowable value for the property, inclusive.
+            </param>
+        </member>
+        <member name="T:SMLimitless.Editor.Attributes.LongIntegerPropertyAttribute">
+            <summary>
+            An attribute for properties of type <see cref="T:System.Int64"/>. 
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.Attributes.LongIntegerPropertyAttribute.Description">
+            <summary>
+            The property's description, as it appears in the property's tooltip.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.Attributes.LongIntegerPropertyAttribute.Name">
+            <summary>
+            The property's name, as it appears in the property panel.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.Attributes.LongIntegerPropertyAttribute.MaxValue">
+            <summary>
+            The maximum allowable value for the property, inclusive.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.Attributes.LongIntegerPropertyAttribute.MinValue">
+            <summary>
+            The minimum allowable value for the property, inclusive.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Editor.Attributes.LongIntegerPropertyAttribute.#ctor(System.String,System.String,System.Int64,System.Int64)">
+            <summary>
+            Initializes a new instance of the <see
+            cref="T:SMLimitless.Editor.Attributes.LongIntegerPropertyAttribute" /> class.
+            </summary>
+            <param name="name">
+            The property's name. This will be presented to the user.
+            </param>
+            <param name="description">
+            The property's description. This will be presented to the user.
+            </param>
+            <param name="maxValue">
+            The maximum allowable value for the property, inclusive.
+            </param>
+            <param name="minValue">
+            The minimum allowable value for the property, inclusive.
+            </param>
+        </member>
+        <member name="T:SMLimitless.Editor.Attributes.NestedPropertyAttribute">
+            <summary>
+            An attribute for properties that themselves contain user-editable properties.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.Attributes.NestedPropertyAttribute.Description">
+            <summary>
+            The property's description, as it appears in the property's tooltip.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.Attributes.NestedPropertyAttribute.Name">
+            <summary>
+            The property's name, as it appears in the property panel.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Editor.Attributes.NestedPropertyAttribute.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see
+            cref="T:SMLimitless.Editor.Attributes.NestedPropertyAttribute" /> class.
+            </summary>
+            <param name="name">
+            The property's name. This will be presented to the user.
+            </param>
+            <param name="description">
+            The property's description. This will be presented to the user.
+            </param>
+        </member>
+        <member name="T:SMLimitless.Editor.Attributes.PointPropertyAttribute">
+            <summary>
+            An attribute for properties of type <see cref="T:Microsoft.Xna.Framework.Point"/>. 
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.Attributes.PointPropertyAttribute.Description">
+            <summary>
+            The property's description, as it appears in the property's tooltip.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.Attributes.PointPropertyAttribute.Name">
+            <summary>
+            The property's name, as it appears in the property panel.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Editor.Attributes.PointPropertyAttribute.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see
+            cref="T:SMLimitless.Editor.Attributes.PointPropertyAttribute" /> class.
+            </summary>
+            <param name="name">
+            The property's name. This will be presented to the user.
+            </param>
+            <param name="description">
+            The property's description. This will be presented to the user.
+            </param>
+        </member>
+        <member name="T:SMLimitless.Editor.Attributes.RectanglePropertyAttribute">
+            <summary>
+            An attribute for properties of type <see cref="T:Microsoft.Xna.Framework.Rectangle"/>. 
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.Attributes.RectanglePropertyAttribute.Description">
+            <summary>
+            The property's description, as it appears in the property's tooltip.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.Attributes.RectanglePropertyAttribute.Name">
+            <summary>
+            The property's name, as it appears in the property panel.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Editor.Attributes.RectanglePropertyAttribute.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see
+            cref="T:SMLimitless.Editor.Attributes.RectanglePropertyAttribute" /> class.
+            </summary>
+            <param name="name">
+            The property's name. This will be presented to the user.
+            </param>
+            <param name="description">
+            The property's description. This will be presented to the user.
+            </param>
+        </member>
+        <member name="T:SMLimitless.Editor.Attributes.StringPropertyAttribute">
+            <summary>
+            An attribute for properties of type <see cref="T:System.String"/>. 
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.Attributes.StringPropertyAttribute.Description">
+            <summary>
+            The property's description, as it appears in the property's tooltip.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.Attributes.StringPropertyAttribute.Name">
+            <summary>
+            The property's name, as it appears in the property panel.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Editor.Attributes.StringPropertyAttribute.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see
+            cref="T:SMLimitless.Editor.Attributes.StringPropertyAttribute" /> class.
+            </summary>
+            <param name="name">
+            The property's name. This will be presented to the user.
+            </param>
+            <param name="description">
+            The property's description. This will be presented to the user.
+            </param>
+        </member>
+        <member name="T:SMLimitless.Editor.Attributes.Vector2PropertyAttribute">
+            <summary>
+            An attribute for properties of type <see cref="T:Microsoft.Xna.Framework.Vector2"/>. 
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.Attributes.Vector2PropertyAttribute.Description">
+            <summary>
+            The property's description, as it appears in the property's tooltip.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Editor.Attributes.Vector2PropertyAttribute.Name">
+            <summary>
+            The property's name, as it appears in the property panel.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Editor.Attributes.Vector2PropertyAttribute.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see
+            cref="T:SMLimitless.Editor.Attributes.Vector2PropertyAttribute" /> class.
+            </summary>
+            <param name="name">
+            The property's name. This will be presented to the user.
+            </param>
+            <param name="description">
+            The property's description. This will be presented to the user.
+            </param>
         </member>
         <member name="T:SMLimitless.Editor.EditorForm">
             <summary>
@@ -2308,8 +2710,8 @@
               An event handler delegate for the effect completed event.
             </summary>
             <param name="sender">The object that raises this event.</param>
-            <param name="direction">
-              The "forward" or "backward" direction of the effect.
+            <param name="e">
+              Arguments for this event.
             </param>
         </member>
         <member name="T:SMLimitless.Interfaces.ILevelSerializer">
@@ -3066,6 +3468,13 @@
               Updates this camera system.
             </summary>
         </member>
+        <member name="M:SMLimitless.Physics.CameraSystem.MoveIfFrozen(Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Forces the camera to move to a position (within bounds if <see cref="P:SMLimitless.Physics.CameraSystem.StayInBounds"/> is
+            set) even if the camera is frozen in place.
+            </summary>
+            <param name="newPosition">The position to move the camera to.</param>
+        </member>
         <member name="T:SMLimitless.Physics.Interpolator">
             <summary>
               Represents a type that can interpolate between two values, and
@@ -3423,6 +3832,9 @@
             <summary>
               A delegate for the PointNotifier event.
             </summary>
+            <param name="sender">
+              The object that raised this event.
+            </param>
             <param name="e">
               Event arguments containing the new velocity multiplier for the attached object.
             </param>
@@ -4266,6 +4678,11 @@
               A reference to the section that owns this background.
             </summary>
         </member>
+        <member name="P:SMLimitless.Sprites.Collections.Background.IsDisposed">
+            <summary>
+            Gets a value indicating whether the resources of this object have been released.
+            </summary>
+        </member>
         <member name="P:SMLimitless.Sprites.Collections.Background.BottomColor">
             <summary>
               Gets the color at the bottom of the screen.
@@ -4334,6 +4751,11 @@
             <summary>
               Updates this background. Background Layers will scroll according to
               the camera's movement.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Sprites.Collections.Background.Dispose">
+            <summary>
+            Releases all resources used by this <see cref="T:SMLimitless.Sprites.Collections.Background"/> instance. 
             </summary>
         </member>
         <member name="T:SMLimitless.Sprites.Collections.BackgroundLayer">
@@ -4740,6 +5162,11 @@
               Loads the content of this level.
             </summary>
         </member>
+        <member name="M:SMLimitless.Sprites.Collections.Level.UnloadContent">
+            <summary>
+            Unloads the content of this level.
+            </summary>
+        </member>
         <member name="M:SMLimitless.Sprites.Collections.Level.Update">
             <summary>
               Updates this level.
@@ -4913,6 +5340,11 @@
               (deserialization and game object initialization) has completed.
             </summary>
         </member>
+        <member name="P:SMLimitless.Sprites.Collections.Section.IsStartSection">
+            <summary>
+            Gets a value indicating whether this section is the first loaded when a level begins.
+            </summary>
+        </member>
         <member name="P:SMLimitless.Sprites.Collections.Section.MousePosition">
             <summary>
               Gets the current mouse position adjusted for the camera's position
@@ -5083,6 +5515,16 @@
             <summary>
               Moves sprites according to their velocity and performs collision
               detection and resolution.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Collections.Section.IsDisposed">
+            <summary>
+            Gets a value indicating whether the resources of this object have been released.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Sprites.Collections.Section.Dispose">
+            <summary>
+            Releases resources used by this <see cref="T:SMLimitless.Sprites.Collections.Section"/> class. 
             </summary>
         </member>
         <member name="T:SMLimitless.Sprites.Collections.SectionExit">
@@ -5262,6 +5704,11 @@
         <member name="M:SMLimitless.Sprites.Collections.SectionExit.Draw">
             <summary>
               Draws a rectangle showing the hitbox of this exit.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Sprites.Collections.SectionExit.DebugDraw">
+            <summary>
+            Draws a differently colored rectangle around the section exit.
             </summary>
         </member>
         <member name="M:SMLimitless.Sprites.Collections.SectionExit.Emerge(System.Collections.Generic.IEnumerable{SMLimitless.Sprites.Sprite})">
@@ -5640,6 +6087,24 @@
               Updates this component.
             </summary>
         </member>
+        <member name="T:SMLimitless.Sprites.Components.SpriteHealedEventArgs">
+            <summary>
+            Contains event data for when a sprite is healed.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Components.SpriteHealedEventArgs.RemainingHitPoints">
+            <summary>
+            Gets the number of remaining hit points on the healed sprite.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Sprites.Components.SpriteHealedEventArgs.#ctor(System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SMLimitless.Sprites.Components.SpriteHealedEventArgs"/> class. 
+            </summary>
+            <param name="remainingHitPoints">
+            The number of remaining hit points on the healed sprite.
+            </param>
+        </member>
         <member name="T:SMLimitless.Sprites.Components.SpriteDamagedEventArgs">
             <summary>
               Contains event data for when a sprite or tile damages another sprite.
@@ -5943,6 +6408,11 @@
               An object containing the objects of the custom sprites.
             </param>
         </member>
+        <member name="M:SMLimitless.Sprites.InternalSprites.EditorCameraTrackingObject.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:SMLimitless.Sprites.InternalSprites.EditorCameraTrackingObject"/> class. 
+            </summary>
+        </member>
         <member name="M:SMLimitless.Sprites.InternalSprites.EditorCameraTrackingObject.Draw">
             <summary>
               This sprite has no graphics.
@@ -6027,6 +6497,13 @@
               cref="T:System.InvalidOperationException" /> if a tile is not selected.
             </summary>
         </member>
+        <member name="P:SMLimitless.Sprites.InternalSprites.EditorSelectedObject.SelectedExit">
+            <summary>
+            Gets the section exit that has been selected, and whose properties are visible in the
+            "Section Exits" tab of the section's <see cref="T:SMLimitless.Editor.EditorForm"/>. Throws an
+            <see cref="T:System.InvalidOperationException"/> if an exit is not selected.
+            </summary>
+        </member>
         <member name="E:SMLimitless.Sprites.InternalSprites.EditorSelectedObject.SelectedObjectChanged">
             <summary>
               An event fired any time the selected object changes.
@@ -6085,6 +6562,18 @@
               Selects a tile already in a section.
             </summary>
             <param name="tile">The tile being selected.</param>
+        </member>
+        <member name="M:SMLimitless.Sprites.InternalSprites.EditorSelectedObject.SelectExistingSectionExit(SMLimitless.Sprites.Collections.SectionExit)">
+            <summary>
+            Selects a section exit already in a section.
+            </summary>
+            <param name="exit">The exit being selected.</param>
+            <remarks>
+            Unlike the <see cref="M:SMLimitless.Sprites.InternalSprites.EditorSelectedObject.SelectExistingTile(SMLimitless.Sprites.Tile)"/> and 
+            <see cref="M:SMLimitless.Sprites.InternalSprites.EditorSelectedObject.SelectExistingSprite(SMLimitless.Sprites.Sprite)"/> methods, this method does not pick up the
+            exit being selected; rather, it populates the exit's properties in the "Section Exits"
+            tab of the section's <see cref="T:SMLimitless.Editor.EditorForm"/>. 
+            </remarks>
         </member>
         <member name="M:SMLimitless.Sprites.InternalSprites.EditorSelectedObject.SelectSpriteFromEditor(SMLimitless.Editor.SpriteData)">
             <summary>
@@ -8634,6 +9123,11 @@
               Updates this object.
             </summary>
         </member>
+        <member name="P:SMLimitless.Graphics.QuadRenderer.IsDisposed">
+            <summary>
+            Gets a value indicating whether the resources for this object have been released.
+            </summary>
+        </member>
         <member name="T:SMLimitless.Graphics.StaticGraphicsObject">
             <summary>
               A graphics object with one texture.
@@ -9110,6 +9604,11 @@
               An iris wipe effect.
             </summary>
         </member>
+        <member name="P:SMLimitless.Screens.Effects.IrisEffect.IsDisposed">
+            <summary>
+            Gets a value indicating whether the resources for this object have been released.
+            </summary>
+        </member>
         <member name="E:SMLimitless.Screens.Effects.IrisEffect.EffectCompletedEvent">
             <summary>
               An event raised when this effect has completed.
@@ -9165,6 +9664,11 @@
               Updates this effect.
             </summary>
         </member>
+        <member name="M:SMLimitless.Screens.Effects.IrisEffect.Dispose">
+            <summary>
+            Releases resources used by this <see cref="T:SMLimitless.Screens.Effects.IrisEffect"/> instance. 
+            </summary>
+        </member>
         <member name="T:SMLimitless.Screens.LevelScreen">
             <summary>
               A screen that contains a <see cref="T:SMLimitless.Sprites.Collections.Level" /> instance.
@@ -9193,6 +9697,11 @@
         <member name="M:SMLimitless.Screens.LevelScreen.LoadContent">
             <summary>
               Loads the content for this screen.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Screens.LevelScreen.UnloadContent">
+            <summary>
+            Unloads the content for this screen.
             </summary>
         </member>
         <member name="M:SMLimitless.Screens.LevelScreen.Update">

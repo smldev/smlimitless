@@ -90,8 +90,8 @@ namespace SMLimitless.Interfaces
 	///   An event handler delegate for the effect completed event.
 	/// </summary>
 	/// <param name="sender">The object that raises this event.</param>
-	/// <param name="direction">
-	///   The "forward" or "backward" direction of the effect.
+	/// <param name="e">
+	///   Arguments for this event.
 	/// </param>
-	public delegate void EffectCompletedEventHandler(object sender, EffectCompletedEventArgs direction);
+	public delegate void EffectCompletedEventHandler(object sender, EffectCompletedEventArgs e);
 }

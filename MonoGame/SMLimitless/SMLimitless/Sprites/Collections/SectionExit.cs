@@ -351,6 +351,9 @@ namespace SMLimitless.Sprites.Collections
 			exitEffect?.Draw();
 		}
 
+        /// <summary>
+        /// Draws a differently colored rectangle around the section exit.
+        /// </summary>
 		public void DebugDraw()
 		{
 			GameServices.SpriteBatch.DrawRectangleEdges(new Rectangle(Position.ToPoint(), Size.ToPoint()), Color.AliceBlue);

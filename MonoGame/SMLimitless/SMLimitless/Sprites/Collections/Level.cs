@@ -162,6 +162,14 @@ namespace SMLimitless.Sprites.Collections
 			selectedObject.LoadContent();
 		}
 
+        /// <summary>
+        /// Unloads the content of this level.
+        /// </summary>
+        public void UnloadContent()
+        {
+            Sections.ForEach(s => s.Dispose());
+        }
+
 		/// <summary>
 		///   Updates this level.
 		/// </summary>
@@ -209,6 +217,15 @@ namespace SMLimitless.Sprites.Collections
 
 			return null;
 		}
+
+        internal Section GetSectionWithExit(SectionExit exit)
+        {
+            foreach (var section in Sections)
+            {
+                if (section.SectionExits.Contains(exit)) { return section; }
+            }
+            return null;
+        }
 
 		internal void OnSectionExit(SectionExit source)
 		{
