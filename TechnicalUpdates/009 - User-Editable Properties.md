@@ -70,7 +70,7 @@ Each user-editable property will have a `Label` instance that displays the name 
 * `BoundingRectanglePropertyAttribute`: Four labels "X", "Y", "Width", and "Height" and four `TextBox` controls into which numbers can be typed.
 * `RectanglePropertyAttribute`: Four labels "X", "Y", "Width", and "Height" and four `NumericUpDown` controls.
 * `ColorPropertyAttribute`: Four labels "R", "G", "B", and "A", four `NumericUpDown` controls, and a small panel that displays the currently selected color.
-* `StringPropertyAttribute`: A `TextBox`.e
+* `StringPropertyAttribute`: A `TextBox`.
 * `NestedPropertyAttribute`: A button with an ellipsis. Clicking this button opens another `PropertyForm`, populated by a call to `DynamicPropertyControlGenerator.GenerateControls(Panel, object)` that displays the properties of the nested property.
 
 #### Changes to `EditorForm` and `PropertyForm`
