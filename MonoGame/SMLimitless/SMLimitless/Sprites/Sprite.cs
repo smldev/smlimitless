@@ -87,6 +87,7 @@ namespace SMLimitless.Sprites
 		///   sprite is facing.
 		/// </summary>
 		// TODO: add enum control generator
+		// TODO: also, make player facing direction something a bit more permanent
 		public SpriteDirection Direction { get; set; }
 
 		/// <summary>
@@ -565,7 +566,7 @@ namespace SMLimitless.Sprites
 			////this.IsActive = true;
 			////this.IsHostile = true;
 			////this.IsMoving = true;
-			Direction = SpriteDirection.FacePlayer;
+			hitbox = new BoundingRectangle(Position, Size);
 		}
 
 		/// <summary>

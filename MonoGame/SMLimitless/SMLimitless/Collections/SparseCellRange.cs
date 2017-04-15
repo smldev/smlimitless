@@ -34,8 +34,6 @@ namespace SMLimitless.Collections
 		/// </param>
 		public SparseCellRange(Point topLeft, Point bottomRight)
 		{
-			// TODO: add parameter validation.
-
 			TopLeft = topLeft;
 			BottomRight = bottomRight;
 		}

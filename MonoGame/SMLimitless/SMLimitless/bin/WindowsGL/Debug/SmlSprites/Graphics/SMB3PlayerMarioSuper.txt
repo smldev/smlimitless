@@ -1,0 +1,137 @@
+[Complex]
+FrameSize = 29,32
+TotalGraphicsObjects = 18
+StartingObject = standing
+
+[Object0]
+Name = standing
+Type = static
+Frame = 0,0
+
+[Object1]
+Name = walking
+Type = animated
+Frames = 4
+Frame0 = 0,0
+Frame1 = 58,0
+Frame2 = 29,0
+Frame3 = 58,0
+CycleLength = 0.311112
+
+[Object2]
+Name = skidding
+Type = static
+Frame = 116,0
+
+[Object3]
+Name = jumping
+Type = static
+Frame = 145,0
+
+[Object4]
+Name = sprinting
+Type = animated
+Frames = 4
+Frame0 = 174,0
+Frame1 = 203,0
+Frame2 = 232,0
+Frame3 = 203,0
+CycleLength = 0.183333
+
+[Object5]
+Name = sprintingJump
+Type = static
+Frame = 261,0
+
+[Object6]
+Name = ducking
+Type = static
+Frame = 290,0
+
+[Object7]
+Name = sliding
+Type = static
+Frame = 319,0
+
+[Object8]
+Name = holdingStand
+Type = static
+Frame = 348,0
+
+[Object9]
+Name = holdingWalk
+Type = animated
+Frames = 4
+Frame0 = 348,0
+Frame1 = 377,0
+Frame2 = 406,0
+Frame3 = 377,0
+CycleLength = 0.26667
+
+[Object10]
+Name = kick
+Type = static
+Frame = 435,0
+
+[Object11]
+Name = swimming
+Type = animated
+Frames = 8
+Frame0 = 464,0 ;0
+Frame1 = 493,0 ;1
+Frame2 = 522,0 ;2
+Frame3 = 551,0 ;3
+Frame4 = 580,0 ;4
+Frame5 = 551,0 ;3
+Frame6 = 522,0 ;2
+Frame7 = 493,0 ;1
+CycleLength = 0.5
+
+[Object12]
+Name = spinJump
+Type = animated
+Frames = 4
+Frame0 = 0,0
+Frame1 = 609,0
+Frame2 = 667,0
+Frame3 = 638,0
+CycleLength = 0.25000
+
+[Object13]
+Name = groundPoundSpin
+Type = animated
+Frames = 8
+Frame0 = 319,0
+Frame1 = 696,0
+Frame2 = 725,0
+Frame3 = 754,0
+Frame4 = 783,0
+Frame5 = 812,0
+Frame6 = 841,0
+Frame7 = 870,0
+CycleLength = 0.4702
+
+[Object14]
+Name = groundPoundDrop
+Type = static
+Frame = 319,0
+
+[Object15]
+Name = inAirSpin
+Type = animated
+Frames = 4
+Frame0 = 899,0
+Frame1 = 957,0
+Frame2 = 928,0
+Frame3 = 986,0
+CycleLength = 0.34
+
+[Object16]
+Name = slidingDownWall
+Type = static
+Frame = 986,0
+
+[Object17]
+Name = dead
+Type = static
+Frame = 1015,0

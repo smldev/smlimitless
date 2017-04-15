@@ -31,6 +31,7 @@ namespace SMLimitless.Graphics
 
 		/// <summary>
 		///   The ComplexGraphicsObject that owns this object.
+		///   Null if this object is not owned by a ComplexGraphicsObject.
 		/// </summary>
 		private ComplexGraphicsObject cgoOwner;
 
@@ -145,6 +146,12 @@ namespace SMLimitless.Graphics
 		}
 
 		/// <summary>
+		/// Gets or sets a value that indicates whether this graphics object is
+		/// being animated in reverse.
+		/// </summary>
+		public bool IsReversed { get; set; }
+
+		/// <summary>
 		///   Initializes a new instance of the <see
 		///   cref="AnimatedGraphicsObject" /> class.
 		/// </summary>
@@ -156,7 +163,7 @@ namespace SMLimitless.Graphics
 		}
 
 		/// <summary>
-		///   Adjusts the speed of the animation of this object by percentage.
+		///   Adjusts the speed of the animation of this object by a percentage.
 		///   Rounded to the closest frame boundary (usually one-sixtieth of a second).
 		/// </summary>
 		/// <param name="percentage">
@@ -472,7 +479,9 @@ namespace SMLimitless.Graphics
 				renderedFramesElapsed++;
 				if (renderedFramesElapsed == FrameTime)
 				{
-					if (frameIndex == frameCount)
+					bool onLastFrame = (IsReversed && frameIndex == 0) ||
+									   (!IsReversed && frameIndex == frameCount);
+					if (onLastFrame)
 					{
 						if (IsRunOnce)
 						{
@@ -481,17 +490,33 @@ namespace SMLimitless.Graphics
 						}
 						else
 						{
-							frameIndex = 0;
+							if (!IsReversed) { frameIndex = 0; }
+							else { frameIndex = frameCount - 1; }
 						}
 					}
 					else
 					{
-						frameIndex++;
+						if (!IsReversed) { frameIndex++; }
+						else { frameIndex--; }
 					}
 
 					renderedFramesElapsed = 0;
 				}
 			}
+		}
+
+		public void PreviousFrame()
+		{
+			if (frameIndex == 0) { frameIndex = frameCount; }
+			else { frameIndex--; }
+			renderedFramesElapsed = 0;
+		}
+
+		public void NextFrame()
+		{
+			if (frameIndex == frameCount) { frameIndex = 0; }
+			else { frameIndex++; }
+			renderedFramesElapsed = 0;
 		}
 
 		/// <summary>

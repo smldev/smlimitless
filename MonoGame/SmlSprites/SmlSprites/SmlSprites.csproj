@@ -71,6 +71,7 @@
     <Compile Include="Helpers\PlayerSensingColumn.cs" />
     <Compile Include="Helpers\VerticalLinePlayerListener.cs" />
     <Compile Include="Players\PlayerMario.cs" />
+    <Compile Include="Players\PlayerMarioSuper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SMB\Enemies\BuzzyBeetle.cs" />
     <Compile Include="SMB\Enemies\Goomba.cs" />

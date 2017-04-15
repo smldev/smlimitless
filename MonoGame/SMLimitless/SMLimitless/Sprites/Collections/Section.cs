@@ -906,6 +906,18 @@ namespace SMLimitless.Sprites.Collections
 			{
 				IrisIn(90, PlayerList.First().Position, (sender, e) => { });
 			}
+			else if (InputManager.IsNewKeyPress(Microsoft.Xna.Framework.Input.Keys.L))
+			{
+				var superMario = Assemblies.AssemblyManager.GetSpriteByFullName("SmlSprites.Players.PlayerMarioSuper");
+				superMario.Initialize(this);
+				superMario.LoadContent();
+				var transitionSprite = new PowerupTransition(
+					Sprites.First(s => s.GetType().FullName.Contains("Player")),
+					superMario, "SMB3PlayerMarioSmallToSuper", 60, true);
+				transitionSprite.Initialize(this);
+				transitionSprite.LoadContent();
+				AddSpriteOnNextFrame(transitionSprite);
+			}
 			Tile tileUnderCursor = (!MousePosition.IsNaN()) ? GetTileAtPosition(MousePosition) : null;
 			if (GameServices.CollisionDebuggerActive) { GameServices.CollisionDebuggerForm.SetTileInfo(tileUnderCursor); }
 

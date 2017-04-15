@@ -1,0 +1,25 @@
+[Complex]
+FrameSize = 16,32
+TotalGraphicsObjects = 1
+StartingObject = transition
+
+[Object0]
+Name = transition
+Type = animated
+Frames = 15
+Frame0 = 0,0
+Frame1 = 16,0
+Frame2 = 0,0
+Frame3 = 16,0
+Frame4 = 0,0
+Frame5 = 16,0
+Frame6 = 0,0
+Frame7 = 16,0
+Frame8 = 32,0
+Frame9 = 16,0
+Frame10 = 32,0
+Frame11 = 16,0
+Frame12 = 32,0
+Frame13 = 16,0
+Frame14 = 32,0
+CycleLength = 1.00000

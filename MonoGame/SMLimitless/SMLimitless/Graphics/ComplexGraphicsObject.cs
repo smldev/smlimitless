@@ -71,6 +71,8 @@ namespace SMLimitless.Graphics
 			}
 		}
 
+		public IReadOnlyList<string> ObjectNames { get; private set; }
+
 		/// <summary>
 		///   Gets the path to the image.
 		/// </summary>
@@ -80,6 +82,37 @@ namespace SMLimitless.Graphics
 		///   Gets the size of each frame in pixels.
 		/// </summary>
 		internal Vector2 FrameSize { get; private set; }
+
+		public decimal AnimationCycleLength
+		{
+			get
+			{
+				var objectAsAnimated = graphicsObjects[CurrentObjectName] as AnimatedGraphicsObject;
+				if (objectAsAnimated != null)
+				{
+					return objectAsAnimated.AnimationCycleLength;
+				}
+				else
+				{
+					return -1m;
+				}
+			}
+		}
+
+		public bool IsReversed
+		{
+			get
+			{
+				var objectAsAnimated = graphicsObjects[CurrentObjectName] as AnimatedGraphicsObject;
+				if (objectAsAnimated != null) { return objectAsAnimated.IsReversed; }
+				else { return false; }
+			}
+			set
+			{
+				var objectAsAnimated = graphicsObjects[CurrentObjectName] as AnimatedGraphicsObject;
+				if (objectAsAnimated != null) { objectAsAnimated.IsReversed = value; }
+			}
+		}
 
 		/// <summary>
 		///   Initializes a new instance of the <see cref="ComplexGraphicsObject"
@@ -125,6 +158,7 @@ namespace SMLimitless.Graphics
 				result.graphicsObjects.Add(graphicsObjectPair.Key, graphicsObjectPair.Value.Clone());
 			}
 
+			result.ObjectNames = ObjectNames;
 			result.CurrentObjectName = CurrentObjectName;
 			result.configFilePath = configFilePath;
 			result.FilePath = FilePath;
@@ -301,6 +335,7 @@ namespace SMLimitless.Graphics
 				}
 
 				CurrentObjectName = startingObject;
+				ObjectNames = graphicsObjects.Keys.ToList().AsReadOnly();
 				isLoaded = true;
 			}
 		}
@@ -391,6 +426,24 @@ namespace SMLimitless.Graphics
 			else
 			{
 				throw new InvalidOperationException("ComplexGraphicsObject.SetSpeed(int): Tried to set the speed of an object that wasn't animated.");
+			}
+		}
+
+		public void PreviousFrame()
+		{
+			var objectAsAnimated = graphicsObjects[CurrentObjectName] as AnimatedGraphicsObject;
+			if (objectAsAnimated != null)
+			{
+				objectAsAnimated.PreviousFrame();
+			}
+		}
+
+		public void NextFrame()
+		{
+			var objectAsAnimated = graphicsObjects[CurrentObjectName] as AnimatedGraphicsObject;
+			if (objectAsAnimated != null)
+			{
+				objectAsAnimated.NextFrame();
 			}
 		}
 

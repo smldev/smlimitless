@@ -66,11 +66,12 @@ namespace SMLimitless
 			ScreenManager.Initialize();
 			GameServices.ScreenSize = new Vector2(GraphicsDevice.PresentationParameters.BackBufferWidth, GraphicsDevice.PresentationParameters.BackBufferHeight);
 
-			string contentPackageSettingsPath = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), @"TestPackage\settings.txt");
+			string contentPackageSettingsPath = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), @"SmlSprites\settings.txt");
 			// SMLimitless.Content.ContentPackageManager.AddPackage(contentPackageSettingsPath);
 			// GameServices.Camera = new Physics.Camera2D(); // NOTE: comment out
 			// this line and the above if loading a LevelScreen.
 			ScreenManager.SetRootScreen(new LevelScreen(), GetInitialLevelFilePath());
+			
 
 			base.Initialize();
 
@@ -174,7 +175,7 @@ namespace SMLimitless
 		{
 			GraphicsDevice.Clear(Color.CornflowerBlue);
 
-			spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, GameServices.Camera.GetTransformation());
+			spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, null, null, null, GameServices.Camera.GetTransformation());
 			ScreenManager.Draw();
 			spriteBatch.End();
 

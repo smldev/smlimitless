@@ -6592,6 +6592,11 @@
               Updates this sprite.
             </summary>
         </member>
+        <member name="T:SMLimitless.Sprites.InternalSprites.PowerupTransition">
+            <summary>
+            A sprite that displays the transition between two powerup states of a player.
+            </summary>
+        </member>
         <member name="T:SMLimitless.Sprites.Particle">
             <summary>
               A small visual effect.
@@ -8454,6 +8459,7 @@
         <member name="F:SMLimitless.Graphics.AnimatedGraphicsObject.cgoOwner">
             <summary>
               The ComplexGraphicsObject that owns this object.
+              Null if this object is not owned by a ComplexGraphicsObject.
             </summary>
         </member>
         <member name="F:SMLimitless.Graphics.AnimatedGraphicsObject.configFilePath">
@@ -8535,6 +8541,12 @@
               each texture is drawn for.
             </summary>
         </member>
+        <member name="P:SMLimitless.Graphics.AnimatedGraphicsObject.IsReversed">
+            <summary>
+            Gets or sets a value that indicates whether this graphics object is
+            being animated in reverse.
+            </summary>
+        </member>
         <member name="M:SMLimitless.Graphics.AnimatedGraphicsObject.#ctor">
             <summary>
               Initializes a new instance of the <see
@@ -8543,7 +8555,7 @@
         </member>
         <member name="M:SMLimitless.Graphics.AnimatedGraphicsObject.AdjustSpeed(System.Single)">
             <summary>
-              Adjusts the speed of the animation of this object by percentage.
+              Adjusts the speed of the animation of this object by a percentage.
               Rounded to the closest frame boundary (usually one-sixtieth of a second).
             </summary>
             <param name="percentage">

@@ -104,7 +104,7 @@ namespace SMLimitless.Content
 				i++;
 				if (i == loadedPackages.Count && resourcePath == "")
 				{
-					throw new ResourceNotFoundException(string.Format("No resource named {0} exists in any loaded package.", resourceName), ContentPackageManager.loadedPackages);
+					throw new ResourceNotFoundException(string.Format("No resource named {0} exists in any loaded package.", resourceName), loadedPackages);
 				}
 			}
 
@@ -144,7 +144,7 @@ namespace SMLimitless.Content
 				{
 					// If we've gone over every package and we still haven't
 					// found the right file...
-					throw new ResourceNotFoundException(string.Format("No resource named {0} exists in any loaded package.", resourceName), ContentPackageManager.loadedPackages);
+					throw new ResourceNotFoundException(string.Format("No resource named {0} exists in any loaded package.", resourceName), loadedPackages);
 				}
 			}
 

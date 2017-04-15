@@ -27,11 +27,11 @@ namespace SmlSprites.Players
 		private Direction direction = SMLimitless.Direction.Left;
 		private ActionScheduler actionScheduler = new ActionScheduler();
 
-		private bool isDead;
-		private bool isGroundPounding;
+		protected bool IsDead { get; set; }
+		protected bool IsGroundPounding { get; set; }
 		private bool wasGroundPounding { get; set; }
-		private int groundPoundSpinTimer = 0;
-		private bool perfomingInAirSpin;
+		protected int GroundPoundSpinTimer { get; set; } = 0;
+		protected bool PerfomingInAirSpin { get; set; }
 		private int inAirSpinTimer = 0;
 		private int inAirSpinTimeout = 0;
 		private bool isSliding;
@@ -50,7 +50,7 @@ namespace SmlSprites.Players
 		private static PhysicsSetting<float> JumpGravityMultiplier = new PhysicsSetting<float>("Small Mario: Jump Gravity Multiplier", 0.01f, 1f, 0.65f, PhysicsSettingType.FloatingPoint);
 		private static PhysicsSetting<float> SpinJumpImpulse = new PhysicsSetting<float>("Small Mario: Spin Jump Impulse (px/sec²)", 0f, 500f, 245f, PhysicsSettingType.FloatingPoint);
 
-		private static PhysicsSetting<int> GroundPoundSpinTimer = new PhysicsSetting<int>("Small Mario: Ground Pound Spin Length (frames)", 1, 50, 20, PhysicsSettingType.Integer);
+		private static PhysicsSetting<int> GroundPoundSpinTimerSetting = new PhysicsSetting<int>("Small Mario: Ground Pound Spin Length (frames)", 1, 50, 20, PhysicsSettingType.Integer);
 		private static PhysicsSetting<float> GroundPoundVelocity = new PhysicsSetting<float>("Small Mario: Ground Pound Velocity (px/sec)", 0f, 500f, 300f, PhysicsSettingType.FloatingPoint);
 		private static PhysicsSetting<float> GroundPoundHorizontalMovementMultiplier = new PhysicsSetting<float>("Small Mario: Ground Pound Horizontal Speed Multiplier", 0.001f, 1f, 0.25f, PhysicsSettingType.FloatingPoint);
 
@@ -160,8 +160,13 @@ namespace SmlSprites.Players
 		{
 			get
 			{
-				//direction = (Velocity.X < 0f) ? Direction.Left : (Velocity.X == 0f) ? direction : Direction.Right;
+				// direction = (Velocity.X < 0f) ? Direction.Left : (Velocity.X == 0f) ? direction : Direction.Right;
 				return direction;
+			}
+			set
+			{
+				direction = value;
+				Direction = (value == SMLimitless.Direction.Left) ? SpriteDirection.Left : SpriteDirection.Right;
 			}
 		}
 
@@ -182,7 +187,7 @@ namespace SmlSprites.Players
 		private void HealthComponent_SpriteKilled(object sender, SpriteDamagedEventArgs e)
 		{
 			Owner.PlayerKilled(this);
-			isDead = true;
+			IsDead = true;
 			Velocity = new Vector2(0f, -100f);
 			TileCollisionMode = SpriteCollisionMode.NoCollision;
 			SpriteCollisionMode = SpriteCollisionMode.NoCollision;
@@ -201,7 +206,7 @@ namespace SmlSprites.Players
 
 		public override void Update()
 		{
-			if (!isDead)
+			if (!IsDead)
 			{
 				CheckForWalkRunInput();
 				SprintIfAllowed();
@@ -249,7 +254,7 @@ namespace SmlSprites.Players
 				{
 					Acceleration = new Vector2(Acceleration.X, Level.GravityAcceleration.Value * JumpGravityMultiplier.Value);
 				}
-				else if (isGroundPounding && groundPoundSpinTimer < GroundPoundSpinTimer.Value)
+				else if (IsGroundPounding && GroundPoundSpinTimer < GroundPoundSpinTimerSetting.Value)
 				{
 					Acceleration = Vector2.Zero;
 				}
@@ -258,7 +263,7 @@ namespace SmlSprites.Players
 					Acceleration = new Vector2(Acceleration.X, Level.GravityAcceleration.Value);
 				}
 
-				if (isGroundPounding) { TargetVelocity = new Vector2(TargetVelocity.X, GroundPoundVelocity.Value); }
+				if (IsGroundPounding) { TargetVelocity = new Vector2(TargetVelocity.X, GroundPoundVelocity.Value); }
 				else if (IsSlidingDownWall) { TargetVelocity = new Vector2(TargetVelocity.X, SlideDownWallVelocity.Value); }
 				else { TargetVelocity = new Vector2(TargetVelocity.X, MaximumGravitationalVelocity.Value); }
 			}
@@ -316,7 +321,7 @@ namespace SmlSprites.Players
 				else { resultVelocity.Y = Velocity.Y + velocityAddend.Y; }
 			}
 
-			if (!perfomingInAirSpin) { Velocity = resultVelocity; }
+			if (!PerfomingInAirSpin) { Velocity = resultVelocity; }
 			else { Velocity = new Vector2(resultVelocity.X, resultVelocity.Y * InAirSpinGravityMultiplier.Value); }
 		}
 
@@ -335,14 +340,14 @@ namespace SmlSprites.Players
 			else if (isLeftDown)
 			{
 				float targetVelocityX = (sprintChargeTimer == FramesToSprintingAllowed.Value) ? -MaximumSprintingSpeed.Value : (IsRunning) ? -MaximumRunningSpeed.Value : -MaximumWalkingSpeed.Value;
-				if (isGroundPounding && groundPoundSpinTimer >= GroundPoundSpinTimer.Value) { targetVelocityX *= GroundPoundHorizontalMovementMultiplier.Value; }
+				if (IsGroundPounding && GroundPoundSpinTimer >= GroundPoundSpinTimerSetting.Value) { targetVelocityX *= GroundPoundHorizontalMovementMultiplier.Value; }
 				TargetVelocity = new Vector2(targetVelocityX, TargetVelocity.Y);
 				direction = SMLimitless.Direction.Left;
 			}
 			else if (isRightDown)
 			{
 				float targetVelocityX = (sprintChargeTimer == FramesToSprintingAllowed.Value) ? MaximumSprintingSpeed.Value : (IsRunning) ? MaximumRunningSpeed.Value : MaximumWalkingSpeed.Value;
-				if (isGroundPounding && groundPoundSpinTimer >= GroundPoundSpinTimer.Value) { targetVelocityX *= GroundPoundHorizontalMovementMultiplier.Value; }
+				if (IsGroundPounding && GroundPoundSpinTimer >= GroundPoundSpinTimerSetting.Value) { targetVelocityX *= GroundPoundHorizontalMovementMultiplier.Value; }
 				TargetVelocity = new Vector2(targetVelocityX, TargetVelocity.Y);
 				direction = SMLimitless.Direction.Right;
 			}
@@ -466,29 +471,29 @@ namespace SmlSprites.Players
 
 		protected virtual void CheckForGroundPoundInput()
 		{
-			if (!IsOnGround && !isGroundPounding && InputManager.IsNewActionPress(InputAction.Down) && !IsSpinJumping && !isSliding && !IsSlidingDownWall)
+			if (!IsOnGround && !IsGroundPounding && InputManager.IsNewActionPress(InputAction.Down) && !IsSpinJumping && !isSliding && !IsSlidingDownWall)
 			{
 				// Start a ground pound.
-				isGroundPounding = true;
+				IsGroundPounding = true;
 				Velocity = TargetVelocity = Vector2.Zero;
 				PlaySound(groundPoundDropSound);
 				SetPlayerGraphicsObject("groundPoundSpin");
 				AddAttribute("GroundPounding");
 			}
-			else if (isGroundPounding && groundPoundSpinTimer < GroundPoundSpinTimer.Value)
+			else if (IsGroundPounding && GroundPoundSpinTimer < GroundPoundSpinTimerSetting.Value)
 			{
-				groundPoundSpinTimer++;
+				GroundPoundSpinTimer++;
 				Velocity = Vector2.Zero;
 			}
-			else if (isGroundPounding && IsOnGround)
+			else if (IsGroundPounding && IsOnGround)
 			{
 				PlaySound(groundPoundHitSound);
-				isGroundPounding = false;
-				groundPoundSpinTimer = 0;
+				IsGroundPounding = false;
+				GroundPoundSpinTimer = 0;
 				actionScheduler.ScheduleAction(() => wasGroundPounding = false, 20);
 				RemoveAttribute("GroundPounding");
 			}
-			else if (isGroundPounding && groundPoundSpinTimer == GroundPoundSpinTimer.Value)
+			else if (IsGroundPounding && GroundPoundSpinTimer == GroundPoundSpinTimerSetting.Value)
 			{
 				Velocity = new Vector2(0, GroundPoundVelocity.Value);
 				wasGroundPounding = true;
@@ -553,21 +558,21 @@ namespace SmlSprites.Players
 
 		protected virtual void CheckForInAirSpinInput()
 		{
-			if (!IsOnGround && Velocity.Y > 0f && !IsSpinJumping && InputManager.IsNewActionPress(InputAction.SpinJump) && !perfomingInAirSpin && inAirSpinTimeout == 0 && !IsSlidingDownWall && !isGroundPounding)
+			if (!IsOnGround && Velocity.Y > 0f && !IsSpinJumping && InputManager.IsNewActionPress(InputAction.SpinJump) && !PerfomingInAirSpin && inAirSpinTimeout == 0 && !IsSlidingDownWall && !IsGroundPounding)
 			{
-				perfomingInAirSpin = true;
+				PerfomingInAirSpin = true;
 				inAirSpinTimer = InAirSpinDuration.Value;
 				PlaySound(inAirSpinSound);
 				SetPlayerGraphicsObject("inAirSpin");
 			}
-			else if (perfomingInAirSpin)
+			else if (PerfomingInAirSpin)
 			{
 				inAirSpinTimer--;
 
 				if (inAirSpinTimer == 0)
 				{
 					inAirSpinTimeout = InAirSpinTimeout.Value;
-					perfomingInAirSpin = false;
+					PerfomingInAirSpin = false;
 				}
 			}
 			else if (inAirSpinTimeout > 0)
@@ -595,18 +600,18 @@ namespace SmlSprites.Players
 
 		protected virtual void DeterminePlayerGraphicsObject()
 		{
-			if (isDead)
+			if (IsDead)
 			{
 				SetPlayerGraphicsObject("dead");
 			}
-			else if (isGroundPounding)
+			else if (IsGroundPounding)
 			{
-				if (groundPoundSpinTimer >= GroundPoundSpinTimer.Value)
+				if (GroundPoundSpinTimer >= GroundPoundSpinTimerSetting.Value)
 				{
 					SetPlayerGraphicsObject("groundPoundDrop");
 				}
 			}
-			else if (perfomingInAirSpin) { return; }
+			else if (PerfomingInAirSpin) { return; }
 			else if (IsSlidingDownWall && !IsOnGround && Velocity.Y >= 0f)
 			{
 				SetPlayerGraphicsObject("slidingDownWall");
@@ -671,6 +676,7 @@ namespace SmlSprites.Players
 		public override void Initialize(Section owner)
 		{
 			graphics = (ComplexGraphicsObject)ContentPackageManager.GetGraphicsResource("SMB3PlayerMarioSmall");
+			FacingDirection = SMLimitless.Direction.Left;
 			base.Initialize(owner);
 		}
 
