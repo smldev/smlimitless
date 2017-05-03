@@ -213,7 +213,11 @@ namespace SMLimitless.Sprites.Collections
 				throw new ArgumentNullException(nameof(sprite), "The sprite to add to the section was null.");
 			}
 
-			if (sprite.IsPlayer) { Players.Add(sprite); }
+			if (sprite.IsPlayer)
+			{
+				Players.Add(sprite);
+				CameraSystem.TrackingObjects.Add(sprite);
+			}
 
 			Sprites.Add(sprite);
 			SpritesGrid.Add(sprite);
@@ -452,7 +456,11 @@ namespace SMLimitless.Sprites.Collections
 
 			Sprites.Remove(sprite);
 			SpritesGrid.Remove(sprite);
-			if (sprite.IsPlayer) { Players.Remove(sprite); }
+			if (sprite.IsPlayer)
+			{
+				Players.Remove(sprite);
+				CameraSystem.TrackingObjects.Remove(sprite);
+			}
 
 			Debug.Logger.LogInfo($"Removed sprite {sprite.GetType().Name} from {sprite.Position}");
 		}
@@ -918,6 +926,18 @@ namespace SMLimitless.Sprites.Collections
 				transitionSprite.LoadContent();
 				AddSpriteOnNextFrame(transitionSprite);
 			}
+			else if (InputManager.IsNewKeyPress(Microsoft.Xna.Framework.Input.Keys.M))
+			{
+				var smallMario = Assemblies.AssemblyManager.GetSpriteByFullName("SmlSprites.Players.PlayerMario");
+				smallMario.Initialize(this);
+				smallMario.LoadContent();
+				var transitionSprite = new PowerupTransition(
+					Sprites.First(s => s.GetType().FullName.Contains("Player")),
+					smallMario, "SMB3PlayerMarioSmallToSuper", 60, false);
+				transitionSprite.Initialize(this);
+				transitionSprite.LoadContent();
+				AddSpriteOnNextFrame(transitionSprite);
+			}
 			Tile tileUnderCursor = (!MousePosition.IsNaN()) ? GetTileAtPosition(MousePosition) : null;
 			if (GameServices.CollisionDebuggerActive) { GameServices.CollisionDebuggerForm.SetTileInfo(tileUnderCursor); }
 
@@ -931,6 +951,19 @@ namespace SMLimitless.Sprites.Collections
 					}
 				}
 			}
+		}
+
+		public void PerformPowerupStateChange(Sprite oldPlayer, string newPlayerTypeName,
+			string transitionGraphicsObjectName, bool poweringUp)
+		{
+			var newPlayer = Assemblies.AssemblyManager.GetSpriteByFullName(newPlayerTypeName);
+			newPlayer.Initialize(this);
+			newPlayer.LoadContent();
+			var transitionSprite = new PowerupTransition(
+				oldPlayer, newPlayer, transitionGraphicsObjectName, 60, poweringUp);
+			transitionSprite.Initialize(this);
+			transitionSprite.LoadContent();
+			AddSpriteOnNextFrame(transitionSprite);
 		}
 
 		private void UninitializeCollisionDebugging()

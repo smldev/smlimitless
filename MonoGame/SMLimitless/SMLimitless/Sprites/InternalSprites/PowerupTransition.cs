@@ -56,13 +56,16 @@ namespace SMLimitless.Sprites.InternalSprites
 
 			graphics = (ComplexGraphicsObject)ContentPackageManager.GetGraphicsResource(graphicsObjectName);
 			string soundName = (isPoweringUp) ? "nsmbwiiPowerup" : "nsmbwiiPowerdown";
+			if (!isPoweringUp) { graphics.IsReversed = true; }
 			sound = new CachedSound(ContentPackageManager.GetAbsoluteFilePath(soundName));
 
 			// Position the new player at the old player's same bottom center.
 			Size = oldPlayer.Size;
 			Position = oldPlayer.Position;
+			FacingDirection = oldPlayer.FacingDirection;
 			newPlayer.Position = new Vector2(oldPlayer.Hitbox.BottomCenter.X - (newPlayer.Hitbox.Width / 2f),
-				newPlayer.Hitbox.BottomCenter.Y - newPlayer.Hitbox.Height);
+				oldPlayer.Hitbox.BottomCenter.Y - newPlayer.Hitbox.Height);
+			newPlayer.FacingDirection = FacingDirection;
 		}
 
 		public override void Initialize(Section owner)
@@ -70,6 +73,7 @@ namespace SMLimitless.Sprites.InternalSprites
 			base.Initialize(owner);
 
 			owner.RemoveSpriteOnNextFrame(oldPlayer);
+			owner.Players.Remove(oldPlayer);
 		}
 
 		public override void DeserializeCustomObjects(JsonHelper customObjects)
@@ -81,7 +85,7 @@ namespace SMLimitless.Sprites.InternalSprites
 			float drawPositionX = Position.X - (graphics.FrameSize.X - Size.X);
 			float drawPositionY = Position.Y - (graphics.FrameSize.Y - Size.Y);
 			graphics.Draw(new Vector2(drawPositionX, drawPositionY), Color.White,
-				(oldPlayer.Direction == SpriteDirection.Left) ?
+				(FacingDirection == SMLimitless.Direction.Left) ?
 				Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipHorizontally :
 				Microsoft.Xna.Framework.Graphics.SpriteEffects.None);
 		}
@@ -109,6 +113,7 @@ namespace SMLimitless.Sprites.InternalSprites
 			{
 				Owner.RemoveSpriteOnNextFrame(this);
 				Owner.AddSpriteOnNextFrame(newPlayer);
+				Owner.Players.Add(newPlayer);
 			}
 			graphics.Update();
 		}

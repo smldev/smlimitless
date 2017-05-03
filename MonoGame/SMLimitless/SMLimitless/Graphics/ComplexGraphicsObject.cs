@@ -151,6 +151,7 @@ namespace SMLimitless.Graphics
 		/// <returns>A deep copy of this object.</returns>
 		public IGraphicsObject Clone()
 		{
+			// TODO: deep clone these lists
 			ComplexGraphicsObject result = new ComplexGraphicsObject();
 			Dictionary<string, IGraphicsObject> cloneObjects = new Dictionary<string, IGraphicsObject>();
 			foreach (var graphicsObjectPair in graphicsObjects)
@@ -163,7 +164,7 @@ namespace SMLimitless.Graphics
 			result.configFilePath = configFilePath;
 			result.FilePath = FilePath;
 			result.FrameSize = FrameSize;
-			result.isContentLoaded = true;
+			result.isContentLoaded = false;
 			result.isLoaded = true;
 			result.texture = texture;
 

@@ -1,0 +1,14 @@
+[Complex]
+FrameSize = 8,9
+TotalGraphicsObjects = 1
+StartingObject = fireball
+
+[Object0]
+Name = fireball
+Type = animated
+Frames = 4
+Frame0 = 0,0
+Frame1 = 8,0
+Frame2 = 16,0
+Frame3 = 24,0
+CycleLength = 0.4

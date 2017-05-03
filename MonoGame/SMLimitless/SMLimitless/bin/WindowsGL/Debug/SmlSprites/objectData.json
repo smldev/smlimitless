@@ -373,6 +373,22 @@
 			"state": 0,
 			"collision": 2,
 			"customObjects": {}
+		},
+		{
+			"typeName": "SmlSprites.SMB3.Items.SuperMushroom",
+			"editorResourceName": "SMB3SuperMushroom",
+			"editorTextureSourceRectangle": "0, 0, 16, 16",
+			"state": 0,
+			"collision": 0,
+			"customObjects": {}
+		},
+		{
+			"typeName": "SmlSprites.SMB3.Items.FireFlower",
+			"editorResourceName": "SMB3FireFlower",
+			"editorTextureSourceRectangle": "0, 0, 16, 16",
+			"state": 0,
+			"collision": 0,
+			"customObjects": {}
 		}
 	]
 }

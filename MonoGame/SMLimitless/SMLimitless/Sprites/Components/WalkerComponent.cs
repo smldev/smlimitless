@@ -214,6 +214,7 @@ namespace SMLimitless.Sprites.Components
 			}
 
 			Owner.Velocity = new Vector2(currentVelocity, Owner.Velocity.Y);
+			Owner.FacingDirection = Direction;
 		}
 	}
 }

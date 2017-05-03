@@ -81,6 +81,11 @@ namespace SMLimitless
 		public static Vector2 QuadTreeCellSize => new Vector2(64f);
 
 		/// <summary>
+		///	  Gets a global random number generator.
+		/// </summary>
+		public static Random Random = new Random();
+
+		/// <summary>
 		///   Gets or sets the size of the window in pixels.
 		/// </summary>
 		public static Vector2 ScreenSize { get; set; }

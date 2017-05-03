@@ -87,8 +87,12 @@ namespace SMLimitless.Sprites
 		///   sprite is facing.
 		/// </summary>
 		// TODO: add enum control generator
-		// TODO: also, make player facing direction something a bit more permanent
 		public SpriteDirection Direction { get; set; }
+
+		/// <summary>
+		/// Gets or sets the direction the sprite is currently facing.
+		/// </summary>
+		public Direction FacingDirection { get; set; }
 
 		/// <summary>
 		///   Gets the name of the category that this sprite is categorized

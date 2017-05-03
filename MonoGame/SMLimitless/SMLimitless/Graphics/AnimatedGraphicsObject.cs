@@ -210,13 +210,15 @@ namespace SMLimitless.Graphics
 			var clone = new AnimatedGraphicsObject();
 			clone.filePath = filePath;
 			clone.configFilePath = configFilePath;
+			clone.CgoSourceRects = new List<Rectangle>(CgoSourceRects);
 			clone.textures = textures;
 			clone.frameCount = frameCount;
 			clone.frameWidth = frameWidth;
 			clone.AnimationCycleLength = AnimationCycleLength;
 			clone.IsRunOnce = IsRunOnce;
 			clone.isLoaded = isLoaded;
-			clone.isContentLoaded = isContentLoaded;
+			clone.isContentLoaded = (textures != null || textures.Count > 0) 
+				? isContentLoaded : false;
 			return clone;
 		}
 

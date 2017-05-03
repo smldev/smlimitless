@@ -5,9 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using SMLimitless;
+using SMLimitless.Content;
 using SMLimitless.Graphics;
 using SMLimitless.IO.LevelSerializers;
 using SMLimitless.Physics;
+using SMLimitless.Sounds;
 using SMLimitless.Sprites;
 using SMLimitless.Sprites.Assemblies;
 using SMLimitless.Sprites.Collections;
@@ -19,6 +21,8 @@ namespace SmlSprites.Tiles
 		private static PhysicsSetting<float> MaximumVisualDisplacement;
 		private static PhysicsSetting<float> VisualDisplacementLength;
 		private static PhysicsSetting<float> SpriteReleaseLength;
+
+		private CachedSound spriteEmergeSound;
 
 		public Sprite ContainedSprite { get; set; }
 		public string ContainedSpriteGraphicsName { get; private set; }
@@ -55,6 +59,7 @@ namespace SmlSprites.Tiles
 			Size = new Vector2(16f);
 			TileShape = CollidableShape.Rectangle;
 			RectSolidSides = TileRectSolidSides.Top | TileRectSolidSides.Left | TileRectSolidSides.Right | TileRectSolidSides.Bottom;
+			spriteEmergeSound = new CachedSound(ContentPackageManager.GetAbsoluteFilePath("nsmbwiiSprout1"));
 		}
 
 		protected void SetGraphicsObjects(IGraphicsObject fullGraphics, IGraphicsObject emptyGraphics)
@@ -146,6 +151,7 @@ namespace SmlSprites.Tiles
 			releasingSprite = CloneSpriteToRelease();
 			IsReleasingSprite = true;
 			releasingSpriteDirection = releaseDirection;
+			AudioPlaybackEngine.Instance.PlaySound(spriteEmergeSound, (sender, e) => { });
 		}
 
 		protected virtual void EndRelease()

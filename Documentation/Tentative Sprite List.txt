@@ -1,14 +1,14 @@
 Super Mario Limitless
-Tentative Sprite List
+Tentative Sprite List (sprites marked with an asterisk are implemented)
 
 - Wave 0 Sprites:
-	- Goomba
-	- Koopa Troopa
-	- Buzzy Beetle
+	- Goomba*
+	- Koopa Troopa*
+	- Buzzy Beetle*
 	- Lakitu
-	- Spiny +Egg
+	- Spiny* +Egg
 	- Goal Flagpole
-	- Super Mushroom
+	- Super Mushroom*
 	- Fire Flower
 
 - Super Mario Bros.

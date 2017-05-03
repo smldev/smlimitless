@@ -475,6 +475,21 @@ namespace SMLimitless.Physics
 		}
 
 		/// <summary>
+		/// Determines which edges of this rectangle are within another rectangle.
+		/// </summary>
+		/// <param name="other">The other rectangle.</param>
+		/// <returns>A set of flags indicating which edges are within another rectangle.</returns>
+		public FlaggedDirection WhichEdgeIsWithin(BoundingRectangle other)
+		{
+			var result = FlaggedDirection.None;
+			if (Left >= other.Left && Left <= other.Right) { result |= FlaggedDirection.Left; }
+			if (Right >= other.Left && Right <= other.Right) { result |= FlaggedDirection.Right; }
+			if (Top >= other.Top && Top <= other.Bottom) { result |= FlaggedDirection.Up; }
+			if (Bottom >= other.Top && Bottom <= other.Bottom) { result |= FlaggedDirection.Down; }
+			return result;
+		}
+
+		/// <summary>
 		///   Gets the Y-coordinate of the top of this rectangle.
 		/// </summary>
 		/// <param name="x">The x-coordinate to check for.</param>
