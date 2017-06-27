@@ -1,0 +1,17 @@
+# Super Mario Limitless
+
+## Technical Update #011 - Level Exits and the SMB Flagpole
+
+### Description
+
+#### Level Exits
+
+A level exit is an object that, when a player activates it, completes a level. In the future, level exits will work with worlds, level packs, and episodes, but for now, a level's completion will open a file dialog to select another level to start.
+
+#### The SMB Flagpole
+
+The flagpole from Super Mario Bros. is a sprite that serves as a level exit. It consists of a staircase block, a flagpole atop the staircase block, and a flag attached to the top.
+
+Players will collide with the staircase block as they would a normal tile, but if a player hits the flagpole, they will start an animation where the flag is lowered to the bottom of the pole. The higher the player hits the flagpole, the higher of a score they get.
+
+When a player hits the flagpole, they can no longer be controlled by the user. Instead, they will walk to the right continuously. After a short delay, the exit is activated, and the file dialog opens.

@@ -82,6 +82,7 @@
     <Compile Include="SMB\Enemies\KoopaTroopa.cs" />
     <Compile Include="SMB\Enemies\Lakitu.cs" />
     <Compile Include="SMB\Enemies\Spiny.cs" />
+    <Compile Include="SMB\Exits\Flagpole.cs" />
     <Compile Include="SMB\Items\Coin.cs" />
     <Compile Include="SMB3\Items\SuperMushroom.cs" />
     <Compile Include="Tiles\BrickBlock.cs" />

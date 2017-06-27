@@ -32,12 +32,11 @@ namespace SmlSprites.Players
 		protected bool WasGroundPounding { get; set; }
 		protected int GroundPoundSpinTimer { get; set; } = 0;
 		protected bool PerfomingInAirSpin { get; set; }
+		protected bool OnLevelExit { get; set; }
 		private int inAirSpinTimer = 0;
 		private int inAirSpinTimeout = 0;
 		protected bool IsSliding { get; set; }
 		private bool isSpinJumping;
-
-		private int testParticleSpawnTimer = 10;
 
 		protected static PhysicsSetting<float> MaximumWalkingSpeed = new PhysicsSetting<float>("Small Mario: Full Walking Speed (px/sec)", 0f, 100f, 50f, PhysicsSettingType.FloatingPoint);
 		protected static PhysicsSetting<float> MaximumRunningSpeed = new PhysicsSetting<float>("Small Mario: Full Running Speed (px/sec)", 0f, 150f, 75f, PhysicsSettingType.FloatingPoint);
@@ -156,20 +155,6 @@ namespace SmlSprites.Players
 			}
 		}
 
-		//protected virtual Direction FacingDirection
-		//{
-		//	get
-		//	{
-		//		// direction = (Velocity.X < 0f) ? Direction.Left : (Velocity.X == 0f) ? direction : Direction.Right;
-		//		return direction;
-		//	}
-		//	set
-		//	{
-		//		direction = value;
-		//		Direction = (value == SMLimitless.Direction.Left) ? SpriteDirection.Left : SpriteDirection.Right;
-		//	}
-		//}
-
 		public PlayerMario() : base()
 		{
 			Size = new Vector2(16f);
@@ -181,8 +166,17 @@ namespace SmlSprites.Players
 				new string[] { SpriteDamageTypes.PlayerFireball });
 			healthComponent.SpriteKilled += HealthComponent_SpriteKilled;
 
+			var levelExitComponent = new TriggersLevelExitsComponent();
+			levelExitComponent.LevelExitTriggered += LevelExitComponent_LevelExitTriggered;
+
 			Components.Add(healthComponent);
 			Components.Add(new DamageComponent());
+			Components.Add(levelExitComponent);
+		}
+
+		private void LevelExitComponent_LevelExitTriggered(object sender, LevelExitTriggeredEventArgs e)
+		{
+			OnLevelExit = true;
 		}
 
 		internal virtual void HealthComponent_SpriteKilled(object sender, SpriteDamagedEventArgs e)
@@ -207,7 +201,7 @@ namespace SmlSprites.Players
 
 		public override void Update()
 		{
-			if (!IsDead)
+			if (!IsDead && !OnLevelExit)
 			{
 				CheckForWalkRunInput();
 				SprintIfAllowed();
@@ -223,17 +217,7 @@ namespace SmlSprites.Players
 			}
 
 			DeterminePlayerGraphicsObject();
-			BaseUpdate();
-
-			if (testParticleSpawnTimer > 0)
-			{
-				testParticleSpawnTimer--;
-			}
-			else
-			{
-				testParticleSpawnTimer = 2;
-				//Owner.AddParticle(new Particle(Owner, "TestSparkle", Hitbox.BottomCenter, Vector2.Zero, false, 0.6f));
-			}
+			if (!OnLevelExit) { BaseUpdate(); }
 		}
 
 		protected virtual void BaseUpdate()
@@ -609,6 +593,10 @@ namespace SmlSprites.Players
 			if (IsDead)
 			{
 				SetPlayerGraphicsObject("dead");
+			}
+			else if (OnLevelExit)
+			{
+				SetPlayerGraphicsObject("flagpole");
 			}
 			else if (IsGroundPounding)
 			{

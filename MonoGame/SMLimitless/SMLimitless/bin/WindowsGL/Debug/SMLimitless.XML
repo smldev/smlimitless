@@ -6240,6 +6240,38 @@
               Updates this component.
             </summary>
         </member>
+        <member name="T:SMLimitless.Sprites.Components.TriggersLevelExitsComponent">
+            <summary>
+            A component for a sprite that can trigger level exits (like players).
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Sprites.Components.TriggersLevelExitsComponent.Update">
+            <summary>
+            Updates this component. Called once per frame.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Sprites.Components.TriggersLevelExitsComponent.ExitTriggered(SMLimitless.Sprites.Sprite)">
+            <summary>
+            Call this method when the sprite triggers a level exit.
+            </summary>
+            <param name="levelExit">The exit that was triggered.</param>
+        </member>
+        <member name="T:SMLimitless.Sprites.Components.LevelExitTriggeredEventArgs">
+            <summary>
+            Arguments for an event that occurs when a level exit is triggered.
+            </summary>
+        </member>
+        <member name="P:SMLimitless.Sprites.Components.LevelExitTriggeredEventArgs.LevelExitSprite">
+            <summary>
+            The level exit that was triggered.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Sprites.Components.LevelExitTriggeredEventArgs.#ctor(SMLimitless.Sprites.Sprite)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SMLimitless.Sprites.Components.LevelExitTriggeredEventArgs"/> class.
+            </summary>
+            <param name="levelExit">The level exit that was triggered.</param>
+        </member>
         <member name="T:SMLimitless.Sprites.Components.WalkerComponent">
             <summary>
               A component which moves the sprite horizontally along a surface of tiles.
@@ -7824,7 +7856,7 @@
         </member>
         <member name="M:SMLimitless.Extensions.StringExtensions.TrimStringArray(System.String[])">
             <summary>
-              Trims evert string in a string array.
+              Trims every string in a string array.
             </summary>
             <param name="input">
               The string array containing the strings to trim.
@@ -8722,6 +8754,16 @@
         <member name="M:SMLimitless.Graphics.AnimatedGraphicsObject.Update">
             <summary>
               Updates this AnimatedGraphicsObject.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Graphics.AnimatedGraphicsObject.PreviousFrame">
+            <summary>
+            Sets the currently displayed frame to the previous frame.
+            </summary>
+        </member>
+        <member name="M:SMLimitless.Graphics.AnimatedGraphicsObject.NextFrame">
+            <summary>
+            Sets the currently displayed frame to the next frame.
             </summary>
         </member>
         <member name="M:SMLimitless.Graphics.AnimatedGraphicsObject.Load(System.Collections.Generic.Dictionary{System.String,System.String},SMLimitless.Graphics.ComplexGraphicsObject)">

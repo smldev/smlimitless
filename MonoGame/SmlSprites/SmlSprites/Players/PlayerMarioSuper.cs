@@ -220,7 +220,7 @@ namespace SmlSprites.Players
 			base.DeterminePlayerGraphicsObject();
 
 			// We can check for ducking here, instead of modifying the base method.
-			if (IsDucking)
+			if (IsDucking && !OnLevelExit)
 			{
 				if (IsSpinJumping) { SetPlayerGraphicsObject("spinJump"); }
 				else if (IsGroundPounding) { return; }

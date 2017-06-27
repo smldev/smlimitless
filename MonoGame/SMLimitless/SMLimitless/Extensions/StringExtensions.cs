@@ -121,7 +121,7 @@ namespace SMLimitless.Extensions
 		}
 
 		/// <summary>
-		///   Trims evert string in a string array.
+		///   Trims every string in a string array.
 		/// </summary>
 		/// <param name="input">
 		///   The string array containing the strings to trim.

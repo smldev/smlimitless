@@ -82,10 +82,7 @@ namespace SMLimitless.Sprites.Components
 
 		private void OnNearestPlayerDirectionUpdated()
 		{
-			if (NearestPlayerDirectionUpdated != null)
-			{
-				NearestPlayerDirectionUpdated(this, new EventArgs());
-			}
+			NearestPlayerDirectionUpdated?.Invoke(this, new EventArgs());
 		}
 
 		private void PerformDirectionCheck()

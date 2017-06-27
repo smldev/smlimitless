@@ -89,11 +89,7 @@ namespace SMLimitless.Graphics
 		/// </summary>
 		public decimal AnimationCycleLength
 		{
-			get
-			{
-				return animationCycleLength;
-			}
-
+			get => animationCycleLength;
 			set
 			{
 				if (value < ((1m / 60m) * textures.Count))
@@ -207,18 +203,20 @@ namespace SMLimitless.Graphics
 		/// <returns>A deep copy of this object.</returns>
 		public IGraphicsObject Clone()
 		{
-			var clone = new AnimatedGraphicsObject();
-			clone.filePath = filePath;
-			clone.configFilePath = configFilePath;
-			clone.CgoSourceRects = new List<Rectangle>(CgoSourceRects);
-			clone.textures = textures;
-			clone.frameCount = frameCount;
-			clone.frameWidth = frameWidth;
-			clone.AnimationCycleLength = AnimationCycleLength;
-			clone.IsRunOnce = IsRunOnce;
-			clone.isLoaded = isLoaded;
-			clone.isContentLoaded = (textures != null || textures.Count > 0) 
-				? isContentLoaded : false;
+			var clone = new AnimatedGraphicsObject()
+			{
+				filePath = filePath,
+				configFilePath = configFilePath,
+				CgoSourceRects = new List<Rectangle>(CgoSourceRects),
+				textures = textures,
+				frameCount = frameCount,
+				frameWidth = frameWidth,
+				AnimationCycleLength = AnimationCycleLength,
+				IsRunOnce = IsRunOnce,
+				isLoaded = isLoaded,
+				isContentLoaded = (textures != null || textures.Count > 0)
+				? isContentLoaded : false
+			};
 			return clone;
 		}
 
@@ -302,7 +300,7 @@ namespace SMLimitless.Graphics
 		{
 			if (!textures[frameIndex].ValidateCropping(cropping)) { throw new ArgumentException($"The cropping {cropping} was not valid for this texture. (Width: {textures[frameIndex].Width}, Height: {textures[frameIndex].Height}"); }
 
-			Rectangle destinationRectangle = new Rectangle((int)position.X + cropping.X, (int)position.Y + cropping.Y, cropping.Width, cropping.Height);
+			var destinationRectangle = new Rectangle((int)position.X + cropping.X, (int)position.Y + cropping.Y, cropping.Width, cropping.Height);
 			Rectangle sourceRectangle = cropping;
 
 			GameServices.SpriteBatch.Draw(textures[frameIndex], destinationRectangle, sourceRectangle, color, 0f, Vector2.Zero, effects, 0f);
@@ -507,6 +505,9 @@ namespace SMLimitless.Graphics
 			}
 		}
 
+		/// <summary>
+		/// Sets the currently displayed frame to the previous frame.
+		/// </summary>
 		public void PreviousFrame()
 		{
 			if (frameIndex == 0) { frameIndex = frameCount; }
@@ -514,6 +515,9 @@ namespace SMLimitless.Graphics
 			renderedFramesElapsed = 0;
 		}
 
+		/// <summary>
+		/// Sets the currently displayed frame to the next frame.
+		/// </summary>
 		public void NextFrame()
 		{
 			if (frameIndex == frameCount) { frameIndex = 0; }

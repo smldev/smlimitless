@@ -546,7 +546,7 @@ namespace SMLimitless.Sprites.Collections
 			Background.Update();
 			TempUpdate();
 
-			debugText = $"{EditorActive}";
+			debugText = $"{SpriteList.Count}";
 
 			stopwatch.Stop();
 		}
@@ -877,6 +877,12 @@ namespace SMLimitless.Sprites.Collections
 			System.IO.File.WriteAllText(sfd.FileName, json);
 		}
 
+		public void OnLevelExit()
+		{
+			// yeah, yeah. We'll do this properly after the spec is released. This will do for now.
+			Owner.LevelExitCleared(null);
+		}
+
 		private void SnapToGround(Sprite sprite)
 		{
 			//if (!sprite.IsOnGround) { return; }
@@ -956,6 +962,8 @@ namespace SMLimitless.Sprites.Collections
 		public void PerformPowerupStateChange(Sprite oldPlayer, string newPlayerTypeName,
 			string transitionGraphicsObjectName, bool poweringUp)
 		{
+			// WYLO: this doesn't always spawn a new player
+			// or even the transition sprite
 			var newPlayer = Assemblies.AssemblyManager.GetSpriteByFullName(newPlayerTypeName);
 			newPlayer.Initialize(this);
 			newPlayer.LoadContent();

@@ -18,6 +18,9 @@ namespace SMLimitless.Screens
 		/// </summary>
 		private Level level;
 
+		// The screens that created this screen.
+		private Screen owner;
+
 		/// <summary>
 		///   Draws this screen.
 		/// </summary>
@@ -36,14 +39,55 @@ namespace SMLimitless.Screens
 		/// </param>
 		public override void Initialize(Screen owner, string parameters)
 		{
-			// level = new Level();
-			//level.Sections.Add(new Section(level));
+			this.owner = owner;
 
 			// temporary level.ContentFolderPaths = new List<string>() {
 			// System.IO.Directory.GetCurrentDirectory() + @"\TestPackage" };
 			level = new IO.LevelSerializers.Serializer003().Deserialize(System.IO.File.ReadAllText(parameters));
 			level.Path = parameters;
 			level.Initialize();
+			level.LevelExitTriggered += Level_LevelExitTriggered;
+		}
+
+		private void Level_LevelExitTriggered(object sender, EventArgs e)
+		{
+			var ofd = new System.Windows.Forms.OpenFileDialog()
+			{
+				AddExtension = true,
+				CheckFileExists = true,
+				CheckPathExists = true,
+				DefaultExt = ".lvl",
+				Filter = "SML Levels (*.lvl)|*.lvl|All files|*.*",
+				Multiselect = false,
+				Title = "Super Mario Limitless"
+			};
+
+			if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+			{
+				string path = ofd.FileName;
+
+				Level newLevel = null;
+				try
+				{
+					newLevel = new IO.LevelSerializers.Serializer003().Deserialize(System.IO.File.ReadAllText(path));
+					newLevel.Path = path;
+					newLevel.Initialize();
+					newLevel.LoadContent();
+				}
+				catch (Exception ex)
+				{
+					string message = string.Concat("A problem occurred while trying to load the level.",
+						Environment.NewLine, ex.GetType().Name,
+						Environment.NewLine, ex.Message ?? "");
+					System.Windows.Forms.MessageBox.Show(message, "Super Mario Limitless", 
+						System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+					System.Diagnostics.Debugger.Break();
+					return;
+				}
+
+				level = newLevel;
+				level.LevelExitTriggered += Level_LevelExitTriggered;
+			}
 		}
 
 		/// <summary>

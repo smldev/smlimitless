@@ -113,6 +113,8 @@ namespace SMLimitless.Sprites.Assemblies
 				throw new InvalidOperationException(string.Format("AssemblyManager.LoadAssembly(string, ushort): The assembly named {0} does not meet assembly requirements.", assembly.FullName));
 			}
 
+			if (loadedAssemblies.Any(a => a.FullName == assembly.FullName)) { return; }
+
 			loadedAssemblies.Add(assembly);
 			AddTypesToDictionary(assembly);
 		}

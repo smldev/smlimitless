@@ -1,6 +1,6 @@
 [Complex]
 FrameSize = 29,32
-TotalGraphicsObjects = 18
+TotalGraphicsObjects = 19
 StartingObject = standing
 
 [Object0]
@@ -135,3 +135,8 @@ Frame = 986,0
 Name = dead
 Type = static
 Frame = 1015,0
+
+[Object18]
+Name = flagpole
+Type = static
+Frame = 1044,0

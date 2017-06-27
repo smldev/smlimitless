@@ -37,6 +37,8 @@ namespace SMLimitless.Sprites.Collections
 
 		private EditorCameraTrackingObject trackingObject = null;
 
+		public event EventHandler LevelExitTriggered;
+
 		/// <summary>
 		///   Gets a string placed in all level files indicating the version of
 		///   the serializer used to create it.
@@ -151,6 +153,8 @@ namespace SMLimitless.Sprites.Collections
 			// Look in this.levelExits for an exit with the sprite name. Notify
 			// the owner (world/levelpack/whatever) that this exit has been
 			// cleared Give the owner the LevelExit tied to the exitSpriteName
+
+			LevelExitTriggered?.Invoke(this, new EventArgs());
 		}
 
 		/// <summary>

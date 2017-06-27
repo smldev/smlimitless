@@ -220,14 +220,14 @@ namespace SMLimitless.Sprites
 
 		internal int SolidSides { get; set; }           // Okay, so this is kind of ugly. This can be either a TileRectSolidSides or a TileTriSolidSides. At least we cast it for public access.
 
-														/// <summary>
-														///   Gets or sets a
-														///   value indicating
-														///   which two sides of
-														///   this tile have been
-														///   replaced by the
-														///   sloped side.
-														/// </summary>
+		/// <summary>
+		///   Gets or sets a
+		///   value indicating
+		///   which two sides of
+		///   this tile have been
+		///   replaced by the
+		///   sloped side.
+		/// </summary>
 		protected internal RtSlopedSides SlopedSides { get; set; }
 
 		/// <summary>

@@ -140,7 +140,7 @@ namespace SmlSprites.Players
 		{
 			base.DeterminePlayerGraphicsObject();
 
-			if (fireballThrowTimer > 0)
+			if (fireballThrowTimer > 0 && !OnLevelExit)
 			{
 				SetPlayerGraphicsObject("throwFireball");
 			}
